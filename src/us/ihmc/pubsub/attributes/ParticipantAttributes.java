@@ -15,6 +15,9 @@
  */
 package us.ihmc.pubsub.attributes;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+
 import us.ihmc.pubsub.common.Time;
 
 /**
@@ -63,4 +66,19 @@ public abstract class ParticipantAttributes
     * @param time
     */
    public abstract void setLeaseDuration(Time time);
+   
+   /**
+    * Binds this participant to only the addresses given as parameters
+    * 
+    * By default the participant binds to all network interfaces on the computer
+    * 
+    * @param addresses one or more local network addresses to bind to
+    */
+   public abstract void bindToAddress(InetAddress... addresses);
+   
+   
+   public void bindToLocalhost()
+   {
+      bindToAddress(Inet4Address.getLoopbackAddress());
+   }
 }

@@ -28,9 +28,9 @@ import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 
 public class FastRTPSCommonFunctions
 {
-   private static final int LOCATOR_KIND_RESERVED = 0;
-   private static final int LOCATOR_KIND_UDPv4 = 1;
-   private static final int LOCATOR_KIND_UDPv6 = 2;
+   public static final int LOCATOR_KIND_RESERVED = 0;
+   public static final int LOCATOR_KIND_UDPv4 = 1;
+   public static final int LOCATOR_KIND_UDPv6 = 2;
 
    public static LocatorList_t convertToCPPLocatorList(List<Locator> in, LocatorList_t out)
    {
