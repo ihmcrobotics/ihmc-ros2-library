@@ -18,6 +18,12 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 find_package(JNI REQUIRED)
 INCLUDE_DIRECTORIES(${JNI_INCLUDE_DIRS})
 
+IF(APPLE)
+  SET(APPLE_PATCH_COMMAND patch -N -d ${PROJECT_SOURCE_DIR}/thirdparty/Fast-RTPS/thirdparty/fastcdr/src/cpp < ${PROJECT_SOURCE_DIR}/fastcdr.patch || "${CMAKE_COMMAND}" -E echo "Patch skipped")
+ELSE()
+  SET(APPLE_PATCH_COMMAND "")
+ENDIF()
+
 include(ExternalProject)
 SET(FAST_RTPS_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
 ExternalProject_Add(FastRTPS
@@ -27,12 +33,13 @@ ExternalProject_Add(FastRTPS
 	DOWNLOAD_COMMAND ""
 	#UPDATE_COMMAND "${CMAKE_COMMAND}" -E chdir "${PROJECT_SOURCE_DIR}" git submodule update --recursive --init "thirdparty/Fast-RTPS"
 	UPDATE_COMMAND ""
+	PATCH_COMMAND ${APPLE_PATCH_COMMAND}
     INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
     TMP_DIR "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
     CMAKE_GENERATOR "${CMAKE_GENERATOR}"
     CMAKE_ARGS
         "-DEPROSIMA_BUILD=ON"
-	"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+	    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
         "-DCOMPILE_EXAMPLES=OFF"
         "-DBUILD_SHARED_LIBS=OFF"
         "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
