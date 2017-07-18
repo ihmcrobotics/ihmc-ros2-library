@@ -76,4 +76,13 @@ public interface Participant
     * @return the number of local subscribers registered to the target_topic
     */
    public int get_no_subscribers(String target_topic);
+   
+   /**
+    * Checks if this publisher is available to read and write data from and to the domain 
+    * 
+    * This method does not allocate memory
+    * 
+    * @return true if this participant is available
+    */
+   public boolean isAvailable();
 }

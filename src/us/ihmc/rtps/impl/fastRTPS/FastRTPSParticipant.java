@@ -445,4 +445,10 @@ class FastRTPSParticipant implements Participant
       impl.registerEDPReaderListeners(nativeParticipantPublisherEDPListenerImpl, nativeParticipantSubscriberEDPListenerImpl);
    }
 
+   @Override
+   public synchronized boolean isAvailable()
+   {
+      return impl != null;
+   }
+
 }

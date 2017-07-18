@@ -16,7 +16,6 @@
 package us.ihmc.pubsub.example;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 import us.ihmc.idl.generated.Chat.ChatMessage;
 import us.ihmc.idl.generated.Chat.ChatMessagePubSubType;

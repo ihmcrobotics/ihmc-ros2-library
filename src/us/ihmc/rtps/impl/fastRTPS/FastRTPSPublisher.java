@@ -226,4 +226,13 @@ public class FastRTPSPublisher implements Publisher
    {
       return topicDataType;
    }
+
+   @Override
+   public boolean isAvailable()
+   {
+      synchronized(destructorLock)
+      {
+         return impl != null;
+      }
+   }
 }

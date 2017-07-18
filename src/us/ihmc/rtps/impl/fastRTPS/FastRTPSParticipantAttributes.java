@@ -18,8 +18,6 @@ package us.ihmc.rtps.impl.fastRTPS;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 
-import us.ihmc.pubsub.attributes.Locator;
-import us.ihmc.pubsub.attributes.Locator.Kind;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.common.Time;
 
