@@ -393,4 +393,13 @@ public class FastRTPSSubscriber implements Subscriber
       return topicDataType;
    }
 
+   @Override
+   public boolean isAvailable()
+   {
+      synchronized(destructorLock)
+      {
+         return impl != null;
+      }
+   }
+
 }

@@ -25,11 +25,22 @@ NativeParticipantImpl::NativeParticipantImpl(RTPSParticipantAttributes& rtps, Na
     m_rtps_listener(this)
 {
 
-    part = RTPSDomain::createParticipant(rtps, &m_rtps_listener);
+	try
+	{
+	    part = RTPSDomain::createParticipant(rtps, &m_rtps_listener);		
+	}
+	catch(const std::exception &e)
+	{
+		std::cerr << "[ERROR]" << e.what() << std::endl;
+		throw FastRTPSException("Problem creating RTPSParticipant");
+		return;
+	}
+	
 
     if(part == nullptr)
     {
         throw FastRTPSException("Problem creating RTPSParticipant");
+        return;
     }
 
     logInfo(PARTICIPANT,"Guid: " << part->getGuid());

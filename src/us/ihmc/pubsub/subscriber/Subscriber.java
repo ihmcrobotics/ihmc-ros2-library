@@ -101,4 +101,13 @@ public interface Subscriber
     * @return There is a clean state with all Publishers.
     */
    public boolean isInCleanState();
+   
+   /**
+    * Checks if this publisher is available to read data from the domain 
+    * 
+    * This method does not allocate memory
+    * 
+    * @return true if this subscriber is available
+    */
+   public boolean isAvailable();
 }

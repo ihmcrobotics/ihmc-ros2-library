@@ -93,4 +93,14 @@ public interface Publisher
     * @return the Attributes of the Publisher
     */
    public PublisherAttributes getAttributes();
+   
+   
+   /**
+    * Checks if this publisher is available to write data to the domain 
+    * 
+    * This method does not allocate memory
+    * 
+    * @return true if this publisher is available
+    */
+   public boolean isAvailable();
 }

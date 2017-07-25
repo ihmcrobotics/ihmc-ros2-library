@@ -89,13 +89,12 @@ public class SubscriberExample
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
 
-      domain.setLogLevel(LogLevel.WARNING);
+      domain.setLogLevel(LogLevel.INFO);
 
       ParticipantAttributes attributes = domain.createParticipantAttributes();
       attributes.setDomainId(1);
       attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("SubscriberExample");
-
+      attributes.setName("SubscriberExample");      
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
