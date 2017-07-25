@@ -68,7 +68,7 @@ public class FastRTPSDomain implements Domain
    }
 
    @Override
-   public Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
+   public synchronized Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
       for (int i = 0; i < participants.size(); i++)

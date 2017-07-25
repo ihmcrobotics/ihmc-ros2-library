@@ -22,7 +22,7 @@ apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = '0.3.3'
+version = '0.3.3-debug-10'
 buildDir = 'build-java'
 
 project.ext.fullVersion = version
