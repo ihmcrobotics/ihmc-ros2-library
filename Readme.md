@@ -23,12 +23,12 @@ Use the [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub-ge
 IHMC Pub Sub has a native component that is compiled for different operating systems
 #### Linux
 - Tested on Ubuntu 14.04, Ubuntu 16.04 and Ubuntu 17.04
-- Requires OpenJDK JRE 8 or compatible JRE
+- Requires a 64 bit Java 8 compatible JRE.
 - Native library is compiled statically, should work on most distributions with a recent glibc
 
 #### Windows 
 - Tested on Windows 10
-- Requires Oracle JRE 8 or compatible JRE. [Download](https://java.com/en/download/)
+- Requires a 64 bit Java 8 compatible JRE.
 - Requires Microsoft Visual C++ 2017 Redistributable (x64). [Download](https://go.microsoft.com/fwlink/?LinkId=746572)
 
 
