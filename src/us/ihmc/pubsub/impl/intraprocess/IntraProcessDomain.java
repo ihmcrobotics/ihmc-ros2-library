@@ -39,7 +39,7 @@ public class IntraProcessDomain implements Domain
    private static IntraProcessDomain instance = null;
    
    
-   private final IntraProcessDomainImpl domains[] = new IntraProcessDomainImpl[256];
+   private final IntraProcessDomainImpl domains[] = new IntraProcessDomainImpl[233];
    
    private final HashSet<IntraProcessParticipant> participants = new HashSet<>();
    
@@ -63,8 +63,13 @@ public class IntraProcessDomain implements Domain
       this.logLevel = level;
    }
 
-   private synchronized IntraProcessDomainImpl getOrCreateDomain(int domainId)
+   private synchronized IntraProcessDomainImpl getOrCreateDomain(int domainId) throws IOException
    {
+      if(domainId < 0 || domainId > 232)
+      {
+         throw new IOException("Invalid domain id. Valid range for domain id is0 - 232");
+      }
+      
       if(domains[domainId] == null)
       {
          domains[domainId] = new IntraProcessDomainImpl(domainId, logLevel);
@@ -78,8 +83,8 @@ public class IntraProcessDomain implements Domain
    {
       if(att instanceof IntraProcessParticipantAttributes)
       {
-         IntraProcessDomainImpl domain = getOrCreateDomain(att.setDomainId(domain););
-         
+         IntraProcessDomainImpl domain = getOrCreateDomain(((IntraProcessParticipantAttributes) att).getDomain());
+         IntraProcessParticipant participant = new IntraProcessParticipant(domain, (IntraProcessParticipantAttributes) att, participantListener);
          
          // TODO Auto-generated method stub
          return null;         

@@ -20,15 +20,14 @@ import java.net.InetAddress;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.common.Time;
 
-public class IntraProcessParticipantAttributes extends ParticipantAttributes
+class IntraProcessParticipantAttributes extends ParticipantAttributes
 {
    private String name;
-   private long domain;
+   private int domain;
    private Time leaseDuration;
    
    IntraProcessParticipantAttributes()
    {
-      // TODO Auto-generated constructor stub
    }
    
    
@@ -45,7 +44,7 @@ public class IntraProcessParticipantAttributes extends ParticipantAttributes
    }
 
    @Override
-   public void setDomainId(long domain)
+   public void setDomainId(int domain)
    {
       this.domain = domain;
    }
@@ -59,17 +58,12 @@ public class IntraProcessParticipantAttributes extends ParticipantAttributes
    @Override
    public void bindToAddress(InetAddress... addresses)
    {
-      System.err.println("TODO: Implement JRTPSParticipantAttributes.bindToAddress");
+      IntraProcessLog.info(this, "Ignoring bind to address");
    }
 
-   long getDomain()
+   int getDomain()
    {
       return domain;
-   }
-
-   void setDomain(long domain)
-   {
-      this.domain = domain;
    }
 
    String getName()

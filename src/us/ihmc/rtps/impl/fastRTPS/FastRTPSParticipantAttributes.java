@@ -49,7 +49,7 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
    }
 
    @Override
-   public void setDomainId(long domain)
+   public void setDomainId(int domain)
    {
       builtin.setDomainId(domain);
    }

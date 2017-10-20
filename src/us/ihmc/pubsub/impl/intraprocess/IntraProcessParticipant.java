@@ -16,29 +16,60 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.participant.Participant;
+import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
+import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.participant.PublisherEndpointDiscoveryListener;
 import us.ihmc.pubsub.participant.SubscriberEndpointDiscoveryListener;
 
 public class IntraProcessParticipant implements Participant
 {
 
+   private final IntraProcessParticipantAttributes attributes;
+   private final Guid guid = new Guid();
+
+   private final ParticipantListener participantListener;
+   private PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener = null;
+   private SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener = null;
+
+   private final ArrayList<IntraProcessSubscriber> subscribers = new ArrayList<>();
+   private final ArrayList<IntraProcessPublisher> publishers = new ArrayList<>();
+
+   IntraProcessParticipant(IntraProcessDomainImpl domain, IntraProcessParticipantAttributes att, ParticipantListener participantListener)
+   {
+      this.attributes = att;
+      this.participantListener = participantListener;
+
+      byte[] guidBytes = new byte[12];
+      Random random = new Random();
+      random.nextBytes(guidBytes);
+
+      guid.getGuidPrefix().setValue(guidBytes);
+
+   }
+
+   String getName()
+   {
+      return attributes.getName();
+   }
+
    @Override
    public Guid getGuid()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return guid;
    }
 
    @Override
    public ParticipantAttributes getAttributes()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return attributes;
    }
 
    @Override
@@ -46,43 +77,88 @@ public class IntraProcessParticipant implements Participant
                                                   SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener)
          throws IOException
    {
-      // TODO Auto-generated method stub
-
+      this.subscriberEndpointDiscoveryListener = subscriberEndpointDiscoveryListener;
+      this.publisherEndpointDiscoveryListener = publisherEndpointDiscoveryListener;
    }
 
    @Override
    public int get_no_publisher(String target_topic)
    {
-      // TODO Auto-generated method stub
-      return 0;
+      int size = 0;
+      for (IntraProcessPublisher publisher : publishers)
+      {
+         if (publisher.getAttributes().getTopic().getTopicName().equals(target_topic))
+         {
+            size++;
+         }
+      }
+      return size;
    }
 
    @Override
    public int get_no_subscribers(String target_topic)
    {
-      // TODO Auto-generated method stub
-      return 0;
+      int size = 0;
+      for (IntraProcessSubscriber subscriber : subscribers)
+      {
+         if (subscriber.getAttributes().getTopic().getTopicName().equals(target_topic))
+         {
+            size++;
+         }
+      }
+      return size;
    }
 
    @Override
    public boolean isAvailable()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return true;
+   }
+   
+   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr)
+   {
+      IntraProcessPublisher publisher = new IntraProcessPublisher(domain, this, attr);
+      publishers.add(publisher);
+      return publisher;
+   }
+   
+   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, IntraProcessSubscriberAttributes attr)
+   {
+      IntraProcessSubscriber subscriber = new IntraProcessSubscriber(domain, this, attr);
+      subscribers.add(subscriber);
+      return subscriber;
    }
 
-   public void notifyParticipantListener(IntraProcessParticipant participant, DiscoveryStatus discoveredRtpsparticipant)
+   void notifyParticipantListener(IntraProcessParticipant participant, DiscoveryStatus discoveryStatus)
    {
-      // TODO Auto-generated method stub
-      
+      if (participantListener != null)
+      {
+         ParticipantDiscoveryInfo info = new ParticipantDiscoveryInfo(participant.getName(), participant.getGuid(), discoveryStatus);
+         participantListener.onParticipantDiscovery(participant, info);
+      }
    }
 
-   public void notifySubscriberDiscoveryListener(IntraProcessSubscriber subscriber)
+   void notifySubscriberDiscoveryListener(IntraProcessSubscriber subscriber)
    {
+      if (subscriberEndpointDiscoveryListener != null)
+      {
+         subscriberEndpointDiscoveryListener.subscriberTopicChange(true, subscriber.getGuid(), false, new ArrayList<>(), new ArrayList<>(),
+                                                                   subscriber.getParticipant().getGuid(), subscriber.getAttributes().getTopic().getTopicName(),
+                                                                   subscriber.getAttributes().getTopic().getTopicDataType(), -1, TopicKind.NO_KEY,
+                                                                   new IntraProcessReaderQosHolder(subscriber.getAttributes().getQos()));
+      }
    }
 
-   public void notifyPublisherDiscoveryListener(IntraProcessPublisher publisher)
+   void notifyPublisherDiscoveryListener(IntraProcessPublisher publisher)
    {
+      if (publisherEndpointDiscoveryListener != null)
+      {
+         publisherEndpointDiscoveryListener.publisherTopicChange(true, publisher.getGuid(), new ArrayList<>(), new ArrayList<>(),
+                                                                 publisher.getParticipant().getGuid(), publisher.getAttributes().getTopic().getTopicName(),
+                                                                 publisher.getAttributes().getTopic().getTopicDataType(), -1,
+                                                                 publisher.getTopicDataType().getTypeSize(), TopicKind.NO_KEY,
+                                                                 new IntraProcessWriterQosHolder(publisher.getAttributes().getQos()));
+      }
    }
 
 }

@@ -17,14 +17,19 @@ package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
 
-import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
 import us.ihmc.pubsub.publisher.Publisher;
 
-public class IntraProcessPublisher implements Publisher
+class IntraProcessPublisher implements Publisher
 {
 
+   public IntraProcessPublisher(IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr)
+   {
+      
+   }
+   
    @Override
    public void write(Object data) throws IOException
    {
@@ -68,7 +73,7 @@ public class IntraProcessPublisher implements Publisher
    }
 
    @Override
-   public PublisherAttributes getAttributes()
+   public IntraProcessPublisherAttributes getAttributes()
    {
       // TODO Auto-generated method stub
       return null;
@@ -81,14 +86,20 @@ public class IntraProcessPublisher implements Publisher
       return false;
    }
 
-   public TopicSubscription getSubscription()
+   public void notifyPublisherListener(IntraProcessSubscriber subscriber, MatchingStatus matchedMatching)
+   {
+   }
+
+   public TopicDataType<?> getTopicDataType()
    {
       // TODO Auto-generated method stub
       return null;
    }
 
-   public void notifyPublisherListener(IntraProcessSubscriber subscriber, MatchingStatus matchedMatching)
+   public IntraProcessParticipant getParticipant()
    {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

@@ -38,8 +38,8 @@ class IntraProcessDomainImpl
    private final int domainID;
 
    private final List<IntraProcessParticipant> participants = new ArrayList<>();
-   private final HashMap<TopicSubscription, List<IntraProcessSubscriber>> subscribers = new HashMap<>();
-   private final HashMap<TopicSubscription, List<IntraProcessPublisher>> publishers = new HashMap<>();
+   private final HashMap<String, List<IntraProcessSubscriber>> subscribers = new HashMap<>();
+   private final HashMap<String, List<IntraProcessPublisher>> publishers = new HashMap<>();
 
    private LogLevel logLevel;
 
@@ -61,12 +61,12 @@ class IntraProcessDomainImpl
       }
    }
 
-   private void matchSubscribers(TopicSubscription publisherToMatch, Consumer<IntraProcessSubscriber> exec)
+   private void matchSubscribers(IntraProcessPublisherAttributes publisherToMatch, Consumer<IntraProcessSubscriber> exec)
    {
-      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(publisherToMatch);
+      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(publisherToMatch.getTopic().getTopicName());
       for (IntraProcessSubscriber subscriber : topicSubscribers)
       {
-         if (subscriber.getSubscription().publisherMatches(publisherToMatch))
+         if (subscriber.getAttributes().publisherMatches(publisherToMatch))
          {
             if (logLevel == LogLevel.INFO)
             {
@@ -77,12 +77,12 @@ class IntraProcessDomainImpl
       }
    }
 
-   private void matchPublishers(TopicSubscription subscriberToMatch, Consumer<IntraProcessPublisher> exec)
+   private void matchPublishers(IntraProcessSubscriberAttributes subscriberToMatch, Consumer<IntraProcessPublisher> exec)
    {
-      List<IntraProcessPublisher> topicPublishers = publishers.get(subscriberToMatch);
+      List<IntraProcessPublisher> topicPublishers = publishers.get(subscriberToMatch.getTopic().getTopicName());
       for (IntraProcessPublisher publisher : topicPublishers)
       {
-         if (subscriberToMatch.publisherMatches(publisher.getSubscription()))
+         if (subscriberToMatch.publisherMatches(publisher.getAttributes()))
          {
             if (logLevel == LogLevel.INFO)
             {
@@ -93,7 +93,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   public void addParticipant(IntraProcessParticipant participant)
+   void addParticipant(IntraProcessParticipant participant)
    {
       domainLock.lock();
 
@@ -107,7 +107,7 @@ class IntraProcessDomainImpl
       domainLock.unlock();
    }
 
-   public void removeParticipant(IntraProcessParticipant participant) throws IOException
+   void removeParticipant(IntraProcessParticipant participant) throws IOException
    {
       domainLock.lock();
       if (logLevel == LogLevel.INFO)
@@ -126,18 +126,19 @@ class IntraProcessDomainImpl
       domainLock.unlock();
    }
 
-   public void addSubscriber(IntraProcessSubscriber subscriber)
+   void addSubscriber(IntraProcessSubscriber subscriber)
    {
       domainLock.lock();
-      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(subscriber.getSubscription());
+      String topicName = subscriber.getAttributes().getTopic().getTopicName();
+      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(topicName);
       if (topicSubscribers == null)
       {
          if (logLevel == LogLevel.INFO)
          {
-            IntraProcessLog.info(this, "Creating new subscriber list for topic " + subscriber.getSubscription());
+            IntraProcessLog.info(this, "Creating new subscriber list for topic " + topicName);
          }
          topicSubscribers = new ArrayList<>();
-         subscribers.put(subscriber.getSubscription(), new ArrayList<>());
+         subscribers.put(topicName, new ArrayList<>());
       }
 
       if (logLevel == LogLevel.INFO)
@@ -151,18 +152,19 @@ class IntraProcessDomainImpl
       matchParticipants((participant) -> participant.notifySubscriberDiscoveryListener(subscriber));
       if (logLevel == LogLevel.INFO)
          IntraProcessLog.info(this, "Notifying publisher listeners");
-      matchPublishers(subscriber.getSubscription(), (publisher) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.MATCHED_MATCHING));
+      matchPublishers(subscriber.getAttributes(), (publisher) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.MATCHED_MATCHING));
 
       domainLock.unlock();
    }
 
-   public void removeSubscriber(IntraProcessSubscriber subscriber) throws IOException
+   void removeSubscriber(IntraProcessSubscriber subscriber) throws IOException
    {
       domainLock.lock();
-      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(subscriber.getSubscription());
+      String topicName = subscriber.getAttributes().getTopic().getTopicName();
+      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(topicName);
       if (topicSubscribers == null)
       {
-         throw new IOException("No subcriber matched in domain");
+         throw new IOException("No subscriber matched in domain");
       }
 
       if (logLevel == LogLevel.INFO)
@@ -174,7 +176,7 @@ class IntraProcessDomainImpl
       {
          if (logLevel == LogLevel.INFO)
             IntraProcessLog.info(this, "Notifying publisher listeners");
-         matchPublishers(subscriber.getSubscription(), (publisher) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.REMOVED_MATCHING));
+         matchPublishers(subscriber.getAttributes(), (publisher) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.REMOVED_MATCHING));
       }
       else
       {
@@ -184,18 +186,19 @@ class IntraProcessDomainImpl
       domainLock.unlock();
    }
 
-   public void addPublisher(IntraProcessPublisher publisher)
+   void addPublisher(IntraProcessPublisher publisher)
    {
       domainLock.lock();
-      List<IntraProcessPublisher> topicPublishers = publishers.get(publisher.getSubscription());
+      String topicName = publisher.getAttributes().getTopic().getTopicName();
+      List<IntraProcessPublisher> topicPublishers = publishers.get(topicName);
       if (topicPublishers == null)
       {
          if (logLevel == LogLevel.INFO)
          {
-            IntraProcessLog.info(this, "Creating new publisher list for topic " + publisher.getSubscription());
+            IntraProcessLog.info(this, "Creating new publisher list for topic " + topicName);
          }
          topicPublishers = new ArrayList<>();
-         publishers.put(publisher.getSubscription(), new ArrayList<>());
+         publishers.put(topicName, new ArrayList<>());
       }
 
       if (logLevel == LogLevel.INFO)
@@ -209,7 +212,35 @@ class IntraProcessDomainImpl
       matchParticipants((participant) -> participant.notifyPublisherDiscoveryListener(publisher));
       if (logLevel == LogLevel.INFO)
          IntraProcessLog.info(this, "Notifying subscriber listeners");
-      matchSubscribers(publisher.getSubscription(), (subscriber) -> subscriber.notifySubscriberListener(publisher, MatchingStatus.MATCHED_MATCHING));
+      matchSubscribers(publisher.getAttributes(), (subscriber) -> subscriber.notifySubscriberListener(publisher, MatchingStatus.MATCHED_MATCHING));
+
+      domainLock.unlock();
+   }
+
+   void removePublisher(IntraProcessPublisher publisher) throws IOException
+   {
+      domainLock.lock();
+      String topicName = publisher.getAttributes().getTopic().getTopicName();
+      List<IntraProcessPublisher> topicSubscribers = publishers.get(topicName);
+      if (topicSubscribers == null)
+      {
+         throw new IOException("No publisher matched in domain");
+      }
+
+      if (logLevel == LogLevel.INFO)
+      {
+         IntraProcessLog.info(this, "Removing publisher" + topicName);
+      }
+      if (topicSubscribers.remove(publisher))
+      {
+         if (logLevel == LogLevel.INFO)
+            IntraProcessLog.info(this, "Notifying subscriber listeners");
+         matchSubscribers(publisher.getAttributes(), (subscriber) -> subscriber.notifySubscriberListener(publisher, MatchingStatus.REMOVED_MATCHING));
+      }
+      else
+      {
+         throw new IOException("No subscriber matched in domain");
+      }
 
       domainLock.unlock();
    }
