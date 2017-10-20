@@ -22,7 +22,7 @@ public class FastRTPSSubscriberAttributes extends SubscriberAttributes
    private final FastRTPSReaderQosHolder qos = new FastRTPSReaderQosHolder();
    private final ReaderTimes times = new ReaderTimes();
    
-   public FastRTPSSubscriberAttributes()
+   FastRTPSSubscriberAttributes()
    {
       super();
    }

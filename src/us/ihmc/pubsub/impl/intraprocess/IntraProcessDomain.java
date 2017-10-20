@@ -16,6 +16,8 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
@@ -32,9 +34,15 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class IntraProcessDomain implements Domain
 {
-   
+   private LogLevel logLevel = LogLevel.WARNING;
    
    private static IntraProcessDomain instance = null;
+   
+   
+   private final IntraProcessDomainImpl domains[] = new IntraProcessDomainImpl[256];
+   
+   private final HashSet<IntraProcessParticipant> participants = new HashSet<>();
+   
    public static synchronized IntraProcessDomain getInstance()
    {
       if(instance == null)
@@ -43,19 +51,44 @@ public class IntraProcessDomain implements Domain
       }
       return instance;
    }
+   
+   private IntraProcessDomain()
+   {
+
+   }
 
    @Override
    public void setLogLevel(LogLevel level)
    {
-      // TODO Auto-generated method stub
-      
+      this.logLevel = level;
    }
 
-   @Override
-   public Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
+   private synchronized IntraProcessDomainImpl getOrCreateDomain(int domainId)
    {
-      // TODO Auto-generated method stub
-      return null;
+      if(domains[domainId] == null)
+      {
+         domains[domainId] = new IntraProcessDomainImpl(domainId, logLevel);
+      }
+      
+      return domains[domainId];
+   }
+   
+   @Override
+   public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
+   {
+      if(att instanceof IntraProcessParticipantAttributes)
+      {
+         IntraProcessDomainImpl domain = getOrCreateDomain(att.setDomainId(domain););
+         
+         
+         // TODO Auto-generated method stub
+         return null;         
+      }
+      else
+      {
+         throw new RuntimeException("Participant attributes have to be an instance of IntraProcessParticipantAttributes. Use domain.createParticipantAttributes()");
+      }
+      
    }
 
    @Override
@@ -140,8 +173,7 @@ public class IntraProcessDomain implements Domain
    @Override
    public ParticipantAttributes createParticipantAttributes()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return new IntraProcessParticipantAttributes();
    }
 
 

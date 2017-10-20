@@ -27,7 +27,7 @@ import us.ihmc.pubsub.common.SerializedPayload;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 
-public class FastRTPSPublisher implements Publisher
+class FastRTPSPublisher implements Publisher
 {
    private final Object destructorLock = new Object(); 
 
@@ -68,7 +68,7 @@ public class FastRTPSPublisher implements Publisher
    }
 
    @SuppressWarnings("unchecked")
-   public FastRTPSPublisher(TopicDataType<?> topicDataTypeIn, FastRTPSPublisherAttributes attributes, PublisherListener listener,
+   FastRTPSPublisher(TopicDataType<?> topicDataTypeIn, FastRTPSPublisherAttributes attributes, PublisherListener listener,
                             NativeParticipantImpl participant)
          throws IOException, IllegalArgumentException
    {

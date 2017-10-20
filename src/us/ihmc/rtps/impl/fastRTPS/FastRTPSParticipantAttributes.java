@@ -27,7 +27,7 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
    private final BuiltinAttributes builtin = rtps.getBuiltin();
    private final Time_t time = new Time_t();
    
-   public FastRTPSParticipantAttributes()
+   FastRTPSParticipantAttributes()
    {
       super();
    }

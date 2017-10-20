@@ -23,6 +23,10 @@ public class FastRTPSParticipantDiscoveryInfo extends ParticipantDiscoveryInfo
    private NativeParticipantListener participant;
    private long infoPtr;
 
+   FastRTPSParticipantDiscoveryInfo()
+   {
+   }
+   
    public void updateInfo(DISCOVERY_STATUS status, NativeParticipantListener nativeParticipantListener, long infoPtr, long guidHigh, long guidLow)
    {
       guid.fromPrimitives(guidHigh, guidLow);

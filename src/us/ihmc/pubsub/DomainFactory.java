@@ -25,6 +25,11 @@ public class DomainFactory
       FAST_RTPS, INTRAPROCESS;
    }
    
+   public static synchronized Domain getDefaultDomain()
+   {
+      return getDomain(PubSubImplementation.FAST_RTPS);
+   }
+   
    public static synchronized Domain getDomain(PubSubImplementation impl)
    {
       switch(impl)
@@ -33,6 +38,8 @@ public class DomainFactory
          return FastRTPSDomain.getInstance();
       case INTRAPROCESS:
          return IntraProcessDomain.getInstance();
+      default:
+         throw new RuntimeException("Invalid implementation specified");
       }
    }
 }
