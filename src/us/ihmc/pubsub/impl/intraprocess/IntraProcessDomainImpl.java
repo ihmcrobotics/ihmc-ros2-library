@@ -27,6 +27,10 @@ import java.util.function.Consumer;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
+import us.ihmc.pubsub.participant.Participant;
+import us.ihmc.pubsub.participant.ParticipantListener;
+import us.ihmc.pubsub.subscriber.Subscriber;
+import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 class IntraProcessDomainImpl
 {
@@ -93,9 +97,10 @@ class IntraProcessDomainImpl
       }
    }
 
-   void addParticipant(IntraProcessParticipant participant)
+   Participant createParticipant(IntraProcessParticipantAttributes attributes, ParticipantListener listener)
    {
       domainLock.lock();
+      IntraProcessParticipant participant = new IntraProcessParticipant(attributes, listener);
 
       if (logLevel == LogLevel.INFO)
       {
@@ -105,6 +110,8 @@ class IntraProcessDomainImpl
       participants.add(participant);
 
       domainLock.unlock();
+
+      return participant;
    }
 
    void removeParticipant(IntraProcessParticipant participant) throws IOException
@@ -126,9 +133,11 @@ class IntraProcessDomainImpl
       domainLock.unlock();
    }
 
-   void addSubscriber(IntraProcessSubscriber subscriber)
+   Subscriber addSubscriber(IntraProcessParticipant participant, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
    {
       domainLock.lock();
+      IntraProcessSubscriber subscriber = participant.createSubscriber(this, attr, listener);
+      
       String topicName = subscriber.getAttributes().getTopic().getTopicName();
       List<IntraProcessSubscriber> topicSubscribers = subscribers.get(topicName);
       if (topicSubscribers == null)
@@ -149,12 +158,14 @@ class IntraProcessDomainImpl
 
       if (logLevel == LogLevel.INFO)
          IntraProcessLog.info(this, "Notifying subscribers discovery listeners");
-      matchParticipants((participant) -> participant.notifySubscriberDiscoveryListener(subscriber));
+      matchParticipants((participantToNotify) -> participantToNotify.notifySubscriberDiscoveryListener(subscriber));
       if (logLevel == LogLevel.INFO)
          IntraProcessLog.info(this, "Notifying publisher listeners");
       matchPublishers(subscriber.getAttributes(), (publisher) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.MATCHED_MATCHING));
 
       domainLock.unlock();
+      
+      return subscriber;
    }
 
    void removeSubscriber(IntraProcessSubscriber subscriber) throws IOException

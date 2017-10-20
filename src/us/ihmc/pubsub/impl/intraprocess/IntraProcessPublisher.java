@@ -21,11 +21,12 @@ import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
 import us.ihmc.pubsub.publisher.Publisher;
+import us.ihmc.pubsub.publisher.PublisherListener;
 
 class IntraProcessPublisher implements Publisher
 {
 
-   public IntraProcessPublisher(IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr)
+   public IntraProcessPublisher(IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener)
    {
       
    }

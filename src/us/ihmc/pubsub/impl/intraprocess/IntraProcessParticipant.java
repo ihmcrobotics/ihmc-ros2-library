@@ -28,6 +28,8 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.participant.PublisherEndpointDiscoveryListener;
 import us.ihmc.pubsub.participant.SubscriberEndpointDiscoveryListener;
+import us.ihmc.pubsub.publisher.PublisherListener;
+import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class IntraProcessParticipant implements Participant
 {
@@ -42,7 +44,7 @@ public class IntraProcessParticipant implements Participant
    private final ArrayList<IntraProcessSubscriber> subscribers = new ArrayList<>();
    private final ArrayList<IntraProcessPublisher> publishers = new ArrayList<>();
 
-   IntraProcessParticipant(IntraProcessDomainImpl domain, IntraProcessParticipantAttributes att, ParticipantListener participantListener)
+   IntraProcessParticipant(IntraProcessParticipantAttributes att, ParticipantListener participantListener)
    {
       this.attributes = att;
       this.participantListener = participantListener;
@@ -115,16 +117,16 @@ public class IntraProcessParticipant implements Participant
       return true;
    }
    
-   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr)
+   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr, PublisherListener listener)
    {
-      IntraProcessPublisher publisher = new IntraProcessPublisher(domain, this, attr);
+      IntraProcessPublisher publisher = new IntraProcessPublisher(domain, this, attr, listener);
       publishers.add(publisher);
       return publisher;
    }
    
-   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, IntraProcessSubscriberAttributes attr)
+   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
    {
-      IntraProcessSubscriber subscriber = new IntraProcessSubscriber(domain, this, attr);
+      IntraProcessSubscriber subscriber = new IntraProcessSubscriber(domain, this, attr, listener);
       subscribers.add(subscriber);
       return subscriber;
    }

@@ -17,18 +17,17 @@ package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
 
-import us.ihmc.pubsub.attributes.ReaderQosHolder;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
 import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.subscriber.Subscriber;
+import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 class IntraProcessSubscriber implements Subscriber
 {
 
-   IntraProcessSubscriber(IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr)
+   IntraProcessSubscriber(IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
    {
       // TODO Auto-generated constructor stub
    }
@@ -91,5 +90,7 @@ class IntraProcessSubscriber implements Subscriber
       // TODO Auto-generated method stub
       return null;
    }
+   
+   
 
 }

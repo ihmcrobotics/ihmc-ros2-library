@@ -84,10 +84,7 @@ public class IntraProcessDomain implements Domain
       if(att instanceof IntraProcessParticipantAttributes)
       {
          IntraProcessDomainImpl domain = getOrCreateDomain(((IntraProcessParticipantAttributes) att).getDomain());
-         IntraProcessParticipant participant = new IntraProcessParticipant(domain, (IntraProcessParticipantAttributes) att, participantListener);
-         
-         // TODO Auto-generated method stub
-         return null;         
+         return domain.createParticipant((IntraProcessParticipantAttributes) att, participantListener);         
       }
       else
       {
