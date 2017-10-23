@@ -22,7 +22,6 @@ import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
 import us.ihmc.pubsub.common.SampleInfo;
-import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
@@ -110,7 +109,7 @@ class IntraProcessSubscriber implements Subscriber
       }
    }
 
-   public Participant getParticipant()
+   public IntraProcessParticipant getParticipant()
    {
       return participant;
    }

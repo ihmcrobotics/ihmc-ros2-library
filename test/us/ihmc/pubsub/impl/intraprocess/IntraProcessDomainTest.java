@@ -38,6 +38,7 @@ import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.attributes.WriterQosHolder;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.Guid;
+import us.ihmc.pubsub.common.Guid.GuidPrefix;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
@@ -59,6 +60,12 @@ public class IntraProcessDomainTest
       assertNotNull(info);
       assertEquals(expectedStatus, info.getStatus());
       assertEquals(expectedGuid, info.getGuid());
+   }
+   private void checkMatchingInfo(MatchingStatus expectedStatus, GuidPrefix expectedGuidPrefix, MatchingInfo info)
+   {
+      assertNotNull(info);
+      assertEquals(expectedStatus, info.getStatus());
+      assertEquals(expectedGuidPrefix, info.getGuid().getGuidPrefix());
    }
    
 
@@ -106,14 +113,14 @@ public class IntraProcessDomainTest
 
          participant.registerEndpointDiscoveryListeners(publisherEndpointDiscoveryListener, subscriberEndpointDiscoveryListener);
 
-         ArrayBlockingQueue<MatchingInfo> publisherMatched = new ArrayBlockingQueue<>(1);
+         ArrayBlockingQueue<MatchingInfo> publisherMatched = new ArrayBlockingQueue<>(2);
          PublisherListener publisherListener = (Publisher publisher, MatchingInfo info) -> {
             publisherMatched.add(info);
          };
          PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
          Publisher publisher1 = domain.createPublisher(participant, publisherAttributes, publisherListener);
 
-         ArrayBlockingQueue<MatchingInfo> subscriberMatched = new ArrayBlockingQueue<>(1);
+         ArrayBlockingQueue<MatchingInfo> subscriberMatched = new ArrayBlockingQueue<>(2);
          SubscriberListener subscriberListener = new SubscriberListener()
          {
 
@@ -147,6 +154,10 @@ public class IntraProcessDomainTest
 
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, subscriber2.getGuid(), publisherMatched.poll(1, TimeUnit.SECONDS));
          
+         
+         assertEquals(1, participant.get_no_publisher(topic));
+         assertEquals(2, participant.get_no_subscribers(topic));
+         
          // Create a new participant, see if original participant listeners get triggered
          Participant participant2 = domain.createParticipant(domain.createParticipantAttributes(1, "participant2"));
          
@@ -175,6 +186,8 @@ public class IntraProcessDomainTest
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, publisherMatched.poll(1, TimeUnit.SECONDS));
          
+         assertEquals(2, participant2.get_no_publisher(topic));
+         assertEquals(2, participant2.get_no_subscribers(topic));
          
          // Create a bunch of non-matching subscribers and publishers and make sure they only trigger the subscriber/publisher listeners
          PublisherAttributes pubAtt3 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT, partition);
@@ -195,7 +208,10 @@ public class IntraProcessDomainTest
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
          // Make sure no subscribers matched
          assertEquals(null, subscriberMatched.poll(1, TimeUnit.SECONDS));
-         
+
+         assertEquals(5, participant2.get_no_publisher(topic));
+         assertEquals(1, participant2.get_no_publisher(topic + "Invalid"));
+
          
          SubscriberAttributes subAtt3 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT);
          guid = domain.createSubscriber(participant2, subAtt3).getGuid();
@@ -209,9 +225,42 @@ public class IntraProcessDomainTest
          guid = domain.createSubscriber(participant2, subAtt5).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
          
+         assertEquals(4, participant2.get_no_subscribers(topic));
+         assertEquals(1, participant2.get_no_subscribers(topic + "Invalid"));
          
          
          assertEquals(null, publisherMatched.poll(1, TimeUnit.SECONDS));
+         
+         
+         // Check if removing participants works
+         domain.removeParticipant(participant2);
+         
+         checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, participant2.getGuid().getGuidPrefix(), publisherMatched.poll(1, TimeUnit.SECONDS));
+         checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, participant2.getGuid().getGuidPrefix(), publisherMatched.poll(1, TimeUnit.SECONDS));
+         assertEquals(null, publisherMatched.poll(1, TimeUnit.SECONDS));
+
+         checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, participant2.getGuid().getGuidPrefix(), subscriberMatched.poll(1, TimeUnit.SECONDS));
+         checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, participant2.getGuid().getGuidPrefix(), subscriberMatched.poll(1, TimeUnit.SECONDS));
+         assertEquals(null, subscriberMatched.poll(1, TimeUnit.SECONDS));
+         
+         assertEquals(0, participant2.get_no_publisher(topic));
+         assertEquals(0, participant2.get_no_publisher(topic + "Invalid"));
+         assertEquals(0, participant2.get_no_subscribers(topic));
+         assertEquals(0, participant2.get_no_subscribers(topic + "Invalid"));
+         
+         // Check removing of subscriber
+         domain.removeSubscriber(subscriber2);
+         checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, subscriber2.getGuid(), publisherMatched.poll(1, TimeUnit.SECONDS));
+         assertEquals(null, subscriberMatched.poll(1, TimeUnit.SECONDS));
+         
+         domain.removePublisher(publisher1);
+         checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, publisher1.getGuid(), subscriberMatched.poll(1, TimeUnit.SECONDS));
+         assertEquals(null, publisherMatched.poll(1, TimeUnit.SECONDS));
+         
+         assertEquals(0, participant.get_no_publisher(topic));
+         assertEquals(1, participant.get_no_subscribers(topic));
+
+         
          
       }
       catch (InterruptedException e)

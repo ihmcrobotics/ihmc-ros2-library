@@ -19,6 +19,11 @@ class IntraProcessLog
 {
    static void info(Object src, String value)
    {
-      System.out.println("[" + src.getClass().getClass() + "] " + value);
+      System.out.println("[" + src.getClass() + "] " + value);
+   }
+
+   static void warn(Object src, String value)
+   {
+      System.err.println("[" + src.getClass() + "] " + value);
    }
 }

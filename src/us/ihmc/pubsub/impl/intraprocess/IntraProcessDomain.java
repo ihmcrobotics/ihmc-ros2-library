@@ -138,22 +138,49 @@ public class IntraProcessDomain implements Domain
    @Override
    public synchronized boolean removeParticipant(Participant participant)
    {
-      // TODO Auto-generated method stub
-      return false;
+      IntraProcessParticipant intraProcessParticipant = participants.get(participant);
+      if(intraProcessParticipant == null)
+      {
+         throw new IllegalArgumentException("This participant is not registered with this domain.");
+      }
+
+      if(intraProcessParticipant.getDomain().removeParticipant(intraProcessParticipant))
+      {
+         participants.remove(participant);
+         return true;
+      }
+      else
+      {
+         return false;
+      }
    }
 
    @Override
    public synchronized boolean removePublisher(Publisher publisher)
    {
-      // TODO Auto-generated method stub
-      return false;
+      if(publisher instanceof IntraProcessPublisher)
+      {
+         IntraProcessPublisher intraProcessPublisher = (IntraProcessPublisher) publisher;
+         return intraProcessPublisher.getParticipant().getDomain().removePublisher(intraProcessPublisher);
+      }
+      else
+      {
+         throw new RuntimeException("Publisher is not of type IntraProcessPublisher");
+      }
    }
 
    @Override
    public synchronized boolean removeSubscriber(Subscriber subscriber)
    {
-      // TODO Auto-generated method stub
-      return false;
+      if(subscriber instanceof IntraProcessSubscriber)
+      {
+         IntraProcessSubscriber intraProcessSubscriber = (IntraProcessSubscriber) subscriber;
+         return intraProcessSubscriber.getParticipant().getDomain().removeSubscriber(intraProcessSubscriber);
+      }
+      else
+      {
+         throw new RuntimeException("Subscriber is not of type IntraProcessSubscriber");
+      }
    }
 
    @Override

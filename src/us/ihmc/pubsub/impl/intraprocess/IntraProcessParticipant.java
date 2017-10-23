@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import us.ihmc.pubsub.TopicDataType;
@@ -206,6 +207,26 @@ public class IntraProcessParticipant implements Participant
       {
          throw new IOException("Cannot remove " + typeName + " from participant " + getName() + ". Type not registered");
       }
+   }
+
+   List<IntraProcessSubscriber> getSubscribers()
+   {
+      return new ArrayList<>(subscribers);
+   }
+
+   List<IntraProcessPublisher> getPublishers()
+   {
+      return new ArrayList<>(publishers);
+   }
+
+   void unregister(IntraProcessSubscriber subscriber)
+   {
+      subscribers.remove(subscriber);
+   }
+   
+   void unregister(IntraProcessPublisher publisher)
+   {
+      publishers.remove(publisher);
    }
 
 }
