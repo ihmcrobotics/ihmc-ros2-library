@@ -26,7 +26,7 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 class IntraProcessPublisher implements Publisher
 {
 
-   public IntraProcessPublisher(IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener)
+   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener)
    {
       
    }

@@ -17,7 +17,6 @@ package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
@@ -35,23 +34,22 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 public class IntraProcessDomain implements Domain
 {
    private LogLevel logLevel = LogLevel.WARNING;
-   
+
    private static IntraProcessDomain instance = null;
-   
-   
+
    private final IntraProcessDomainImpl domains[] = new IntraProcessDomainImpl[233];
-   
-   private final HashSet<IntraProcessParticipant> participants = new HashSet<>();
-   
+
+   private final HashMap<Participant, IntraProcessParticipant> participants = new HashMap<>();
+
    public static synchronized IntraProcessDomain getInstance()
    {
-      if(instance == null)
+      if (instance == null)
       {
          instance = new IntraProcessDomain();
       }
       return instance;
    }
-   
+
    private IntraProcessDomain()
    {
 
@@ -65,66 +63,94 @@ public class IntraProcessDomain implements Domain
 
    private synchronized IntraProcessDomainImpl getOrCreateDomain(int domainId) throws IOException
    {
-      if(domainId < 0 || domainId > 232)
+      if (domainId < 0 || domainId > 232)
       {
          throw new IOException("Invalid domain id. Valid range for domain id is0 - 232");
       }
-      
-      if(domains[domainId] == null)
+
+      if (domains[domainId] == null)
       {
          domains[domainId] = new IntraProcessDomainImpl(domainId, logLevel);
       }
-      
+
       return domains[domainId];
    }
-   
+
    @Override
    public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
    {
-      if(att instanceof IntraProcessParticipantAttributes)
+      if (att instanceof IntraProcessParticipantAttributes)
       {
          IntraProcessDomainImpl domain = getOrCreateDomain(((IntraProcessParticipantAttributes) att).getDomain());
-         return domain.createParticipant((IntraProcessParticipantAttributes) att, participantListener);         
+         IntraProcessParticipant participant = domain.createParticipant((IntraProcessParticipantAttributes) att, participantListener);
+         participants.put(participant, participant);
+         return participant;
+
       }
       else
       {
-         throw new RuntimeException("Participant attributes have to be an instance of IntraProcessParticipantAttributes. Use domain.createParticipantAttributes()");
+         throw new IllegalArgumentException("Participant attributes have to be an instance of IntraProcessParticipantAttributes. Use domain.createParticipantAttributes()");
+      }
+
+   }
+
+   @Override
+   public synchronized Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      
+      IntraProcessParticipant intraProcessParticipant = participants.get(participant);
+      if(intraProcessParticipant == null)
+      {
+         throw new IOException("This participant is not registered with this domain.");
       }
       
+      if(publisherAttributes instanceof IntraProcessPublisherAttributes)
+      {
+         return intraProcessParticipant.getDomain().createPublisher(intraProcessParticipant, (IntraProcessPublisherAttributes) publisherAttributes, listener);
+      }
+      else
+      {
+         throw new IllegalArgumentException("Publisher attributes have to be an instance of IntraProcessPublisherAttributes. Use domain.createPublisherAttributes()");
+      }
    }
 
    @Override
-   public Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
+   public synchronized Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
-      // TODO Auto-generated method stub
-      return null;
+      IntraProcessParticipant intraProcessParticipant = participants.get(participant);
+      if(intraProcessParticipant == null)
+      {
+         throw new IOException("This participant is not registered with this domain.");
+      }
+      
+      if(subscriberAttributes instanceof IntraProcessSubscriberAttributes)
+      {
+         return intraProcessParticipant.getDomain().createSubscriber(intraProcessParticipant, (IntraProcessSubscriberAttributes) subscriberAttributes, listener);
+      }
+      else
+      {
+         throw new IllegalArgumentException("Publisher attributes have to be an instance of IntraProcessPublisherAttributes. Use domain.createPublisherAttributes()");
+      }
    }
 
    @Override
-   public Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
-         throws IOException, IllegalArgumentException
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public boolean removeParticipant(Participant participant)
+   public synchronized boolean removeParticipant(Participant participant)
    {
       // TODO Auto-generated method stub
       return false;
    }
 
    @Override
-   public boolean removePublisher(Publisher publisher)
+   public synchronized boolean removePublisher(Publisher publisher)
    {
       // TODO Auto-generated method stub
       return false;
    }
 
    @Override
-   public boolean removeSubscriber(Subscriber subscriber)
+   public synchronized boolean removeSubscriber(Subscriber subscriber)
    {
       // TODO Auto-generated method stub
       return false;
@@ -138,38 +164,36 @@ public class IntraProcessDomain implements Domain
    }
 
    @Override
-   public void registerType(Participant participant, TopicDataType<?> topicDataType) throws IllegalArgumentException
+   public synchronized void registerType(Participant participant, TopicDataType<?> topicDataType) throws IllegalArgumentException
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
-   public void unregisterType(Participant participant, String typeName) throws IOException
+   public synchronized void unregisterType(Participant participant, String typeName) throws IOException
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
    public void stopAll()
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
    public SubscriberAttributes createSubscriberAttributes()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return new IntraProcessSubscriberAttributes();
    }
 
    @Override
    public PublisherAttributes createPublisherAttributes()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return new IntraProcessPublisherAttributes();
    }
 
    @Override
@@ -177,6 +201,5 @@ public class IntraProcessDomain implements Domain
    {
       return new IntraProcessParticipantAttributes();
    }
-
 
 }

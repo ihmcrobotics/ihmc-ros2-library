@@ -16,6 +16,7 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -37,6 +38,10 @@ public class IntraProcessParticipant implements Participant
    private final IntraProcessParticipantAttributes attributes;
    private final Guid guid = new Guid();
 
+   private int entityId = 0;
+
+   private final IntraProcessDomainImpl domain;
+   
    private final ParticipantListener participantListener;
    private PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener = null;
    private SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener = null;
@@ -44,10 +49,11 @@ public class IntraProcessParticipant implements Participant
    private final ArrayList<IntraProcessSubscriber> subscribers = new ArrayList<>();
    private final ArrayList<IntraProcessPublisher> publishers = new ArrayList<>();
 
-   IntraProcessParticipant(IntraProcessParticipantAttributes att, ParticipantListener participantListener)
+   IntraProcessParticipant(IntraProcessDomainImpl domain, IntraProcessParticipantAttributes att, ParticipantListener participantListener)
    {
       this.attributes = att;
       this.participantListener = participantListener;
+      this.domain = domain;
 
       byte[] guidBytes = new byte[12];
       Random random = new Random();
@@ -57,6 +63,11 @@ public class IntraProcessParticipant implements Participant
 
    }
 
+   IntraProcessDomainImpl getDomain()
+   {
+      return domain;
+   }
+   
    String getName()
    {
       return attributes.getName();
@@ -117,16 +128,28 @@ public class IntraProcessParticipant implements Participant
       return true;
    }
    
+   private Guid createNextGuid()
+   {
+      entityId++;
+      
+      Guid child = new Guid();
+      child.getGuidPrefix().setValue(guid.getGuidPrefix().getValue());
+      child.getEntity().setValue(ByteBuffer.allocate(4).putInt(entityId).array());
+      return child;
+      
+   }
+   
    IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr, PublisherListener listener)
    {
-      IntraProcessPublisher publisher = new IntraProcessPublisher(domain, this, attr, listener);
+      
+      IntraProcessPublisher publisher = new IntraProcessPublisher(createNextGuid(), domain, this, attr, listener);
       publishers.add(publisher);
       return publisher;
    }
    
    IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
    {
-      IntraProcessSubscriber subscriber = new IntraProcessSubscriber(domain, this, attr, listener);
+      IntraProcessSubscriber subscriber = new IntraProcessSubscriber(createNextGuid(), domain, this, attr, listener);
       subscribers.add(subscriber);
       return subscriber;
    }

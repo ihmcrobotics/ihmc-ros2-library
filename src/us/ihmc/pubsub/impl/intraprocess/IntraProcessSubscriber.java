@@ -27,7 +27,7 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 class IntraProcessSubscriber implements Subscriber
 {
 
-   IntraProcessSubscriber(IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
+   IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
    {
       // TODO Auto-generated constructor stub
    }
