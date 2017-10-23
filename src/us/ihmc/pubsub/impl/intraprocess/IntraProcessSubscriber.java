@@ -30,10 +30,12 @@ class IntraProcessSubscriber implements Subscriber
 
    private final TopicDataType<?> topicDataType;
    private final Guid guid;
-   private final IntraProcessDomainImpl domain;
-   private final IntraProcessParticipant participant;
    private final IntraProcessSubscriberAttributes attr;
-   private final SubscriberListener listener;
+   private IntraProcessDomainImpl domain;
+   private IntraProcessParticipant participant;
+   private SubscriberListener listener;
+   
+   private boolean available = true;
 
    IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr,
                           SubscriberListener listener)
@@ -95,7 +97,7 @@ class IntraProcessSubscriber implements Subscriber
    @Override
    public boolean isAvailable()
    {
-      return true;
+      return available;
    }
 
    public void notifySubscriberListener(IntraProcessPublisher publisher, MatchingStatus matchedMatching)
@@ -112,6 +114,14 @@ class IntraProcessSubscriber implements Subscriber
    public IntraProcessParticipant getParticipant()
    {
       return participant;
+   }
+
+   void destroy()
+   {
+      available = false;
+      domain = null;
+      participant = null;
+      listener = null;
    }
 
 }

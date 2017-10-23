@@ -27,12 +27,13 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 class IntraProcessPublisher implements Publisher
 {
 
+   private boolean available = true;
    private final TopicDataType<?> topicDataType;
    private final Guid guid;
-   private final IntraProcessDomainImpl domain;
-   private final IntraProcessParticipant participant;
    private final IntraProcessPublisherAttributes attr;
-   private final PublisherListener listener;
+   private IntraProcessDomainImpl domain;
+   private IntraProcessParticipant participant;
+   private PublisherListener listener;
 
    public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr,
                                 PublisherListener listener)
@@ -102,10 +103,10 @@ class IntraProcessPublisher implements Publisher
    @Override
    public boolean isAvailable()
    {
-      return true;
+      return available;
    }
 
-   public void notifyPublisherListener(IntraProcessSubscriber subscriber, MatchingStatus matchedMatching)
+   void notifyPublisherListener(IntraProcessSubscriber subscriber, MatchingStatus matchedMatching)
    {
       if (listener != null)
       {
@@ -121,9 +122,17 @@ class IntraProcessPublisher implements Publisher
       return topicDataType;
    }
 
-   public IntraProcessParticipant getParticipant()
+   IntraProcessParticipant getParticipant()
    {
       return participant;
+   }
+
+   void destroy()
+   {
+      available = false;
+      domain = null;
+      participant = null;
+      listener = null;
    }
 
 }

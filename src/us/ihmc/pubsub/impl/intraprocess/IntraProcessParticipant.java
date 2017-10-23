@@ -41,11 +41,13 @@ public class IntraProcessParticipant implements Participant
    private final IntraProcessParticipantAttributes attributes;
    private final Guid guid = new Guid();
 
+   private boolean isAvailable = true;
+   
    private int entityId = 0;
 
-   private final IntraProcessDomainImpl domain;
+   private IntraProcessDomainImpl domain;
+   private ParticipantListener participantListener;
    
-   private final ParticipantListener participantListener;
    private PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener = null;
    private SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener = null;
 
@@ -130,7 +132,7 @@ public class IntraProcessParticipant implements Participant
    @Override
    public boolean isAvailable()
    {
-      return true;
+      return isAvailable;
    }
    
    private Guid createNextGuid()
@@ -229,4 +231,13 @@ public class IntraProcessParticipant implements Participant
       publishers.remove(publisher);
    }
 
+   void destroy()
+   {
+      isAvailable = false;
+      domain = null;
+      participantListener = null;
+      publisherEndpointDiscoveryListener = null;
+      subscriberEndpointDiscoveryListener = null;
+      registeredTopicDataTypes.clear();
+   }
 }

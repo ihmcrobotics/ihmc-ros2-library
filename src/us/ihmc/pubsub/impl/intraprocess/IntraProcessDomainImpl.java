@@ -139,6 +139,7 @@ class IntraProcessDomainImpl
          {
             removePublisher(publisher);
          }
+         participant.destroy();
          matchParticipants((participantToNotify) -> participantToNotify.notifyParticipantListener(participant, DiscoveryStatus.REMOVED_RTPSPARTICIPANT));
       }
       else
@@ -215,6 +216,7 @@ class IntraProcessDomainImpl
          if (logLevel == LogLevel.INFO)
             IntraProcessLog.info(this, "Notifying publisher listeners");
          matchPublishers(subscriber.getAttributes(), (publisher) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.REMOVED_MATCHING));
+         subscriber.destroy();
       }
       else
       {
@@ -289,6 +291,7 @@ class IntraProcessDomainImpl
          if (logLevel == LogLevel.INFO)
             IntraProcessLog.info(this, "Notifying subscriber listeners");
          matchSubscribers(publisher.getAttributes(), (subscriber) -> subscriber.notifySubscriberListener(publisher, MatchingStatus.REMOVED_MATCHING));
+         publisher.destroy();
       }
       else
       {
