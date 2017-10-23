@@ -17,7 +17,9 @@ package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
 
+import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.common.Guid;
+import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
 import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.pubsub.participant.Participant;
@@ -27,23 +29,42 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 class IntraProcessSubscriber implements Subscriber
 {
 
-   IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
+   private final TopicDataType<?> topicDataType;
+   private final Guid guid;
+   private final IntraProcessDomainImpl domain;
+   private final IntraProcessParticipant participant;
+   private final IntraProcessSubscriberAttributes attr;
+   private final SubscriberListener listener;
+
+   IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr,
+                          SubscriberListener listener)
+         throws IOException
    {
-      // TODO Auto-generated constructor stub
+      TopicDataType<?> topicDataType = intraProcessParticipant.getTopicDataType(attr.getTopic().getTopicDataType());
+      if (topicDataType == null)
+      {
+         throw new IOException("Cannot registered publisher with topic " + attr.getTopic().getTopicDataType() + ". Topic data type is not registered.");
+      }
+      this.topicDataType = topicDataType.newInstance();
+      this.guid = guid;
+      this.domain = domain;
+      this.participant = intraProcessParticipant;
+      this.attr = attr;
+      this.listener = listener;
+
    }
 
    @Override
    public Guid getGuid()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return guid;
    }
 
    @Override
    public void waitForUnreadMessage(int timeoutInMilliseconds) throws InterruptedException
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    @Override
@@ -63,34 +84,35 @@ class IntraProcessSubscriber implements Subscriber
    @Override
    public IntraProcessSubscriberAttributes getAttributes()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return attr;
    }
 
    @Override
    public boolean isInCleanState()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return true;
    }
 
    @Override
    public boolean isAvailable()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return true;
    }
 
    public void notifySubscriberListener(IntraProcessPublisher publisher, MatchingStatus matchedMatching)
    {
+      if (listener != null)
+      {
+         MatchingInfo info = new MatchingInfo();
+         info.setStatus(matchedMatching);
+         info.getGuid().set(publisher.getGuid());
+         listener.onSubscriptionMatched(this, info);
+      }
    }
 
    public Participant getParticipant()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return participant;
    }
-   
-   
 
 }

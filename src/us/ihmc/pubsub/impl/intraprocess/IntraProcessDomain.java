@@ -102,7 +102,7 @@ public class IntraProcessDomain implements Domain
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
       if(intraProcessParticipant == null)
       {
-         throw new IOException("This participant is not registered with this domain.");
+         throw new IllegalArgumentException("This participant is not registered with this domain.");
       }
       
       if(publisherAttributes instanceof IntraProcessPublisherAttributes)
@@ -122,7 +122,7 @@ public class IntraProcessDomain implements Domain
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
       if(intraProcessParticipant == null)
       {
-         throw new IOException("This participant is not registered with this domain.");
+         throw new IllegalArgumentException("This participant is not registered with this domain.");
       }
       
       if(subscriberAttributes instanceof IntraProcessSubscriberAttributes)
@@ -159,22 +159,37 @@ public class IntraProcessDomain implements Domain
    @Override
    public TopicDataType<?> getRegisteredType(Participant participant, String typeName)
    {
-      // TODO Auto-generated method stub
-      return null;
+      IntraProcessParticipant intraProcessParticipant = participants.get(participant);
+      if(intraProcessParticipant == null)
+      {
+         throw new IllegalArgumentException("This participant is not registered with this domain.");
+      }
+
+      return intraProcessParticipant.getTopicDataType(typeName);
    }
 
    @Override
    public synchronized void registerType(Participant participant, TopicDataType<?> topicDataType) throws IllegalArgumentException
    {
-      // TODO Auto-generated method stub
+      IntraProcessParticipant intraProcessParticipant = participants.get(participant);
+      if(intraProcessParticipant == null)
+      {
+         throw new IllegalArgumentException("This participant is not registered with this domain.");
+      }
 
+      intraProcessParticipant.registerTopicDataType(topicDataType);
    }
 
    @Override
    public synchronized void unregisterType(Participant participant, String typeName) throws IOException
    {
-      // TODO Auto-generated method stub
+      IntraProcessParticipant intraProcessParticipant = participants.get(participant);
+      if(intraProcessParticipant == null)
+      {
+         throw new IllegalArgumentException("This participant is not registered with this domain.");
+      }
 
+      intraProcessParticipant.unRegisterTopicDataType(typeName);
    }
 
    @Override

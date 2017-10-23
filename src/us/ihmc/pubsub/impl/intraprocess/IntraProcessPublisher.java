@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.common.Guid;
+import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
@@ -26,11 +27,31 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 class IntraProcessPublisher implements Publisher
 {
 
-   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener)
+   private final TopicDataType<?> topicDataType;
+   private final Guid guid;
+   private final IntraProcessDomainImpl domain;
+   private final IntraProcessParticipant participant;
+   private final IntraProcessPublisherAttributes attr;
+   private final PublisherListener listener;
+
+   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr,
+                                PublisherListener listener)
+         throws IOException
    {
-      
+      TopicDataType<?> topicDataType = participant.getTopicDataType(attr.getTopic().getTopicDataType());
+      if (topicDataType == null)
+      {
+         throw new IOException("Cannot registered publisher with topic " + attr.getTopic().getTopicDataType() + ". Topic data type is not registered.");
+      }
+      this.topicDataType = topicDataType.newInstance();
+      this.guid = guid;
+      this.domain = domainImpl;
+      this.participant = participant;
+      this.attr = attr;
+      this.listener = listener;
+
    }
-   
+
    @Override
    public void write(Object data) throws IOException
    {
@@ -69,38 +90,40 @@ class IntraProcessPublisher implements Publisher
    @Override
    public Guid getGuid()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return guid;
    }
 
    @Override
    public IntraProcessPublisherAttributes getAttributes()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return attr;
    }
 
    @Override
    public boolean isAvailable()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return true;
    }
 
    public void notifyPublisherListener(IntraProcessSubscriber subscriber, MatchingStatus matchedMatching)
    {
+      if (listener != null)
+      {
+         MatchingInfo info = new MatchingInfo();
+         info.setStatus(matchedMatching);
+         info.getGuid().set(subscriber.getGuid());
+         listener.onPublicationMatched(this, info);
+      }
    }
 
    public TopicDataType<?> getTopicDataType()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return topicDataType;
    }
 
    public IntraProcessParticipant getParticipant()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return participant;
    }
 
 }

@@ -66,15 +66,18 @@ class IntraProcessDomainImpl
    private void matchSubscribers(IntraProcessPublisherAttributes publisherToMatch, Consumer<IntraProcessSubscriber> exec)
    {
       List<IntraProcessSubscriber> topicSubscribers = subscribers.get(publisherToMatch.getTopic().getTopicName());
-      for (IntraProcessSubscriber subscriber : topicSubscribers)
+      if(topicSubscribers != null)
       {
-         if (subscriber.getAttributes().publisherMatches(publisherToMatch))
+         for (IntraProcessSubscriber subscriber : topicSubscribers)
          {
-            if (logLevel == LogLevel.INFO)
+            if (subscriber.getAttributes().publisherMatches(publisherToMatch))
             {
-               IntraProcessLog.info(this, "Notifying matched subscriber " + subscriber);
+               if (logLevel == LogLevel.INFO)
+               {
+                  IntraProcessLog.info(this, "Notifying matched subscriber " + subscriber);
+               }
+               threadPool.execute(() -> exec.accept(subscriber));
             }
-            threadPool.execute(() -> exec.accept(subscriber));
          }
       }
    }
@@ -82,15 +85,18 @@ class IntraProcessDomainImpl
    private void matchPublishers(IntraProcessSubscriberAttributes subscriberToMatch, Consumer<IntraProcessPublisher> exec)
    {
       List<IntraProcessPublisher> topicPublishers = publishers.get(subscriberToMatch.getTopic().getTopicName());
-      for (IntraProcessPublisher publisher : topicPublishers)
+      if(topicPublishers != null)
       {
-         if (subscriberToMatch.publisherMatches(publisher.getAttributes()))
+         for (IntraProcessPublisher publisher : topicPublishers)
          {
-            if (logLevel == LogLevel.INFO)
+            if (subscriberToMatch.publisherMatches(publisher.getAttributes()))
             {
-               IntraProcessLog.info(this, "Notifying matched publisher " + publisher);
+               if (logLevel == LogLevel.INFO)
+               {
+                  IntraProcessLog.info(this, "Notifying matched publisher " + publisher);
+               }
+               threadPool.execute(() -> exec.accept(publisher));
             }
-            threadPool.execute(() -> exec.accept(publisher));
          }
       }
    }
@@ -105,8 +111,12 @@ class IntraProcessDomainImpl
          IntraProcessLog.info(this, "Adding participant " + participant);
       }
       matchParticipants((participantToNotify) -> participantToNotify.notifyParticipantListener(participant, DiscoveryStatus.DISCOVERED_RTPSPARTICIPANT));
+      
+      if(logLevel == LogLevel.INFO)
+         IntraProcessLog.info(this,  "Notifying self of existing participants");
+      matchParticipants((participantOnline) -> participant.notifyParticipantListener(participantOnline, DiscoveryStatus.DISCOVERED_RTPSPARTICIPANT));
+      
       participants.add(participant);
-
       domainLock.unlock();
 
       return participant;
@@ -131,7 +141,7 @@ class IntraProcessDomainImpl
       domainLock.unlock();
    }
 
-   Subscriber createSubscriber(IntraProcessParticipant participant, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
+   Subscriber createSubscriber(IntraProcessParticipant participant, IntraProcessSubscriberAttributes attr, SubscriberListener listener) throws IOException
    {
       domainLock.lock();
       IntraProcessSubscriber subscriber = participant.createSubscriber(this, attr, listener);
@@ -145,12 +155,12 @@ class IntraProcessDomainImpl
             IntraProcessLog.info(this, "Creating new subscriber list for topic " + topicName);
          }
          topicSubscribers = new ArrayList<>();
-         subscribers.put(topicName, new ArrayList<>());
+         subscribers.put(topicName, topicSubscribers);
       }
 
       if (logLevel == LogLevel.INFO)
       {
-         IntraProcessLog.info(this, "Adding subscriber" + subscriber);
+         IntraProcessLog.info(this, "Adding subscriber " + subscriber);
       }
       topicSubscribers.add(subscriber);
 
@@ -160,6 +170,10 @@ class IntraProcessDomainImpl
       if (logLevel == LogLevel.INFO)
          IntraProcessLog.info(this, "Notifying publisher listeners");
       matchPublishers(subscriber.getAttributes(), (publisher) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.MATCHED_MATCHING));
+      
+      if(logLevel == LogLevel.INFO)
+         IntraProcessLog.info(this, "Notifying self listener of existing publishers");
+      matchPublishers(subscriber.getAttributes(), (publisher) -> subscriber.notifySubscriberListener(publisher, MatchingStatus.MATCHED_MATCHING));
 
       domainLock.unlock();
       
@@ -178,7 +192,7 @@ class IntraProcessDomainImpl
 
       if (logLevel == LogLevel.INFO)
       {
-         IntraProcessLog.info(this, "Removing subscriber" + subscriber);
+         IntraProcessLog.info(this, "Removing subscriber " + subscriber);
       }
       if (topicSubscribers.remove(subscriber))
 
@@ -195,7 +209,7 @@ class IntraProcessDomainImpl
       domainLock.unlock();
    }
 
-   IntraProcessPublisher createPublisher(IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener)
+   IntraProcessPublisher createPublisher(IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener) throws IOException
    {
       domainLock.lock();
       IntraProcessPublisher  publisher = participant.createPublisher(this, attr, listener);
@@ -208,12 +222,12 @@ class IntraProcessDomainImpl
             IntraProcessLog.info(this, "Creating new publisher list for topic " + topicName);
          }
          topicPublishers = new ArrayList<>();
-         publishers.put(topicName, new ArrayList<>());
+         publishers.put(topicName, topicPublishers);
       }
 
       if (logLevel == LogLevel.INFO)
       {
-         IntraProcessLog.info(this, "Adding publisher" + publisher);
+         IntraProcessLog.info(this, "Adding publisher " + publisher);
       }
       topicPublishers.add(publisher);
 
@@ -224,6 +238,10 @@ class IntraProcessDomainImpl
          IntraProcessLog.info(this, "Notifying subscriber listeners");
       matchSubscribers(publisher.getAttributes(), (subscriber) -> subscriber.notifySubscriberListener(publisher, MatchingStatus.MATCHED_MATCHING));
 
+      if(logLevel == LogLevel.INFO)
+         IntraProcessLog.info(this, "Notify self listener of existing subscribers");
+      matchSubscribers(publisher.getAttributes(), (subscriber) -> publisher.notifyPublisherListener(subscriber, MatchingStatus.MATCHED_MATCHING));
+      
       domainLock.unlock();
       
       return publisher;
@@ -241,7 +259,7 @@ class IntraProcessDomainImpl
 
       if (logLevel == LogLevel.INFO)
       {
-         IntraProcessLog.info(this, "Removing publisher" + topicName);
+         IntraProcessLog.info(this, "Removing publisher " + topicName);
       }
       if (topicSubscribers.remove(publisher))
       {

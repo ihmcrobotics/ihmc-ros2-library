@@ -198,4 +198,10 @@ public class Guid
       return true;
    }
 
+   public void set(Guid guid)
+   {
+      System.arraycopy(guid.guidPrefix.value, 0, guidPrefix.value, 0, guidPrefix.value.length);
+      System.arraycopy(guid.entity.value, 0, entity.value, 0, entity.value.length);
+   }
+
 }

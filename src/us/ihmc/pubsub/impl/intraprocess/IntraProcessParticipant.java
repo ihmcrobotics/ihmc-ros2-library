@@ -18,8 +18,10 @@ package us.ihmc.pubsub.impl.intraprocess;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
+import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.DiscoveryStatus;
@@ -48,6 +50,8 @@ public class IntraProcessParticipant implements Participant
 
    private final ArrayList<IntraProcessSubscriber> subscribers = new ArrayList<>();
    private final ArrayList<IntraProcessPublisher> publishers = new ArrayList<>();
+   
+   private final HashMap<String, TopicDataType<?>> registeredTopicDataTypes = new HashMap<>();
 
    IntraProcessParticipant(IntraProcessDomainImpl domain, IntraProcessParticipantAttributes att, ParticipantListener participantListener)
    {
@@ -139,7 +143,7 @@ public class IntraProcessParticipant implements Participant
       
    }
    
-   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr, PublisherListener listener)
+   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr, PublisherListener listener) throws IOException
    {
       
       IntraProcessPublisher publisher = new IntraProcessPublisher(createNextGuid(), domain, this, attr, listener);
@@ -147,7 +151,7 @@ public class IntraProcessParticipant implements Participant
       return publisher;
    }
    
-   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, IntraProcessSubscriberAttributes attr, SubscriberListener listener)
+   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, IntraProcessSubscriberAttributes attr, SubscriberListener listener) throws IOException
    {
       IntraProcessSubscriber subscriber = new IntraProcessSubscriber(createNextGuid(), domain, this, attr, listener);
       subscribers.add(subscriber);
@@ -183,6 +187,24 @@ public class IntraProcessParticipant implements Participant
                                                                  publisher.getAttributes().getTopic().getTopicDataType(), -1,
                                                                  publisher.getTopicDataType().getTypeSize(), TopicKind.NO_KEY,
                                                                  new IntraProcessWriterQosHolder(publisher.getAttributes().getQos()));
+      }
+   }
+
+   TopicDataType<?> getTopicDataType(String topicDataType)
+   {
+      return registeredTopicDataTypes.get(topicDataType);
+   }
+   
+   void registerTopicDataType(TopicDataType<?> type)
+   {
+      registeredTopicDataTypes.put(type.getName(), type);
+   }
+
+   public void unRegisterTopicDataType(String typeName) throws IOException
+   {
+      if(registeredTopicDataTypes.remove(typeName) == null)
+      {
+         throw new IOException("Cannot remove " + typeName + " from participant " + getName() + ". Type not registered");
       }
    }
 
