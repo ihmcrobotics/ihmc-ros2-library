@@ -50,6 +50,7 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
+import us.ihmc.pubsub.types.ByteBufferPubSubType;
 
 public class IntraProcessDomainTest
 {
@@ -166,7 +167,7 @@ public class IntraProcessDomainTest
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, subscriberMatched.poll(1, TimeUnit.SECONDS));
          
-         SubscriberAttributes subAtt2 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
+         SubscriberAttributes subAtt2 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT, partition);
          guid = domain.createSubscriber(participant2, subAtt2).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, publisherMatched.poll(1, TimeUnit.SECONDS));
@@ -176,6 +177,41 @@ public class IntraProcessDomainTest
          
          
          // Create a bunch of non-matching subscribers and publishers and make sure they only trigger the subscriber/publisher listeners
+         PublisherAttributes pubAtt3 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT, partition);
+         guid = domain.createPublisher(participant2, pubAtt3).getGuid();
+         assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
+         
+         PublisherAttributes pubAtt4 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.RELIABLE);
+         guid = domain.createPublisher(participant2, pubAtt4).getGuid();
+         assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
+
+         PublisherAttributes pubAtt5 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic + "Invalid", ReliabilityKind.RELIABLE, partition);
+         guid = domain.createPublisher(participant2, pubAtt5).getGuid();
+         assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
+
+         TopicDataType<?> newDataType = new ByteBufferPubSubType("Test", 10);
+         PublisherAttributes pubAtt6 = domain.createPublisherAttributes(participant2, newDataType, topic, ReliabilityKind.RELIABLE, partition);
+         guid = domain.createPublisher(participant2, pubAtt6).getGuid();
+         assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
+         // Make sure no subscribers matched
+         assertEquals(null, subscriberMatched.poll(1, TimeUnit.SECONDS));
+         
+         
+         SubscriberAttributes subAtt3 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT);
+         guid = domain.createSubscriber(participant2, subAtt3).getGuid();
+         assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
+         
+         SubscriberAttributes subAtt4 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic + "Invalid", ReliabilityKind.BEST_EFFORT, partition);
+         guid = domain.createSubscriber(participant2, subAtt4).getGuid();
+         assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
+         
+         SubscriberAttributes subAtt5 = domain.createSubscriberAttributes(participant2, newDataType, topic, ReliabilityKind.BEST_EFFORT, partition);
+         guid = domain.createSubscriber(participant2, subAtt5).getGuid();
+         assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
+         
+         
+         
+         assertEquals(null, publisherMatched.poll(1, TimeUnit.SECONDS));
          
       }
       catch (InterruptedException e)

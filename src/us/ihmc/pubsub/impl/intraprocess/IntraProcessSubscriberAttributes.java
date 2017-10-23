@@ -47,7 +47,7 @@ class IntraProcessSubscriberAttributes extends SubscriberAttributes
       if (getQos().getOwnershipPolicyKind() != publisher.getQos().getOwnershipPolicyKind())
          return false;
 
-      if (publisher.getQos().getReliabilityKind() == ReliabilityKind.RELIABLE && getQos().getReliabilityKind() == ReliabilityKind.BEST_EFFORT)
+      if (publisher.getQos().getReliabilityKind() == ReliabilityKind.BEST_EFFORT && getQos().getReliabilityKind() == ReliabilityKind.RELIABLE)
          return false;
 
       if (publisher.getQos().getDurabilityKind() == DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS
