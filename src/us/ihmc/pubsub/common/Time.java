@@ -49,6 +49,12 @@ public class Time
       
    }
    
+   public void set(long nanoseconds)
+   {
+      this.seconds = (int) (nanoseconds / 1000000000l);
+      this.fraction = ((nanoseconds % 1000000000l) * 4294967296l) / 1000000000l;
+   }
+   
    public int getSeconds()
    {
       return seconds;
@@ -73,5 +79,11 @@ public class Time
    public String toString()
    {
       return String.format("%.2f", seconds + (fraction / Math.pow(2, 32)));
+   }
+
+   public void set(Time sourceTimestamp)
+   {
+      this.seconds = sourceTimestamp.seconds;
+      this.fraction = sourceTimestamp.fraction;
    }
 }

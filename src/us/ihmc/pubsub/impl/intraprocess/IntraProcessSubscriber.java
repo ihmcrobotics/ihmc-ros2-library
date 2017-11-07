@@ -16,6 +16,11 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.common.Guid;
@@ -25,34 +30,52 @@ import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
-class IntraProcessSubscriber implements Subscriber
+class IntraProcessSubscriber<T> implements Subscriber
 {
 
-   private final TopicDataType<?> topicDataType;
+   private class MessageHolder
+   {
+      @SuppressWarnings("unchecked")
+      public MessageHolder(Object newData, SampleInfo newInfo)
+      {
+         this.message = (T) newData;
+         this.info = newInfo;
+      }
+
+      T message;
+      SampleInfo info;
+   }
+
+   private final ReentrantLock messageLock = new ReentrantLock();
+   private final Condition messageCondition = messageLock.newCondition();
+   
+   private final TopicDataType<T> topicDataType;
    private final Guid guid;
    private final IntraProcessSubscriberAttributes attr;
-   private IntraProcessDomainImpl domain;
    private IntraProcessParticipant participant;
    private SubscriberListener listener;
+
    
+   private final LinkedList<MessageHolder> messageQueue;
+
    private boolean available = true;
 
    IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr,
                           SubscriberListener listener)
          throws IOException
    {
-      TopicDataType<?> topicDataType = intraProcessParticipant.getTopicDataType(attr.getTopic().getTopicDataType());
+      TopicDataType<T> topicDataType = (TopicDataType<T>) intraProcessParticipant.getTopicDataType(attr.getTopic().getTopicDataType());
       if (topicDataType == null)
       {
          throw new IOException("Cannot registered publisher with topic " + attr.getTopic().getTopicDataType() + ". Topic data type is not registered.");
       }
       this.topicDataType = topicDataType.newInstance();
       this.guid = guid;
-      this.domain = domain;
       this.participant = intraProcessParticipant;
       this.attr = attr;
       this.listener = listener;
 
+      this.messageQueue = new LinkedList<>();
    }
 
    @Override
@@ -64,22 +87,61 @@ class IntraProcessSubscriber implements Subscriber
    @Override
    public void waitForUnreadMessage(int timeoutInMilliseconds) throws InterruptedException
    {
-      // TODO Auto-generated method stub
-
+      messageLock.lock();
+      if(messageQueue.peek() == null)
+      {
+         if(timeoutInMilliseconds > 0)
+         {
+            messageCondition.await(timeoutInMilliseconds, TimeUnit.MILLISECONDS);
+         }
+         else
+         {
+            messageCondition.await();
+         }
+      }
+      messageLock.unlock();
    }
 
    @Override
    public boolean readNextData(Object data, SampleInfo info) throws IOException
    {
-      // TODO Auto-generated method stub
-      return false;
+      messageLock.lock();
+
+      MessageHolder next = messageQueue.peek();
+      if (next != null)
+      {
+         topicDataType.copy(next.message, (T) data);
+         info.set(next.info);
+         messageLock.unlock();
+         return true;
+      }
+      else
+      {
+         messageLock.unlock();
+         return false;
+      }
    }
 
    @Override
    public boolean takeNextData(Object data, SampleInfo info) throws IOException
    {
-      // TODO Auto-generated method stub
-      return false;
+      messageLock.lock();
+      MessageHolder next = messageQueue.poll();
+      if (next != null)
+      {
+         topicDataType.copy(next.message, (T) data);
+         if(info != null)
+         {
+            info.set(next.info);
+         }
+         messageLock.unlock();
+         return true;
+      }
+      else
+      {
+         messageLock.unlock();
+         return false;
+      }
    }
 
    @Override
@@ -119,9 +181,21 @@ class IntraProcessSubscriber implements Subscriber
    void destroy()
    {
       available = false;
-      domain = null;
       participant = null;
       listener = null;
+      messageQueue.clear();
+   }
+
+   void putNextData(Object newData, SampleInfo newInfo)
+   {
+      messageLock.lock();
+      messageQueue.offer(new MessageHolder(newData, newInfo));
+      messageCondition.signal();
+      messageLock.unlock();
+      if(listener != null)
+      {
+         listener.onNewDataMessage(this);
+      }
    }
 
 }

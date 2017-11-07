@@ -37,4 +37,10 @@ public class SampleIdentity
       return sequenceNumber;
    }
 
+   public void set(SampleIdentity other)
+   {
+      this.guid.set(other.guid);
+      this.sequenceNumber.set(other.sequenceNumber);
+   }
+
 }

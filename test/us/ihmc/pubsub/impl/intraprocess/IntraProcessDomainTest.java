@@ -15,7 +15,11 @@
  */
 package us.ihmc.pubsub.impl.intraprocess;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
+import us.ihmc.idl.generated.Chat.ChatMessage;
 import us.ihmc.idl.generated.Chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.Locator;
@@ -34,12 +39,14 @@ import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.attributes.WriterQosHolder;
+import us.ihmc.pubsub.common.ChangeKind;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.Guid.GuidPrefix;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
+import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
@@ -67,27 +74,156 @@ public class IntraProcessDomainTest
       assertEquals(expectedGuidPrefix, info.getGuid().getGuidPrefix());
    }
 
-   @Test
-   public void testConnectionLogic() throws IOException
+   @Test(timeout = 30000)
+   public void testMessagePassing() throws IOException, InterruptedException
    {
+      TopicDataType<?> typeOfTheDay = new ChatMessagePubSubType();
+      String topic = "chat";
+      String partition = "us.ihmc";
+
+      IntraProcessDomain domain = IntraProcessDomain.getInstance();
+      domain.setLogLevel(LogLevel.INFO);
+
+      ParticipantAttributes participantAttributes = domain.createParticipantAttributes(1, "participant");
+      Participant participant = domain.createParticipant(participantAttributes);
+
+      try
+      {
+
+         ArrayBlockingQueue<ChatMessage> messageQueue = new ArrayBlockingQueue<>(10);
+
+         SubscriberListener listener = new SubscriberListener()
+         {
+
+            @Override
+            public void onSubscriptionMatched(Subscriber subscriber, MatchingInfo info)
+            {
+
+            }
+
+            @Override
+            public void onNewDataMessage(Subscriber subscriber)
+            {
+               ChatMessage data = new ChatMessage();
+               try
+               {
+                  if (subscriber.takeNextData(data, null))
+                  {
+                     messageQueue.add(data);
+                  }
+
+               }
+               catch (IOException e)
+               {
+                  throw new RuntimeException(e);
+               }
+            }
+         };
+
+         PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
+         Publisher publisher1 = domain.createPublisher(participant, publisherAttributes);
+
+         SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
+         Subscriber subscriber1 = domain.createSubscriber(participant, subscriberAttributes);
+
+         SubscriberAttributes subscriberAttributes2 = domain.createSubscriberAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
+         Subscriber subscriber2 = domain.createSubscriber(participant, subscriberAttributes2, listener);
+
+         SubscriberAttributes subscriberAttributes3 = domain.createSubscriberAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE);
+         Subscriber subscriber3 = domain.createSubscriber(participant, subscriberAttributes3);
+
+         ChatMessage msg = new ChatMessage();
+         msg.setMsg("Test");
+         msg.setSender("JUnit");
+
+         publisher1.write(msg);
+
+         subscriber1.waitForUnreadMessage(100);
+
+         ChatMessage rec = new ChatMessage();
+         SampleInfo info = new SampleInfo();
+
+         assertTrue(subscriber1.readNextData(rec, info));
+         assertEquals(msg, rec);
+
+         subscriber1.waitForUnreadMessage(100);
+
+         assertTrue(subscriber1.takeNextData(rec, info));
+         assertEquals(msg, rec);
+
+         assertEquals(publisher1.getGuid(), info.getSampleIdentity().getGuid());
+         assertEquals(0l, info.getSampleIdentity().getSequenceNumber().get());
+         assertEquals(ChangeKind.ALIVE, info.getSampleKind());
+
+         assertEquals(msg, messageQueue.poll(5000, TimeUnit.MILLISECONDS));
+
+         assertFalse(subscriber1.takeNextData(rec, info));
+         assertFalse(subscriber2.takeNextData(rec, info));
+         assertFalse(subscriber3.takeNextData(msg, info));
+         
+         for(int i = 0; i < 10; i++)
+         {
+            String msgText = "Test " + i;
+            msg.setMsg(msgText);
+            publisher1.write(msg);
+            subscriber1.waitForUnreadMessage(100);
+            
+            assertTrue(subscriber1.takeNextData(rec, info));
+            assertEquals(msg, rec);
+            assertEquals(msgText, rec.getMsgAsString());
+
+            assertEquals(publisher1.getGuid(), info.getSampleIdentity().getGuid());
+            assertEquals(i + 1l, info.getSampleIdentity().getSequenceNumber().get());
+            assertEquals(ChangeKind.ALIVE, info.getSampleKind());
+            
+            ChatMessage rec2 = messageQueue.poll(5000, TimeUnit.MILLISECONDS);
+            assertEquals(msg, rec2);
+            assertEquals(msgText, rec2.getMsgAsString());
+            
+         }
+         
+         boolean failed = false;
+         Object failure = new Object();
+         try
+         {
+            publisher1.write(failure);
+         }
+         catch(IOException e)
+         {
+            failed = true;
+         }
+         
+         assertTrue(failed);
+         
+      } finally
+      {
+         domain.stopAll();
+      }
+   }
+
+   @Test(timeout = 30000)
+   public void testConnectionLogic() throws IOException, InterruptedException
+   {
+      // Setup participant with subscriber and publisher listeners
+      ArrayBlockingQueue<ParticipantDiscoveryInfo> participantListenerFuture = new ArrayBlockingQueue<>(1);
+      
+      ParticipantListener participantListener = (participant, info) -> {
+         participantListenerFuture.add(info);
+      };
+      IntraProcessDomain domain = IntraProcessDomain.getInstance();
+      domain.setLogLevel(LogLevel.INFO);
+      
+      ParticipantAttributes participantAttributes = domain.createParticipantAttributes(1, "participant");
+      Participant participant = domain.createParticipant(participantAttributes, participantListener);
+      
       try
       {
          TopicDataType<?> typeOfTheDay = new ChatMessagePubSubType();
          String topic = "chat";
          String partition = "us.ihmc";
 
-         IntraProcessDomain domain = IntraProcessDomain.getInstance();
-         domain.setLogLevel(LogLevel.INFO);
 
-         // Setup participant with subscriber and publisher listeners
-         ArrayBlockingQueue<ParticipantDiscoveryInfo> participantListenerFuture = new ArrayBlockingQueue<>(1);
 
-         ParticipantListener participantListener = (participant, info) -> {
-            participantListenerFuture.add(info);
-         };
-
-         ParticipantAttributes participantAttributes = domain.createParticipantAttributes(1, "participant");
-         Participant participant = domain.createParticipant(participantAttributes, participantListener);
 
          ArrayBlockingQueue<Guid> publisherEndpointDiscover = new ArrayBlockingQueue<>(1);
          ArrayBlockingQueue<Guid> subscriberEndpointDiscover = new ArrayBlockingQueue<>(1);
@@ -261,9 +397,9 @@ public class IntraProcessDomainTest
          assertFalse(participant2.isAvailable());
 
       }
-      catch (InterruptedException e)
+      finally
       {
-         throw new RuntimeException(e);
+         domain.stopAll();
       }
    }
 

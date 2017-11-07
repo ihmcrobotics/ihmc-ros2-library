@@ -84,6 +84,17 @@ public class SequenceNumber
       }
       return false;
    }
+   
+   /** 
+    * Set this sequence number as long
+    * 
+    * @param sequenceNumber 
+    */
+   public void set(long sequenceNumber)
+   {
+      high = (int) (sequenceNumber >> 32);
+      low = sequenceNumber & 0xFFFFFFFF;
+   }
 
    /**
     * Get this sequence number as 64 bit long
@@ -134,6 +145,12 @@ public class SequenceNumber
       if (low != other.low)
          return false;
       return true;
+   }
+
+   public void set(SequenceNumber other)
+   {
+      this.low = other.low;
+      this.high = other.high;
    }
 
    

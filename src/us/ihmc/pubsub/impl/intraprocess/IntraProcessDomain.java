@@ -16,7 +16,9 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
@@ -220,10 +222,13 @@ public class IntraProcessDomain implements Domain
    }
 
    @Override
-   public void stopAll()
+   public synchronized void stopAll()
    {
-      // TODO Auto-generated method stub
-
+      List<IntraProcessParticipant> participantsToRemove = new ArrayList<>(participants.values());
+      for(IntraProcessParticipant participantToRemove : participantsToRemove)
+      {
+         removeParticipant(participantToRemove);
+      }
    }
 
    @Override

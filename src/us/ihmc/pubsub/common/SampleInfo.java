@@ -96,4 +96,15 @@ public class SampleInfo
       this.dataLength = dataLength;
    }
 
+   
+   public void set(SampleInfo other)
+   {
+      this.dataLength = other.dataLength;
+      this.sampleKind = other.sampleKind;
+      this.ownershipStrength = other.ownershipStrength;
+      this.sourceTimestamp.set(other.sourceTimestamp);
+      this.instanceHandle.setValue(other.instanceHandle.getValue());
+      this.sampleIdentity.set(other.sampleIdentity);
+      this.relatedSampleIdentity.set(other.relatedSampleIdentity);
+   }
 }
