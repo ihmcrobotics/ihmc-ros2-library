@@ -18,6 +18,8 @@ package us.ihmc.rtps.impl.fastRTPS;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
@@ -38,7 +40,21 @@ public class FastRTPSDomain implements Domain
 
    public FastRTPSDomain()
    {
-      NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
+      try
+      {
+         NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
+      }
+      catch(UnsatisfiedLinkError e)
+      {
+         if(SystemUtils.IS_OS_WINDOWS)
+         {
+            throw new UnsatisfiedLinkError("Cannot load library, make sure to install Microsoft Visual C++ 2017 Redistributable (x64) (https://go.microsoft.com/fwlink/?LinkId=746572) ");
+         }
+         else
+         {
+            throw e;
+         }
+      }
       Runtime.getRuntime().addShutdownHook(new Thread((Runnable) () -> {
          stopAll();
       })); 
