@@ -26,7 +26,7 @@ import us.ihmc.pubsub.attributes.PublishModeKind;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 
-public class FastRTPSCommonFunctions
+class FastRTPSCommonFunctions
 {
    public static final int LOCATOR_KIND_RESERVED = 0;
    public static final int LOCATOR_KIND_UDPv4 = 1;

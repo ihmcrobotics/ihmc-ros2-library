@@ -24,13 +24,13 @@ import us.ihmc.pubsub.attributes.OwnerShipPolicyKind;
 import us.ihmc.pubsub.attributes.ReaderQosHolder;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 
-public class FastRTPSReaderQosHolder implements ReaderQosHolder
+class FastRTPSReaderQosHolder implements ReaderQosHolder
 {
    private final boolean ownMemory;
 
    private final ReaderQos readerQos;
 
-   public FastRTPSReaderQosHolder()
+   FastRTPSReaderQosHolder()
    {
       this.readerQos = new ReaderQos();
       ownMemory = true;

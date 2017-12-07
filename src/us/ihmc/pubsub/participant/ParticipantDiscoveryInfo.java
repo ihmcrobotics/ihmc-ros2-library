@@ -24,10 +24,24 @@ import us.ihmc.pubsub.common.Guid;
  * @author Jesper Smith
  *
  */
-public abstract class ParticipantDiscoveryInfo
+public class ParticipantDiscoveryInfo
 {
-   protected final Guid guid = new Guid();
+   protected final Guid guid;
    protected DiscoveryStatus status;
+   protected String name;
+   
+   protected ParticipantDiscoveryInfo()
+   {
+      this.guid = new Guid();
+   }
+   
+   public ParticipantDiscoveryInfo(String name, Guid guid, DiscoveryStatus status)
+   {
+      this.name = name;
+      this.guid = guid;
+      this.status = status;
+   }
+   
    
    /**
     * Associated GUID.
@@ -60,6 +74,9 @@ public abstract class ParticipantDiscoveryInfo
     * 
     * @return participant name
     */
-   public abstract String getName();
+   public String getName()
+   {
+      return name;
+   }
    
 }

@@ -16,7 +16,7 @@
 package us.ihmc.rtps.impl.fastRTPS;
 
 
-public class FastRTPSAttributes
+class FastRTPSAttributes
 {
    static TopicAttributes createAttributes(us.ihmc.pubsub.attributes.TopicAttributes topic)
    {

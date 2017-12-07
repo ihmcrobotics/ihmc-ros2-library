@@ -58,7 +58,7 @@ public abstract class ParticipantAttributes
     * 
     * @param domain
     */
-   public abstract void setDomainId(long domain);
+   public abstract void setDomainId(int domain);
    
    /**
     * Convenience function to set the participant lease duration an implementation agnostic manner

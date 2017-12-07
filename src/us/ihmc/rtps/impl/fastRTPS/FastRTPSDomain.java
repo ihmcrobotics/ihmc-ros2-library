@@ -38,7 +38,18 @@ public class FastRTPSDomain implements Domain
 {
    private final ArrayList<FastRTPSParticipant> participants = new ArrayList<>();
 
-   public FastRTPSDomain()
+   
+   private static FastRTPSDomain instance = null;
+   public static synchronized FastRTPSDomain getInstance()
+   {
+      if(instance == null)
+      {
+         instance = new FastRTPSDomain();
+      }
+      return instance;
+   }
+   
+   private FastRTPSDomain()
    {
       try
       {

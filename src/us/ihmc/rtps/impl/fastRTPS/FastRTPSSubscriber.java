@@ -31,7 +31,7 @@ import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
-public class FastRTPSSubscriber implements Subscriber
+class FastRTPSSubscriber implements Subscriber
 {
    private final Object destructorLock = new Object(); 
 
