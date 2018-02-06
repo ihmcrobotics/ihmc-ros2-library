@@ -15,48 +15,28 @@
  */
 package us.ihmc.pubsub.impl.intraprocess;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import us.ihmc.idl.generated.Chat.ChatMessage;
+import us.ihmc.idl.generated.Chat.ChatMessagePubSubType;
+import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.*;
+import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
+import us.ihmc.pubsub.common.*;
+import us.ihmc.pubsub.common.Guid.GuidPrefix;
+import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
+import us.ihmc.pubsub.participant.*;
+import us.ihmc.pubsub.publisher.Publisher;
+import us.ihmc.pubsub.publisher.PublisherListener;
+import us.ihmc.pubsub.subscriber.Subscriber;
+import us.ihmc.pubsub.subscriber.SubscriberListener;
+import us.ihmc.pubsub.types.ByteBufferPubSubType;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-
-import us.ihmc.idl.generated.Chat.ChatMessage;
-import us.ihmc.idl.generated.Chat.ChatMessagePubSubType;
-import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.Locator;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.ReaderQosHolder;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
-import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
-import us.ihmc.pubsub.attributes.WriterQosHolder;
-import us.ihmc.pubsub.common.ChangeKind;
-import us.ihmc.pubsub.common.DiscoveryStatus;
-import us.ihmc.pubsub.common.Guid;
-import us.ihmc.pubsub.common.Guid.GuidPrefix;
-import us.ihmc.pubsub.common.LogLevel;
-import us.ihmc.pubsub.common.MatchingInfo;
-import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
-import us.ihmc.pubsub.common.SampleInfo;
-import us.ihmc.pubsub.participant.Participant;
-import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
-import us.ihmc.pubsub.participant.ParticipantListener;
-import us.ihmc.pubsub.participant.PublisherEndpointDiscoveryListener;
-import us.ihmc.pubsub.participant.SubscriberEndpointDiscoveryListener;
-import us.ihmc.pubsub.publisher.Publisher;
-import us.ihmc.pubsub.publisher.PublisherListener;
-import us.ihmc.pubsub.subscriber.Subscriber;
-import us.ihmc.pubsub.subscriber.SubscriberListener;
-import us.ihmc.pubsub.types.ByteBufferPubSubType;
+import static org.junit.Assert.*;
 
 public class IntraProcessDomainTest
 {

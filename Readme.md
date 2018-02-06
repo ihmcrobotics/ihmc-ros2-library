@@ -42,7 +42,7 @@ repositories {
 }
 	
 dependencies {
-	compile group: 'us.ihmc', name: 'IHMCPubSub', version: '0.3.4.1'
+	compile group: 'us.ihmc', name: 'IHMCPubSub', version: '0.4.0'
 }
 ```
 
