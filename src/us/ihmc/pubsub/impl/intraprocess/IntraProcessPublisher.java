@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import net.sf.jrtps.rtps.Sample;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.DurabilityKind;
 import us.ihmc.pubsub.common.ChangeKind;

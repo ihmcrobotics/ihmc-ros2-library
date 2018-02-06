@@ -2,6 +2,7 @@
 .project
 .settings
 bin
+out
 build
 build-java
 classes

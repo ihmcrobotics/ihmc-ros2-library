@@ -135,6 +135,11 @@ The library is supported on the following Operating Systems
 
 
 ## Compilation
+
+### Initialize submodule:
+
+`git submodule update --init --recursive`
+
 ### Java code compilation
 ```
 gradle build
