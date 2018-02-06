@@ -42,7 +42,7 @@ repositories {
 }
 	
 dependencies {
-	compile group: 'us.ihmc', name: 'IHMCPubSub', version: '0.3.4.1'
+	compile group: 'us.ihmc', name: 'IHMCPubSub', version: '0.4.0'
 }
 ```
 
@@ -135,6 +135,11 @@ The library is supported on the following Operating Systems
 
 
 ## Compilation
+
+### Initialize submodule:
+
+`git submodule update --init --recursive`
+
 ### Java code compilation
 ```
 gradle build
