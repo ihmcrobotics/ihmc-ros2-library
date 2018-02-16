@@ -291,8 +291,11 @@ public class PreallocatedList<T>
          return false;
       if (pos != other.pos)
          return false;
-      if (!Arrays.equals(values, other.values))
-         return false;
+      for (int i = 0; i < size(); i++)
+      {
+         if (!values[i].equals(other.values[i]))
+            return false;
+      }
       return true;
    }
 
