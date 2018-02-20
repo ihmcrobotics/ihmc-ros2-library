@@ -170,10 +170,7 @@ public class PreallocatedList<T>
     */
    public void remove()
    {
-      if (pos < 0)
-      {
-         throw new ArrayIndexOutOfBoundsException("List is empty");
-      }
+      nonEmptyCheck();
       --pos;
    }
 
@@ -305,6 +302,14 @@ public class PreallocatedList<T>
    public int remaining()
    {
       return capacity() - size();
+   }
+
+   private void nonEmptyCheck()
+   {
+      if (pos < 0)
+      {
+         throw new ArrayIndexOutOfBoundsException("List is empty");
+      }
    }
 
    private void rangeCheck(int i)
