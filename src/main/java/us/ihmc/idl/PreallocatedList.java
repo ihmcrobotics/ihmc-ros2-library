@@ -199,6 +199,34 @@ public class PreallocatedList<T>
    }
 
    /**
+    * Returns the first element of this list.
+    * If the list is empty, it returns {@code null}.
+    *
+    * @return the first element of this list.
+    */
+   public T getFirst()
+   {
+      if (isEmpty())
+         return null;
+      else
+         return values[0];
+   }
+
+   /**
+    * Returns the last element of this list.
+    * If the list is empty, it returns {@code null}.
+    *
+    * @return the last element of this list.
+    */
+   public T getLast()
+   {
+      if (isEmpty())
+         return null;
+      else
+         return values[pos];
+   }
+
+   /**
     * Set the Enum value at position i. 
     * 
     * @param i
