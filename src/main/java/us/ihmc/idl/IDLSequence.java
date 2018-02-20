@@ -32,8 +32,6 @@ import us.ihmc.pubsub.TopicDataType;
  * The current implementation of this class extends ArrayList<T>. Primitive versions are provided as subclasses and extend Trove ArrayLists. 
  * By providing a custom interface to ArrayList we can adjust the type to more efficient storage should the need arise. 
  * 
- * @param T Type of data
- * 
  * @author Jesper Smith
  */
 public interface IDLSequence
@@ -610,7 +608,7 @@ public interface IDLSequence
 
       public StringBuilderHolder(int maxSize, String typeCode)
       {
-         super(StringBuilder.class, () -> new StringBuilder(), maxSize);
+         super(StringBuilder.class, StringBuilder::new, maxSize);
          switch (typeCode)
          {
          case "type_d":
@@ -775,7 +773,7 @@ public interface IDLSequence
        */
       public Object(int maxSize, Class<T> clazz, TopicDataType<T> topicDataType)
       {
-         super(clazz, () -> topicDataType.createData() , maxSize);
+         super(clazz, topicDataType::createData, maxSize);
          this.topicDataType = topicDataType;
          
       }
