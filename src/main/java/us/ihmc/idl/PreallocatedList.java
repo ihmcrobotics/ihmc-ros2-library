@@ -144,10 +144,7 @@ public class PreallocatedList<T>
       {
          throw new RuntimeException("Cannot add() enum to enum sequences. Use add(T) instead.");
       }
-      if (pos + 1 >= this.values.length)
-      {
-         throw new ArrayIndexOutOfBoundsException("Cannot add element to sequence, max size is violated");
-      }
+      maxCapacityCheck(pos + 1);
       return values[++pos];
    }
 
@@ -164,10 +161,7 @@ public class PreallocatedList<T>
       {
          throw new RuntimeException("Cannot add(T value) to object sequences. Use T add() instead");
       }
-      if (pos + 1 >= this.values.length)
-      {
-         throw new ArrayIndexOutOfBoundsException("Cannot add element to sequence, max size is violated");
-      }
+      maxCapacityCheck(pos + 1);
       values[++pos] = value;
    }
 
@@ -265,14 +259,6 @@ public class PreallocatedList<T>
       values[i] = value;
    }
 
-   private void rangeCheck(int i)
-   {
-      if (i < 0 || i > pos)
-      {
-         throw new ArrayIndexOutOfBoundsException("Position is not valid in the list, size is " + size() + ", requested element is " + i);
-      }
-   }
-
    /**
     * Clears the list
     * 
@@ -320,7 +306,23 @@ public class PreallocatedList<T>
    {
       return capacity() - size();
    }
-   
+
+   private void rangeCheck(int i)
+   {
+      if (i < 0 || i > pos)
+      {
+         throw new ArrayIndexOutOfBoundsException("Position is not valid in the list, size is " + size() + ", requested element is " + i);
+      }
+   }
+
+   private void maxCapacityCheck(int newSize)
+   {
+      if (newSize >= this.values.length)
+      {
+         throw new ArrayIndexOutOfBoundsException("Cannot add element to sequence, max size is violated");
+      }
+   }
+
    @Override
    public int hashCode()
    {
