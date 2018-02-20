@@ -206,6 +206,23 @@ public class PreallocatedList<T>
    }
 
    /**
+    * Removes the element at the specified position in this list.
+    * This method is faster than {@link #remove(int)} but the ith element is swapped with the last element changing the ordering of the list.
+    *
+    * @param index the index of the element to be removed
+    */
+   public void removeQuick(int index)
+   {
+      if (index == pos)
+      {
+         remove();
+         return;
+      }
+      rangeCheck(index);
+      unsafeSwap(index, pos--);
+   }
+
+   /**
     * Swap two objects of this list.
     *
     * @param i index of the first object to swap
