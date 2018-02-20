@@ -175,6 +175,37 @@ public class PreallocatedList<T>
    }
 
    /**
+    * Removes the element at the specified position in this list.
+    * Shifts any subsequent elements to the left (subtracts one from their
+    * indices).
+    *
+    * @param index the index of the element to be removed
+    * @return null.
+    */
+   public void remove(int i)
+   {
+      if (i == pos)
+      {
+         remove();
+         return;
+      }
+
+      rangeCheck(i);
+
+      T t = values[i];
+
+      while (i < pos)
+      {
+         values[i] = values[++i];
+      }
+
+      // Do not throw away the removed element, put it at the end of the list instead.
+      values[pos] = t;
+      --pos;
+      return;
+   }
+
+   /**
     * Swap two objects of this list.
     *
     * @param i index of the first object to swap
