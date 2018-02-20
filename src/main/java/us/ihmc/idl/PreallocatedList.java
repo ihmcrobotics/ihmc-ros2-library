@@ -184,6 +184,32 @@ public class PreallocatedList<T>
    }
 
    /**
+    * Swap two objects of this list.
+    *
+    * @param i index of the first object to swap
+    * @param j index of the second object to swap
+    * @throws ArrayIndexOutOfBoundsException if either of the indices is out of range
+    * (<tt>i &lt; 0 || i &gt;= size() || j &lt; 0 || j &gt;= size()</tt>)
+    */
+   public void swap(int i, int j)
+   {
+      rangeCheck(i);
+      rangeCheck(j);
+
+      if (i == j)
+         return;
+
+      unsafeSwap(i, j);
+   }
+
+   private void unsafeSwap(int i, int j)
+   {
+      T t = values[i];
+      values[i] = values[j];
+      values[j] = t;
+   }
+
+   /**
     * Get the element at position i. To change the element, use get() and 
     * 
     * @param i Position to get element at
