@@ -191,10 +191,7 @@ public class PreallocatedList<T>
     */
    public T get(int i)
    {
-      if (i < 0 || i > pos)
-      {
-         throw new ArrayIndexOutOfBoundsException("Position is not valid in the list, size is " + size() + ", requested element is " + i);
-      }
+      rangeCheck(i);
       return values[i];
    }
 
@@ -238,11 +235,16 @@ public class PreallocatedList<T>
       {
          throw new RuntimeException("Cannot set() object sequences. Use T get(int i) instead");
       }
+      rangeCheck(i);
+      values[i] = value;
+   }
+
+   private void rangeCheck(int i)
+   {
       if (i < 0 || i > pos)
       {
          throw new ArrayIndexOutOfBoundsException("Position is not valid in the list, size is " + size() + ", requested element is " + i);
       }
-      values[i] = value;
    }
 
    /**
