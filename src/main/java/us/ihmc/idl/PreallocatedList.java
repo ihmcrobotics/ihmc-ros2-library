@@ -79,7 +79,7 @@ public class PreallocatedList<T>
       System.arraycopy(values, 0, array, 0, size());
       return array;
    }
-   
+
    /**
     * Copies the elements in this list to dest
     * 
@@ -88,14 +88,14 @@ public class PreallocatedList<T>
     */
    public void toArray(T[] dest)
    {
-      if(dest.length < size())
+      if (dest.length < size())
       {
          throw new IndexOutOfBoundsException("Cannot copy data in destination array, insufficient space.");
       }
       System.arraycopy(values, 0, dest, 0, size());
 
    }
-   
+
    /**
     * 
     * @return true if this is a List of enums
@@ -121,7 +121,7 @@ public class PreallocatedList<T>
    }
 
    /**
-    * Clears the list. 
+    * Clears the list.
     * 
     * This function just resets the size to 0. The underlying data objects are not emptied or removed.
     */
@@ -144,17 +144,14 @@ public class PreallocatedList<T>
       {
          throw new RuntimeException("Cannot add() enum to enum sequences. Use add(T) instead.");
       }
-      if (pos + 1 >= this.values.length)
-      {
-         throw new ArrayIndexOutOfBoundsException("Cannot add element to sequence, max size is violated");
-      }
+      maxCapacityCheck(pos + 1);
       return values[++pos];
    }
 
    /**
     * Add an enum value.
     * 
-    * Use for enum sequences 
+    * Use for enum sequences
     * 
     * @param Enum value
     */
@@ -164,10 +161,7 @@ public class PreallocatedList<T>
       {
          throw new RuntimeException("Cannot add(T value) to object sequences. Use T add() instead");
       }
-      if (pos + 1 >= this.values.length)
-      {
-         throw new ArrayIndexOutOfBoundsException("Cannot add element to sequence, max size is violated");
-      }
+      maxCapacityCheck(pos + 1);
       values[++pos] = value;
    }
 
@@ -176,30 +170,135 @@ public class PreallocatedList<T>
     */
    public void remove()
    {
-      if (pos < 0)
-      {
-         throw new ArrayIndexOutOfBoundsException("List is empty");
-      }
+      nonEmptyCheck();
       --pos;
    }
 
    /**
-    * Get the element at position i. To change the element, use get() and 
+    * Removes the element at the specified position in this list.
+    * Shifts any subsequent elements to the left (subtracts one from their
+    * indices).
+    *
+    * @param index the index of the element to be removed
+    * @return null.
+    */
+   public void remove(int i)
+   {
+      if (i == pos)
+      {
+         remove();
+         return;
+      }
+
+      rangeCheck(i);
+
+      T t = values[i];
+
+      while (i < pos)
+      {
+         values[i] = values[++i];
+      }
+
+      // Do not throw away the removed element, put it at the end of the list instead.
+      values[pos] = t;
+      --pos;
+      return;
+   }
+
+   /**
+    * Removes the element at the specified position in this list. This method is faster than
+    * {@link #remove(int)} but the ith element is swapped with the last element changing the
+    * ordering of the list.
+    *
+    * @param i the index of the element to be removed
+    */
+   public void removeQuick(int i)
+   {
+      if (i == pos)
+      {
+         remove();
+         return;
+      }
+      rangeCheck(i);
+      unsafeSwap(i, pos--);
+   }
+
+   /**
+    * Swap two objects of this list.
+    *
+    * @param i index of the first object to swap
+    * @param j index of the second object to swap
+    * @throws ArrayIndexOutOfBoundsException if either of the indices is out of range
+    *            (<tt>i &lt; 0 || i &gt;= size() || j &lt; 0 || j &gt;= size()</tt>)
+    */
+   public void swap(int i, int j)
+   {
+      rangeCheck(i);
+      rangeCheck(j);
+
+      if (i == j)
+      {
+         return;
+      }
+
+      unsafeSwap(i, j);
+   }
+
+   private void unsafeSwap(int i, int j)
+   {
+      T t = values[i];
+      values[i] = values[j];
+      values[j] = t;
+   }
+
+   /**
+    * Get the element at position i. To change the element, use get() and
     * 
     * @param i Position to get element at
     * @return Element at position i.
     */
    public T get(int i)
    {
-      if (i < 0 || i > pos)
-      {
-         throw new ArrayIndexOutOfBoundsException("Position is not valid in the list, size is " + size() + ", requested element is " + i);
-      }
+      rangeCheck(i);
       return values[i];
    }
 
    /**
-    * Set the Enum value at position i. 
+    * Returns the first element of this list. If the list is empty, it returns {@code null}.
+    *
+    * @return the first element of this list.
+    */
+   public T getFirst()
+   {
+      if (isEmpty())
+      {
+         return null;
+      }
+      else
+      {
+         return values[0];
+      }
+   }
+
+   /**
+    * Returns the last element of this list. If the list is empty, it returns {@code null}.
+    *
+    * @return the last element of this list.
+    */
+   public T getLast()
+   {
+      if (isEmpty())
+      {
+         return null;
+      }
+      else
+      {
+         return values[pos];
+      }
+   }
+
+   /**
+    * Set the Enum value at position i.
     * 
     * @param i
     * @param value
@@ -210,20 +309,18 @@ public class PreallocatedList<T>
       {
          throw new RuntimeException("Cannot set() object sequences. Use T get(int i) instead");
       }
-      if (i < 0 || i > pos)
-      {
-         throw new ArrayIndexOutOfBoundsException("Position is not valid in the list, size is " + size() + ", requested element is " + i);
-      }
+      rangeCheck(i);
       values[i] = value;
    }
 
    /**
     * Clears the list
     * 
-    * This function just resets the size to 0. 
+    * This function just resets the size to 0.
     * 
-    * The underlying data objects are not emptied or removed, however this may change in future releases
-    *  
+    * The underlying data objects are not emptied or removed, however this may change in future
+    * releases
+    * 
     */
    public void clear()
    {
@@ -237,7 +334,17 @@ public class PreallocatedList<T>
    {
       return pos + 1;
    }
-   
+
+   /**
+    * Returns {@code true} if this list contains no elements.
+    *
+    * @return {@code true} if this list contains no elements.
+    */
+   public boolean isEmpty()
+   {
+      return size() == 0;
+   }
+
    /**
     * @return the maximum capacity of this list
     */
@@ -254,7 +361,31 @@ public class PreallocatedList<T>
    {
       return capacity() - size();
    }
-   
+
+   private void nonEmptyCheck()
+   {
+      if (pos < 0)
+      {
+         throw new ArrayIndexOutOfBoundsException("List is empty");
+      }
+   }
+
+   private void rangeCheck(int i)
+   {
+      if (i < 0 || i > pos)
+      {
+         throw new ArrayIndexOutOfBoundsException("Position is not valid in the list, size is " + size() + ", requested element is " + i);
+      }
+   }
+
+   private void maxCapacityCheck(int newSize)
+   {
+      if (newSize >= this.values.length)
+      {
+         throw new ArrayIndexOutOfBoundsException("Cannot add element to sequence, max size is violated");
+      }
+   }
+
    @Override
    public int hashCode()
    {
