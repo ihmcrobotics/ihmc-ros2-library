@@ -606,6 +606,10 @@ public interface IDLSequence
    {
       private final int type;
 
+      /**
+       * @param maxSize Preallocate elements
+       * @param typeCode Can be "type_d" (idl type string) or "type_15" (idl type wstring)
+       */
       public StringBuilderHolder(int maxSize, String typeCode)
       {
          super(StringBuilder.class, StringBuilder::new, maxSize);
