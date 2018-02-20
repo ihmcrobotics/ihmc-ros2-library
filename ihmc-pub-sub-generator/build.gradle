@@ -1,0 +1,62 @@
+buildscript {
+   repositories {
+      maven { url "https://plugins.gradle.org/m2/" }
+      mavenLocal()
+      maven { url "http://dl.bintray.com/ihmcrobotics/maven-release" }
+      maven { url "http://dl.bintray.com/ihmcrobotics/maven-vendor" }
+      jcenter()
+   }
+   dependencies {
+      classpath "us.ihmc:ihmc-build:0.12.8"
+      classpath group: "us.ihmc", name: "ihmc-pub-sub-generator", version: "0.3.8-LOCAL"
+      classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
+   }
+}
+apply plugin: "us.ihmc.ihmc-build"
+apply plugin: "com.github.hierynomus.license"
+apply plugin: "application"
+
+buildDir = "build-java"
+mainClassName = "us.ihmc.idl.generator.IDLGenerator"
+
+ihmc {
+   group = "us.ihmc"
+   version = "0.3.8"
+   vcsUrl = "https://stash.ihmc.us/projects/LIBS/repos/ihmc-pub-sub-generator"
+   openSource = true
+   maintainer = "Jesper Smith (jsmith@ihmc.us)"
+
+   configureDependencyResolution()
+   resourceDirectory("main", "templates")
+   javaDirectory("test", "generated-java")
+   resourceDirectory("test", "idl")
+   configurePublications()
+}
+
+dependencies {
+   compile gradleApi()
+   compile group: "us.ihmc.thirdparty.eprosima", name: "idl-parser", version: "1.0.0-ihmc3"
+   compile group: "org.anarres", name: "jcpp", version: "1.4.12"
+   compile group: "us.ihmc", name: "euclid-core", version: "0.4.13"
+}
+
+testDependencies {
+   compile group: "us.ihmc", name: "ihmc-pub-sub", version: "0.4.0"
+   compile group: "junit", name: "junit", version: "4.12"
+}
+
+license {
+   header rootProject.file("license-header.txt")
+   ext.year = Calendar.getInstance().get(Calendar.YEAR)
+   strictCheck true
+
+   sourceSets = project.container(SourceSet)
+   sourceSets.add(ihmc.sourceSet("main"))
+}
+
+task generateIDLElementTest(type: us.ihmc.idl.generator.IDLGeneratorTask) {
+   idlFiles = fileTree(dir: "src/test/idl")
+   includeDirs = files(".", "idl")
+   targetDirectory = file("src/test/generated-java")
+   packagePrefix = "us.ihmc.idl.generated"
+}
