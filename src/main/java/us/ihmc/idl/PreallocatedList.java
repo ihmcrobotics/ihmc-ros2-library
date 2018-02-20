@@ -79,7 +79,7 @@ public class PreallocatedList<T>
       System.arraycopy(values, 0, array, 0, size());
       return array;
    }
-   
+
    /**
     * Copies the elements in this list to dest
     * 
@@ -88,14 +88,14 @@ public class PreallocatedList<T>
     */
    public void toArray(T[] dest)
    {
-      if(dest.length < size())
+      if (dest.length < size())
       {
          throw new IndexOutOfBoundsException("Cannot copy data in destination array, insufficient space.");
       }
       System.arraycopy(values, 0, dest, 0, size());
 
    }
-   
+
    /**
     * 
     * @return true if this is a List of enums
@@ -121,7 +121,7 @@ public class PreallocatedList<T>
    }
 
    /**
-    * Clears the list. 
+    * Clears the list.
     * 
     * This function just resets the size to 0. The underlying data objects are not emptied or removed.
     */
@@ -151,7 +151,7 @@ public class PreallocatedList<T>
    /**
     * Add an enum value.
     * 
-    * Use for enum sequences 
+    * Use for enum sequences
     * 
     * @param Enum value
     */
@@ -206,20 +206,21 @@ public class PreallocatedList<T>
    }
 
    /**
-    * Removes the element at the specified position in this list.
-    * This method is faster than {@link #remove(int)} but the ith element is swapped with the last element changing the ordering of the list.
+    * Removes the element at the specified position in this list. This method is faster than
+    * {@link #remove(int)} but the ith element is swapped with the last element changing the
+    * ordering of the list.
     *
-    * @param index the index of the element to be removed
+    * @param i the index of the element to be removed
     */
-   public void removeQuick(int index)
+   public void removeQuick(int i)
    {
-      if (index == pos)
+      if (i == pos)
       {
          remove();
          return;
       }
-      rangeCheck(index);
-      unsafeSwap(index, pos--);
+      rangeCheck(i);
+      unsafeSwap(i, pos--);
    }
 
    /**
@@ -228,7 +229,7 @@ public class PreallocatedList<T>
     * @param i index of the first object to swap
     * @param j index of the second object to swap
     * @throws ArrayIndexOutOfBoundsException if either of the indices is out of range
-    * (<tt>i &lt; 0 || i &gt;= size() || j &lt; 0 || j &gt;= size()</tt>)
+    *            (<tt>i &lt; 0 || i &gt;= size() || j &lt; 0 || j &gt;= size()</tt>)
     */
    public void swap(int i, int j)
    {
@@ -236,7 +237,9 @@ public class PreallocatedList<T>
       rangeCheck(j);
 
       if (i == j)
+      {
          return;
+      }
 
       unsafeSwap(i, j);
    }
@@ -249,7 +252,7 @@ public class PreallocatedList<T>
    }
 
    /**
-    * Get the element at position i. To change the element, use get() and 
+    * Get the element at position i. To change the element, use get() and
     * 
     * @param i Position to get element at
     * @return Element at position i.
@@ -261,35 +264,41 @@ public class PreallocatedList<T>
    }
 
    /**
-    * Returns the first element of this list.
-    * If the list is empty, it returns {@code null}.
+    * Returns the first element of this list. If the list is empty, it returns {@code null}.
     *
     * @return the first element of this list.
     */
    public T getFirst()
    {
       if (isEmpty())
+      {
          return null;
+      }
       else
+      {
          return values[0];
+      }
    }
 
    /**
-    * Returns the last element of this list.
-    * If the list is empty, it returns {@code null}.
+    * Returns the last element of this list. If the list is empty, it returns {@code null}.
     *
     * @return the last element of this list.
     */
    public T getLast()
    {
       if (isEmpty())
+      {
          return null;
+      }
       else
+      {
          return values[pos];
+      }
    }
 
    /**
-    * Set the Enum value at position i. 
+    * Set the Enum value at position i.
     * 
     * @param i
     * @param value
@@ -307,10 +316,11 @@ public class PreallocatedList<T>
    /**
     * Clears the list
     * 
-    * This function just resets the size to 0. 
+    * This function just resets the size to 0.
     * 
-    * The underlying data objects are not emptied or removed, however this may change in future releases
-    *  
+    * The underlying data objects are not emptied or removed, however this may change in future
+    * releases
+    * 
     */
    public void clear()
    {
