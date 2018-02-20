@@ -96,44 +96,6 @@ public class PreallocatedListTest
    }
 
    @Test(timeout = 30000)
-   public void testFastRemove()
-   {
-      int currentSize = 10;
-      PreallocatedList<Object> list = new PreallocatedList<>(Object.class, Object::new, 20);
-      while (list.size() < currentSize)
-         list.add();
-      
-      assertTrue(list.size() == currentSize);
-
-      ArrayList<Object> savedList = new ArrayList<>();
-      for (int i = 0; i < currentSize; i++)
-         savedList.add(list.get(i));
-
-      int indexOfRemovedOject = 3;
-      list.removeQuick(indexOfRemovedOject);
-      currentSize--;
-      assertTrue(list.size() == currentSize);
-
-      for (int i = 0; i < currentSize; i++)
-      {
-         if (i == indexOfRemovedOject)
-            assertTrue(list.get(i) == savedList.get(savedList.size() - 1));
-         else
-            assertTrue(list.get(i) == savedList.get(i));
-      }
-
-      try
-      {
-         list.removeQuick(currentSize);
-         fail();
-      }
-      catch (IndexOutOfBoundsException e)
-      {
-         // Good
-      }
-   }
-
-   @Test(timeout = 30000)
    public void testRemove()
    {
       PreallocatedList<MutableInt> list = new PreallocatedList<>(MutableInt.class, MutableInt::new, 10);

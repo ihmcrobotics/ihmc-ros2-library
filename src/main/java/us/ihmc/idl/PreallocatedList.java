@@ -180,7 +180,6 @@ public class PreallocatedList<T>
     * indices).
     *
     * @param index the index of the element to be removed
-    * @return null.
     */
    public void remove(int i)
    {
@@ -203,24 +202,6 @@ public class PreallocatedList<T>
       values[pos] = t;
       --pos;
       return;
-   }
-
-   /**
-    * Removes the element at the specified position in this list. This method is faster than
-    * {@link #remove(int)} but the ith element is swapped with the last element changing the
-    * ordering of the list.
-    *
-    * @param i the index of the element to be removed
-    */
-   public void removeQuick(int i)
-   {
-      if (i == pos)
-      {
-         remove();
-         return;
-      }
-      rangeCheck(i);
-      unsafeSwap(i, pos--);
    }
 
    /**
