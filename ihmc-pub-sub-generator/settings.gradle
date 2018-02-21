@@ -10,6 +10,10 @@ buildscript {
 
 import us.ihmc.build.IHMCSettingsConfigurator
 
+/**
+ * Browse source at https://github.com/ihmcrobotics/ihmc-build
+ */
 def ihmcSettingsConfigurator = new IHMCSettingsConfigurator(settings, logger, ext)
-ihmcSettingsConfigurator.configureAsGroupOfProjects()
+ihmcSettingsConfigurator.checkRequiredPropertiesAreSet()
+ihmcSettingsConfigurator.configureExtraSourceSets()
 ihmcSettingsConfigurator.findAndIncludeCompositeBuilds()
