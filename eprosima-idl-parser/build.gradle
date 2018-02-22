@@ -1,0 +1,102 @@
+buildscript {
+   repositories {
+      mavenCentral()
+      maven { url "http://dl.bintray.com/ihmcrobotics/maven-release" }
+      maven { url "http://dl.bintray.com/ihmcrobotics/maven-vendor" }
+      maven { url "https://plugins.gradle.org/m2/" }
+      mavenLocal()
+      jcenter()
+   }
+   dependencies {
+      classpath "us.ihmc:ihmc-build:0.12.8"
+      classpath "me.champeau.gradle:antlr4-gradle-plugin:0.1"
+   }
+}
+apply plugin: "us.ihmc.ihmc-build"
+apply plugin: "me.champeau.gradle.antlr4"
+
+ihmc {
+   group = "us.ihmc"
+   version = "1.0.0.1"
+   vcsUrl = "https://github.com/ihmcrobotics/ihmc-pub-sub"
+   openSource = true
+   maintainer = "Duncan Calvert (dcalvert@ihmc.us)"
+
+   configureDependencyResolution()
+   javaDirectory("main", "generated-java")
+   resourceDirectory("main", "antlr4")
+   configurePublications()
+}
+
+mainDependencies {
+   compile group: "org.antlr", name: "antlr4", version: "4.2.2"
+   compile group: "org.antlr", name: "stringtemplate", version: "3.2"
+   compile group: "us.ihmc", name: "ihmc-commons", version: "0.18.0"
+}
+
+antlr4.source = project.file("src/main/antlr4/omg")
+antlr4.output = project.file("src/main/generated-java")
+antlr4.listener = false
+antlr4.visitor = false
+antlr4.extraArgs = ["-package", "com.eprosima.idl.parser.grammar"]
+
+// make the Java compile task depend on the antlr4 task
+//compileJava.dependsOn antlr4
+
+//sourceSets.main {
+//// add the generated source files to the list of java sources
+//   java.srcDirs += antlr4.output
+//
+//   resources {
+//      srcDir "src/main/java"
+//      include "**/*.stg"
+//   }
+//}
+
+// add antlr4 to classpath
+//   configurations {
+//      compile.extendsFrom antlr4
+//   }
+//
+//   group = "com.eprosima"
+//   version = "1.0.0-170731"
+
+////general properties
+//   jar {
+//      from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//      baseName = "idlparser"
+//   }
+//
+//   task sourceJar(type: Jar, dependsOn: classes) {
+//      classifier = "sources"
+//      from sourceSets.main.allJava
+//   }
+
+/**
+ * Set up publishing. User must set the following properties
+ * in ~/.gradle/gradle.properties or pass via -Pproperty=value
+ * on command line.
+ *
+ * publishUsername=yourusername
+ * publishPassword=yourpassword
+ * publishUrl=https://some.url/maven/orgname/reponame/projectname
+// */
+//   publishing {
+//      publications {
+//         mavenJava(MavenPublication) {
+//            artifactId = "idl-parser"
+//            from components.java
+//
+//            artifact sourceJar {
+//               classifier "sources"
+//            }
+//         }
+//      }
+//      repositories {
+//         maven {
+//            url publishURL
+//            credentials.username = publishUsername
+//            credentials.password = publishPassword
+//         }
+//      }
+//   }
