@@ -683,7 +683,9 @@ public interface IDLSequence
          resetQuick();
          for(int i = 0; i < other.size(); i++)
          {
-            add().append(other.get(i));
+            StringBuilder add = add();
+            add.delete(0, add.length());
+            add.append(other.get(i));
          }
       }
       
