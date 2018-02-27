@@ -9,7 +9,7 @@ buildscript {
    }
    dependencies {
       classpath "us.ihmc:ihmc-build:0.12.8"
-      classpath "us.ihmc:ihmc-pub-sub-generator:0.3.7"
+//      classpath "us.ihmc:ihmc-pub-sub-generator:0.3.7"
       classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
    }
 }
@@ -33,12 +33,12 @@ ihmc {
 // For swig builds
 //buildDir = 'build-java'
 
-task generateChatMessage(type: us.ihmc.idl.generator.IDLGeneratorTask) {
-   idlFiles = fileTree(dir: 'idl')
-   includeDirs = files(".", "idl")
-   targetDirectory = file("src/main/generated")
-   packagePrefix = "us.ihmc.idl.generated"
-}
+//task generateChatMessage(type: us.ihmc.idl.generator.IDLGeneratorTask) {
+//   idlFiles = fileTree(dir: 'idl')
+//   includeDirs = files(".", "idl")
+//   targetDirectory = file("src/main/generated")
+//   packagePrefix = "us.ihmc.idl.generated"
+//}
 
 license {
    header rootProject.file('license-header.txt')
