@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,13 @@
 
 package us.ihmc.idl.generator;
 
+import com.eprosima.idl.generator.manager.TemplateManager;
+import com.eprosima.idl.parser.tree.*;
+import com.eprosima.idl.parser.typecode.*;
+import com.eprosima.log.ColorMessage;
+import org.antlr.stringtemplate.StringTemplate;
+import org.antlr.stringtemplate.StringTemplateGroup;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,38 +46,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.StringTemplateGroup;
-
-import com.eprosima.idl.generator.manager.TemplateManager;
-import com.eprosima.idl.parser.tree.Definition;
-import com.eprosima.idl.parser.tree.Export;
-import com.eprosima.idl.parser.tree.Interface;
-import com.eprosima.idl.parser.tree.Module;
-import com.eprosima.idl.parser.tree.TypeDeclaration;
-import com.eprosima.idl.parser.typecode.ContainerTypeCode;
-import com.eprosima.idl.parser.typecode.EnumTypeCode;
-import com.eprosima.idl.parser.typecode.Member;
-import com.eprosima.idl.parser.typecode.TypeCode;
-import com.eprosima.idl.parser.typecode.UnionTypeCode;
-import com.eprosima.log.ColorMessage;
-
 /**
  * Internal class for the code generator
- * 
- * 
- * @author Jesper Smith
  *
+ * @author Jesper Smith
  */
 class TypesGenerator
 {
-
    private static final String PUB_SUB_TYPE_NAME = "PubSubType";
-   
+
    private final HashMap<TypeCode, AbstractStructTypeCode> updatedTypes = new HashMap<>();
    private final ArrayList<Member> members = new ArrayList<>();
-   
-   
+   private TemplateManager tmanager_ = null;
+   private boolean replace_ = false;
+
    TypesGenerator(TemplateManager tmanager, boolean replace)
    {
       tmanager_ = tmanager;
@@ -86,7 +75,7 @@ class TypesGenerator
       ArrayList<Definition> definitions = context.getDefinitions();
 
       processAbstractDefinitions(definitions);
-      
+
       StringTemplateGroup javaTypeTemplate = tmanager_.createStringTemplateGroup("JavaType");
       boolean returnedValue = processDefinitions(javaTypeTemplate, context, definitions, packagDir, packag, "", extensions);
       if (returnedValue)
@@ -102,7 +91,7 @@ class TypesGenerator
    {
       if (definitions != null)
       {
-         for (int i = 0 ; i < definitions.size(); i++)
+         for (int i = 0; i < definitions.size(); i++)
          {
             Definition definition = definitions.get(i);
 
@@ -114,10 +103,10 @@ class TypesGenerator
             else if (definition.isIsTypeDeclaration())
             {
                TypeDeclaration typedecl = (TypeDeclaration) definition;
-               if(typedecl.getTypeCode().getKind() == TypeCode.KIND_STRUCT)
+               if (typedecl.getTypeCode().getKind() == TypeCode.KIND_STRUCT)
                {
                   boolean abstractAnnotation = typedecl.getAnnotations().containsKey("Abstract");
-                  if(abstractAnnotation)
+                  if (abstractAnnotation)
                   {
                      AbstractTypeDeclaration newDeclaration = new AbstractTypeDeclaration(typedecl);
                      definitions.set(i, newDeclaration);
@@ -125,31 +114,28 @@ class TypesGenerator
                   }
                   members.addAll(((StructTypeCode) typedecl.getTypeCode()).getMembers());
                }
-               
-                  
             }
          }
-         
-         for(Member member: members)
+
+         for (Member member : members)
          {
-            if(updatedTypes.containsKey(member.getTypecode()))
+            if (updatedTypes.containsKey(member.getTypecode()))
             {
                member.setTypecode(updatedTypes.get(member.getTypecode()));
             }
             else if (member.getTypecode().getKind() == TypeCode.KIND_SEQUENCE || member.getTypecode().getKind() == TypeCode.KIND_ARRAY)
             {
                ContainerTypeCode containerTypeCode = (ContainerTypeCode) member.getTypecode();
-               if(containerTypeCode.getContentTypeCode().getKind() == TypeCode.KIND_STRUCT)
+               if (containerTypeCode.getContentTypeCode().getKind() == TypeCode.KIND_STRUCT)
                {
-                  for(AbstractStructTypeCode entry : updatedTypes.values())
+                  for (AbstractStructTypeCode entry : updatedTypes.values())
                   {
-                     if(entry.getIdlTypename().equals(containerTypeCode.getContentTypeCode().getIdlTypename()))
+                     if (entry.getIdlTypename().equals(containerTypeCode.getContentTypeCode().getIdlTypename()))
                      {
                         containerTypeCode.setContentTypeCode(entry);
                         break;
                      }
                   }
-                  
                }
             }
          }
@@ -177,7 +163,6 @@ class TypesGenerator
       if (definitions != null)
       {
 
-         
          for (Definition definition : definitions)
          {
             if (definition.isIsModule())
@@ -199,8 +184,8 @@ class TypesGenerator
                   }
 
                   String packageName = packag.isEmpty() ? "" : (packag + ".");
-                  if (!processDefinitions(stg_, context, module.getDefinitions(), outputDir + File.separator, packageName + module.getName(),
-                                          moduleNamePostfix, extensions))
+                  if (!processDefinitions(stg_, context, module.getDefinitions(), outputDir + File.separator, packageName + module.getName(), moduleNamePostfix,
+                                          extensions))
                      return false;
                }
             }
@@ -262,13 +247,12 @@ class TypesGenerator
                   boolean abstractAnnotation = typedecl.getAnnotations().containsKey("Abstract");
                   boolean notEnumPubSubType = !moduleNamePostfix.equals(PUB_SUB_TYPE_NAME) || typedecl.getTypeCode().getKind() != TypeCode.KIND_ENUM;
                   boolean notAbstractDefinition = moduleNamePostfix.equals(PUB_SUB_TYPE_NAME) || !abstractAnnotation;
-                  
-                  
-                  if(notEnumPubSubType && notAbstractDefinition)
+
+                  if (notEnumPubSubType && notAbstractDefinition)
                   {
                      // get StringTemplate of the structure
                      StringTemplate typest = processTypeDeclaration(stg_, context, typedecl, extensions);
-   
+
                      if (typest != null)
                      {
                         // Save file.
@@ -276,7 +260,7 @@ class TypesGenerator
                         st.setAttribute("ctx", context);
                         st.setAttribute("definitions", typest.toString());
                         st.setAttribute("package", (!packag.isEmpty() ? packag : null));
-                        
+
                         StringTemplate extensionst = null;
                         String extensionname = null;
                         if (extensions != null && (extensionname = extensions.get("main")) != null)
@@ -334,7 +318,7 @@ class TypesGenerator
       {
          typest = stg_.getInstanceOf("struct_type");
          typest.setAttribute("struct", typedecl.getTypeCode());
-         if(typedecl.getAnnotations().containsKey("TypeCode"))
+         if (typedecl.getAnnotations().containsKey("TypeCode"))
          {
             typest.setAttribute("typecode", getTypeCodeAnnotation(typedecl));
          }
@@ -354,7 +338,7 @@ class TypesGenerator
          typest = stg_.getInstanceOf("union_type");
          typest.setAttribute("union", typedecl.getTypeCode());
 
-         if(typedecl.getAnnotations().containsKey("TypeCode"))
+         if (typedecl.getAnnotations().containsKey("TypeCode"))
          {
             typest.setAttribute("typecode", getTypeCodeAnnotation(typedecl));
          }
@@ -362,7 +346,7 @@ class TypesGenerator
          {
             typest.setAttribute("typecode", ((UnionTypeCode) typedecl.getTypeCode()).getScopedname());
          }
-         
+
          // Get extension
          if (extensions != null && (extensionname = extensions.get("union_type")) != null)
          {
@@ -374,8 +358,8 @@ class TypesGenerator
       {
          typest = stg_.getInstanceOf("enum_type");
          typest.setAttribute("enum", typedecl.getTypeCode());
-         
-         if(typedecl.getAnnotations().containsKey("TypeCode"))
+
+         if (typedecl.getAnnotations().containsKey("TypeCode"))
          {
             typest.setAttribute("typecode", getTypeCodeAnnotation(typedecl));
          }
@@ -447,7 +431,4 @@ class TypesGenerator
 
       return returnedValue;
    }
-
-   private TemplateManager tmanager_ = null;
-   private boolean replace_ = false;
 }

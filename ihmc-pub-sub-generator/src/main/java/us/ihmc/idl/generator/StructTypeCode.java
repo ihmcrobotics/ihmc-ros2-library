@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,73 +29,69 @@
 
 package us.ihmc.idl.generator;
 
+import com.eprosima.idl.parser.tree.Annotation;
 import com.eprosima.idl.parser.typecode.Member;
-
 import org.antlr.stringtemplate.StringTemplate;
 
-import com.eprosima.idl.parser.tree.Annotation;
-
 /**
- * 
  * Internal class for the code generator
- * 
- * @author Jesper Smith
  *
+ * @author Jesper Smith
  */
 class StructTypeCode extends com.eprosima.idl.parser.typecode.StructTypeCode
 {
-    public StructTypeCode(String scope, String name)
-    {
-        super(scope, name);
-    }
+   private boolean istopic_ = true;
 
-    public boolean isHasKey()
-    {
-        boolean returnedValue = false;
-        
-        for(int count = 0; count < getMembers().size() && !returnedValue; ++count)
-        {
-            Member member = getMembers().get(count);
-            Annotation key = member.getAnnotations().get("Key");
+   public StructTypeCode(String scope, String name)
+   {
+      super(scope, name);
+   }
 
-            if(key != null)
-            {
-                String value = key.getValue("value");
+   public boolean isHasKey()
+   {
+      boolean returnedValue = false;
 
-                if(value != null && value.equals("true"))
-                    returnedValue = true;
-            }
-        }
+      for (int count = 0; count < getMembers().size() && !returnedValue; ++count)
+      {
+         Member member = getMembers().get(count);
+         Annotation key = member.getAnnotations().get("Key");
 
-        return returnedValue;
-    }
-    
-    public String getAbstractimpl()
-    {
-       return null;
-    }
-    
-    public boolean isAbstract()
-    {
-       return false;
-    }
+         if (key != null)
+         {
+            String value = key.getValue("value");
 
-    public void setIsTopic(boolean value)
-    {
-        istopic_ = value;
-    }
+            if (value != null && value.equals("true"))
+               returnedValue = true;
+         }
+      }
 
-    public boolean isIsTopic()
-    {
-        return istopic_;
-    }
-    
-    public String getPubsubTypename()
-    {
-        StringTemplate st = getJavaTypenameFromStringTemplate();
-        st.setAttribute("name", getJavaScopedname() + "PubSubType");
-        return st.toString();
-    }
+      return returnedValue;
+   }
 
-    private boolean istopic_ = true;
+   public String getAbstractimpl()
+   {
+      return null;
+   }
+
+   public boolean isAbstract()
+   {
+      return false;
+   }
+
+   public boolean isIsTopic()
+   {
+      return istopic_;
+   }
+
+   public void setIsTopic(boolean value)
+   {
+      istopic_ = value;
+   }
+
+   public String getPubsubTypename()
+   {
+      StringTemplate st = getJavaTypenameFromStringTemplate();
+      st.setAttribute("name", getJavaScopedname() + "PubSubType");
+      return st.toString();
+   }
 }
