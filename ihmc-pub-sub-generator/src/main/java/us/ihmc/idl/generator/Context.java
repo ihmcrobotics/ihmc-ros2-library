@@ -576,7 +576,7 @@ public class Context extends com.eprosima.idl.context.Context
             // Read filename
             scanner.next();
             String file = scanner.next();
-            System.out.println("file: " + file);
+//            System.out.println("[idl-parser] " + file);
             // Read flags.
             boolean systemFile = false, enteringFile = false, exitingFile = false;
 
