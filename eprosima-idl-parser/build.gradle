@@ -35,7 +35,7 @@ mainDependencies {
 }
 
 antlr4.source = project.file("src/main/antlr4/omg")
-antlr4.output = project.file("src/main/generated-java")
+antlr4.output = project.file("src/main/generated-java/com/eprosima/idl/parser/grammar")
 antlr4.listener = false
 antlr4.visitor = false
 antlr4.extraArgs = ["-package", "com.eprosima.idl.parser.grammar"]
