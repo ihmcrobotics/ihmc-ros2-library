@@ -42,6 +42,8 @@ grammar IDL;
 }
 
 @lexer::members{
+    public static final int COMMENTS = 2;
+
     Context ctx = null;
     
     public void setContext(Context _ctx)
@@ -2116,11 +2118,11 @@ PREPROC_DIRECTIVE
 	;
 	
 COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
+    :   '/*' .*? '*/' -> channel(COMMENTS)
     ;
 
 LINE_COMMENT
-    :   '//' ~('\n' | '\r')* '\r'? '\n' -> channel(HIDDEN)
+    :   '//' ~('\n' | '\r')* '\r'? '\n' -> channel(COMMENTS)
     ;
 
 // [EOF] IDL.g

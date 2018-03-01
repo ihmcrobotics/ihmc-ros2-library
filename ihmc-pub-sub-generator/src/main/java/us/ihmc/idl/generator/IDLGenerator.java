@@ -28,6 +28,7 @@ import org.anarres.cpp.CppReader;
 import org.anarres.cpp.Feature;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,7 +119,7 @@ public class IDLGenerator
    /**
     * Generate java classes from an IDL file
     *
-    * @param idlFilename IDL file to parse
+    * @param idlFile IDL file to parse
     * @param packageName Target package (IDL Module gets added to this)
     * @param targetDirectory Directory to save the generated files in. The whole package structure is generated in this directory
     * @throws IOException
@@ -174,6 +175,9 @@ public class IDLGenerator
          IDLLexer lexer = new IDLLexer(input);
          lexer.setContext(ctx);
          CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+         printTokenStream(tokens);
+
          IDLParser parser = new IDLParser(tokens);
          // Pass the filename without the extension
 
@@ -196,6 +200,34 @@ public class IDLGenerator
       else
       {
          throw new IOException("The File " + idlFilename + " was not found.");
+      }
+   }
+
+   public static void printTokenStream(CommonTokenStream tokens)
+   {
+      tokens.fill();
+      for (int index = 0; index < tokens.size(); index++)
+      {
+         Token token = tokens.get(index);
+         if (token.getType() != IDLParser.WS)
+         {
+            String out = "";
+            out += "Channel: " + token.getChannel();
+            out += " Type: " + token.getType();
+            out += " Hidden: ";
+            List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index);
+            for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++)
+            {
+               if (hiddenTokensToLeft.get(i).getType() != IDLParser.WS)
+               {
+                  out += "\n\t" + i + ":";
+                  out += "\n\tChannel: " + hiddenTokensToLeft.get(i).getChannel() + "  Type: " + hiddenTokensToLeft.get(i).getType();
+                  out += hiddenTokensToLeft.get(i).getText().replaceAll("\\s", "");
+               }
+            }
+            out += token.getText().replaceAll("\\s", "");
+            System.out.println(out);
+         }
       }
    }
 }
