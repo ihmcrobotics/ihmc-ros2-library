@@ -17,11 +17,7 @@ apply plugin: "us.ihmc.ihmc-build"
 apply plugin: "com.github.hierynomus.license"
 
 ihmc {
-   group = "us.ihmc"
-   version = "0.4.0"
-   vcsUrl = "https://github.com/ihmcrobotics/ihmc-pub-sub"
-   openSource = true
-   maintainer = "Jesper Smith (jesper@halodi.com)"
+   loadProductProperties("../product.properties")
 
    configureDependencyResolution()
    resourceDirectory("main", "idl")

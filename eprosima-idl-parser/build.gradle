@@ -16,11 +16,7 @@ apply plugin: "us.ihmc.ihmc-build"
 apply plugin: "me.champeau.gradle.antlr4"
 
 ihmc {
-   group = "us.ihmc"
-   version = "1.0.0.1"
-   vcsUrl = "https://github.com/ihmcrobotics/ihmc-pub-sub"
-   openSource = true
-   maintainer = "Duncan Calvert (dcalvert@ihmc.us)"
+   loadProductProperties("../product.properties")
 
    configureDependencyResolution()
    javaDirectory("main", "generated-java")

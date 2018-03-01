@@ -19,11 +19,7 @@ apply plugin: "application"
 mainClassName = "us.ihmc.idl.generator.IDLGenerator"
 
 ihmc {
-   group = "us.ihmc"
-   version = "0.3.8"
-   vcsUrl = "https://stash.ihmc.us/projects/LIBS/repos/ihmc-pub-sub-generator"
-   openSource = true
-   maintainer = "Jesper Smith (jsmith@ihmc.us)"
+   loadProductProperties("../product.properties")
 
    configureDependencyResolution()
    resourceDirectory("main", "templates")
@@ -34,13 +30,13 @@ ihmc {
 
 dependencies {
    compile gradleApi()
-   compile group: "us.ihmc", name: "eprosima-idl-parser", version: "1.0.0.1"
+   compile group: "us.ihmc", name: "eprosima-idl-parser", version: "0.5.1"
    compile group: "org.anarres", name: "jcpp", version: "1.4.12"
    compile group: "us.ihmc", name: "euclid-core", version: "0.4.13"
 }
 
 testDependencies {
-   compile group: "us.ihmc", name: "ihmc-pub-sub", version: "0.4.0"
+   compile group: "us.ihmc", name: "ihmc-pub-sub", version: "0.5.1"
    compile group: "junit", name: "junit", version: "4.12"
 }
 
