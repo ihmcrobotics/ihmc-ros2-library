@@ -80,9 +80,9 @@ public class IDLContext extends Context
    }
 
    @Override
-   public StructTypeCode createStructTypeCode(String name)
+   public StructTypeCode createStructTypeCode(String name, String comments)
    {
-      return new StructTypeCode(getScope(), name);
+      return new StructTypeCode(getScope(), name, comments);
    }
 
    public boolean isPrintexception()

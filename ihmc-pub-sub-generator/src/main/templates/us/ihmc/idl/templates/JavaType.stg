@@ -22,7 +22,7 @@ public interface $interface.name$
 struct_type(ctx, parent, struct, extension, typecode) ::= <<
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
-$classdescription(type="class", name=struct.name, filename=[ctx.filename, ".idl"])$
+$struct.comments$
 public class $struct.name$ implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
 {
     public $struct.name$()
@@ -74,9 +74,9 @@ public class $struct.name$ implements Settable<$struct.name$>, EpsilonComparable
     }
 
     $struct.members : { member |
-    $member.comments$
     $if(!member.typecode.isType_e)$
     $if(member.typecode.primitive)$
+    $member.comments$
 public void set$member.javaName$($member.typecode.javaTypename$ $member.name$)
 {
     $member.name$_ = $member.name$;
@@ -84,19 +84,21 @@ public void set$member.javaName$($member.typecode.javaTypename$ $member.name$)
     $endif$
     $endif$
     $if(member.typecode.isType_d)$
+    $member.comments$
     public void set$member.javaName$(String $member.name$)
     {
     	$member.name$_.setLength(0);
     	$member.name$_.append($member.name$);
     }
-    
+
+    $member.comments$
     public java.lang.String get$member.javaName$AsString()
     {
     	return get$member.javaName$().toString();
     }
     $endif$
 
-$member.comments$
+    $member.comments$
 public $member.typecode.javaTypename$ get$member.javaName$()
 {
     return $member.name$_;

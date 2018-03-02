@@ -26,6 +26,7 @@ import java.util.Scanner;
 import java.util.NoSuchElementException;
 import java.util.Collection;
 
+import com.eprosima.idl.parser.grammar.IDLLexer;
 import com.eprosima.idl.util.Pair;
 import com.eprosima.idl.parser.tree.TreeNode;
 import com.eprosima.idl.parser.tree.Notebook;
@@ -43,6 +44,7 @@ import com.eprosima.idl.util.Util;
 import com.eprosima.idl.parser.exception.ParseException;
 
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
 
 public class Context
 {
@@ -361,10 +363,28 @@ public class Context
         return paramObject;
     }
 
-    public StructTypeCode createStructTypeCode(String name)
+    public StructTypeCode createStructTypeCode(String name, String comments)
     {
-        StructTypeCode structObject = new StructTypeCode(m_scope, name);
+        StructTypeCode structObject = new StructTypeCode(m_scope, name, comments);
         return structObject;
+    }
+
+    public String lookForComments(TokenStream tokenStream, Token token, int lookbackDistance)
+    {
+        int tokenIndex = token.getTokenIndex();
+        while (tokenIndex > 0 && tokenStream.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (token.getTokenIndex() - tokenIndex) < lookbackDistance)
+            tokenIndex--;
+
+        if (tokenIndex > 0 && (token.getTokenIndex() - tokenIndex) < lookbackDistance)
+        {
+            String comments = tokenStream.get(tokenIndex).getText().trim();
+            if (!comments.isEmpty())
+            {
+                return comments;
+            }
+        }
+
+        return null;
     }
 
     public Collection<TypeDeclaration> getTypes()

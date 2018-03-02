@@ -487,16 +487,7 @@ const_decl returns [Pair<ConstDeclaration, TemplateGroup> returnPair = null]
 	{
 		if(typecode != null)
         {
-            int maxTokenSeparation = 20;
-            int channel = 0;
-            int tokenIndex = tk.getTokenIndex();
-            while (tokenIndex > 0 && _input.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-                tokenIndex--;
-
-            if (tokenIndex > 0 && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-            {
-                comments = _input.get(tokenIndex).getText();
-            }
+            comments = ctx.lookForComments(_input, tk, 20);
 
 			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), constName, typecode, constValue, tk, comments);
 
@@ -1071,12 +1062,17 @@ struct_type returns [Pair<Vector<TypeCode>, TemplateGroup> returnPair = null]
     Vector<TypeCode> vector = null;
     StructTypeCode structTP = null;
     TemplateGroup structTemplates = null;
+    Token tk = null;
+    String comments = null;
 }
     :   KW_STRUCT
 		identifier
 	    {
-			name=$identifier.id;
-	       structTP = ctx.createStructTypeCode(name);
+           tk = _input.LT(1);
+
+           comments = ctx.lookForComments(_input, tk, 50);
+		   name=$identifier.id;
+	       structTP = ctx.createStructTypeCode(name, comments);
 	    }
 		LEFT_BRACE member_list[structTP] RIGHT_BRACE
 		{
@@ -1137,16 +1133,7 @@ member returns [Vector<Pair<Pair<String, Token>, Member>> ret = new Vector<Pair<
 		{
 	       if($type_spec.typecode!=null)
 	       {
-               int maxTokenSeparation = 20;
-               int channel = 0;
-               int tokenIndex = tk.getTokenIndex();
-               while (tokenIndex > 0 && _input.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-                   tokenIndex--;
-
-               if (tokenIndex > 0 && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-               {
-                   comments = _input.get(tokenIndex).getText();
-               }
+               comments = ctx.lookForComments(_input, tk, 20);
 
 	           // for ex:
 	           // int x = 5, y = 6;

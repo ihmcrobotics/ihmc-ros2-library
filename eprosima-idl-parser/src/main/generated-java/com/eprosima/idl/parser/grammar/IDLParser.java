@@ -2207,16 +2207,7 @@ public class IDLParser extends Parser {
 
 					if(typecode != null)
 			        {
-			            int maxTokenSeparation = 20;
-			            int channel = 0;
-			            int tokenIndex = tk.getTokenIndex();
-			            while (tokenIndex > 0 && _input.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-			                tokenIndex--;
-
-			            if (tokenIndex > 0 && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-			            {
-			                comments = _input.get(tokenIndex).getText();
-			            }
+			            comments = ctx.lookForComments(_input, tk, 20);
 
 						constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), constName, typecode, constValue, tk, comments);
 
@@ -4981,6 +4972,8 @@ public class IDLParser extends Parser {
 		    Vector<TypeCode> vector = null;
 		    StructTypeCode structTP = null;
 		    TemplateGroup structTemplates = null;
+		    Token tk = null;
+		    String comments = null;
 
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -4988,8 +4981,11 @@ public class IDLParser extends Parser {
 			setState(995); match(KW_STRUCT);
 			setState(996); ((Struct_typeContext)_localctx).identifier = identifier();
 
-						name=((Struct_typeContext)_localctx).identifier.id;
-				       structTP = ctx.createStructTypeCode(name);
+			           tk = _input.LT(1);
+
+			           comments = ctx.lookForComments(_input, tk, 50);
+					   name=((Struct_typeContext)_localctx).identifier.id;
+				       structTP = ctx.createStructTypeCode(name, comments);
 				    
 			setState(998); match(LEFT_BRACE);
 			setState(999); member_list(structTP);
@@ -5202,16 +5198,7 @@ public class IDLParser extends Parser {
 
 				       if(((MemberContext)_localctx).type_spec.typecode!=null)
 				       {
-			               int maxTokenSeparation = 20;
-			               int channel = 0;
-			               int tokenIndex = tk.getTokenIndex();
-			               while (tokenIndex > 0 && _input.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-			                   tokenIndex--;
-
-			               if (tokenIndex > 0 && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
-			               {
-			                   comments = _input.get(tokenIndex).getText();
-			               }
+			               comments = ctx.lookForComments(_input, tk, 20);
 
 				           // for ex:
 				           // int x = 5, y = 6;
