@@ -481,12 +481,24 @@ const_decl returns [Pair<ConstDeclaration, TemplateGroup> returnPair = null]
 		constTemplates = tmanager.createTemplateGroup("const_decl");
 	}
     Token tk = null;
+    String comments = null;
 }
     :   KW_CONST const_type { typecode=$const_type.typecode; tk = _input.LT(1);} identifier { constName=$identifier.id; } EQUAL const_exp { constValue=$const_exp.literalStr; }
 	{
 		if(typecode != null)
         {
-			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), constName, typecode, constValue, tk);
+            int maxTokenSeparation = 20;
+            int channel = 0;
+            int tokenIndex = tk.getTokenIndex();
+            while (tokenIndex > 0 && _input.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
+                tokenIndex--;
+
+            if (tokenIndex > 0 && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
+            {
+                comments = _input.get(tokenIndex).getText();
+            }
+
+			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), constName, typecode, constValue, tk, comments);
 
 			if(constTemplates != null)
             {
@@ -1117,10 +1129,28 @@ member_def returns [Vector<Pair<Pair<String, Token>, Member>> ret = null]
     ; 
 
 member returns [Vector<Pair<Pair<String, Token>, Member>> ret = new Vector<Pair<Pair<String, Token>, Member>>()]
-    :   type_spec declarators SEMICOLON
+@init {
+    Token tk = null;
+    String comments = null;
+}
+    :   type_spec { tk = _input.LT(1);} declarators SEMICOLON
 		{
 	       if($type_spec.typecode!=null)
 	       {
+               int maxTokenSeparation = 20;
+               int channel = 0;
+               int tokenIndex = tk.getTokenIndex();
+               while (tokenIndex > 0 && _input.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
+                   tokenIndex--;
+
+               if (tokenIndex > 0 && (tk.getTokenIndex() - tokenIndex) < maxTokenSeparation)
+               {
+                   comments = _input.get(tokenIndex).getText();
+               }
+
+	           // for ex:
+	           // int x = 5, y = 6;
+	           // but we are just gonna have one declarator most of the time
 		       for(int count = 0; count < $declarators.ret.size(); ++count)
 		       {
                    Member member = null;
@@ -1129,13 +1159,13 @@ member returns [Vector<Pair<Pair<String, Token>, Member>> ret = new Vector<Pair<
 		           {
 		               // Array declaration
 		               $declarators.ret.get(count).second().setContentTypeCode($type_spec.typecode);
-                       member = new Member($declarators.ret.get(count).second(), $declarators.ret.get(count).first().first());
+                       member = new Member($declarators.ret.get(count).second(), $declarators.ret.get(count).first().first(), comments);
 		               
 		           }
 		           else
 		           {
 		               // Simple declaration
-                       member = new Member($type_spec.typecode, $declarators.ret.get(count).first().first());
+                       member = new Member($type_spec.typecode, $declarators.ret.get(count).first().first(), comments);
 		           }
 
                    $ret.add(new Pair<Pair<String, Token>, Member>($declarators.ret.get(count).first(), member));

@@ -74,6 +74,7 @@ public class $struct.name$ implements Settable<$struct.name$>, EpsilonComparable
     }
 
     $struct.members : { member |
+    $member.comments$
     $if(!member.typecode.isType_e)$
     $if(member.typecode.primitive)$
 public void set$member.javaName$($member.typecode.javaTypename$ $member.name$)
@@ -95,6 +96,7 @@ public void set$member.javaName$($member.typecode.javaTypename$ $member.name$)
     }
     $endif$
 
+$member.comments$
 public $member.typecode.javaTypename$ get$member.javaName$()
 {
     return $member.name$_;
@@ -200,7 +202,8 @@ $else$builder.append(this.$member.name$_);$endif$
 		return builder.toString();
     }
 
-    $struct.members : { member |private $member.typecode.javaTypename$ $member.name$_; }; separator="\n"$
+    $struct.members : { member | $member.comments$
+    private $member.typecode.javaTypename$ $member.name$_; }; separator="\n"$
 
     $extension$
 }

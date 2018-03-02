@@ -142,23 +142,23 @@ public class IDLGenerator
 
       String onlyFileName = Util.getIDLFileNameOnly(idlFilename);
 
-      MyContext ctx = new MyContext(onlyFileName, idlFilename, new ArrayList<>());
-      ctx.setPackage(packageName);
-      TypeCode.javapackage = ctx.isIsPackageEmpty() ? "" : (ctx.getPackage() + ".");
+      IDLContext context = new IDLContext(onlyFileName, idlFilename, new ArrayList<>());
+      context.setPackage(packageName);
+      TypeCode.javapackage = context.isIsPackageEmpty() ? "" : (context.getPackage() + ".");
 
       // Create default @Key annotation.
-      AnnotationDeclaration keyann = ctx.createAnnotationDeclaration("Key", null);
+      AnnotationDeclaration keyann = context.createAnnotationDeclaration("Key", null);
       keyann.addMember(new AnnotationMember("value", new PrimitiveTypeCode(TypeCode.KIND_BOOLEAN), "true"));
 
       // Create default @Topic annotation.
-      AnnotationDeclaration topicann = ctx.createAnnotationDeclaration("Topic", null);
+      AnnotationDeclaration topicann = context.createAnnotationDeclaration("Topic", null);
       topicann.addMember(new AnnotationMember("value", new PrimitiveTypeCode(TypeCode.KIND_BOOLEAN), "true"));
 
-      AnnotationDeclaration abstractann = ctx.createAnnotationDeclaration("Abstract", null);
+      AnnotationDeclaration abstractann = context.createAnnotationDeclaration("Abstract", null);
       abstractann.addMember(new AnnotationMember("type", new PrimitiveTypeCode(TypeCode.KIND_STRING), "java.lang.Object"));
       abstractann.addMember(new AnnotationMember("impl", new PrimitiveTypeCode(TypeCode.KIND_STRING), ""));
 
-      AnnotationDeclaration typecode = ctx.createAnnotationDeclaration("TypeCode", null);
+      AnnotationDeclaration typecode = context.createAnnotationDeclaration("TypeCode", null);
       typecode.addMember(new AnnotationMember("type", new PrimitiveTypeCode(TypeCode.KIND_BOOLEAN), "INVALID_TYPE_CODE"));
 
       // Create template manager
@@ -166,28 +166,28 @@ public class IDLGenerator
 
       // Create main template
       TemplateGroup maintemplates = tmanager.createTemplateGroup("main");
-      maintemplates.setAttribute("ctx", ctx);
+      maintemplates.setAttribute("ctx", context);
 
       if (idlFile.exists())
       {
          Reader reader = createPreProcessedInputStream(idlFile, includePath);
          ANTLRInputStream input = new ANTLRInputStream(reader);
          IDLLexer lexer = new IDLLexer(input);
-         lexer.setContext(ctx);
+         lexer.setContext(context);
          CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-         printTokenStream(tokens);
+//         printTokenStream(tokens);
 
          IDLParser parser = new IDLParser(tokens);
          // Pass the filename without the extension
 
-         parser.specification(ctx, tmanager, maintemplates);
+         parser.specification(context, tmanager, maintemplates);
 
-         File packageDir = new File(targetDirectory, ctx.getPackageDir());
+         File packageDir = new File(targetDirectory, context.getPackageDir());
          if (packageDir.isDirectory() || packageDir.mkdirs())
          {
             TypesGenerator gen = new TypesGenerator(tmanager, true);
-            if (!gen.generate(ctx, packageDir.getPath() + "/", ctx.getPackage(), null))
+            if (!gen.generate(context, packageDir.getPath() + "/", context.getPackage(), null))
             {
                throw new IOException("Cannot create Java files");
             }
@@ -205,29 +205,41 @@ public class IDLGenerator
 
    public static void printTokenStream(CommonTokenStream tokens)
    {
+
       tokens.fill();
       for (int index = 0; index < tokens.size(); index++)
       {
-         Token token = tokens.get(index);
-         if (token.getType() != IDLParser.WS)
-         {
-            String out = "";
-            out += "Channel: " + token.getChannel();
-            out += " Type: " + token.getType();
-            out += " Hidden: ";
-            List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index);
-            for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++)
-            {
-               if (hiddenTokensToLeft.get(i).getType() != IDLParser.WS)
-               {
-                  out += "\n\t" + i + ":";
-                  out += "\n\tChannel: " + hiddenTokensToLeft.get(i).getChannel() + "  Type: " + hiddenTokensToLeft.get(i).getType();
-                  out += hiddenTokensToLeft.get(i).getText().replaceAll("\\s", "");
-               }
-            }
-            out += token.getText().replaceAll("\\s", "");
-            System.out.println(out);
-         }
+         printToken(tokens, index, tokens.get(index));
+//         printToken(tokens, index, tokens.LA(index));
+//         System.out.println(tokens.LA(index));
+//         printToken(tokens, index, tokens.LT(index));
+//         printToken(tokens, index, tokens.LB(index));
+      }
+   }
+
+   private static void printToken(CommonTokenStream tokens, int index, Token token)
+   {
+      if (token.getType() != IDLParser.WS)
+      {
+         String out = "";
+         out += " Index: " + token.getTokenIndex();
+         out += " Start: " + token.getStartIndex();
+         out += " Stop: " + token.getStopIndex();
+         out += " Channel: " + token.getChannel();
+         out += " Type: " + token.getType();
+//         out += " Hidden: ";
+//         List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index);
+//         for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++)
+//         {
+//            if (hiddenTokensToLeft.get(i).getType() != IDLParser.WS)
+//            {
+//               out += "\n\t" + i + ":";
+//               out += "\n\tChannel: " + hiddenTokensToLeft.get(i).getChannel() + "  Type: " + hiddenTokensToLeft.get(i).getType();
+//               out += hiddenTokensToLeft.get(i).getText().replaceAll("\\s", "");
+//            }
+//         }
+         out += " " + token.getText().replaceAll("\\s", "");
+         System.out.println(out);
       }
    }
 }

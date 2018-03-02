@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  * @author Jesper Smith
  */
-public class MyContext extends Context
+public class IDLContext extends Context
 {
    private String m_package = "";
    private String m_onlypackage = "";
@@ -30,7 +30,7 @@ public class MyContext extends Context
 
    private String m_file;
 
-   MyContext(String onlyFileName, String idlFilename, ArrayList<String> arg2)
+   IDLContext(String onlyFileName, String idlFilename, ArrayList<String> arg2)
    {
       super(onlyFileName, idlFilename, arg2);
       this.m_file = idlFilename;

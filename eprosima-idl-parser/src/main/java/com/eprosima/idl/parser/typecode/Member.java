@@ -17,6 +17,7 @@ package com.eprosima.idl.parser.typecode;
 import com.eprosima.idl.parser.tree.Annotation;
 import com.eprosima.idl.parser.tree.Notebook;
 import com.eprosima.idl.context.Context;
+import org.antlr.v4.runtime.Token;
 import us.ihmc.commons.FormattingTools;
 
 import java.util.Map;
@@ -29,11 +30,18 @@ public class Member implements Notebook
         m_annotations = new HashMap<String, Annotation>();
     }
     
-    public Member(TypeCode typecode, String name)
+    public Member(TypeCode typecode, String name, String comments)
     {
         m_typecode = typecode;
         m_name = name;
         m_annotations = new HashMap<String, Annotation>();
+
+        m_comments = comments;
+    }
+
+    public String getComments()
+    {
+        return m_comments;
     }
     
     public String getName()
@@ -93,4 +101,6 @@ public class Member implements Notebook
     private TypeCode m_typecode = null;
 
     private HashMap<String, Annotation> m_annotations = null;
+
+    private String m_comments;
 }
