@@ -38,6 +38,18 @@ public class PreallocatedList<T>
    private final Enum[] constants;
    private final boolean isEnum;
 
+   /**
+    * Temporarily needed to enable Kryo to serialize DDS messages.
+    */
+   @Deprecated
+   public PreallocatedList()
+   {
+      clazz = null;
+      values = null;
+      constants = null;
+      isEnum = false;
+   }
+
    @SuppressWarnings("unchecked")
    public PreallocatedList(Class<T> clazz, ListAllocator<T> allocator, int maxSize)
    {
