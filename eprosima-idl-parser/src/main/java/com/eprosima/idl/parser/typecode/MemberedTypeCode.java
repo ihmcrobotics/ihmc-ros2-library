@@ -92,7 +92,6 @@ public abstract class MemberedTypeCode extends TypeCode
 
     public void addConstant(ConstDeclaration constDeclaration)
     {
-        System.out.println("addConstant: " + constDeclaration.getName());
         m_consts.add(constDeclaration);
     }
     

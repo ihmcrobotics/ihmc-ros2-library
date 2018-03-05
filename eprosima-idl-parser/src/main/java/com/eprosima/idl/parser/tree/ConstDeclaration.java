@@ -29,11 +29,17 @@ public class ConstDeclaration extends TreeNode implements Definition, Export
         m_value = value;
         // Set as parent to the Typecode.
         m_typecode.setParent(this);
+        m_comments = comments;
     }
     
     public TypeCode getTypeCode()
     {
         return m_typecode;
+    }
+
+    public String getComments()
+    {
+        return m_comments;
     }
 
     public String getValue()
@@ -102,4 +108,5 @@ public class ConstDeclaration extends TreeNode implements Definition, Export
     private TypeCode m_typecode = null;
     private String m_value = null;
     private Object m_parent = null;
+    private String m_comments = null;
 }

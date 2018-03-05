@@ -490,7 +490,7 @@ const_decl returns [Pair<ConstDeclaration, TemplateGroup> returnPair = null]
 		if(typecode != null)
         {
             comments = ctx.lookForComments(_input, tk, 20);
-            String modifiedName = name.contains("__") ? name.substring(name.indexOf("__") + 2) : name;
+            String modifiedName = constName.contains("__") ? constName.substring(constName.indexOf("__") + 2) : constName;
 			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), modifiedName, typecode, constValue, tk, comments);
 			constDeclarations.add(constDecl);
 
@@ -1077,6 +1077,7 @@ struct_type returns [Pair<Vector<TypeCode>, TemplateGroup> returnPair = null]
 	       structTP = ctx.createStructTypeCode(name, comments);
            for (ConstDeclaration constDeclaration : constDeclarations)
 	          structTP.addConstant(constDeclaration);
+	       constDeclarations.clear();
 	    }
 		LEFT_BRACE member_list[structTP] RIGHT_BRACE
 		{
