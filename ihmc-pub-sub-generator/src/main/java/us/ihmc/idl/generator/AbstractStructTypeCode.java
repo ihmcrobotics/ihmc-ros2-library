@@ -27,7 +27,7 @@ public class AbstractStructTypeCode extends StructTypeCode
 
    public AbstractStructTypeCode(TypeDeclaration declaration)
    {
-      super(((StructTypeCode) declaration.getTypeCode()).getScope(), ((StructTypeCode) declaration.getTypeCode()).getName());
+      super(((StructTypeCode) declaration.getTypeCode()).getScope(), ((StructTypeCode) declaration.getTypeCode()).getName(), null);
       Annotation abstractAnnotation = declaration.getAnnotations().get("Abstract");
       if (abstractAnnotation == null)
       {

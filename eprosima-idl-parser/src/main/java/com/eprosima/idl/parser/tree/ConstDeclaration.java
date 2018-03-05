@@ -21,7 +21,7 @@ import org.antlr.v4.runtime.Token;
 
 public class ConstDeclaration extends TreeNode implements Definition, Export
 {
-    public ConstDeclaration(String scopeFile, boolean isInScope, String scope, String name, TypeCode typecode, String value, Token token)
+    public ConstDeclaration(String scopeFile, boolean isInScope, String scope, String name, TypeCode typecode, String value, Token token, String comments)
     {
         super(scopeFile, isInScope, scope, name, token);
 

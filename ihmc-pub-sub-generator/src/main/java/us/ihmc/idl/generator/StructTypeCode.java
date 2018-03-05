@@ -42,9 +42,9 @@ class StructTypeCode extends com.eprosima.idl.parser.typecode.StructTypeCode
 {
    private boolean istopic_ = true;
 
-   public StructTypeCode(String scope, String name)
+   public StructTypeCode(String scope, String name, String comments)
    {
-      super(scope, name);
+      super(scope, name, comments);
    }
 
    public boolean isHasKey()

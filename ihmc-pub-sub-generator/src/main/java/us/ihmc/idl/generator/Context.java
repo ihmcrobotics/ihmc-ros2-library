@@ -381,9 +381,9 @@ public class Context extends com.eprosima.idl.context.Context
       return paramObject;
    }
 
-   public StructTypeCode createStructTypeCode(String name)
+   public StructTypeCode createStructTypeCode(String name, String comments)
    {
-      StructTypeCode structObject = new StructTypeCode(m_scope, name);
+      StructTypeCode structObject = new StructTypeCode(m_scope, name, comments);
       return structObject;
    }
 

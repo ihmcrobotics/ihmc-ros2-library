@@ -44,6 +44,8 @@ grammar IDL;
 }
 
 @lexer::members{
+    public static final int COMMENTS = 2;
+
     Context ctx = null;
     
     public void setContext(Context _ctx)
@@ -481,13 +483,15 @@ const_decl returns [Pair<ConstDeclaration, TemplateGroup> returnPair = null]
 		constTemplates = tmanager.createTemplateGroup("const_decl");
 	}
     Token tk = null;
+    String comments = null;
 }
     :   KW_CONST const_type { typecode=$const_type.typecode; tk = _input.LT(1);} identifier { constName=$identifier.id; } EQUAL const_exp { constValue=$const_exp.literalStr; }
 	{
 		if(typecode != null)
         {
+            comments = ctx.lookForComments(_input, tk, 20);
             String modifiedName = name.contains("__") ? name.substring(name.indexOf("__") + 2) : name;
-			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), modifiedName, typecode, constValue, tk);
+			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), modifiedName, typecode, constValue, tk, comments);
 			constDeclarations.add(constDecl);
 
 			if(constTemplates != null)
@@ -1061,14 +1065,18 @@ struct_type returns [Pair<Vector<TypeCode>, TemplateGroup> returnPair = null]
     Vector<TypeCode> vector = null;
     StructTypeCode structTP = null;
     TemplateGroup structTemplates = null;
+    Token tk = null;
+    String comments = null;
 }
     :   KW_STRUCT
 		identifier
 	    {
-			name=$identifier.id;
-	       structTP = ctx.createStructTypeCode(name);
+           tk = _input.LT(1);
+           comments = ctx.lookForComments(_input, tk, 50);
+		   name=$identifier.id;
+	       structTP = ctx.createStructTypeCode(name, comments);
            for (ConstDeclaration constDeclaration : constDeclarations)
-	        structTP.addConstant(constDeclaration);
+	          structTP.addConstant(constDeclaration);
 	    }
 		LEFT_BRACE member_list[structTP] RIGHT_BRACE
 		{
@@ -1121,10 +1129,19 @@ member_def returns [Vector<Pair<Pair<String, Token>, Member>> ret = null]
     ; 
 
 member returns [Vector<Pair<Pair<String, Token>, Member>> ret = new Vector<Pair<Pair<String, Token>, Member>>()]
-    :   type_spec declarators SEMICOLON
+@init {
+    Token tk = null;
+    String comments = null;
+}
+    :   type_spec { tk = _input.LT(1);} declarators SEMICOLON
 		{
 	       if($type_spec.typecode!=null)
 	       {
+               comments = ctx.lookForComments(_input, tk, 20);
+
+	           // for ex:
+	           // int x = 5, y = 6;
+	           // but we are just gonna have one declarator most of the time
 		       for(int count = 0; count < $declarators.ret.size(); ++count)
 		       {
                    Member member = null;
@@ -1133,13 +1150,13 @@ member returns [Vector<Pair<Pair<String, Token>, Member>> ret = new Vector<Pair<
 		           {
 		               // Array declaration
 		               $declarators.ret.get(count).second().setContentTypeCode($type_spec.typecode);
-                       member = new Member($declarators.ret.get(count).second(), $declarators.ret.get(count).first().first());
+                       member = new Member($declarators.ret.get(count).second(), $declarators.ret.get(count).first().first(), comments);
 		               
 		           }
 		           else
 		           {
 		               // Simple declaration
-                       member = new Member($type_spec.typecode, $declarators.ret.get(count).first().first());
+                       member = new Member($type_spec.typecode, $declarators.ret.get(count).first().first(), comments);
 		           }
 
                    $ret.add(new Pair<Pair<String, Token>, Member>($declarators.ret.get(count).first(), member));
@@ -2122,11 +2139,11 @@ PREPROC_DIRECTIVE
 	;
 	
 COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
+    :   '/*' .*? '*/' -> channel(COMMENTS)
     ;
 
 LINE_COMMENT
-    :   '//' ~('\n' | '\r')* '\r'? '\n' -> channel(HIDDEN)
+    :   '//' ~('\n' | '\r')* '\r'? '\n' -> channel(COMMENTS)
     ;
 
 // [EOF] IDL.g

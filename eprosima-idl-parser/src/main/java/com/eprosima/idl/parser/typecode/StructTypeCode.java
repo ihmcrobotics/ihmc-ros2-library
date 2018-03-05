@@ -23,11 +23,20 @@ import org.antlr.stringtemplate.StringTemplate;
 
 public class StructTypeCode extends MemberedTypeCode
 {
-    public StructTypeCode(String scope, String name)
+    private String comments;
+
+    public StructTypeCode(String scope, String name, String comments)
     {
         super(TypeCode.KIND_STRUCT, scope, name);
+
+        this.comments = comments;
     }
-    
+
+    public String getComments()
+    {
+        return comments;
+    }
+
     @Override
     public String getCppTypename()
     {
