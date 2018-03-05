@@ -100,6 +100,8 @@ public class IDLLexer extends Lexer {
 	};
 
 
+	    public static final int COMMENTS = 2;
+
 	    Context ctx = null;
 	    
 	    public void setContext(Context _ctx)
@@ -135,6 +137,15 @@ public class IDLLexer extends Lexer {
 	public void action(RuleContext _localctx, int ruleIndex, int actionIndex) {
 		switch (ruleIndex) {
 		case 112: PREPROC_DIRECTIVE_action((RuleContext)_localctx, actionIndex); break;
+
+		case 113: COMMENT_action((RuleContext)_localctx, actionIndex); break;
+
+		case 114: LINE_COMMENT_action((RuleContext)_localctx, actionIndex); break;
+		}
+	}
+	private void LINE_COMMENT_action(RuleContext _localctx, int actionIndex) {
+		switch (actionIndex) {
+		case 2: _channel = COMMENTS; break;
 		}
 	}
 	private void PREPROC_DIRECTIVE_action(RuleContext _localctx, int actionIndex) {
@@ -144,6 +155,11 @@ public class IDLLexer extends Lexer {
 				skip();
 				//newline();
 			 break;
+		}
+	}
+	private void COMMENT_action(RuleContext _localctx, int actionIndex) {
+		switch (actionIndex) {
+		case 1: _channel = COMMENTS; break;
 		}
 	}
 
@@ -480,15 +496,15 @@ public class IDLLexer extends Lexer {
 		"\u03cc\13\2\2\2\u03cb\u03ca\3\2\2\2\u03cc\u03cf\3\2\2\2\u03cd\u03ce\3"+
 		"\2\2\2\u03cd\u03cb\3\2\2\2\u03ce\u03d0\3\2\2\2\u03cf\u03cd\3\2\2\2\u03d0"+
 		"\u03d1\7,\2\2\u03d1\u03d2\7\61\2\2\u03d2\u03d3\3\2\2\2\u03d3\u03d4\bs"+
-		"\2\2\u03d4\u00e6\3\2\2\2\u03d5\u03d6\7\61\2\2\u03d6\u03d7\7\61\2\2\u03d7"+
+		"\4\2\u03d4\u00e6\3\2\2\2\u03d5\u03d6\7\61\2\2\u03d6\u03d7\7\61\2\2\u03d7"+
 		"\u03db\3\2\2\2\u03d8\u03da\n\16\2\2\u03d9\u03d8\3\2\2\2\u03da\u03dd\3"+
 		"\2\2\2\u03db\u03d9\3\2\2\2\u03db\u03dc\3\2\2\2\u03dc\u03df\3\2\2\2\u03dd"+
 		"\u03db\3\2\2\2\u03de\u03e0\7\17\2\2\u03df\u03de\3\2\2\2\u03df\u03e0\3"+
 		"\2\2\2\u03e0\u03e1\3\2\2\2\u03e1\u03e2\7\f\2\2\u03e2\u03e3\3\2\2\2\u03e3"+
-		"\u03e4\bt\2\2\u03e4\u00e8\3\2\2\2$\2\u00f9\u00fc\u00ff\u0105\u0108\u010f"+
+		"\u03e4\bt\5\2\u03e4\u00e8\3\2\2\2$\2\u00f9\u00fc\u00ff\u0105\u0108\u010f"+
 		"\u0112\u011b\u0121\u0125\u0128\u012e\u0131\u0134\u0139\u013d\u0142\u0145"+
 		"\u0148\u014f\u0154\u015e\u0168\u016a\u0178\u017e\u0189\u03b4\u03b6\u03c1"+
-		"\u03cd\u03db\u03df\4\2\3\2\3r\2";
+		"\u03cd\u03db\u03df\6\2\3\2\3r\2\3s\3\3t\4";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
