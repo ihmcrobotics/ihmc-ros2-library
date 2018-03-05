@@ -25,6 +25,16 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 $struct.comments$
 public class $struct.name$ implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
 {
+    $struct.constants : { constant |
+        $constant.comments$
+        $if(constant.typeCode.isType_d)$
+           public static final String $constant.name$ = $constant.value$;
+        $elseif(constant.typeCode.isType_9)$
+            public static final $constant.typeCode.javaTypename$ $constant.name$ = (byte) $constant.value$;
+        $else$
+            public static final $constant.typeCode.javaTypename$ $constant.name$ = $constant.value$;
+        $endif$
+    }; separator=""$
     public $struct.name$()
     {
         $struct.members : { member | $if(member.typecode.isType_e)$

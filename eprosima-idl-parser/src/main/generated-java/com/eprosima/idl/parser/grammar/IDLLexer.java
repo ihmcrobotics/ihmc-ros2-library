@@ -13,8 +13,9 @@ package com.eprosima.idl.parser.grammar;
     import com.eprosima.idl.parser.strategy.DefaultErrorStrategy;
     import com.eprosima.idl.parser.listener.DefaultErrorListener;
     import com.eprosima.idl.parser.exception.ParseException;
-   
+
     import java.util.Vector;
+    import java.util.ArrayList;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

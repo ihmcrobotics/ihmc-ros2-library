@@ -216,6 +216,7 @@ public abstract class TypeCode
     public boolean isIsType_f(){return false;}
     public boolean isIsType_e(){return false;}
     public boolean isIsType_a(){return false;}
+    public boolean isIsType_9(){return getJavaTypename().equals("byte");}
     public boolean isIsType_10(){return false;}
     /*** End of functions to know the type in string templates ***/
 

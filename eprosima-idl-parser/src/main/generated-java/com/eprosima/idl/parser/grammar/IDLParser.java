@@ -13,8 +13,9 @@ package com.eprosima.idl.parser.grammar;
     import com.eprosima.idl.parser.strategy.DefaultErrorStrategy;
     import com.eprosima.idl.parser.listener.DefaultErrorListener;
     import com.eprosima.idl.parser.exception.ParseException;
-   
+
     import java.util.Vector;
+    import java.util.ArrayList;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -177,6 +178,7 @@ public class IDLParser extends Parser {
 
 	    private TemplateManager tmanager = null;
 	    private Context ctx = null;
+	    private List<ConstDeclaration> constDeclarations = new ArrayList<>();
 
 	    public Context getContext_()
 	    {
@@ -2208,8 +2210,9 @@ public class IDLParser extends Parser {
 					if(typecode != null)
 			        {
 			            comments = ctx.lookForComments(_input, tk, 20);
-
-						constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), constName, typecode, constValue, tk, comments);
+			            String modifiedName = constName.contains("__") ? constName.substring(constName.indexOf("__") + 2) : constName;
+						constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), modifiedName, typecode, constValue, tk, comments);
+						constDeclarations.add(constDecl);
 
 						if(constTemplates != null)
 			            {
@@ -4982,10 +4985,12 @@ public class IDLParser extends Parser {
 			setState(996); ((Struct_typeContext)_localctx).identifier = identifier();
 
 			           tk = _input.LT(1);
-
 			           comments = ctx.lookForComments(_input, tk, 50);
 					   name=((Struct_typeContext)_localctx).identifier.id;
 				       structTP = ctx.createStructTypeCode(name, comments);
+			           for (ConstDeclaration constDeclaration : constDeclarations)
+				          structTP.addConstant(constDeclaration);
+				       constDeclarations.clear();
 				    
 			setState(998); match(LEFT_BRACE);
 			setState(999); member_list(structTP);

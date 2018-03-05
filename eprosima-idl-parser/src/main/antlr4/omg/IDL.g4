@@ -27,13 +27,15 @@ grammar IDL;
     import com.eprosima.idl.parser.strategy.DefaultErrorStrategy;
     import com.eprosima.idl.parser.listener.DefaultErrorListener;
     import com.eprosima.idl.parser.exception.ParseException;
-   
+
     import java.util.Vector;
+    import java.util.ArrayList;
 }
 
 @parser::members {
     private TemplateManager tmanager = null;
     private Context ctx = null;
+    private List<ConstDeclaration> constDeclarations = new ArrayList<>();
 
     public Context getContext_()
     {
@@ -488,8 +490,9 @@ const_decl returns [Pair<ConstDeclaration, TemplateGroup> returnPair = null]
 		if(typecode != null)
         {
             comments = ctx.lookForComments(_input, tk, 20);
-
-			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), constName, typecode, constValue, tk, comments);
+            String modifiedName = constName.contains("__") ? constName.substring(constName.indexOf("__") + 2) : constName;
+			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), modifiedName, typecode, constValue, tk, comments);
+			constDeclarations.add(constDecl);
 
 			if(constTemplates != null)
             {
@@ -1069,10 +1072,12 @@ struct_type returns [Pair<Vector<TypeCode>, TemplateGroup> returnPair = null]
 		identifier
 	    {
            tk = _input.LT(1);
-
            comments = ctx.lookForComments(_input, tk, 50);
 		   name=$identifier.id;
 	       structTP = ctx.createStructTypeCode(name, comments);
+           for (ConstDeclaration constDeclaration : constDeclarations)
+	          structTP.addConstant(constDeclaration);
+	       constDeclarations.clear();
 	    }
 		LEFT_BRACE member_list[structTP] RIGHT_BRACE
 		{
