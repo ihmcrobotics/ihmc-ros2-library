@@ -14,6 +14,8 @@
 
 package com.eprosima.idl.parser.typecode;
 
+import com.eprosima.idl.parser.tree.ConstDeclaration;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,6 +28,7 @@ public abstract class MemberedTypeCode extends TypeCode
         m_scope = scope;
         m_name = name;
         m_members = new LinkedHashMap<String, Member>();
+        m_consts = new ArrayList<>();
     }
     
     public String getName()
@@ -81,6 +84,17 @@ public abstract class MemberedTypeCode extends TypeCode
         }
         return false;
     }
+
+    public List<ConstDeclaration> getConstants()
+    {
+        return m_consts;
+    }
+
+    public void addConstant(ConstDeclaration constDeclaration)
+    {
+        System.out.println("addConstant: " + constDeclaration.getName());
+        m_consts.add(constDeclaration);
+    }
     
     @Override
     public abstract String getCppTypename();
@@ -96,4 +110,6 @@ public abstract class MemberedTypeCode extends TypeCode
     private String m_scope = null;
     
     private LinkedHashMap<String, Member> m_members = null;
+
+    private List<ConstDeclaration> m_consts = null;
 }

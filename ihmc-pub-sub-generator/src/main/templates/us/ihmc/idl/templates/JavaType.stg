@@ -25,6 +25,10 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 $classdescription(type="class", name=struct.name, filename=[ctx.filename, ".idl"])$
 public class $struct.name$ implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
 {
+    $struct.constants : { constant |
+        public static final $constant.typeCode.javaTypename$ $constant.name$ = $constant.value$;
+    }; separator="\n"$
+
     public $struct.name$()
     {
         $struct.members : { member | $if(member.typecode.isType_e)$
