@@ -26,6 +26,9 @@ public class ConstDeclaration extends TreeNode implements Definition, Export
         super(scopeFile, isInScope, scope, name, token);
 
         m_typecode = typecode;
+
+        value = value.replaceAll("null", "");
+
         m_value = value;
         // Set as parent to the Typecode.
         m_typecode.setParent(this);

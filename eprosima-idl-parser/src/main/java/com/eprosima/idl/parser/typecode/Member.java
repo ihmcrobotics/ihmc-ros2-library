@@ -90,7 +90,24 @@ public class Member implements Notebook
         {
             if (annotation.getName().equals("defaultValue"))
             {
-                m_defaultValue = annotation.getValue("value");
+                String parsedValue = annotation.getValue("value");
+
+                parsedValue = parsedValue.replaceAll("null", "");
+
+                if (parsedValue.equals("True") || parsedValue.equals("False"))
+                {
+                    parsedValue = parsedValue.toLowerCase();
+                }
+                else if (getTypecode().getJavaTypename().equals("byte"))
+                {
+                    parsedValue = "(byte) " + parsedValue;
+                }
+                else if (getTypecode().getJavaTypename().equals("double") && parsedValue.equals("inf"))
+                {
+                    parsedValue = "Double.POSITIVE_INFINITY";
+                }
+
+                m_defaultValue = parsedValue;
             }
             m_annotations.put(annotation.getName(), annotation);
         }
