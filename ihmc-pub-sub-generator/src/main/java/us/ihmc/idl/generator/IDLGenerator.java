@@ -146,6 +146,10 @@ public class IDLGenerator
       context.setPackage(packageName);
       TypeCode.javapackage = context.isIsPackageEmpty() ? "" : (context.getPackage() + ".");
 
+      // Create default @default annotation.
+      AnnotationDeclaration defaultAnnotation = context.createAnnotationDeclaration("defaultValue", null);
+      defaultAnnotation.addMember(new AnnotationMember("value", new PrimitiveTypeCode(TypeCode.KIND_STRING), ""));
+
       // Create default @Key annotation.
       AnnotationDeclaration keyann = context.createAnnotationDeclaration("Key", null);
       keyann.addMember(new AnnotationMember("value", new PrimitiveTypeCode(TypeCode.KIND_BOOLEAN), "true"));

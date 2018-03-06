@@ -87,13 +87,29 @@ public class Member implements Notebook
     public void addAnnotation(Context ctx, Annotation annotation)
     {
         if(annotation != null)
+        {
+            if (annotation.getName().equals("defaultValue"))
+            {
+                m_defaultValue = annotation.getValue("value");
+            }
             m_annotations.put(annotation.getName(), annotation);
+        }
     }
 
     @Override
     public Map<String, Annotation> getAnnotations()
     {
         return m_annotations;
+    }
+
+    public boolean getHasDefaultValue()
+    {
+        return m_defaultValue != null;
+    }
+
+    public String getDefaultValue()
+    {
+        return m_defaultValue;
     }
     
     private String m_name = null;
@@ -103,4 +119,6 @@ public class Member implements Notebook
     private HashMap<String, Annotation> m_annotations = null;
 
     private String m_comments;
+
+    private String m_defaultValue = null;
 }

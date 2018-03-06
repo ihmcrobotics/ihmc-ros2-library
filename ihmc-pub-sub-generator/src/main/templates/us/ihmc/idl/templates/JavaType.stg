@@ -215,7 +215,12 @@ $else$builder.append(this.$member.name$_);$endif$
     }
 
     $struct.members : { member | $member.comments$
-    private $member.typecode.javaTypename$ $member.name$_; }; separator="\n"$
+    $if(member.hasDefaultValue)$
+    private $member.typecode.javaTypename$ $member.name$_ = $member.defaultValue$;
+    $else$
+    private $member.typecode.javaTypename$ $member.name$_;
+    $endif$
+    }; separator="\n"$
 
     $extension$
 }

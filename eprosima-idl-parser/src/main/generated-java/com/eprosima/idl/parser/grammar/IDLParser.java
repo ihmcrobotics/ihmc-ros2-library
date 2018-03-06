@@ -2209,7 +2209,7 @@ public class IDLParser extends Parser {
 
 					if(typecode != null)
 			        {
-			            comments = ctx.lookForComments(_input, tk, 20);
+			            comments = ctx.lookForComments(_input, tk, 50);
 			            String modifiedName = constName.contains("__") ? constName.substring(constName.indexOf("__") + 2) : constName;
 						constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), modifiedName, typecode, constValue, tk, comments);
 						constDeclarations.add(constDecl);
@@ -5203,7 +5203,7 @@ public class IDLParser extends Parser {
 
 				       if(((MemberContext)_localctx).type_spec.typecode!=null)
 				       {
-			               comments = ctx.lookForComments(_input, tk, 20);
+			               comments = ctx.lookForComments(_input, tk, 50);
 
 				           // for ex:
 				           // int x = 5, y = 6;
