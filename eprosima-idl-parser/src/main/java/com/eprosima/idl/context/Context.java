@@ -372,8 +372,21 @@ public class Context
     public String lookForComments(TokenStream tokenStream, Token token, int lookbackDistance)
     {
         int tokenIndex = token.getTokenIndex();
-        while (tokenIndex > 0 && tokenStream.get(tokenIndex).getChannel() != IDLLexer.COMMENTS && (token.getTokenIndex() - tokenIndex) < lookbackDistance)
+        while (tokenIndex > 0
+              && tokenStream.get(tokenIndex).getChannel() != IDLLexer.COMMENTS
+              && (token.getTokenIndex() - tokenIndex) < lookbackDistance)
+        {
+            int type = tokenStream.get(tokenIndex).getType();
+            // Make sure not to get comments from another type if this one doesn't have doc
+            // Check for ";" and "{" only if it's already gone back at least one token,
+            // because structs start on their first brace
+            if (type == IDLLexer.SEMICOLON || ((token.getTokenIndex() - tokenIndex) > 0 && type == IDLLexer.LEFT_BRACE))
+            {
+                return null;
+            }
+
             tokenIndex--;
+        }
 
         if (tokenIndex > 0 && (token.getTokenIndex() - tokenIndex) < lookbackDistance)
         {

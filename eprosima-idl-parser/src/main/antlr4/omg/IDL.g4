@@ -489,7 +489,7 @@ const_decl returns [Pair<ConstDeclaration, TemplateGroup> returnPair = null]
 	{
 		if(typecode != null)
         {
-            comments = ctx.lookForComments(_input, tk, 20);
+            comments = ctx.lookForComments(_input, tk, 50);
             String modifiedName = constName.contains("__") ? constName.substring(constName.indexOf("__") + 2) : constName;
 			constDecl = new ConstDeclaration(ctx.getScopeFile(), ctx.isInScopedFile(), ctx.getScope(), modifiedName, typecode, constValue, tk, comments);
 			constDeclarations.add(constDecl);
@@ -1138,7 +1138,7 @@ member returns [Vector<Pair<Pair<String, Token>, Member>> ret = new Vector<Pair<
 		{
 	       if($type_spec.typecode!=null)
 	       {
-               comments = ctx.lookForComments(_input, tk, 20);
+               comments = ctx.lookForComments(_input, tk, 50);
 
 	           // for ex:
 	           // int x = 5, y = 6;
