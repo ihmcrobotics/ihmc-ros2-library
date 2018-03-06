@@ -62,7 +62,7 @@ public class Context extends com.eprosima.idl.context.Context
    //! Set that contains the include dependencies that force to include our type generated file (right now only with exceptions in RTI DDS types).
    private HashSet<String> m_includedependency = null;
    // TODO Lleva la cuenta del nombre de variables para bucles anidados.
-   private char m_loopVarName = 'a';
+   private int m_loopVarIndex = 0;
    private Stack<Pair<String, Integer>> m_scopeFilesStack;
 
    public Context(String filename, String file, ArrayList<String> includePaths)
@@ -702,12 +702,13 @@ public class Context extends com.eprosima.idl.context.Context
    /*** Function to generate random loop variables in string templates ***/
    public String getNewLoopVarName()
    {
-      m_loopVarName = 'a';
-      return Character.toString(m_loopVarName);
+      m_loopVarIndex = 0;
+      return "i" + m_loopVarIndex;
    }
 
    public String getNextLoopVarName()
    {
-      return Character.toString(++m_loopVarName);
+      ++m_loopVarIndex;
+      return "i" + m_loopVarIndex;
    }
 }
