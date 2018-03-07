@@ -340,4 +340,20 @@ public class PreallocatedList<T>
       return true;
    }
 
+   @Override
+   public String toString()
+   {
+      String s = "";
+      s += clazz.getSimpleName();
+      s += " pos: " + pos;
+      s += " [";
+      for (int i = 0; i < size(); i++)
+      {
+         if (i > 0)
+            s += ", ";
+         s += values[i].toString();
+      }
+      s += "]";
+      return s;
+   }
 }

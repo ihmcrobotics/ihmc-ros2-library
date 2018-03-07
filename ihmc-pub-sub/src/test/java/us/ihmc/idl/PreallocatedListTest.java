@@ -103,6 +103,8 @@ public class PreallocatedListTest
       while (list.size() < currentSize)
          list.add().setValue(10 + list.size());
 
+      System.out.println(list);
+
       ArrayList<MutableInt> expectedList = new ArrayList<>();
       for (int i = 0; i < currentSize; i++)
          expectedList.add(list.get(i));
