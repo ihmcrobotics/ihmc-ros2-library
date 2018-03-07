@@ -135,8 +135,7 @@ public $member.typecode.javaTypename$ get$member.javaName$()
             $elseif(member.typecode.isStringBuilderSequence)$
                 if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilderSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
             $elseif(member.typecode.isObjectSequence)$
-                if (this.$member.name$_.isEnum()) { if (!this.$member.name$_.equals(other.$member.name$_)) return false; }
-                else if (this.$member.name$_.size() == other.$member.name$_.size()) { return false; }
+                if (this.$member.name$_.size() == other.$member.name$_.size()) { return false; }
                 else
                 {
                     for (int i = 0; i < this.$member.name$_.size(); i++)

@@ -15,15 +15,8 @@
  */
 package us.ihmc.idl;
 
+import gnu.trove.list.array.*;
 import org.apache.commons.lang3.NotImplementedException;
-
-import gnu.trove.list.array.TByteArrayList;
-import gnu.trove.list.array.TCharArrayList;
-import gnu.trove.list.array.TDoubleArrayList;
-import gnu.trove.list.array.TFloatArrayList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.list.array.TLongArrayList;
-import gnu.trove.list.array.TShortArrayList;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
@@ -784,62 +777,27 @@ public interface IDLSequence
          
       }
 
-      public Object(int maxSize, Class<T> clazz, Enum[] constants)
-      {
-         super(clazz, constants, maxSize);
-         this.topicDataType = null;
-      }
-
-      
-      
       @SuppressWarnings("unchecked")
       @Override
       public void readElement(int i, CDR cdr)
       {
-         if (isEnum())
-         {
-            add((T) getEnumConstants()[cdr.read_type_c()]);
-         }
-         else
-         {
-            T val = add();
-            topicDataType.deserialize(val, cdr);          
-         }
+         T val = add();
+         topicDataType.deserialize(val, cdr);
       }
 
       @Override
       public void writeElement(int i, CDR cdr)
       {
-         if (isEnum())
-         {
-            cdr.write_type_c(((Enum) get(i)).ordinal());
-         }
-         else
-         {
-            topicDataType.serialize(get(i), cdr);
-         }
+         topicDataType.serialize(get(i), cdr);
       }
-
-
 
       public void set(Object<T> other)
       {
-         if(isEnum())
+         clear();
+         for (int i = 0; i < other.size(); i++)
          {
-            clear();
-            for(int i = 0; i < other.size(); i++)
-            {
-               add(other.get(i));
-            }
-         }
-         else
-         {
-            clear();
-            for(int i = 0; i < other.size(); i++)
-            {
-               T val = add();
-               topicDataType.copy(other.get(i), val);
-            }
+            T val = add();
+            topicDataType.copy(other.get(i), val);
          }
       }
       

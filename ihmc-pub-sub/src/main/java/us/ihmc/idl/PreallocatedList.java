@@ -34,10 +34,6 @@ public class PreallocatedList<T>
    private final T[] values;
    private int pos = -1;
 
-   @SuppressWarnings("rawtypes")
-   private final Enum[] constants;
-   private final boolean isEnum;
-
    /**
     * Temporarily needed to enable Kryo to serialize DDS messages.
     */
@@ -46,8 +42,6 @@ public class PreallocatedList<T>
    {
       clazz = null;
       values = null;
-      constants = null;
-      isEnum = false;
    }
 
    @SuppressWarnings("unchecked")
@@ -55,21 +49,10 @@ public class PreallocatedList<T>
    {
       this.clazz = clazz;
       this.values = (T[]) Array.newInstance(clazz, maxSize);
-      this.isEnum = false;
-      this.constants = null;
       for (int i = 0; i < maxSize; i++)
       {
          values[i] = allocator.createInstance();
       }
-   }
-
-   @SuppressWarnings({"unchecked", "rawtypes"})
-   public PreallocatedList(Class<T> clazz, Enum[] constants, int maxSize)
-   {
-      this.clazz = clazz;
-      this.values = (T[]) Array.newInstance(clazz, maxSize);
-      this.isEnum = true;
-      this.constants = constants;
    }
 
    public interface ListAllocator<T>
@@ -109,30 +92,6 @@ public class PreallocatedList<T>
    }
 
    /**
-    * 
-    * @return true if this is a List of enums
-    */
-   public boolean isEnum()
-   {
-      return isEnum;
-   }
-
-   /**
-    * 
-    * @return the enum constants of the underlying enum
-    * @throws RuntimeException if isEnum() is false
-    */
-   @SuppressWarnings("rawtypes")
-   public Enum[] getEnumConstants()
-   {
-      if (!isEnum)
-      {
-         throw new RuntimeException("This list is not filled with Enums");
-      }
-      return constants;
-   }
-
-   /**
     * Clears the list.
     * 
     * This function just resets the size to 0. The underlying data objects are not emptied or removed.
@@ -152,29 +111,8 @@ public class PreallocatedList<T>
     */
    public T add()
    {
-      if (isEnum)
-      {
-         throw new RuntimeException("Cannot add() enum to enum sequences. Use add(T) instead.");
-      }
       maxCapacityCheck(pos + 1);
       return values[++pos];
-   }
-
-   /**
-    * Add an enum value.
-    * 
-    * Use for enum sequences
-    * 
-    * @param Enum value
-    */
-   public void add(T value)
-   {
-      if (!isEnum)
-      {
-         throw new RuntimeException("Cannot add(T value) to object sequences. Use T add() instead");
-      }
-      maxCapacityCheck(pos + 1);
-      values[++pos] = value;
    }
 
    /**
@@ -291,22 +229,6 @@ public class PreallocatedList<T>
    }
 
    /**
-    * Set the Enum value at position i.
-    * 
-    * @param i
-    * @param value
-    */
-   public void setEnum(int i, T value)
-   {
-      if (!isEnum)
-      {
-         throw new RuntimeException("Cannot set() object sequences. Use T get(int i) instead");
-      }
-      rangeCheck(i);
-      values[i] = value;
-   }
-
-   /**
     * Clears the list
     * 
     * This function just resets the size to 0.
@@ -385,8 +307,7 @@ public class PreallocatedList<T>
       final int prime = 31;
       int result = 1;
       result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
-      result = prime * result + Arrays.hashCode(constants);
-      result = prime * result + (isEnum ? 1231 : 1237);
+      result = prime * result + 1237;
       result = prime * result + pos;
       result = prime * result + Arrays.hashCode(values);
       return result;
@@ -408,10 +329,6 @@ public class PreallocatedList<T>
             return false;
       }
       else if (!clazz.equals(other.clazz))
-         return false;
-      if (!Arrays.equals(constants, other.constants))
-         return false;
-      if (isEnum != other.isEnum)
          return false;
       if (pos != other.pos)
          return false;
