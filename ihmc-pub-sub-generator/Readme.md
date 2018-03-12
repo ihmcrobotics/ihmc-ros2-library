@@ -4,9 +4,9 @@ The IHMC Pub/Sub generator creates Java classes from OMG DDS IDL formatted files
 
 ## Toolchain
 - [IHMC Pub/Sub](https://github.com/ihmcrobotics/ihmc-pub-sub): IHMC Pub/Sub RTPS library
-- [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub-generator): Gradle plugin and standalone application to generate java classes from .idl messages.
+- [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub): Gradle plugin and standalone application to generate java classes from .idl messages.
 - [IHMC RTPS Visualizer](https://github.com/ihmcrobotics/ihmc-rtps-visualizer): GUI to display partitions, topics, participants, subscribers, publisher and publisher data on a RTPS domain.
-- [IHMC Pub/Sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub-serializers-extra): Optional serializer to generated JSON, BSON, YAML, Java Properties and XML(limited) output from .idl messages. 
+- [IHMC Pub/Sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub): Optional serializer to generated JSON, BSON, YAML, Java Properties and XML(limited) output from .idl messages. 
 
 ## License
 The IHMC Pub/Sub generator is licensed under the Apache 2.0. See LICENSE.txt
@@ -18,7 +18,7 @@ The IHMC Pub/Sub generator is licensed under the Apache 2.0. See LICENSE.txt
 - Support for wchar and wstring to map directly to Java's UTF-16.
 - Automatically generated equals() and toString() methods for testing and debugging.
 - Support for #include directives and other C preprocessor directives. The include search path is the current directory and the parent directory of the .idl file.
-- Optional (using [IHMC pub/sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub-serializers-extra) ) serialization and deserialization to JSON/BSON/YAML and XML.
+- Optional (using [IHMC pub/sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub) ) serialization and deserialization to JSON/BSON/YAML and XML.
 - @Abstract(type="[fully qualified class name]") annotation to generate an abstract Pub/Sub type. This allows reusing exisiting Java data objects in combination with IDL specified data without marshalling. Use [Name]PubSubType.setImplementation() to implement.  
  
 ### Limitations

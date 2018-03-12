@@ -7,9 +7,9 @@ The API is designed to avoid allocating memory except during initialization.
 
 ## Toolchain
 - [IHMC Pub/Sub](https://github.com/ihmcrobotics/ihmc-pub-sub): IHMC Pub/Sub RTPS library
-- [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub-generator): Gradle plugin and standalone application to generate java classes from .idl messages.
+- [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub): Gradle plugin and standalone application to generate java classes from .idl messages.
 - [IHMC RTPS Visualizer](https://github.com/ihmcrobotics/ihmc-rtps-visualizer): GUI to display partitions, topics, participants, subscribers, publisher and publisher data on a RTPS domain.
-- [IHMC Pub/Sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub-serializers-extra): Optional serializer to generated JSON, BSON, YAML, Java Properties and XML(limited) output from .idl messages. 
+- [IHMC Pub/Sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub): Optional serializer to generated JSON, BSON, YAML, Java Properties and XML(limited) output from .idl messages. 
 
 ## License
 The IHMC Pub/Sub library is licensed under the Apache 2.0. See LICENSE.txt
@@ -17,7 +17,7 @@ The IHMC Pub/Sub library is licensed under the Apache 2.0. See LICENSE.txt
 ## Usage
 
 ## Generating Java code from .idl messages
-Use the [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub-generator) to compile your .idl messages into [MessageType].java and [MessagePubSubType].java.
+Use the [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub) to compile your .idl messages into [MessageType].java and [MessagePubSubType].java.
 
 ### Supported operating systems
 IHMC Pub Sub has a native component that is compiled for different operating systems

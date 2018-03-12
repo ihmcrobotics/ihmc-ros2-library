@@ -20,7 +20,7 @@ public class UnionMember extends Member
 {
     public UnionMember(TypeCode typecode, String name, List<String> labels, boolean isDefault)
     {
-        super(typecode, name);
+        super(typecode, name, "");
         m_internallabels = labels;
         m_default = isDefault;
     }
