@@ -95,7 +95,7 @@ public void set$member.javaName$($member.typecode.javaTypename$ $member.name$)
     $endif$
     $if(member.typecode.isType_d)$
     $member.comments$
-    public void set$member.javaName$(String $member.name$)
+    public void set$member.javaName$(java.lang.String $member.name$)
     {
     	$member.name$_.setLength(0);
     	$member.name$_.append($member.name$);
