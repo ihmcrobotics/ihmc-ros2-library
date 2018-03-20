@@ -30,13 +30,13 @@ ihmc {
 
 dependencies {
    compile gradleApi()
-   compile group: "us.ihmc", name: "eprosima-idl-parser", version: "0.5.1"
+   compile group: "us.ihmc", name: "eprosima-idl-parser", version: version
    compile group: "org.anarres", name: "jcpp", version: "1.4.12"
    compile group: "us.ihmc", name: "euclid-core", version: "0.4.13"
 }
 
 testDependencies {
-   compile group: "us.ihmc", name: "ihmc-pub-sub", version: "0.5.1"
+   compile group: "us.ihmc", name: "ihmc-pub-sub", version: version
    compile group: "junit", name: "junit", version: "4.12"
 }
 
