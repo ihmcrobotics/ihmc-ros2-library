@@ -17,6 +17,7 @@ package us.ihmc.idl;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 /**
  * Preallocated list of Objects or Enums.
@@ -45,19 +46,14 @@ public class PreallocatedList<T>
    }
 
    @SuppressWarnings("unchecked")
-   public PreallocatedList(Class<T> clazz, ListAllocator<T> allocator, int maxSize)
+   public PreallocatedList(Class<T> clazz, Supplier<T> allocator, int maxSize)
    {
       this.clazz = clazz;
       this.values = (T[]) Array.newInstance(clazz, maxSize);
       for (int i = 0; i < maxSize; i++)
       {
-         values[i] = allocator.createInstance();
+         values[i] = allocator.get();
       }
-   }
-
-   public interface ListAllocator<T>
-   {
-      T createInstance();
    }
 
    /**
