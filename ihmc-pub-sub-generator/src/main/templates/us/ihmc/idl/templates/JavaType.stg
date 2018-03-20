@@ -20,10 +20,11 @@ public interface $interface.name$
 >>
 
 struct_type(ctx, parent, struct, extension, typecode) ::= <<
+import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 $struct.comments$
-public class $struct.name$ implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
+public class $struct.name$ extends Packet<$struct.name$> implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
 {
     $struct.constants : { constant |
         $constant.comments$
@@ -215,9 +216,9 @@ $else$builder.append(this.$member.name$_);$endif$
 
     $struct.members : { member | $member.comments$
     $if(member.hasDefaultValue)$
-    private $member.typecode.javaTypename$ $member.name$_ = $member.defaultValue$;
+    public $member.typecode.javaTypename$ $member.name$_ = $member.defaultValue$;
     $else$
-    private $member.typecode.javaTypename$ $member.name$_;
+    public $member.typecode.javaTypename$ $member.name$_;
     $endif$
     }; separator="\n"$
 
