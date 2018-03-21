@@ -595,7 +595,7 @@ public interface IDLSequence
       }
    }
 
-   public static class StringBuilderHolder extends PreallocatedList<StringBuilder> implements IDLSequence
+   public static class StringBuilderHolder extends RecyclingArrayListPubSub<StringBuilder> implements IDLSequence
    {
       private final int type;
 
@@ -617,6 +617,18 @@ public interface IDLSequence
          default:
             throw new NotImplementedException(typeCode + " is not implemented for Sequence");
          }
+      }
+
+      @Override
+      public void resetQuick()
+      {
+         clear();
+      }
+
+      @Override
+      public int capacity()
+      {
+         return java.lang.Integer.MAX_VALUE;
       }
 
       @Override
@@ -760,7 +772,7 @@ public interface IDLSequence
     * @param <T> Element type
     */
    @SuppressWarnings("rawtypes")
-   public static class Object<T> extends PreallocatedList<T> implements IDLSequence
+   public static class Object<T> extends RecyclingArrayListPubSub<T> implements IDLSequence
    {
       private final TopicDataType<T> topicDataType;
      
@@ -775,6 +787,18 @@ public interface IDLSequence
          super(clazz, topicDataType::createData, maxSize);
          this.topicDataType = topicDataType;
          
+      }
+
+      @Override
+      public void resetQuick()
+      {
+         clear();
+      }
+
+      @Override
+      public int capacity()
+      {
+         return java.lang.Integer.MAX_VALUE;
       }
 
       @SuppressWarnings("unchecked")
