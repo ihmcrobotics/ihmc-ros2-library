@@ -29,6 +29,7 @@ public class RecyclingArrayListPubSub<T> implements List<T>
       this.allocator = allocator;
 
       fillElementDataIfNeeded();
+      clear();
    }
 
    public void shuffle(Random random)
