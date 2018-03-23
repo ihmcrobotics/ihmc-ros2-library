@@ -1,6 +1,11 @@
 package us.ihmc.idl;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class RecyclingArrayListPubSub<T> implements List<T>
@@ -442,11 +447,10 @@ public class RecyclingArrayListPubSub<T> implements List<T>
       return ret;
    }
 
-   /** Unsupported operation. */
    @Override
    public Iterator<T> iterator()
-   {
-      throw new UnsupportedOperationException();
+   { // TODO This is needed only for supporting Kryo, needs to be either improved or removed.
+      return Arrays.asList(values).subList(0, size).iterator();
    }
 
    /** Unsupported operation. */
