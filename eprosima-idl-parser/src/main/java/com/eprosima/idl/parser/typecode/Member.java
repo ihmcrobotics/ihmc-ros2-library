@@ -14,14 +14,14 @@
 
 package com.eprosima.idl.parser.typecode;
 
+import com.eprosima.idl.context.Context;
 import com.eprosima.idl.parser.tree.Annotation;
 import com.eprosima.idl.parser.tree.Notebook;
-import com.eprosima.idl.context.Context;
-import org.antlr.v4.runtime.Token;
+import org.apache.commons.lang3.StringUtils;
 import us.ihmc.commons.FormattingTools;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Member implements Notebook
 {
@@ -48,19 +48,21 @@ public class Member implements Notebook
     {
         return m_name;
     }
-    
-    public String getJavaName() {
-    	if (m_name != null) {
 
-    	    // @dcalvert: Fix Java method naming from getSome_type() to getSomeType()
-    	   return FormattingTools.underscoredToCamelCase(m_name, true);
-//	    	Character firstChar =Character.toUpperCase(m_name.charAt(0));
-//	    	String javaName = firstChar.toString();
-//	    	if (m_name.length() > 1) {
-//	    		javaName += m_name.substring(1);
-//	    	}
-//	    	return javaName;
-    	}
+    public String getJavaName()
+    {
+        if (m_name != null)
+        {
+            // @dcalvert: Fix Java method naming from getSome_type() to getSomeType()
+            if (m_name.contains("_"))
+            {
+                return FormattingTools.underscoredToCamelCase(m_name, true);
+            }
+            else
+            {
+                return StringUtils.capitalize(m_name);
+            }
+        }
     	return null;
     }
 

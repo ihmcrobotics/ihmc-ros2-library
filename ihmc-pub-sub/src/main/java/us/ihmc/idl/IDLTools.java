@@ -68,6 +68,11 @@ public class IDLTools
       return EuclidCoreTools.epsilonEquals(a, b, epsilon);
    }
 
+   public static boolean epsilonEqualsEnum(Object a, Object b, double epsilon)
+   {
+      return a.equals(b);
+   }
+
    public static boolean epsilonEqualsStringBuilder(StringBuilder a, StringBuilder b, double epsilon)
    {
       return equals(a, b);

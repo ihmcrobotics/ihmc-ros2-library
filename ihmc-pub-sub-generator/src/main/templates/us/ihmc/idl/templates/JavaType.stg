@@ -127,6 +127,8 @@ public $member.typecode.javaTypename$ get$member.javaName$()
         $struct.members : { member |
             $if(member.typecode.isType_7)$
                 if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+            $elseif(member.typecode.isType_c)$
+                if (!us.ihmc.idl.IDLTools.epsilonEqualsEnum(this.$member.name$_, other.$member.name$_, epsilon)) return false;
             $elseif(member.typecode.primitive)$
                 if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.$member.name$_, other.$member.name$_, epsilon)) return false;
             $elseif(member.typecode.isType_d)$
