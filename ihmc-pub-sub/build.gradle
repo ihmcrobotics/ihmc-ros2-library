@@ -17,7 +17,7 @@ apply plugin: "us.ihmc.ihmc-build"
 apply plugin: "com.github.hierynomus.license"
 
 ihmc {
-   loadProductProperties("../product.properties")
+   loadProductProperties("../group.gradle.properties")
 
    configureDependencyResolution()
    resourceDirectory("main", "idl")

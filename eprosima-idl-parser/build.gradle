@@ -16,7 +16,7 @@ apply plugin: "us.ihmc.ihmc-build"
 apply plugin: "me.champeau.gradle.antlr4"
 
 ihmc {
-   loadProductProperties("../product.properties")
+   loadProductProperties("../group.gradle.properties")
 
    configureDependencyResolution()
    javaDirectory("main", "generated-java")

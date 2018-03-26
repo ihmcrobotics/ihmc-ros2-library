@@ -19,7 +19,7 @@ apply plugin: "application"
 mainClassName = "us.ihmc.idl.generator.IDLGenerator"
 
 ihmc {
-   loadProductProperties("../product.properties")
+   loadProductProperties("../group.gradle.properties")
 
    configureDependencyResolution()
    resourceDirectory("main", "templates")
