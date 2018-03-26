@@ -9,7 +9,7 @@ buildscript {
    }
    dependencies {
       classpath "us.ihmc:ihmc-build:0.12.10"
-//      classpath "us.ihmc:ihmc-pub-sub-generator:0.3.7"
+//      classpath group: "us.ihmc", name: "ihmc-pub-sub-generator", version: version
       classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
    }
 }
