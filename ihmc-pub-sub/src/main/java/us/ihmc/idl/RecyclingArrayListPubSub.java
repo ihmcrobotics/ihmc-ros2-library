@@ -433,6 +433,33 @@ public class RecyclingArrayListPubSub<T> implements List<T>
    }
 
    @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (getClass() != obj.getClass())
+         return false;
+      RecyclingArrayListPubSub<?> other = (RecyclingArrayListPubSub<?>) obj;
+      if (clazz == null)
+      {
+         if (other.clazz != null)
+            return false;
+      }
+      else if (!clazz.equals(other.clazz))
+         return false;
+      if (size != other.size)
+         return false;
+      for (int i = 0; i < size(); i++)
+      {
+         if (!values[i].equals(other.values[i]))
+            return false;
+      }
+      return true;
+   }
+
+   @Override
    public String toString()
    {
       if (isEmpty())
