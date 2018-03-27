@@ -16,7 +16,7 @@
  
  module Geometry{
  
- @Abstract(type="java.lang.Object", impl="null")
+ //@Abstract(type="java.lang.Object", impl="null")
  @TypeCode(type="Geometry::Vector")
  struct Vector {
  	string<128> frame;

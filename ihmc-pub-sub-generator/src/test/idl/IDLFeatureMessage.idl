@@ -1,0 +1,62 @@
+#ifndef __IDLElement__IDLFeatureMessage__
+#define __IDLElement__IDLFeatureMessage__
+
+#include "IDLSubmessage.idl"
+
+module IDLElement
+{
+  /**
+   * a, b, c
+   * 1, 2, 3
+   * baby
+   * sneaky boi
+   */
+  const long X =
+  123;
+
+  const octet BYTE_ME = 255;
+
+  const string CATCH_22 =
+  "No doc, watch out!";
+
+
+  /**
+   * This is the header
+   * Header line 2
+   * This is some dangling comment that will be included in header
+   */
+  @TypeCode(type="IDLElement::IDLFeatureMessage")
+  struct IDLFeatureMessage
+  {
+    /**
+     * this num should have default value 5
+     */
+    @defaultValue(value=5)
+    long long num;
+    /**
+     * I have some doc not relevant to the next
+     */
+    long long no_default_with_doc;
+    long long no_doc_num;
+    /**
+     * @javadoc I guess javadoc will work okay.
+     * hello
+     */
+    long hello;
+
+    IDLElement::IDLSubmessage num1;
+    sequence<IDLElement::IDLSubmessage> num2;
+    /**
+     * Should be ros_msgs::msg::dds::Num num3[3];
+     */
+    IDLElement::IDLSubmessage num3[3];
+    sequence<IDLElement::IDLSubmessage, 3> num4;
+    string str1;
+    string<10> str2;
+    sequence<string, 5> str3;
+    sequence<string<10> > str4;
+    sequence<string<10>, 5> str5;
+  };
+};
+
+#endif

@@ -46,6 +46,7 @@ module IDLElement
 		long longArray[10];
 		IDLNestedElement::NestedElement nestedArray[5][3];
 		string stringArray[4];
+		Color enumArray[6];
 		
 		sequence<char, 25> charSeqTest;
 		sequence<wchar, 25> wcharSeqTest;
@@ -60,6 +61,7 @@ module IDLElement
 		sequence<double, 25> doubleSeqTest;
 		sequence<boolean, 25> booleanSeqTest;
 		sequence<IDLNestedElement::NestedElement, 25> nestedSeqTest;
+		sequence<Color, 25> enumSeqTest;
 		sequence<string, 25> stringSeqTest;
 		
 		
