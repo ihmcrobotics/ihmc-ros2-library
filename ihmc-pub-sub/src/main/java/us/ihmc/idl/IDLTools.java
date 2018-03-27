@@ -68,6 +68,11 @@ public class IDLTools
       return EuclidCoreTools.epsilonEquals(a, b, epsilon);
    }
 
+   public static boolean epsilonEqualsEnum(Enum a, Enum b, double epsilon)
+   {
+      return EuclidCoreTools.epsilonEquals(a.ordinal(), b.ordinal(), epsilon);
+   }
+
    public static boolean epsilonEqualsEnum(Object a, Object b, double epsilon)
    {
       return a.equals(b);
@@ -206,6 +211,21 @@ public class IDLTools
          for (int i = 0; i < a.size(); i++)
          {
             if (!epsilonEquals(a.get(i), b.get(i), epsilon))
+            {
+               return false;
+            }
+         }
+      return false;
+   }
+
+   public static boolean epsilonEqualsEnumSequence(IDLSequence.Enum a, IDLSequence.Enum b, double epsilon)
+   {
+      if (a.size() != b.size())
+         return false;
+      else
+         for (int i = 0; i < a.size(); i++)
+         {
+            if (!epsilonEqualsEnum(a.get(i), b.get(i), epsilon))
             {
                return false;
             }

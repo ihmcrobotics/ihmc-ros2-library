@@ -763,9 +763,68 @@ public interface IDLSequence
 
    }
 
+   /**
+    * Generic  enum type for IDL sequences.
+    *
+    * @param <T> Element type
+    * @author Jesper Smith
+    */
+   @SuppressWarnings("rawtypes")
+   public static class Enum<T extends java.lang.Enum> extends PreallocatedEnumList<T> implements IDLSequence
+   {
+      /**
+       *
+       * @param maxSize Maximum size of this sequence
+       * @param clazz Class to store
+       * @param constants Enum constants
+       */
+      public Enum(int maxSize, Class<T> clazz, T[] constants)
+      {
+         super(clazz, constants, maxSize);
+      }
+
+      @SuppressWarnings("unchecked")
+      @Override
+      public void readElement(int i, CDR cdr)
+      {
+         add((T) getEnumConstants()[cdr.read_type_c()]);
+      }
+
+      @Override
+      public void writeElement(int i, CDR cdr)
+      {
+         cdr.write_type_c(((java.lang.Enum) get(i)).ordinal());
+      }
+
+      public void set(Enum<T> other)
+      {
+         clear();
+         for(int i = 0; i < other.size(); i++)
+         {
+            add(other.get(i));
+         }
+      }
+
+      @Override
+      public String toString()
+      {
+         StringBuilder builder = new StringBuilder();
+         builder.append("[");
+         for(int i = 0; i < size(); i++)
+         {
+            if(i > 0)
+            {
+               builder.append(", ");
+            }
+            builder.append(get(i));
+         }
+         builder.append("]");
+         return builder.toString();
+      }
+   }
 
    /**
-    * Generic object and enum type for IDL sequences. 
+    * Generic object for IDL sequences.
     * 
     * @author Jesper Smith
     *

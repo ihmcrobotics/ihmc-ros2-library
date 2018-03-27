@@ -131,6 +131,11 @@ public abstract class TypeCode
         return isIsType_e() && getJavaTypename().startsWith("us.ihmc.idl.IDLSequence.Double");
     }
 
+    public boolean getIsEnumSequence()
+    {
+        return isIsType_e() && getJavaTypename().startsWith("us.ihmc.idl.IDLSequence.Enum");
+    }
+
     public boolean getIsIdlSequence()
     {
         return isIsType_e() && getJavaTypename().startsWith("us.ihmc.idl.IDLSequence");

@@ -166,6 +166,8 @@ $elseif(member.typecode.isFloatSequence)$
       if (!us.ihmc.idl.IDLTools.epsilonEqualsFloatSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
 $elseif(member.typecode.isDoubleSequence)$
       if (!us.ihmc.idl.IDLTools.epsilonEqualsDoubleSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isEnumSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsEnumSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
 $elseif(member.typecode.isIdlSequence)$
       if (this.$member.name$_.size() != other.$member.name$_.size()) return false;
       else
@@ -334,6 +336,8 @@ public class $union.name$
 
 enum_type(ctx, parent, enum, extension, typecode) ::= <<
 $classdescription(type="enum", name=enum.name, filename=[ctx.filename, ".idl"])$
+import us.ihmc.idl.IDLTools;
+
 public enum $enum.name$
 {
    $enum.members:{ member |
@@ -341,6 +345,11 @@ public enum $enum.name$
    }; separator="\n"$
    ;
    public static $enum.name$[] values = values();
+
+   public boolean epsilonEquals($enum.name$ other, double epsilon)
+   {
+      return IDLTools.epsilonEqualsEnum(this, other, epsilon);
+   }
    $extension$
 }
 >>

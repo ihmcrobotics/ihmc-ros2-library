@@ -101,6 +101,8 @@ for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
 $else$
     $if(typecodeArr.contentTypeCode.isType_7)$
         if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.$data$, $other$, epsilon)) return false;
+    $elseif(typecodeArr.contentTypeCode.isType_c)$
+        if (!us.ihmc.idl.IDLTools.epsilonEqualsEnum(this.$data$, $other$, epsilon)) return false;
     $elseif(typecodeArr.contentTypeCode.primitive)$
         if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.$data$, $other$, epsilon)) return false;
     $elseif(typecodeArr.contentTypeCode.isType_d)$
@@ -120,7 +122,7 @@ for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
 }
 $else$
 $if(typecodeArr.contentTypeCode.isType_c)$
-	cdr.write_$typecodeArr.contentTypeCode.stType$($data$.ordinal())
+	cdr.write_$typecodeArr.contentTypeCode.stType$($data$.ordinal());
 $elseif(typecodeArr.contentTypeCode.isType_a)$
 	$typecodeArr.contentTypeCode.pubsubTypename$.write($data$, cdr);	
 $else$

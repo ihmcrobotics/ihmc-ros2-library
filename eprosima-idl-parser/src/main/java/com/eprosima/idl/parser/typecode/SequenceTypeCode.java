@@ -41,6 +41,9 @@ public class SequenceTypeCode extends ContainerTypeCode
     @Override
     public String getJavaTypename()
     {
+        if (getContentTypeCode().isIsType_c())
+            return "us.ihmc.idl.IDLSequence.Enum<" + getContentTypeCode().getJavaTypename() + ">";
+
         StringTemplate st = getJavaTypenameFromStringTemplate();
         st.setAttribute("type", getContentTypeCode().getJavaTypename());
         st.setAttribute("maxsize", m_maxsize);
