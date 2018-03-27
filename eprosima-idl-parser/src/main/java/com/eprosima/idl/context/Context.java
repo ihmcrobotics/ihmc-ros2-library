@@ -393,6 +393,7 @@ public class Context
             String comments = tokenStream.get(tokenIndex).getText().trim();
             if (!comments.isEmpty())
             {
+                comments = comments.replaceAll("(\n|\r\n|\r) {1,5}\\*", "\n *");
                 return comments;
             }
         }
