@@ -1,125 +1,123 @@
 package us.ihmc.idl.generated.Geometry;
-/**
-* 
-* Definition of the class "Box" defined in Vector.idl. 
-*
-* This file was automatically generated from Vector.idl by us.ihmc.idl.generator.IDLGenerator. 
-* Do not update this file directly, edit Vector.idl instead.
-*
-*/
-public class Box
+
+import us.ihmc.communication.packets.Packet;
+import us.ihmc.euclid.interfaces.Settable;
+import us.ihmc.euclid.interfaces.EpsilonComparable;
+
+public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable<Box>
 {
-    public Box()
-    {
-        	center_ = new java.lang.Object();        
-        
-    }
+   public us.ihmc.idl.generated.Geometry.Vector center_;
+   public double w_;
+   public double l_;
+   public double h_;
 
-    public void set(Box other)
-    {
-           	us.ihmc.idl.generated.Geometry.VectorPubSubType.staticCopy(other.center_, center_);w_ = other.w_;
-        	l_ = other.l_;
-        	h_ = other.h_;
+   public Box()
+   {
+      center_ = new us.ihmc.idl.generated.Geometry.Vector();
+   }
 
-    }
+   public Box(Box other)
+   {
+      set(other);
+   }
 
+   public void set(Box other)
+   {
+      us.ihmc.idl.generated.Geometry.VectorPubSubType.staticCopy(other.center_, center_);
+      w_ = other.w_;
 
-    public java.lang.Object getCenter()
-    {
-        return center_;
-    }
+      l_ = other.l_;
 
-        
-    public void setW(double w)
-    {
-        w_ = w;
-    }
+      h_ = other.h_;
 
-    public double getW()
-    {
-        return w_;
-    }
-
-        
-    public void setL(double l)
-    {
-        l_ = l;
-    }
-
-    public double getL()
-    {
-        return l_;
-    }
-
-        
-    public void setH(double h)
-    {
-        h_ = h;
-    }
-
-    public double getH()
-    {
-        return h_;
-    }
-
-        
+   }
 
 
+   public us.ihmc.idl.generated.Geometry.Vector getCenter()
+   {
+      return center_;
+   }
+
+   public void setW(double w)
+   {
+      w_ = w;
+   }
+   public double getW()
+   {
+      return w_;
+   }
+
+   public void setL(double l)
+   {
+      l_ = l;
+   }
+   public double getL()
+   {
+      return l_;
+   }
+
+   public void setH(double h)
+   {
+      h_ = h;
+   }
+   public double getH()
+   {
+      return h_;
+   }
 
 
-    @Override
-    public boolean equals(java.lang.Object other)
-    {
-        if(other == null) return false;
-        if(other == this) return true;
-        if(!(other instanceof Box)) return false;
-        Box otherMyClass = (Box)other;
-        boolean returnedValue = true;
+   @Override
+   public boolean epsilonEquals(Box other, double epsilon)
+   {
+      if(other == null) return false;
+      if(other == this) return true;
 
-        returnedValue &= this.center_.equals(otherMyClass.center_);
-                
-        returnedValue &= this.w_ == otherMyClass.w_;
+      if (!this.center_.epsilonEquals(other.center_, epsilon)) return false;
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.w_, other.w_, epsilon)) return false;
 
-                
-        returnedValue &= this.l_ == otherMyClass.l_;
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.l_, other.l_, epsilon)) return false;
 
-                
-        returnedValue &= this.h_ == otherMyClass.h_;
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.h_, other.h_, epsilon)) return false;
 
-                
 
-        return returnedValue;
-    }
-    
-     @Override
-    public java.lang.String toString()
-    {
-		StringBuilder builder = new StringBuilder();
-		
-      	builder.append("Box {");
-        builder.append("center=");
-        builder.append(this.center_);
+      return true;
+   }
 
-                builder.append(", ");
-        builder.append("w=");
-        builder.append(this.w_);
+   @Override
+   public boolean equals(Object other)
+   {
+      if(other == null) return false;
+      if(other == this) return true;
+      if(!(other instanceof Box)) return false;
 
-                builder.append(", ");
-        builder.append("l=");
-        builder.append(this.l_);
+      Box otherMyClass = (Box) other;
 
-                builder.append(", ");
-        builder.append("h=");
-        builder.append(this.h_);
+      if (!this.center_.equals(otherMyClass.center_)) return false;
+      if(this.w_ != otherMyClass.w_) return false;
 
-                
-        builder.append("}");
-		return builder.toString();
-    }
+      if(this.l_ != otherMyClass.l_) return false;
 
-    private java.lang.Object center_; 
-    private double w_; 
-    private double l_; 
-    private double h_; 
+      if(this.h_ != otherMyClass.h_) return false;
 
+
+      return true;
+   }
+
+   @Override
+   public java.lang.String toString()
+   {
+      StringBuilder builder = new StringBuilder();
+
+      builder.append("Box {");
+      builder.append("center=");
+      builder.append(this.center_);      builder.append(", ");
+      builder.append("w=");
+      builder.append(this.w_);      builder.append(", ");
+      builder.append("l=");
+      builder.append(this.l_);      builder.append(", ");
+      builder.append("h=");
+      builder.append(this.h_);
+      builder.append("}");
+      return builder.toString();
+   }
 }

@@ -10,26 +10,19 @@ package us.ihmc.idl.generated.IDLNestedElement;
 */
 public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.IDLNestedElement.NestedElement>
 {
-	public static final java.lang.String name = "IDLNestedElement::NestedElement";
-	
-	
-	
-    public NestedElementPubSubType()
-    {
-        
-    }
+   public static final java.lang.String name = "IDLNestedElement::NestedElement";
 
-	private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
-	private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();
+   private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
+   private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();
 
-    
-    @Override
+   @Override
    public void serialize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, us.ihmc.pubsub.common.SerializedPayload serializedPayload) throws java.io.IOException
    {
       serializeCDR.serialize(serializedPayload);
       write(data, serializeCDR);
       serializeCDR.finishSerialize();
    }
+
    @Override
    public void deserialize(us.ihmc.pubsub.common.SerializedPayload serializedPayload, us.ihmc.idl.generated.IDLNestedElement.NestedElement data) throws java.io.IOException
    {
@@ -37,92 +30,83 @@ public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.
       read(data, deserializeCDR);
       deserializeCDR.finishDeserialize();
    }
-   
-	public static int getMaxCdrSerializedSize()
-	{
-		return getMaxCdrSerializedSize(0);
-	}
 
-	public static int getMaxCdrSerializedSize(int current_alignment)
-	{
-	    int initial_alignment = current_alignment;
-	            
-	    current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
+   public static int getMaxCdrSerializedSize()
+   {
+      return getMaxCdrSerializedSize(0);
+   }
 
-	    current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+   public static int getMaxCdrSerializedSize(int current_alignment)
+   {
+      int initial_alignment = current_alignment;
 
-	
-	    return current_alignment - initial_alignment;
-	}
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
-	public final static int getCdrSerializedSize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data)
-	{
-		return getCdrSerializedSize(data, 0);
-	}
+      return current_alignment - initial_alignment;
+   }
 
-	public final static int getCdrSerializedSize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, int current_alignment)
-	{
-	    int initial_alignment = current_alignment;
-	            
-	    current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getStringTest().length() + 1;
+   public final static int getCdrSerializedSize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data)
+   {
+      return getCdrSerializedSize(data, 0);
+   }
 
-	    current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+   public final static int getCdrSerializedSize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, int current_alignment)
+   {
+      int initial_alignment = current_alignment;
 
-	
-	    return current_alignment - initial_alignment;
-	}
-	
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getStringTest().length() + 1;
+
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+
+
+
+      return current_alignment - initial_alignment;
+   }
+
    public static void write(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, us.ihmc.idl.CDR cdr)
    {
+      if(data.getStringTest().length() <= 255)
+      cdr.write_type_d(data.getStringTest());else
+          throw new RuntimeException("stringTest field exceeds the maximum length");
 
-	    if(data.getStringTest().length() <= 255)
-	    cdr.write_type_d(data.getStringTest());else
-	        throw new RuntimeException("stringTest field exceeds the maximum length");
+      cdr.write_type_2(data.getLongTest());
 
-	    cdr.write_type_2(data.getLongTest());
    }
 
    public static void read(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, us.ihmc.idl.CDR cdr)
    {
+      cdr.read_type_d(data.getStringTest());	
+      data.setLongTest(cdr.read_type_2());
+      	
 
-	    	cdr.read_type_d(data.getStringTest());	
-
-	    	data.setLongTest(cdr.read_type_2());
-	    	
    }
-   
-	@Override
-	public final void serialize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, us.ihmc.idl.InterchangeSerializer ser)
-	{
-			    ser.write_type_d("stringTest", data.getStringTest());
-			    
-			    ser.write_type_2("longTest", data.getLongTest());
-			    
-	}
-	
-	@Override
-	public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, us.ihmc.idl.generated.IDLNestedElement.NestedElement data)
-	{
-	    			ser.read_type_d("stringTest", data.getStringTest());	
-	    	    
-	    			data.setLongTest(ser.read_type_2("longTest"));	
-	    	    
-	}
+
+   @Override
+   public final void serialize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, us.ihmc.idl.InterchangeSerializer ser)
+   {
+      ser.write_type_d("stringTest", data.getStringTest());
+      ser.write_type_2("longTest", data.getLongTest());
+   }
+
+   @Override
+   public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, us.ihmc.idl.generated.IDLNestedElement.NestedElement data)
+   {
+      ser.read_type_d("stringTest", data.getStringTest());
+      data.setLongTest(ser.read_type_2("longTest"));
+   }
 
    public static void staticCopy(us.ihmc.idl.generated.IDLNestedElement.NestedElement src, us.ihmc.idl.generated.IDLNestedElement.NestedElement dest)
    {
       dest.set(src);
    }
-   
-   
+
    @Override
    public us.ihmc.idl.generated.IDLNestedElement.NestedElement createData()
    {
       return new us.ihmc.idl.generated.IDLNestedElement.NestedElement();
    }
-      
-
    @Override
    public int getTypeSize()
    {
@@ -136,24 +120,23 @@ public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.
    }
    
    public void serialize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, us.ihmc.idl.CDR cdr)
-	{
-		write(data, cdr);
-	}
+   {
+      write(data, cdr);
+   }
 
    public void deserialize(us.ihmc.idl.generated.IDLNestedElement.NestedElement data, us.ihmc.idl.CDR cdr)
    {
-        read(data, cdr);
+      read(data, cdr);
    }
    
    public void copy(us.ihmc.idl.generated.IDLNestedElement.NestedElement src, us.ihmc.idl.generated.IDLNestedElement.NestedElement dest)
    {
       staticCopy(src, dest);
-   }	
+   }
 
-   
    @Override
    public NestedElementPubSubType newInstance()
    {
-   	  return new NestedElementPubSubType();
+      return new NestedElementPubSubType();
    }
 }

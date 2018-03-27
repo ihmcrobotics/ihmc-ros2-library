@@ -1,4 +1,5 @@
 package us.ihmc.idl.generated.IDLElement;
+
 /**
 * 
 * Definition of the enum "Color" defined in IDLElementTest.idl. 
@@ -7,16 +8,21 @@ package us.ihmc.idl.generated.IDLElement;
 * Do not update this file directly, edit IDLElementTest.idl instead.
 *
 */
+import us.ihmc.idl.IDLTools;
+
 public enum Color
 {
-        	red,
-        
-        	green,
-        
-        	blue,
-        
-	;
-	
-	public static Color[] values = values();
+         red,
+      
+         green,
+      
+         blue,
+      
+   ;
+   public static Color[] values = values();
 
+   public boolean epsilonEquals(Color other, double epsilon)
+   {
+      return IDLTools.epsilonEqualsEnum(this, other, epsilon);
+   }
 }

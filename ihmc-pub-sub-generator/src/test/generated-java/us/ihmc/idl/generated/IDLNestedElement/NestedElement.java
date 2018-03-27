@@ -1,98 +1,100 @@
 package us.ihmc.idl.generated.IDLNestedElement;
-/**
-* 
-* Definition of the class "NestedElement" defined in NestedElement.idl. 
-*
-* This file was automatically generated from NestedElement.idl by us.ihmc.idl.generator.IDLGenerator. 
-* Do not update this file directly, edit NestedElement.idl instead.
-*
-*/
-public class NestedElement
+
+import us.ihmc.communication.packets.Packet;
+import us.ihmc.euclid.interfaces.Settable;
+import us.ihmc.euclid.interfaces.EpsilonComparable;
+
+public class NestedElement extends Packet<NestedElement> implements Settable<NestedElement>, EpsilonComparable<NestedElement>
 {
-    public NestedElement()
-    {
-        	stringTest_ = new java.lang.StringBuilder(255); 
-        
-        
-    }
+   public java.lang.StringBuilder stringTest_;
+   public int longTest_;
 
-    public void set(NestedElement other)
-    {
-        	stringTest_.setLength(0);
-        	stringTest_.append(other.stringTest_);
-        	longTest_ = other.longTest_;
+   public NestedElement()
+   {
+      stringTest_ = new java.lang.StringBuilder(255);
+   }
 
-    }
+   public NestedElement(NestedElement other)
+   {
+      set(other);
+   }
 
-        public void setStringTest(String stringTest)
-        {
-        	stringTest_.setLength(0);
-        	stringTest_.append(stringTest);
-        }
-        
-        public java.lang.String getStringTestAsString()
-        {
-        	return getStringTest().toString();
-        }
+   public void set(NestedElement other)
+   {
+      stringTest_.setLength(0);
+      stringTest_.append(other.stringTest_);
 
-    public java.lang.StringBuilder getStringTest()
-    {
-        return stringTest_;
-    }
+      longTest_ = other.longTest_;
 
-        
-    public void setLongTest(int longTest)
-    {
-        longTest_ = longTest;
-    }
+   }
 
-    public int getLongTest()
-    {
-        return longTest_;
-    }
+   public void setStringTest(java.lang.String stringTest)
+   {
+      stringTest_.setLength(0);
+      stringTest_.append(stringTest);
+   }
 
-        
+   public java.lang.String getStringTestAsString()
+   {
+      return getStringTest().toString();
+   }
+   public java.lang.StringBuilder getStringTest()
+   {
+      return stringTest_;
+   }
+
+   public void setLongTest(int longTest)
+   {
+      longTest_ = longTest;
+   }
+   public int getLongTest()
+   {
+      return longTest_;
+   }
 
 
+   @Override
+   public boolean epsilonEquals(NestedElement other, double epsilon)
+   {
+      if(other == null) return false;
+      if(other == this) return true;
+
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.stringTest_, other.stringTest_, epsilon)) return false;
+
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.longTest_, other.longTest_, epsilon)) return false;
 
 
-    @Override
-    public boolean equals(java.lang.Object other)
-    {
-        if(other == null) return false;
-        if(other == this) return true;
-        if(!(other instanceof NestedElement)) return false;
-        NestedElement otherMyClass = (NestedElement)other;
-        boolean returnedValue = true;
+      return true;
+   }
 
-        returnedValue &= us.ihmc.idl.IDLTools.equals(this.stringTest_, otherMyClass.stringTest_);
-                
-        returnedValue &= this.longTest_ == otherMyClass.longTest_;
+   @Override
+   public boolean equals(Object other)
+   {
+      if(other == null) return false;
+      if(other == this) return true;
+      if(!(other instanceof NestedElement)) return false;
 
-                
+      NestedElement otherMyClass = (NestedElement) other;
 
-        return returnedValue;
-    }
-    
-     @Override
-    public java.lang.String toString()
-    {
-		StringBuilder builder = new StringBuilder();
-		
-      	builder.append("NestedElement {");
-        builder.append("stringTest=");
-        builder.append(this.stringTest_);
+      if (!us.ihmc.idl.IDLTools.equals(this.stringTest_, otherMyClass.stringTest_)) return false;
 
-                builder.append(", ");
-        builder.append("longTest=");
-        builder.append(this.longTest_);
+      if(this.longTest_ != otherMyClass.longTest_) return false;
 
-                
-        builder.append("}");
-		return builder.toString();
-    }
 
-    private java.lang.StringBuilder stringTest_; 
-    private int longTest_; 
+      return true;
+   }
 
+   @Override
+   public java.lang.String toString()
+   {
+      StringBuilder builder = new StringBuilder();
+
+      builder.append("NestedElement {");
+      builder.append("stringTest=");
+      builder.append(this.stringTest_);      builder.append(", ");
+      builder.append("longTest=");
+      builder.append(this.longTest_);
+      builder.append("}");
+      return builder.toString();
+   }
 }
