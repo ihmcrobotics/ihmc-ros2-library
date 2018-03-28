@@ -261,6 +261,10 @@ class JacksonInterchangeSerializer implements InterchangeSerializer
             {
                ((IDLSequence.StringBuilderHolder) seq).add(val.asText());
             }
+            else if (seq instanceof IDLSequence.Enum)
+            {
+               ((IDLSequence.Enum) seq).add(str2enum(((IDLSequence.Enum) seq).getEnumConstants(), val.asText()));
+            }
             else if (seq instanceof IDLSequence.Object)
             {
                TopicDataType<Object> type = ((IDLSequence.Object) seq).getTopicDataType();
@@ -324,6 +328,10 @@ class JacksonInterchangeSerializer implements InterchangeSerializer
          else if (seq instanceof IDLSequence.StringBuilderHolder)
          {
             child.add(((IDLSequence.StringBuilderHolder) seq).get(i).toString());
+         }
+         else if (seq instanceof IDLSequence.Enum)
+         {
+            child.add(((Enum<?>) ((IDLSequence.Enum) seq).get(i)).name());
          }
          else if (seq instanceof IDLSequence.Object)
          {
