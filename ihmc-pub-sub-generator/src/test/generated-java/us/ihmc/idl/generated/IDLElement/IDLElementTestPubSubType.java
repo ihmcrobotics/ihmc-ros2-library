@@ -303,7 +303,10 @@ public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us
 
       for(int i0 = 0; i0 < data.getEnumArray().length; ++i0)
       {
-        	cdr.write_type_c(data.getEnumArray()[i0].ordinal());
+            if (data.getEnumArray()[i0] == null)
+        	   cdr.write_type_c(-1);
+            else
+        	   cdr.write_type_c(data.getEnumArray()[i0].ordinal());
         	
       }
 
@@ -420,7 +423,11 @@ public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us
       	
       for(int i0 = 0; i0 < data.getEnumArray().length; ++i0)
       {
-        	data.getEnumArray()[i0] = us.ihmc.idl.generated.IDLElement.Color.values[cdr.read_type_c()];
+           int ordinal = cdr.read_type_c();
+           if (ordinal < 0)
+        	  data.getEnumArray()[i0] = null;
+           else
+              data.getEnumArray()[i0] = us.ihmc.idl.generated.IDLElement.Color.values[ordinal];
         	
       }
       	

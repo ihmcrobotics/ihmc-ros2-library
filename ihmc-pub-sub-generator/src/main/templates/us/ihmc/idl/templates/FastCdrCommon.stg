@@ -122,7 +122,10 @@ for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
 }
 $else$
 $if(typecodeArr.contentTypeCode.isType_c)$
-	cdr.write_$typecodeArr.contentTypeCode.stType$($data$.ordinal());
+    if ($data$ == null)
+	   cdr.write_$typecodeArr.contentTypeCode.stType$(-1);
+    else
+	   cdr.write_$typecodeArr.contentTypeCode.stType$($data$.ordinal());
 $elseif(typecodeArr.contentTypeCode.isType_a)$
 	$typecodeArr.contentTypeCode.pubsubTypename$.write($data$, cdr);	
 $else$
@@ -148,7 +151,11 @@ for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
 }
 $else$
 $if(typecodeArr.contentTypeCode.isType_c)$
-	$data$ = $typecodeArr.contentTypeCode.javaTypename$.values[cdr.read_$typecodeArr.contentTypeCode.stType$()];
+   int ordinal = cdr.read_type_c();
+   if (ordinal < 0)
+	  $data$ = null;
+   else
+      $data$ = $typecodeArr.contentTypeCode.javaTypename$.values[ordinal];
 $elseif(typecodeArr.contentTypeCode.primitive)$
 	$data$ = cdr.read_$typecodeArr.contentTypeCode.stType$();
 $elseif(typecodeArr.contentTypeCode.isType_a)$
