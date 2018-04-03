@@ -53,6 +53,11 @@ public class IDLTools
       return true;
    }
 
+   private interface DoubleProvider
+   {
+      double get(int i);
+   }
+
    public static boolean epsilonEquals(double a, double b, double epsilon)
    {
       return EuclidCoreTools.epsilonEquals(a, b, epsilon);
@@ -95,7 +100,7 @@ public class IDLTools
                return false;
             }
          }
-      return false;
+      return true;
    }
 
    public static boolean epsilonEqualsBooleanSequence(IDLSequence.Boolean a, IDLSequence.Boolean b, double epsilon)
@@ -110,112 +115,22 @@ public class IDLTools
                return false;
             }
          }
-      return false;
+      return true;
    }
 
-   public static boolean epsilonEqualsByteSequence(IDLSequence.Byte a, IDLSequence.Byte b, double epsilon)
+   public static boolean epsilonEqualsPrimitiveSequence(DoubleProvider providerA, DoubleProvider providerB, IDLSequence a, IDLSequence b, double epsilon)
    {
       if (a.size() != b.size())
          return false;
       else
          for (int i = 0; i < a.size(); i++)
          {
-            if (!epsilonEquals(a.get(i), b.get(i), epsilon))
+            if (!epsilonEquals(providerA.get(i), providerB.get(i), epsilon))
             {
                return false;
             }
          }
-      return false;
-   }
-
-   public static boolean epsilonEqualsCharSequence(IDLSequence.Char a, IDLSequence.Char b, double epsilon)
-   {
-      if (a.size() != b.size())
-         return false;
-      else
-         for (int i = 0; i < a.size(); i++)
-         {
-            if (!epsilonEquals(a.get(i), b.get(i), epsilon))
-            {
-               return false;
-            }
-         }
-      return false;
-   }
-
-   public static boolean epsilonEqualsShortSequence(IDLSequence.Short a, IDLSequence.Short b, double epsilon)
-   {
-      if (a.size() != b.size())
-         return false;
-      else
-         for (int i = 0; i < a.size(); i++)
-         {
-            if (!epsilonEquals(a.get(i), b.get(i), epsilon))
-            {
-               return false;
-            }
-         }
-      return false;
-   }
-
-   public static boolean epsilonEqualsIntegerSequence(IDLSequence.Integer a, IDLSequence.Integer b, double epsilon)
-   {
-      if (a.size() != b.size())
-         return false;
-      else
-         for (int i = 0; i < a.size(); i++)
-         {
-            if (!epsilonEquals(a.get(i), b.get(i), epsilon))
-            {
-               return false;
-            }
-         }
-      return false;
-   }
-
-   public static boolean epsilonEqualsLongSequence(IDLSequence.Long a, IDLSequence.Long b, double epsilon)
-   {
-      if (a.size() != b.size())
-         return false;
-      else
-         for (int i = 0; i < a.size(); i++)
-         {
-            if (!epsilonEquals(a.get(i), b.get(i), epsilon))
-            {
-               return false;
-            }
-         }
-      return false;
-   }
-
-   public static boolean epsilonEqualsFloatSequence(IDLSequence.Float a, IDLSequence.Float b, double epsilon)
-   {
-      if (a.size() != b.size())
-         return false;
-      else
-         for (int i = 0; i < a.size(); i++)
-         {
-            if (!epsilonEquals(a.get(i), b.get(i), epsilon))
-            {
-               return false;
-            }
-         }
-      return false;
-   }
-
-   public static boolean epsilonEqualsDoubleSequence(IDLSequence.Double a, IDLSequence.Double b, double epsilon)
-   {
-      if (a.size() != b.size())
-         return false;
-      else
-         for (int i = 0; i < a.size(); i++)
-         {
-            if (!epsilonEquals(a.get(i), b.get(i), epsilon))
-            {
-               return false;
-            }
-         }
-      return false;
+      return true;
    }
 
    public static boolean epsilonEqualsEnumSequence(IDLSequence.Enum a, IDLSequence.Enum b, double epsilon)
@@ -230,6 +145,41 @@ public class IDLTools
                return false;
             }
          }
-      return false;
+      return true;
+   }
+
+   public static boolean epsilonEqualsByteSequence(IDLSequence.Byte a, IDLSequence.Byte b, double epsilon)
+   {
+      return epsilonEqualsPrimitiveSequence(a::get, b::get, a, b, epsilon);
+   }
+
+   public static boolean epsilonEqualsCharSequence(IDLSequence.Char a, IDLSequence.Char b, double epsilon)
+   {
+      return epsilonEqualsPrimitiveSequence(a::get, b::get, a, b, epsilon);
+   }
+
+   public static boolean epsilonEqualsShortSequence(IDLSequence.Short a, IDLSequence.Short b, double epsilon)
+   {
+      return epsilonEqualsPrimitiveSequence(a::get, b::get, a, b, epsilon);
+   }
+
+   public static boolean epsilonEqualsIntegerSequence(IDLSequence.Integer a, IDLSequence.Integer b, double epsilon)
+   {
+      return epsilonEqualsPrimitiveSequence(a::get, b::get, a, b, epsilon);
+   }
+
+   public static boolean epsilonEqualsLongSequence(IDLSequence.Long a, IDLSequence.Long b, double epsilon)
+   {
+      return epsilonEqualsPrimitiveSequence(a::get, b::get, a, b, epsilon);
+   }
+
+   public static boolean epsilonEqualsFloatSequence(IDLSequence.Float a, IDLSequence.Float b, double epsilon)
+   {
+      return epsilonEqualsPrimitiveSequence(a::get, b::get, a, b, epsilon);
+   }
+
+   public static boolean epsilonEqualsDoubleSequence(IDLSequence.Double a, IDLSequence.Double b, double epsilon)
+   {
+      return epsilonEqualsPrimitiveSequence(a::get, b::get, a, b, epsilon);
    }
 }
