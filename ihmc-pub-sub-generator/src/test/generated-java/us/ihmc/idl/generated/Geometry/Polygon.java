@@ -37,7 +37,7 @@ public class Polygon extends Packet<Polygon> implements Settable<Polygon>, Epsil
       if(other == null) return false;
       if(other == this) return true;
 
-      if (this.points_.size() == other.points_.size()) { return false; }
+      if (this.points_.size() != other.points_.size()) { return false; }
       else
       {
          for (int i = 0; i < this.points_.size(); i++)

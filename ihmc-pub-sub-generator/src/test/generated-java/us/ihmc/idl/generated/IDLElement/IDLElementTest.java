@@ -508,7 +508,7 @@ public class IDLElementTest extends Packet<IDLElementTest> implements Settable<I
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsBooleanSequence(this.booleanSeqTest_, other.booleanSeqTest_, epsilon)) return false;
 
-      if (this.nestedSeqTest_.size() == other.nestedSeqTest_.size()) { return false; }
+      if (this.nestedSeqTest_.size() != other.nestedSeqTest_.size()) { return false; }
       else
       {
          for (int i = 0; i < this.nestedSeqTest_.size(); i++)
