@@ -247,7 +247,7 @@ public class IDLFeatureMessage extends Packet<IDLFeatureMessage> implements Sett
       if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.hello_, other.hello_, epsilon)) return false;
 
       if (!this.num1_.epsilonEquals(other.num1_, epsilon)) return false;
-      if (this.num2_.size() == other.num2_.size()) { return false; }
+      if (this.num2_.size() != other.num2_.size()) { return false; }
       else
       {
          for (int i = 0; i < this.num2_.size(); i++)
@@ -259,7 +259,7 @@ public class IDLFeatureMessage extends Packet<IDLFeatureMessage> implements Sett
               if (!this.num3_[i5].epsilonEquals(other.num3_[i5], epsilon)) return false;
       }
 
-      if (this.num4_.size() == other.num4_.size()) { return false; }
+      if (this.num4_.size() != other.num4_.size()) { return false; }
       else
       {
          for (int i = 0; i < this.num4_.size(); i++)

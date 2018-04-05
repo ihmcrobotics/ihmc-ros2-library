@@ -69,14 +69,6 @@ public class IDLToolsTest
    }
 
    @Test(timeout = 30000)
-   public void testEpsilonEqualsObject()
-   {
-      Object a = new Object();
-      assertTrue("Enums not equal", IDLTools.epsilonEqualsEnum(a, a, 0.0));
-      assertFalse("Enums equal", IDLTools.epsilonEqualsEnum(new Object(), new Object(), 0.0));
-   }
-
-   @Test(timeout = 30000)
    public void testStringBuilderEpsilonEqualsSequence()
    {
       StringBuilderHolder a;

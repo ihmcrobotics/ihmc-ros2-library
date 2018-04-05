@@ -75,12 +75,18 @@ public class IDLTools
 
    public static boolean epsilonEqualsEnum(Enum a, Enum b, double epsilon)
    {
-      return EuclidCoreTools.epsilonEquals(a.ordinal(), b.ordinal(), epsilon);
-   }
-
-   public static boolean epsilonEqualsEnum(Object a, Object b, double epsilon)
-   {
-      return a.equals(b);
+      if (a == null && b == null)
+      {
+         return true;
+      }
+      else if (a == null || b == null)
+      {
+         return false;
+      }
+      else
+      {
+         return EuclidCoreTools.epsilonEquals(a.ordinal(), b.ordinal(), epsilon);
+      }
    }
 
    public static boolean epsilonEqualsStringBuilder(StringBuilder a, StringBuilder b, double epsilon)

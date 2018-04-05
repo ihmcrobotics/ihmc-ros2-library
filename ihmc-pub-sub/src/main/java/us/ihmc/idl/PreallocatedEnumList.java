@@ -19,7 +19,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
- * Preallocated list of Objects or Enums.
+ * Preallocated list of Enums.
  *
  * This object preallocates the maximum number of instances.
  * No setter is provided, use add(), remove() and get(i) to add, remove or get elements and change them in place.
@@ -28,7 +28,7 @@ import java.util.Arrays;
  *
  * @param <T>
  */
-public class PreallocatedEnumList<T>
+public class PreallocatedEnumList<T extends java.lang.Enum>
 {
    private final Class<T> clazz;
    private final T[] values;
