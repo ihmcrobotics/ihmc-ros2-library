@@ -71,6 +71,7 @@ $endif$
 
    public $struct.name$($struct.name$ other)
    {
+      this();
       set(other);
    }
 

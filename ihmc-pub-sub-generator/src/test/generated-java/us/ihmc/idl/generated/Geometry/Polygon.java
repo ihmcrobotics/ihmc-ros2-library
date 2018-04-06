@@ -16,6 +16,7 @@ public class Polygon extends Packet<Polygon> implements Settable<Polygon>, Epsil
 
    public Polygon(Polygon other)
    {
+      this();
       set(other);
    }
 

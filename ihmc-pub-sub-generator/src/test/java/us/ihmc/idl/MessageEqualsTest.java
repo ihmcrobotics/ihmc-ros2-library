@@ -92,6 +92,16 @@ public class MessageEqualsTest
       assertTrue("not equal", a.epsilonEquals(b, 1.0));
    }
 
+   @Test(timeout = 30000)
+   public void testCopyConstructor()
+   {
+      IDLElementTest a = new IDLElementTest();
+      createFullMessage(a);
+      IDLElementTest b = new IDLElementTest(a);
+      assertTrue("not equal", a.equals(b));
+      assertTrue("not equal", a.epsilonEquals(b, 0.0));
+   }
+
    private void createFullMessage(IDLElementTest a)
    {
       a.setCharTest('a');

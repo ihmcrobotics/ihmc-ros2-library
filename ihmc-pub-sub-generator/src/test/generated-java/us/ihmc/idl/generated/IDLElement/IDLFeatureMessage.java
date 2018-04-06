@@ -69,6 +69,7 @@ public class IDLFeatureMessage extends Packet<IDLFeatureMessage> implements Sett
 
    public IDLFeatureMessage(IDLFeatureMessage other)
    {
+      this();
       set(other);
    }
 
