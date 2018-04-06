@@ -18,6 +18,7 @@ public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable
 
    public Box(Box other)
    {
+      this();
       set(other);
    }
 

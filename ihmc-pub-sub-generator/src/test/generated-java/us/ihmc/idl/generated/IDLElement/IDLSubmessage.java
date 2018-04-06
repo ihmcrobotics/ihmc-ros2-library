@@ -41,6 +41,7 @@ public class IDLSubmessage extends Packet<IDLSubmessage> implements Settable<IDL
 
    public IDLSubmessage(IDLSubmessage other)
    {
+      this();
       set(other);
    }
 

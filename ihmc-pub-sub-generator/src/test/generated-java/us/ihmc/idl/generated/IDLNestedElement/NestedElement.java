@@ -16,6 +16,7 @@ public class NestedElement extends Packet<NestedElement> implements Settable<Nes
 
    public NestedElement(NestedElement other)
    {
+      this();
       set(other);
    }
 

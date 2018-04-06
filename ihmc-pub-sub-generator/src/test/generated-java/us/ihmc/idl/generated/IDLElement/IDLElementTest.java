@@ -97,6 +97,7 @@ public class IDLElementTest extends Packet<IDLElementTest> implements Settable<I
 
    public IDLElementTest(IDLElementTest other)
    {
+      this();
       set(other);
    }
 

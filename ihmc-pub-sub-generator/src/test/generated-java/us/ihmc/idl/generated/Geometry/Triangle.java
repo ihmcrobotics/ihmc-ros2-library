@@ -20,6 +20,7 @@ public class Triangle extends Packet<Triangle> implements Settable<Triangle>, Ep
 
    public Triangle(Triangle other)
    {
+      this();
       set(other);
    }
 

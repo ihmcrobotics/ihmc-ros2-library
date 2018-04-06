@@ -25,6 +25,7 @@ public class Vector extends Packet<Vector> implements Settable<Vector>, EpsilonC
 
    public Vector(Vector other)
    {
+      this();
       set(other);
    }
 
