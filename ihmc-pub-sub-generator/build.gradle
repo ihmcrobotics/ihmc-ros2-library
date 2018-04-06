@@ -7,7 +7,7 @@ buildscript {
       jcenter()
    }
    dependencies {
-      classpath "us.ihmc:ihmc-build:0.12.11"
+      classpath "us.ihmc:ihmc-build:0.13.0"
       classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
    }
 }
