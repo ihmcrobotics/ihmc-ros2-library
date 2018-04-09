@@ -1,4 +1,4 @@
-package us.ihmc.idl.generated.Geometry;
+package us.ihmc.idl.generated.geometry;
 
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
@@ -6,15 +6,15 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 
 public class Triangle extends Packet<Triangle> implements Settable<Triangle>, EpsilonComparable<Triangle>
 {
-   public us.ihmc.idl.generated.Geometry.Vector[] points_;
+   public us.ihmc.idl.generated.geometry.Vector[] points_;
 
    public Triangle()
    {
-      points_ = new us.ihmc.idl.generated.Geometry.Vector[3];
+      points_ = new us.ihmc.idl.generated.geometry.Vector[3];
 
       for(int i7 = 0; i7 < points_.length; ++i7)
       {
-          points_[i7] = new us.ihmc.idl.generated.Geometry.Vector();
+          points_[i7] = new us.ihmc.idl.generated.geometry.Vector();
       }
    }
 
@@ -28,11 +28,11 @@ public class Triangle extends Packet<Triangle> implements Settable<Triangle>, Ep
    {
       for(int i9 = 0; i9 < points_.length; ++i9)
       {
-            us.ihmc.idl.generated.Geometry.VectorPubSubType.staticCopy(other.points_[i9], points_[i9]);}
+            us.ihmc.idl.generated.geometry.VectorPubSubType.staticCopy(other.points_[i9], points_[i9]);}
    }
 
 
-   public us.ihmc.idl.generated.Geometry.Vector[] getPoints()
+   public us.ihmc.idl.generated.geometry.Vector[] getPoints()
    {
       return points_;
    }

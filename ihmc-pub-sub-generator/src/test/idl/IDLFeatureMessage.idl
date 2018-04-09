@@ -1,9 +1,9 @@
-#ifndef __IDLElement__IDLFeatureMessage__
-#define __IDLElement__IDLFeatureMessage__
+#ifndef __test__IDLFeatureMessage__
+#define __test__IDLFeatureMessage__
 
 #include "IDLSubmessage.idl"
 
-module IDLElement
+module test
 {
   /**
    * a, b, c
@@ -25,7 +25,7 @@ module IDLElement
    * Header line 2
    * This is some dangling comment that will be included in header
    */
-  @TypeCode(type="IDLElement::IDLFeatureMessage")
+  @TypeCode(type="test::IDLFeatureMessage")
   struct IDLFeatureMessage
   {
     /**
@@ -44,13 +44,13 @@ module IDLElement
      */
     long hello;
 
-    IDLElement::IDLSubmessage num1;
-    sequence<IDLElement::IDLSubmessage> num2;
+    test::IDLSubmessage num1;
+    sequence<test::IDLSubmessage> num2;
     /**
      * Should be ros_msgs::msg::dds::Num num3[3];
      */
-    IDLElement::IDLSubmessage num3[3];
-    sequence<IDLElement::IDLSubmessage, 3> num4;
+    test::IDLSubmessage num3[3];
+    sequence<test::IDLSubmessage, 3> num4;
     string str1;
     string<10> str2;
     sequence<string, 5> str3;

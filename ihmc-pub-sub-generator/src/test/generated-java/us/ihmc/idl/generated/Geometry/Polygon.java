@@ -1,4 +1,4 @@
-package us.ihmc.idl.generated.Geometry;
+package us.ihmc.idl.generated.geometry;
 
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
@@ -6,11 +6,11 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 
 public class Polygon extends Packet<Polygon> implements Settable<Polygon>, EpsilonComparable<Polygon>
 {
-   public us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.Geometry.Vector>  points_;
+   public us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.geometry.Vector>  points_;
 
    public Polygon()
    {
-      points_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.Geometry.Vector> (100, us.ihmc.idl.generated.Geometry.Vector.class, new us.ihmc.idl.generated.Geometry.VectorPubSubType());
+      points_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.geometry.Vector> (100, us.ihmc.idl.generated.geometry.Vector.class, new us.ihmc.idl.generated.geometry.VectorPubSubType());
 
    }
 
@@ -26,7 +26,7 @@ public class Polygon extends Packet<Polygon> implements Settable<Polygon>, Epsil
    }
 
 
-   public us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.Geometry.Vector>  getPoints()
+   public us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.geometry.Vector>  getPoints()
    {
       return points_;
    }

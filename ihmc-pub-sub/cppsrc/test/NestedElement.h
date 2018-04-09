@@ -83,25 +83,25 @@ namespace IDLNestedElement
         
         /*!
          * @brief Copy constructor.
-         * @param x Reference to the object IDLNestedElement::NestedElement that will be copied.
+         * @param x Reference to the object nested::NestedElement that will be copied.
          */
         eProsima_user_DllExport NestedElement(const NestedElement &x);
         
         /*!
          * @brief Move constructor.
-         * @param x Reference to the object IDLNestedElement::NestedElement that will be copied.
+         * @param x Reference to the object nested::NestedElement that will be copied.
          */
         eProsima_user_DllExport NestedElement(NestedElement &&x);
         
         /*!
          * @brief Copy assignment.
-         * @param x Reference to the object IDLNestedElement::NestedElement that will be copied.
+         * @param x Reference to the object nested::NestedElement that will be copied.
          */
         eProsima_user_DllExport NestedElement& operator=(const NestedElement &x);
         
         /*!
          * @brief Move assignment.
-         * @param x Reference to the object IDLNestedElement::NestedElement that will be copied.
+         * @param x Reference to the object nested::NestedElement that will be copied.
          */
         eProsima_user_DllExport NestedElement& operator=(NestedElement &&x);
         
@@ -181,7 +181,7 @@ namespace IDLNestedElement
          * @param current_alignment Buffer alignment.
          * @return Serialized size.
          */
-        eProsima_user_DllExport static size_t getCdrSerializedSize(const IDLNestedElement::NestedElement& data, size_t current_alignment = 0);
+        eProsima_user_DllExport static size_t getCdrSerializedSize(const nested::NestedElement& data, size_t current_alignment = 0);
 
 
         /*!

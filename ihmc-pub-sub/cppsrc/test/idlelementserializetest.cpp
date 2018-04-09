@@ -6,7 +6,7 @@
 int main()
 {
 
-    IDLElement::IDLElementTest msg;
+    test::IDLElementTest msg;
     msg.charTest('3');
     msg.wcharTest(L'Ω');
     msg.octetTest(0xa);
@@ -19,7 +19,7 @@ int main()
     msg.floatTest(258145.2143f);
     msg.doubleTest(9184289051.1241);
     msg.booleanTest(true);
-    msg.colorTest(IDLElement::Color::blue);
+    msg.colorTest(test::Color::blue);
     msg.nestedElementTest().longTest(518);
     msg.nestedElementTest().stringTest("Nested");
     msg.stringTest("Wolololo");
@@ -66,7 +66,7 @@ int main()
                msg.ulonglongSeqTest().push_back(241l + i * 100421410l);
                msg.floatSeqTest().push_back(325.25f * i);
                msg.doubleSeqTest().push_back(15095.921 * i);
-               IDLNestedElement::NestedElement nested;
+               nested::NestedElement nested;
                nested.longTest(i * 541);
                nested.stringTest("dim:" + std::to_string(s) + std::to_string(w));
                msg.nestedSeqTest().push_back(nested);
@@ -76,8 +76,8 @@ int main()
          }
       }
 
-    IDLElement::IDLElementTestPubSubType type;
-    SerializedPayload_t payload(IDLElement::IDLElementTest::getMaxCdrSerializedSize());
+    test::IDLElementTestPubSubType type;
+    SerializedPayload_t payload(test::IDLElementTest::getMaxCdrSerializedSize());
     type.serialize(&msg,&payload);
 
     std::cout << "static byte[] cppData = {" << std::setfill('0');

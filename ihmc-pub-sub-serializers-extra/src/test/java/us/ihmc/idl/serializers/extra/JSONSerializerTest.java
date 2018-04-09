@@ -21,12 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-
-import us.ihmc.idl.generated.IDLElement.Color;
-import us.ihmc.idl.generated.IDLElement.IDLElementTest;
-import us.ihmc.idl.generated.IDLElement.IDLElementTestPubSubType;
-import us.ihmc.idl.generated.IDLNestedElement.NestedElement;
-import us.ihmc.idl.serializers.extra.JSONSerializer;
+import us.ihmc.idl.generated.nested.NestedElement;
+import us.ihmc.idl.generated.test.Color;
+import us.ihmc.idl.generated.test.IDLElementTest;
+import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 
 public class JSONSerializerTest
 {
@@ -147,7 +145,7 @@ public class JSONSerializerTest
       IDLElementTestPubSubType type = new IDLElementTestPubSubType();
       JSONSerializer<IDLElementTest> serializer = new JSONSerializer<>(type);
 
-      IDLElementTest empty = serializer.deserialize("{\"IDLElement::IDLElementTest\":{}}");
+      IDLElementTest empty = serializer.deserialize("{\"test::IDLElementTest\":{}}");
       assertEquals(type.createData(), empty);
       
       InputStream dataStream = getClass().getResourceAsStream("IDLElementTest.incomplete.json");

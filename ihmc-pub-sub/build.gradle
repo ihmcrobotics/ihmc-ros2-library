@@ -20,21 +20,12 @@ ihmc {
    loadProductProperties("../group.gradle.properties")
 
    configureDependencyResolution()
-   resourceDirectory("main", "idl")
-   javaDirectory("main", "generated")
    javaDirectory("main", "../../swig/FastRTPS/generated")
    configurePublications()
 }
 
 // For swig builds
 //buildDir = 'build-java'
-
-//task generateChatMessage(type: us.ihmc.idl.generator.IDLGeneratorTask) {
-//   idlFiles = fileTree(dir: 'idl')
-//   includeDirs = files(".", "idl")
-//   targetDirectory = file("src/main/generated")
-//   packagePrefix = "us.ihmc.idl.generated"
-//}
 
 license {
    header rootProject.file('license-header.txt')

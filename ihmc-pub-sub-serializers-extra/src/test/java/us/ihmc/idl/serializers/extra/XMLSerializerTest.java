@@ -21,10 +21,10 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import us.ihmc.idl.generated.Chat.ChatMessage;
-import us.ihmc.idl.generated.Chat.ChatMessagePubSubType;
-import us.ihmc.idl.generated.IDLElement.IDLElementTest;
-import us.ihmc.idl.generated.IDLElement.IDLElementTestPubSubType;
+import us.ihmc.idl.generated.chat.ChatMessage;
+import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
+import us.ihmc.idl.generated.test.IDLElementTest;
+import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 
 public class XMLSerializerTest
 {

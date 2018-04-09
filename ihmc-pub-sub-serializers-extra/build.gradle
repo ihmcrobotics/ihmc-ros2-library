@@ -14,7 +14,6 @@ ihmc {
    loadProductProperties("../group.gradle.properties")
 
    configureDependencyResolution()
-   javaDirectory("main", "generated-java")
    configurePublications()
 }
 
@@ -29,6 +28,6 @@ mainDependencies {
 }
 
 testDependencies {
-    compile group: "us.ihmc", name: "ihmc-pub-sub-generator", version: version
+    compile group: "us.ihmc", name: "ihmc-pub-sub-generator-test", version: version
     compile group: "junit", name: "junit", version: "4.11"
 }

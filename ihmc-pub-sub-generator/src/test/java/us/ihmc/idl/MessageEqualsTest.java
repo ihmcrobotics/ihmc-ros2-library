@@ -1,8 +1,8 @@
 package us.ihmc.idl;
 
 import org.junit.Test;
-import us.ihmc.idl.generated.IDLElement.Color;
-import us.ihmc.idl.generated.IDLElement.IDLElementTest;
+import us.ihmc.idl.generated.test.Color;
+import us.ihmc.idl.generated.test.IDLElementTest;
 
 import static org.junit.Assert.*;
 

@@ -20,9 +20,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.junit.Test;
-
-import us.ihmc.idl.generated.IDLElement.IDLElementTest;
-import us.ihmc.idl.generated.IDLElement.IDLElementTestPubSubType;
+import us.ihmc.idl.generated.test.IDLElementTest;
+import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 
 public class BSONSerializerTest
 {
