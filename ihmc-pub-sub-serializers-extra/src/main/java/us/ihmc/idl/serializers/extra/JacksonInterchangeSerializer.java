@@ -789,7 +789,14 @@ class JacksonInterchangeSerializer implements InterchangeSerializer
       {
          for (int i = 0; i < arr.length; i++)
          {
-            child.add(((Enum<?>) arr[i]).name());
+            if (arr[i] == null)
+            {
+               child.add("null");
+            }
+            else
+            {
+               child.add(((Enum<?>) arr[i]).name());
+            }
          }
       }
       else if(StringBuilder.class.isAssignableFrom(arrayType))
