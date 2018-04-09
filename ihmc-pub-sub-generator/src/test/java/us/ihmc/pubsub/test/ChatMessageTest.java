@@ -1,4 +1,4 @@
-package us.ihmc.idl;
+package us.ihmc.pubsub.test;
 
 import org.junit.Test;
 import us.ihmc.idl.generated.chat.ChatMessage;

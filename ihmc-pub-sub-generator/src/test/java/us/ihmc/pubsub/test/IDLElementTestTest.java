@@ -1,4 +1,4 @@
-package us.ihmc.idl;
+package us.ihmc.pubsub.test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

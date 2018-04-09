@@ -1,4 +1,4 @@
-package us.ihmc.idl;
+package us.ihmc.pubsub.test;
 
 /**
  * This class contains the serialized data as created by the classes generated from IDLElementTest using fastrtpsgen
