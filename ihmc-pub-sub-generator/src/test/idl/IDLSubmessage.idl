@@ -1,7 +1,7 @@
-#ifndef __IDLElement__IDLSubMessage__
-#define __IDLElement__IDLSubMessage__
+#ifndef __test__IDLSubMessage__
+#define __test__IDLSubMessage__
 
-module IDLElement
+module test
 {
   /**
    * a, b, c
@@ -21,7 +21,7 @@ module IDLElement
    * Header line 2
    * This is some dangling comment that will be included in header
    */
-  @TypeCode(type="IDLElement::IDLSubmessage")
+  @TypeCode(type="test::IDLSubmessage")
   struct IDLSubmessage
   {
     /**

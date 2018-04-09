@@ -29,7 +29,7 @@ namespace IDLElement
 {
 
     IDLElementTestPubSubType::IDLElementTestPubSubType() {
-        setName("IDLElement::IDLElementTest");
+        setName("test::IDLElementTest");
         m_typeSize = (uint32_t)IDLElementTest::getMaxCdrSerializedSize() + 4 /*encapsulation*/;
         m_isGetKeyDefined = IDLElementTest::isKeyDefined();
         m_keyBuffer = (unsigned char*)malloc(IDLElementTest::getKeyMaxCdrSerializedSize()>16 ? IDLElementTest::getKeyMaxCdrSerializedSize() : 16);

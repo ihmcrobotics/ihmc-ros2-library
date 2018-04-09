@@ -33,29 +33,29 @@ using namespace eprosima::fastcdr::exception;
 
 #include <utility>
 
-IDLNestedElement::NestedElement::NestedElement()
+nested::NestedElement::NestedElement()
 {
 
     m_longTest = 0;
 }
 
-IDLNestedElement::NestedElement::~NestedElement()
+nested::NestedElement::~NestedElement()
 {
 }
 
-IDLNestedElement::NestedElement::NestedElement(const NestedElement &x)
+nested::NestedElement::NestedElement(const NestedElement &x)
 {
     m_stringTest = x.m_stringTest;
     m_longTest = x.m_longTest;
 }
 
-IDLNestedElement::NestedElement::NestedElement(NestedElement &&x)
+nested::NestedElement::NestedElement(NestedElement &&x)
 {
     m_stringTest = std::move(x.m_stringTest);
     m_longTest = x.m_longTest;
 }
 
-IDLNestedElement::NestedElement& IDLNestedElement::NestedElement::operator=(const NestedElement &x)
+nested::NestedElement& nested::NestedElement::operator=(const NestedElement &x)
 {
     m_stringTest = x.m_stringTest;
     m_longTest = x.m_longTest;
@@ -63,7 +63,7 @@ IDLNestedElement::NestedElement& IDLNestedElement::NestedElement::operator=(cons
     return *this;
 }
 
-IDLNestedElement::NestedElement& IDLNestedElement::NestedElement::operator=(NestedElement &&x)
+nested::NestedElement& nested::NestedElement::operator=(NestedElement &&x)
 {
     m_stringTest = std::move(x.m_stringTest);
     m_longTest = x.m_longTest;
@@ -71,7 +71,7 @@ IDLNestedElement::NestedElement& IDLNestedElement::NestedElement::operator=(Nest
     return *this;
 }
 
-size_t IDLNestedElement::NestedElement::getMaxCdrSerializedSize(size_t current_alignment)
+size_t nested::NestedElement::getMaxCdrSerializedSize(size_t current_alignment)
 {
     size_t initial_alignment = current_alignment;
             
@@ -83,7 +83,7 @@ size_t IDLNestedElement::NestedElement::getMaxCdrSerializedSize(size_t current_a
     return current_alignment - initial_alignment;
 }
 
-size_t IDLNestedElement::NestedElement::getCdrSerializedSize(const IDLNestedElement::NestedElement& data, size_t current_alignment)
+size_t nested::NestedElement::getCdrSerializedSize(const nested::NestedElement& data, size_t current_alignment)
 {
     size_t initial_alignment = current_alignment;
             
@@ -95,7 +95,7 @@ size_t IDLNestedElement::NestedElement::getCdrSerializedSize(const IDLNestedElem
     return current_alignment - initial_alignment;
 }
 
-void IDLNestedElement::NestedElement::serialize(eprosima::fastcdr::Cdr &scdr) const
+void nested::NestedElement::serialize(eprosima::fastcdr::Cdr &scdr) const
 {
     if(m_stringTest.length() <= 255)
     scdr << m_stringTest;
@@ -105,13 +105,13 @@ void IDLNestedElement::NestedElement::serialize(eprosima::fastcdr::Cdr &scdr) co
 
 }
 
-void IDLNestedElement::NestedElement::deserialize(eprosima::fastcdr::Cdr &dcdr)
+void nested::NestedElement::deserialize(eprosima::fastcdr::Cdr &dcdr)
 {
     dcdr >> m_stringTest;
     dcdr >> m_longTest;
 }
 
-size_t IDLNestedElement::NestedElement::getKeyMaxCdrSerializedSize(size_t current_alignment)
+size_t nested::NestedElement::getKeyMaxCdrSerializedSize(size_t current_alignment)
 {
 	size_t current_align = current_alignment;
             
@@ -121,12 +121,12 @@ size_t IDLNestedElement::NestedElement::getKeyMaxCdrSerializedSize(size_t curren
     return current_align;
 }
 
-bool IDLNestedElement::NestedElement::isKeyDefined()
+bool nested::NestedElement::isKeyDefined()
 {
     return false;
 }
 
-void IDLNestedElement::NestedElement::serializeKey(eprosima::fastcdr::Cdr &scdr) const
+void nested::NestedElement::serializeKey(eprosima::fastcdr::Cdr &scdr) const
 {
 	 
 	 

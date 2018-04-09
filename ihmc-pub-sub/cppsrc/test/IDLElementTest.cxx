@@ -34,7 +34,7 @@ using namespace eprosima::fastcdr::exception;
 #include <utility>
 
 
-IDLElement::IDLElementTest::IDLElementTest()
+test::IDLElementTest::IDLElementTest()
 {
     m_charTest = 0;
     m_wcharTest = 0;
@@ -48,7 +48,7 @@ IDLElement::IDLElementTest::IDLElementTest()
     m_floatTest = 0.0;
     m_doubleTest = 0.0;
     m_booleanTest = false;
-    m_colorTest = IDLElement::red;
+    m_colorTest = test::red;
 
 
 
@@ -70,11 +70,11 @@ IDLElement::IDLElementTest::IDLElementTest()
 
 }
 
-IDLElement::IDLElementTest::~IDLElementTest()
+test::IDLElementTest::~IDLElementTest()
 {
 }
 
-IDLElement::IDLElementTest::IDLElementTest(const IDLElementTest &x)
+test::IDLElementTest::IDLElementTest(const IDLElementTest &x)
 {
     m_charTest = x.m_charTest;
     m_wcharTest = x.m_wcharTest;
@@ -110,7 +110,7 @@ IDLElement::IDLElementTest::IDLElementTest(const IDLElementTest &x)
     m_stringSeqTest = x.m_stringSeqTest;
 }
 
-IDLElement::IDLElementTest::IDLElementTest(IDLElementTest &&x)
+test::IDLElementTest::IDLElementTest(IDLElementTest &&x)
 {
     m_charTest = x.m_charTest;
     m_wcharTest = x.m_wcharTest;
@@ -146,7 +146,7 @@ IDLElement::IDLElementTest::IDLElementTest(IDLElementTest &&x)
     m_stringSeqTest = std::move(x.m_stringSeqTest);
 }
 
-IDLElement::IDLElementTest& IDLElement::IDLElementTest::operator=(const IDLElementTest &x)
+test::IDLElementTest& test::IDLElementTest::operator=(const IDLElementTest &x)
 {
     m_charTest = x.m_charTest;
     m_wcharTest = x.m_wcharTest;
@@ -184,7 +184,7 @@ IDLElement::IDLElementTest& IDLElement::IDLElementTest::operator=(const IDLEleme
     return *this;
 }
 
-IDLElement::IDLElementTest& IDLElement::IDLElementTest::operator=(IDLElementTest &&x)
+test::IDLElementTest& test::IDLElementTest::operator=(IDLElementTest &&x)
 {
     m_charTest = x.m_charTest;
     m_wcharTest = x.m_wcharTest;
@@ -222,7 +222,7 @@ IDLElement::IDLElementTest& IDLElement::IDLElementTest::operator=(IDLElementTest
     return *this;
 }
 
-size_t IDLElement::IDLElementTest::getMaxCdrSerializedSize(size_t current_alignment)
+size_t test::IDLElementTest::getMaxCdrSerializedSize(size_t current_alignment)
 {
     size_t initial_alignment = current_alignment;
             
@@ -252,14 +252,14 @@ size_t IDLElement::IDLElementTest::getMaxCdrSerializedSize(size_t current_alignm
 
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
 
-    current_alignment += IDLNestedElement::NestedElement::getMaxCdrSerializedSize(current_alignment);
+    current_alignment += nested::NestedElement::getMaxCdrSerializedSize(current_alignment);
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + 255 + 1;
 
     current_alignment += ((10) * 4) + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
 
     for(size_t a = 0; a < (5 * 3); ++a)
     {
-        current_alignment += IDLNestedElement::NestedElement::getMaxCdrSerializedSize(current_alignment);}
+        current_alignment += nested::NestedElement::getMaxCdrSerializedSize(current_alignment);}
     for(size_t a = 0; a < (4); ++a)
     {
         current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + 255 + 1;
@@ -315,7 +315,7 @@ size_t IDLElement::IDLElementTest::getMaxCdrSerializedSize(size_t current_alignm
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     for(size_t a = 0; a < 25; ++a)
     {
-        current_alignment += IDLNestedElement::NestedElement::getMaxCdrSerializedSize(current_alignment);}
+        current_alignment += nested::NestedElement::getMaxCdrSerializedSize(current_alignment);}
 
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     for(size_t a = 0; a < 25; ++a)
@@ -326,7 +326,7 @@ size_t IDLElement::IDLElementTest::getMaxCdrSerializedSize(size_t current_alignm
     return current_alignment - initial_alignment;
 }
 
-size_t IDLElement::IDLElementTest::getCdrSerializedSize(const IDLElement::IDLElementTest& data, size_t current_alignment)
+size_t test::IDLElementTest::getCdrSerializedSize(const test::IDLElementTest& data, size_t current_alignment)
 {
     size_t initial_alignment = current_alignment;
             
@@ -356,7 +356,7 @@ size_t IDLElement::IDLElementTest::getCdrSerializedSize(const IDLElement::IDLEle
 
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
 
-    current_alignment += IDLNestedElement::NestedElement::getCdrSerializedSize(data.nestedElementTest(), current_alignment);
+    current_alignment += nested::NestedElement::getCdrSerializedSize(data.nestedElementTest(), current_alignment);
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + data.stringTest().size() + 1;
 
     current_alignment += ((10) * 4) + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
@@ -364,7 +364,7 @@ size_t IDLElement::IDLElementTest::getCdrSerializedSize(const IDLElement::IDLEle
     {
         for(size_t b = 0; b < data.nestedArray().at(a).size(); ++b)
         {
-                current_alignment += IDLNestedElement::NestedElement::getCdrSerializedSize(data.nestedArray().at(a).at(b), current_alignment);
+                current_alignment += nested::NestedElement::getCdrSerializedSize(data.nestedArray().at(a).at(b), current_alignment);
         }
     }
     for(size_t a = 0; a < data.stringArray().size(); ++a)
@@ -423,7 +423,7 @@ size_t IDLElement::IDLElementTest::getCdrSerializedSize(const IDLElement::IDLEle
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     for(size_t a = 0; a < data.nestedSeqTest().size(); ++a)
     {
-        current_alignment += IDLNestedElement::NestedElement::getCdrSerializedSize(data.nestedSeqTest().at(a), current_alignment);}
+        current_alignment += nested::NestedElement::getCdrSerializedSize(data.nestedSeqTest().at(a), current_alignment);}
 
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     for(size_t a = 0; a < data.stringSeqTest().size(); ++a)
@@ -434,7 +434,7 @@ size_t IDLElement::IDLElementTest::getCdrSerializedSize(const IDLElement::IDLEle
     return current_alignment - initial_alignment;
 }
 
-void IDLElement::IDLElementTest::serialize(eprosima::fastcdr::Cdr &scdr) const
+void test::IDLElementTest::serialize(eprosima::fastcdr::Cdr &scdr) const
 {
     scdr << m_charTest;
 
@@ -532,7 +532,7 @@ void IDLElement::IDLElementTest::serialize(eprosima::fastcdr::Cdr &scdr) const
         throw eprosima::fastcdr::exception::BadParamException("stringSeqTest field exceeds the maximum length");
 }
 
-void IDLElement::IDLElementTest::deserialize(eprosima::fastcdr::Cdr &dcdr)
+void test::IDLElementTest::deserialize(eprosima::fastcdr::Cdr &dcdr)
 {
     dcdr >> m_charTest;
     dcdr >> m_wcharTest;
@@ -568,7 +568,7 @@ void IDLElement::IDLElementTest::deserialize(eprosima::fastcdr::Cdr &dcdr)
     dcdr >> m_stringSeqTest;
 }
 
-size_t IDLElement::IDLElementTest::getKeyMaxCdrSerializedSize(size_t current_alignment)
+size_t test::IDLElementTest::getKeyMaxCdrSerializedSize(size_t current_alignment)
 {
 	size_t current_align = current_alignment;
             
@@ -608,12 +608,12 @@ size_t IDLElement::IDLElementTest::getKeyMaxCdrSerializedSize(size_t current_ali
     return current_align;
 }
 
-bool IDLElement::IDLElementTest::isKeyDefined()
+bool test::IDLElementTest::isKeyDefined()
 {
     return false;
 }
 
-void IDLElement::IDLElementTest::serializeKey(eprosima::fastcdr::Cdr &scdr) const
+void test::IDLElementTest::serializeKey(eprosima::fastcdr::Cdr &scdr) const
 {
 	 
 	 

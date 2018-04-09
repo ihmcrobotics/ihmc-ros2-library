@@ -28,7 +28,7 @@
 namespace IDLNestedElement
 {
     NestedElementPubSubType::NestedElementPubSubType() {
-        setName("IDLNestedElement::NestedElement");
+        setName("nested::NestedElement");
         m_typeSize = (uint32_t)NestedElement::getMaxCdrSerializedSize() + 4 /*encapsulation*/;
         m_isGetKeyDefined = NestedElement::isKeyDefined();
         m_keyBuffer = (unsigned char*)malloc(NestedElement::getKeyMaxCdrSerializedSize()>16 ? NestedElement::getKeyMaxCdrSerializedSize() : 16);

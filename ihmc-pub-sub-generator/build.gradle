@@ -15,7 +15,6 @@ apply plugin: "us.ihmc.ihmc-build"
 apply plugin: "com.github.hierynomus.license"
 apply plugin: "application"
 
-//buildDir = "build-java"
 mainClassName = "us.ihmc.idl.generator.IDLGenerator"
 
 ihmc {
