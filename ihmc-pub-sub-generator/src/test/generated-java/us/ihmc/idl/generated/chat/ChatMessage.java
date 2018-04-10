@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.chat;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 // Define a ChatMessage
 public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMessage>, EpsilonComparable<ChatMessage>
@@ -78,6 +79,11 @@ public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMes
       return msg_;
    }
 
+
+   public static Supplier<ChatMessagePubSubType> getPubSubType()
+   {
+      return ChatMessagePubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(ChatMessage other, double epsilon)

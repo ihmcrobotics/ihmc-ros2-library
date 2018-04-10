@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.geometry;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 public class Triangle extends Packet<Triangle> implements Settable<Triangle>, EpsilonComparable<Triangle>
 {
@@ -37,6 +38,11 @@ public class Triangle extends Packet<Triangle> implements Settable<Triangle>, Ep
       return points_;
    }
 
+
+   public static Supplier<TrianglePubSubType> getPubSubType()
+   {
+      return TrianglePubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(Triangle other, double epsilon)

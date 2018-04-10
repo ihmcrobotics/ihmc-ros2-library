@@ -20,6 +20,7 @@ struct_type(ctx, parent, struct, extension, typecode) ::= <<
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 $struct.comments$
 public class $struct.name$ extends Packet<$struct.name$> implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
@@ -124,6 +125,11 @@ $endif$
       return $member.name$_;
    }
 }; separator="\n"$
+
+   public static Supplier<$struct.name$PubSubType> getPubSubType()
+   {
+      return $struct.name$PubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals($struct.name$ other, double epsilon)

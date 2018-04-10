@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.geometry;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 //@Abstract(type="java.lang.Object", impl="null")
 public class Vector extends Packet<Vector> implements Settable<Vector>, EpsilonComparable<Vector>
@@ -103,6 +104,11 @@ public class Vector extends Packet<Vector> implements Settable<Vector>, EpsilonC
       return waa_;
    }
 
+
+   public static Supplier<VectorPubSubType> getPubSubType()
+   {
+      return VectorPubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(Vector other, double epsilon)
