@@ -20,21 +20,16 @@ public abstract class Packet<T extends Packet<T>> implements EpsilonComparable<T
    public static final long VALID_MESSAGE_DEFAULT_ID = -1L;
 
    @RosIgnoredField
-   public byte destination = (byte) PacketDestination.BROADCAST.ordinal();
+   public byte destination = (byte) 0;
 
    @RosIgnoredField
-   public byte source = (byte) PacketDestination.BROADCAST.ordinal();
+   public byte source = (byte) 0;
 
    public void setPacketInformation(Packet<?> other)
    {
       uniqueId = other.uniqueId;
       destination = other.destination;
       source = other.source;
-   }
-
-   public void setDestination(PacketDestination destination)
-   {
-      setDestination(destination.ordinal());
    }
 
    public void setDestination(int destination)
