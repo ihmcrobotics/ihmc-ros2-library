@@ -62,7 +62,7 @@ repositories {
 }
 	
 dependencies {
-   classpath "us.ihmc:ros2-msg-to-pubsub-generator:0.6.8-alpha"
+   classpath "us.ihmc:ros2-msg-to-pubsub-generator:0.6.9-alpha"
 }
 ```
 
@@ -261,7 +261,7 @@ repositories {
 }
 	
 dependencies {
-	compile group: 'us.ihmc', name: 'ihmc-pub-sub-serializers-extra', version: '0.6.8-alpha'
+	compile group: 'us.ihmc', name: 'ihmc-pub-sub-serializers-extra', version: '0.6.9-alpha'
 }
 ```
 
