@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.test;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 /**
  * This is the header
@@ -232,6 +233,11 @@ public class IDLFeatureMessage extends Packet<IDLFeatureMessage> implements Sett
       return str5_;
    }
 
+
+   public static Supplier<IDLFeatureMessagePubSubType> getPubSubType()
+   {
+      return IDLFeatureMessagePubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(IDLFeatureMessage other, double epsilon)

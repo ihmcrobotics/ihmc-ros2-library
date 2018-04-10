@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.test;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 public class IDLElementTest extends Packet<IDLElementTest> implements Settable<IDLElementTest>, EpsilonComparable<IDLElementTest>
 {
@@ -427,6 +428,11 @@ public class IDLElementTest extends Packet<IDLElementTest> implements Settable<I
       return stringSeqTest_;
    }
 
+
+   public static Supplier<IDLElementTestPubSubType> getPubSubType()
+   {
+      return IDLElementTestPubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(IDLElementTest other, double epsilon)

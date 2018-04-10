@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.geometry;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 public class Polygon extends Packet<Polygon> implements Settable<Polygon>, EpsilonComparable<Polygon>
 {
@@ -31,6 +32,11 @@ public class Polygon extends Packet<Polygon> implements Settable<Polygon>, Epsil
       return points_;
    }
 
+
+   public static Supplier<PolygonPubSubType> getPubSubType()
+   {
+      return PolygonPubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(Polygon other, double epsilon)

@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.geometry;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable<Box>
 {
@@ -66,6 +67,11 @@ public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable
       return h_;
    }
 
+
+   public static Supplier<BoxPubSubType> getPubSubType()
+   {
+      return BoxPubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(Box other, double epsilon)

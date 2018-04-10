@@ -35,6 +35,7 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public class PublisherExample
 {
@@ -75,11 +76,10 @@ public class PublisherExample
       attributes.setDomainId(1);
       attributes.setLeaseDuration(Time.Infinite);
       attributes.setName("PublisherExample");
-      
-      
+
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
       
-      ChatMessagePubSubType dataType = new ChatMessagePubSubType();
+      ChatMessagePubSubType dataType = ChatMessage.getPubSubType().get();
       domain.registerType(participant, dataType);
       
       PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "ChatBox", ReliabilityKind.RELIABLE, "us/ihmc");           

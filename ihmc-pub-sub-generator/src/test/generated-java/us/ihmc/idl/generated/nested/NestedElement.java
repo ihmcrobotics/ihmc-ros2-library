@@ -3,6 +3,7 @@ package us.ihmc.idl.generated.nested;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
 
 public class NestedElement extends Packet<NestedElement> implements Settable<NestedElement>, EpsilonComparable<NestedElement>
 {
@@ -53,6 +54,11 @@ public class NestedElement extends Packet<NestedElement> implements Settable<Nes
       return longTest_;
    }
 
+
+   public static Supplier<NestedElementPubSubType> getPubSubType()
+   {
+      return NestedElementPubSubType::new;
+   }
 
    @Override
    public boolean epsilonEquals(NestedElement other, double epsilon)
