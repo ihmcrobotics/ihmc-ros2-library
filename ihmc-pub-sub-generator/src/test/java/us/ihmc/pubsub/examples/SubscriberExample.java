@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,7 +51,6 @@ public class SubscriberExample
          System.out.println("Guid: " + info.getGuid().toString());
          System.out.println("Name: " + info.getName());
       }
-
    }
 
    private class SubscriberListenerImpl implements SubscriberListener
@@ -94,32 +93,34 @@ public class SubscriberExample
       ParticipantAttributes attributes = domain.createParticipantAttributes();
       attributes.setDomainId(1);
       attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("SubscriberExample");      
+      attributes.setName("SubscriberExample");
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType, "ChatBox", ReliabilityKind.RELIABLE, "us/ihmc");      
+      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType, "ChatBox1", ReliabilityKind.BEST_EFFORT, "us/ihmc");
       subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
       subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
 
-      
-      
-      
-      domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 
+      ChatMessage chatMessage = new ChatMessage();
+      SampleInfo sampleInfo = new SampleInfo();
       while (true)
       {
          try
          {
             Thread.sleep(1000);
+            if (subscriber.takeNextData(chatMessage, sampleInfo))
+            {
+               System.out.println("Received message: " + chatMessage + " " + sampleInfo);
+            }
          }
          catch (InterruptedException e)
          {
          }
       }
-
    }
 
    public static void main(String[] args) throws IOException

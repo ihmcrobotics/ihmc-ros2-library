@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 // Define a ChatMessage
 public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMessage>, EpsilonComparable<ChatMessage>
 {
+   public int key_;
    /*
            * This is the sender
            */
@@ -29,12 +30,23 @@ public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMes
 
    public void set(ChatMessage other)
    {
+      key_ = other.key_;
+
       sender_.setLength(0);
       sender_.append(other.sender_);
 
       msg_.setLength(0);
       msg_.append(other.msg_);
 
+   }
+
+   public void setKey(int key)
+   {
+      key_ = key;
+   }
+   public int getKey()
+   {
+      return key_;
    }
 
    /*
@@ -91,6 +103,8 @@ public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMes
       if(other == null) return false;
       if(other == this) return true;
 
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.key_, other.key_, epsilon)) return false;
+
       if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.sender_, other.sender_, epsilon)) return false;
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.msg_, other.msg_, epsilon)) return false;
@@ -108,6 +122,8 @@ public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMes
 
       ChatMessage otherMyClass = (ChatMessage) other;
 
+      if(this.key_ != otherMyClass.key_) return false;
+
       if (!us.ihmc.idl.IDLTools.equals(this.sender_, otherMyClass.sender_)) return false;
 
       if (!us.ihmc.idl.IDLTools.equals(this.msg_, otherMyClass.msg_)) return false;
@@ -122,6 +138,8 @@ public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMes
       StringBuilder builder = new StringBuilder();
 
       builder.append("ChatMessage {");
+      builder.append("key=");
+      builder.append(this.key_);      builder.append(", ");
       builder.append("sender=");
       builder.append(this.sender_);      builder.append(", ");
       builder.append("msg=");

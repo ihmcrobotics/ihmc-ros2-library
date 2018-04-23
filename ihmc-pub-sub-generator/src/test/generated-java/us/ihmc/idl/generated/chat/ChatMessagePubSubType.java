@@ -40,6 +40,8 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
    {
       int initial_alignment = current_alignment;
 
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
 
@@ -55,6 +57,9 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
    {
       int initial_alignment = current_alignment;
 
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+
+
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getSender().length() + 1;
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getMsg().length() + 1;
@@ -65,6 +70,8 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
 
    public static void write(us.ihmc.idl.generated.chat.ChatMessage data, us.ihmc.idl.CDR cdr)
    {
+      cdr.write_type_2(data.getKey());
+
       if(data.getSender().length() <= 255)
       cdr.write_type_d(data.getSender());else
           throw new RuntimeException("sender field exceeds the maximum length");
@@ -77,6 +84,8 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
 
    public static void read(us.ihmc.idl.generated.chat.ChatMessage data, us.ihmc.idl.CDR cdr)
    {
+      data.setKey(cdr.read_type_2());
+      	
       cdr.read_type_d(data.getSender());	
       cdr.read_type_d(data.getMsg());	
 
@@ -85,6 +94,7 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
    @Override
    public final void serialize(us.ihmc.idl.generated.chat.ChatMessage data, us.ihmc.idl.InterchangeSerializer ser)
    {
+      ser.write_type_2("key", data.getKey());
       ser.write_type_d("sender", data.getSender());
       ser.write_type_d("msg", data.getMsg());
    }
@@ -92,6 +102,7 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, us.ihmc.idl.generated.chat.ChatMessage data)
    {
+      data.setKey(ser.read_type_2("key"));
       ser.read_type_d("sender", data.getSender());
       ser.read_type_d("msg", data.getMsg());
    }

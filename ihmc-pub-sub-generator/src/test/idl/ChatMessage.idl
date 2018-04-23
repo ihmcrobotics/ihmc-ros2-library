@@ -3,6 +3,8 @@ module chat
     // Define a ChatMessage
     struct ChatMessage
     {
+        @Key
+        long key;
         /*
         * This is the sender
         */
