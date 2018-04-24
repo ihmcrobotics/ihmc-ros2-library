@@ -4,6 +4,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 /**
  * This is the header
@@ -115,7 +116,8 @@ public class IDLSubmessage extends Packet<IDLSubmessage> implements Settable<IDL
    }
 
 
-   public static Supplier<IDLSubmessagePubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return IDLSubmessagePubSubType::new;
    }

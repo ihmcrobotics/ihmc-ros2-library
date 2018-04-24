@@ -79,7 +79,7 @@ public class PublisherExample
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
       
-      ChatMessagePubSubType dataType = ChatMessage.getPubSubType().get();
+      ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
       
       PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "ChatBox", ReliabilityKind.RELIABLE, "us/ihmc");           

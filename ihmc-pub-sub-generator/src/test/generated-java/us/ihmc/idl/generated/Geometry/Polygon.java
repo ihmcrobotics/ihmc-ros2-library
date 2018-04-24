@@ -4,6 +4,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 public class Polygon extends Packet<Polygon> implements Settable<Polygon>, EpsilonComparable<Polygon>
 {
@@ -33,7 +34,8 @@ public class Polygon extends Packet<Polygon> implements Settable<Polygon>, Epsil
    }
 
 
-   public static Supplier<PolygonPubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return PolygonPubSubType::new;
    }

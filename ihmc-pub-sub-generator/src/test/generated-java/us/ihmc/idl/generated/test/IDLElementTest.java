@@ -4,6 +4,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 public class IDLElementTest extends Packet<IDLElementTest> implements Settable<IDLElementTest>, EpsilonComparable<IDLElementTest>
 {
@@ -429,7 +430,8 @@ public class IDLElementTest extends Packet<IDLElementTest> implements Settable<I
    }
 
 
-   public static Supplier<IDLElementTestPubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return IDLElementTestPubSubType::new;
    }

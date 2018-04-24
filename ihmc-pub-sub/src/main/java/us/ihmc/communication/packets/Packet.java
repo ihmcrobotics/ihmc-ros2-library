@@ -4,6 +4,9 @@ import us.ihmc.communication.ros.generators.RosExportedField;
 import us.ihmc.communication.ros.generators.RosIgnoredField;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import us.ihmc.euclid.interfaces.Settable;
+import us.ihmc.pubsub.TopicDataType;
+
+import java.util.function.Supplier;
 
 public abstract class Packet<T extends Packet<T>> implements EpsilonComparable<T>, Settable<T>
 {
@@ -66,6 +69,8 @@ public abstract class Packet<T extends Packet<T>> implements EpsilonComparable<T
    {
       return true;
    }
+
+   public abstract Supplier<TopicDataType> getPubSubType();
 
    /**
     * Check the data held in that message.

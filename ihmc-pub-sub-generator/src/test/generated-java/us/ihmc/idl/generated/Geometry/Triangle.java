@@ -4,6 +4,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 public class Triangle extends Packet<Triangle> implements Settable<Triangle>, EpsilonComparable<Triangle>
 {
@@ -39,7 +40,8 @@ public class Triangle extends Packet<Triangle> implements Settable<Triangle>, Ep
    }
 
 
-   public static Supplier<TrianglePubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return TrianglePubSubType::new;
    }

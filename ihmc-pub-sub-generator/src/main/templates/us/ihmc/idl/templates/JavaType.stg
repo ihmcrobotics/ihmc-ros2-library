@@ -21,6 +21,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 $struct.comments$
 public class $struct.name$ extends Packet<$struct.name$> implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
@@ -126,7 +127,8 @@ $endif$
    }
 }; separator="\n"$
 
-   public static Supplier<$struct.name$PubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return $struct.name$PubSubType::new;
    }

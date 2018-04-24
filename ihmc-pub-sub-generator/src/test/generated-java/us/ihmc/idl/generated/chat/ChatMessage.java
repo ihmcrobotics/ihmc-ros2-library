@@ -4,6 +4,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 // Define a ChatMessage
 public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMessage>, EpsilonComparable<ChatMessage>
@@ -92,7 +93,8 @@ public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMes
    }
 
 
-   public static Supplier<ChatMessagePubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return ChatMessagePubSubType::new;
    }

@@ -4,6 +4,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 //@Abstract(type="java.lang.Object", impl="null")
 public class Vector extends Packet<Vector> implements Settable<Vector>, EpsilonComparable<Vector>
@@ -105,7 +106,8 @@ public class Vector extends Packet<Vector> implements Settable<Vector>, EpsilonC
    }
 
 
-   public static Supplier<VectorPubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return VectorPubSubType::new;
    }

@@ -4,6 +4,7 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
 
 /**
  * This is the header
@@ -234,7 +235,8 @@ public class IDLFeatureMessage extends Packet<IDLFeatureMessage> implements Sett
    }
 
 
-   public static Supplier<IDLFeatureMessagePubSubType> getPubSubType()
+   @Override
+   public Supplier<TopicDataType> getPubSubType()
    {
       return IDLFeatureMessagePubSubType::new;
    }
