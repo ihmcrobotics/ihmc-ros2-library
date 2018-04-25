@@ -1,7 +1,7 @@
-module geometry2
+module geometry
 {
     //@Abstract(type="java.lang.Object", impl="null")
-    @TypeCode(type="geometry2::Vector")
+    @TypeCode(type="geometry::Vector")
     struct Vector {
         string<128> frame;
 
