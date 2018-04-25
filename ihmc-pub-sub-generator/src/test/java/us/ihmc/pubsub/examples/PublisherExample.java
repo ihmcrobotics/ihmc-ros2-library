@@ -82,7 +82,7 @@ public class PublisherExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
       
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "ChatBox", ReliabilityKind.RELIABLE, "us/ihmc");           
+      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "ChatBox1", ReliabilityKind.RELIABLE, "us/ihmc");
       publisherAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setDepth(50);
@@ -101,6 +101,7 @@ public class PublisherExample
          {
             msg.setMsg("Hello World " + (i++));
             publisher.write(msg);
+            System.out.println("Publishing: " + msg.getMsgAsString());
             Thread.sleep(1000);
          }
          catch (InterruptedException e)

@@ -17,6 +17,9 @@ apply plugin: "application"
 
 mainClassName = "us.ihmc.idl.generator.IDLGenerator"
 
+ihmc.sourceSetProject("test").apply plugin: "application"
+ihmc.sourceSetProject("test").mainClassName = "us.ihmc.pubsub.examples.PublisherExample"
+
 ihmc {
    loadProductProperties("../group.gradle.properties")
 
