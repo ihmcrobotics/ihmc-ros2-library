@@ -34,8 +34,13 @@ public class Polygon extends Packet<Polygon> implements Settable<Polygon>, Epsil
    }
 
 
+   public static Supplier<PolygonPubSubType> getPubSubType()
+   {
+      return PolygonPubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return PolygonPubSubType::new;
    }

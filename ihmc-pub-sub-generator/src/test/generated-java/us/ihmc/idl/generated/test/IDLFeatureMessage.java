@@ -235,8 +235,13 @@ public class IDLFeatureMessage extends Packet<IDLFeatureMessage> implements Sett
    }
 
 
+   public static Supplier<IDLFeatureMessagePubSubType> getPubSubType()
+   {
+      return IDLFeatureMessagePubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return IDLFeatureMessagePubSubType::new;
    }

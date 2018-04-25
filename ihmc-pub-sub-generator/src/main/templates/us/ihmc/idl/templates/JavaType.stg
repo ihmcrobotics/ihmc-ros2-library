@@ -127,8 +127,13 @@ $endif$
    }
 }; separator="\n"$
 
+   public static Supplier<$struct.name$PubSubType> getPubSubType()
+   {
+      return $struct.name$PubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return $struct.name$PubSubType::new;
    }

@@ -93,8 +93,13 @@ public class ChatMessage extends Packet<ChatMessage> implements Settable<ChatMes
    }
 
 
+   public static Supplier<ChatMessagePubSubType> getPubSubType()
+   {
+      return ChatMessagePubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return ChatMessagePubSubType::new;
    }

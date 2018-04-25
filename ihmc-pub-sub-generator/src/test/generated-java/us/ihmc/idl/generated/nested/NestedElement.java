@@ -56,8 +56,13 @@ public class NestedElement extends Packet<NestedElement> implements Settable<Nes
    }
 
 
+   public static Supplier<NestedElementPubSubType> getPubSubType()
+   {
+      return NestedElementPubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return NestedElementPubSubType::new;
    }

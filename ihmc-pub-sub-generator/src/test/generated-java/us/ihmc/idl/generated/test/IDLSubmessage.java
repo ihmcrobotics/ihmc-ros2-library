@@ -116,8 +116,13 @@ public class IDLSubmessage extends Packet<IDLSubmessage> implements Settable<IDL
    }
 
 
+   public static Supplier<IDLSubmessagePubSubType> getPubSubType()
+   {
+      return IDLSubmessagePubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return IDLSubmessagePubSubType::new;
    }

@@ -69,8 +69,13 @@ public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable
    }
 
 
+   public static Supplier<BoxPubSubType> getPubSubType()
+   {
+      return BoxPubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return BoxPubSubType::new;
    }

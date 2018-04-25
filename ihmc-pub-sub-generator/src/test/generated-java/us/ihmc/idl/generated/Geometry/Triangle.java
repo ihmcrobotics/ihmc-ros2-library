@@ -40,8 +40,13 @@ public class Triangle extends Packet<Triangle> implements Settable<Triangle>, Ep
    }
 
 
+   public static Supplier<TrianglePubSubType> getPubSubType()
+   {
+      return TrianglePubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return TrianglePubSubType::new;
    }

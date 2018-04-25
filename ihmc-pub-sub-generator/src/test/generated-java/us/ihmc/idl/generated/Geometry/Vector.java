@@ -106,8 +106,13 @@ public class Vector extends Packet<Vector> implements Settable<Vector>, EpsilonC
    }
 
 
+   public static Supplier<VectorPubSubType> getPubSubType()
+   {
+      return VectorPubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return VectorPubSubType::new;
    }

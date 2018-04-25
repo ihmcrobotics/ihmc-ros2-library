@@ -70,7 +70,10 @@ public abstract class Packet<T extends Packet<T>> implements EpsilonComparable<T
       return true;
    }
 
-   public abstract Supplier<TopicDataType> getPubSubType();
+   public Supplier<TopicDataType> getPubSubTypePacket()
+   {
+      return null;
+   }
 
    /**
     * Check the data held in that message.

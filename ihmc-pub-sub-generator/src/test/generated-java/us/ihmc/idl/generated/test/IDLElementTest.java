@@ -430,8 +430,13 @@ public class IDLElementTest extends Packet<IDLElementTest> implements Settable<I
    }
 
 
+   public static Supplier<IDLElementTestPubSubType> getPubSubType()
+   {
+      return IDLElementTestPubSubType::new;
+   }
+
    @Override
-   public Supplier<TopicDataType> getPubSubType()
+   public Supplier<TopicDataType> getPubSubTypePacket()
    {
       return IDLElementTestPubSubType::new;
    }
