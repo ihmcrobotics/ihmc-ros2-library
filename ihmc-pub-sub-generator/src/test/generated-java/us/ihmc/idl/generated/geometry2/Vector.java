@@ -1,4 +1,4 @@
-package us.ihmc.idl.generated.geometry;
+package us.ihmc.idl.generated.geometry2;
 
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;

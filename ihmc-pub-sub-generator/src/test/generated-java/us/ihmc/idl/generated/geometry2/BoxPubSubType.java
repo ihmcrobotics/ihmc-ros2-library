@@ -1,4 +1,4 @@
-package us.ihmc.idl.generated.geometry;
+package us.ihmc.idl.generated.geometry2;
 
 /**
 * 
@@ -8,15 +8,15 @@ package us.ihmc.idl.generated.geometry;
 * Do not update this file directly, edit Vector.idl instead.
 *
 */
-public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.geometry.Box>
+public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.geometry2.Box>
 {
-   public static final java.lang.String name = "geometry::Box";
+   public static final java.lang.String name = "geometry2::Box";
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();
 
    @Override
-   public void serialize(us.ihmc.idl.generated.geometry.Box data, us.ihmc.pubsub.common.SerializedPayload serializedPayload) throws java.io.IOException
+   public void serialize(us.ihmc.idl.generated.geometry2.Box data, us.ihmc.pubsub.common.SerializedPayload serializedPayload) throws java.io.IOException
    {
       serializeCDR.serialize(serializedPayload);
       write(data, serializeCDR);
@@ -24,7 +24,7 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
    }
 
    @Override
-   public void deserialize(us.ihmc.pubsub.common.SerializedPayload serializedPayload, us.ihmc.idl.generated.geometry.Box data) throws java.io.IOException
+   public void deserialize(us.ihmc.pubsub.common.SerializedPayload serializedPayload, us.ihmc.idl.generated.geometry2.Box data) throws java.io.IOException
    {
       deserializeCDR.deserialize(serializedPayload);
       read(data, deserializeCDR);
@@ -40,7 +40,7 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
    {
       int initial_alignment = current_alignment;
 
-      current_alignment += us.ihmc.idl.generated.geometry.VectorPubSubType.getMaxCdrSerializedSize(current_alignment);
+      current_alignment += us.ihmc.idl.generated.geometry2.VectorPubSubType.getMaxCdrSerializedSize(current_alignment);
 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
@@ -52,16 +52,16 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
       return current_alignment - initial_alignment;
    }
 
-   public final static int getCdrSerializedSize(us.ihmc.idl.generated.geometry.Box data)
+   public final static int getCdrSerializedSize(us.ihmc.idl.generated.geometry2.Box data)
    {
       return getCdrSerializedSize(data, 0);
    }
 
-   public final static int getCdrSerializedSize(us.ihmc.idl.generated.geometry.Box data, int current_alignment)
+   public final static int getCdrSerializedSize(us.ihmc.idl.generated.geometry2.Box data, int current_alignment)
    {
       int initial_alignment = current_alignment;
 
-      current_alignment += us.ihmc.idl.generated.geometry.VectorPubSubType.getCdrSerializedSize(data.getCenter(), current_alignment);
+      current_alignment += us.ihmc.idl.generated.geometry2.VectorPubSubType.getCdrSerializedSize(data.getCenter(), current_alignment);
 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
@@ -76,9 +76,9 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
       return current_alignment - initial_alignment;
    }
 
-   public static void write(us.ihmc.idl.generated.geometry.Box data, us.ihmc.idl.CDR cdr)
+   public static void write(us.ihmc.idl.generated.geometry2.Box data, us.ihmc.idl.CDR cdr)
    {
-      us.ihmc.idl.generated.geometry.VectorPubSubType.write(data.getCenter(), cdr);
+      us.ihmc.idl.generated.geometry2.VectorPubSubType.write(data.getCenter(), cdr);
       cdr.write_type_6(data.getW());
 
       cdr.write_type_6(data.getL());
@@ -87,9 +87,9 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
 
    }
 
-   public static void read(us.ihmc.idl.generated.geometry.Box data, us.ihmc.idl.CDR cdr)
+   public static void read(us.ihmc.idl.generated.geometry2.Box data, us.ihmc.idl.CDR cdr)
    {
-      us.ihmc.idl.generated.geometry.VectorPubSubType.read(data.getCenter(), cdr);	
+      us.ihmc.idl.generated.geometry2.VectorPubSubType.read(data.getCenter(), cdr);	
       data.setW(cdr.read_type_6());
       	
       data.setL(cdr.read_type_6());
@@ -100,9 +100,9 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
    }
 
    @Override
-   public final void serialize(us.ihmc.idl.generated.geometry.Box data, us.ihmc.idl.InterchangeSerializer ser)
+   public final void serialize(us.ihmc.idl.generated.geometry2.Box data, us.ihmc.idl.InterchangeSerializer ser)
    {
-      ser.write_type_a("center", new us.ihmc.idl.generated.geometry.VectorPubSubType(), data.getCenter());
+      ser.write_type_a("center", new us.ihmc.idl.generated.geometry2.VectorPubSubType(), data.getCenter());
 
       ser.write_type_6("w", data.getW());
       ser.write_type_6("l", data.getL());
@@ -110,24 +110,24 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
    }
 
    @Override
-   public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, us.ihmc.idl.generated.geometry.Box data)
+   public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, us.ihmc.idl.generated.geometry2.Box data)
    {
-      ser.read_type_a("center", new us.ihmc.idl.generated.geometry.VectorPubSubType(), data.getCenter());
+      ser.read_type_a("center", new us.ihmc.idl.generated.geometry2.VectorPubSubType(), data.getCenter());
 
       data.setW(ser.read_type_6("w"));
       data.setL(ser.read_type_6("l"));
       data.setH(ser.read_type_6("h"));
    }
 
-   public static void staticCopy(us.ihmc.idl.generated.geometry.Box src, us.ihmc.idl.generated.geometry.Box dest)
+   public static void staticCopy(us.ihmc.idl.generated.geometry2.Box src, us.ihmc.idl.generated.geometry2.Box dest)
    {
       dest.set(src);
    }
 
    @Override
-   public us.ihmc.idl.generated.geometry.Box createData()
+   public us.ihmc.idl.generated.geometry2.Box createData()
    {
-      return new us.ihmc.idl.generated.geometry.Box();
+      return new us.ihmc.idl.generated.geometry2.Box();
    }
    @Override
    public int getTypeSize()
@@ -141,17 +141,17 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
       return name;
    }
    
-   public void serialize(us.ihmc.idl.generated.geometry.Box data, us.ihmc.idl.CDR cdr)
+   public void serialize(us.ihmc.idl.generated.geometry2.Box data, us.ihmc.idl.CDR cdr)
    {
       write(data, cdr);
    }
 
-   public void deserialize(us.ihmc.idl.generated.geometry.Box data, us.ihmc.idl.CDR cdr)
+   public void deserialize(us.ihmc.idl.generated.geometry2.Box data, us.ihmc.idl.CDR cdr)
    {
       read(data, cdr);
    }
    
-   public void copy(us.ihmc.idl.generated.geometry.Box src, us.ihmc.idl.generated.geometry.Box dest)
+   public void copy(us.ihmc.idl.generated.geometry2.Box src, us.ihmc.idl.generated.geometry2.Box dest)
    {
       staticCopy(src, dest);
    }

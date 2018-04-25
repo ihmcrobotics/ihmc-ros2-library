@@ -1,4 +1,4 @@
-package us.ihmc.idl.generated.geometry;
+package us.ihmc.idl.generated.geometry2;
 
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.euclid.interfaces.Settable;
@@ -8,14 +8,14 @@ import us.ihmc.pubsub.TopicDataType;
 
 public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable<Box>
 {
-   public us.ihmc.idl.generated.geometry.Vector center_;
+   public us.ihmc.idl.generated.geometry2.Vector center_;
    public double w_;
    public double l_;
    public double h_;
 
    public Box()
    {
-      center_ = new us.ihmc.idl.generated.geometry.Vector();
+      center_ = new us.ihmc.idl.generated.geometry2.Vector();
    }
 
    public Box(Box other)
@@ -26,7 +26,7 @@ public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable
 
    public void set(Box other)
    {
-      us.ihmc.idl.generated.geometry.VectorPubSubType.staticCopy(other.center_, center_);
+      us.ihmc.idl.generated.geometry2.VectorPubSubType.staticCopy(other.center_, center_);
       w_ = other.w_;
 
       l_ = other.l_;
@@ -36,7 +36,7 @@ public class Box extends Packet<Box> implements Settable<Box>, EpsilonComparable
    }
 
 
-   public us.ihmc.idl.generated.geometry.Vector getCenter()
+   public us.ihmc.idl.generated.geometry2.Vector getCenter()
    {
       return center_;
    }
