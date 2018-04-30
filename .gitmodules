@@ -1,0 +1,3 @@
+[submodule "ihmc-pub-sub/thirdparty/Fast-RTPS"]
+	path = ihmc-pub-sub/thirdparty/Fast-RTPS
+	url = https://github.com/eProsima/Fast-RTPS.git
