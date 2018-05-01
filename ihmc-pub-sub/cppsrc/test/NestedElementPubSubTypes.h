@@ -29,7 +29,7 @@ using namespace eprosima::fastrtps;
 
 #include "NestedElement.h"
 
-namespace IDLNestedElement
+namespace nested
 {
     /*!
      * @brief This class represents the TopicDataType of the type NestedElement defined by the user in the IDL file.

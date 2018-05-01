@@ -97,12 +97,8 @@ size_t nested::NestedElement::getCdrSerializedSize(const nested::NestedElement& 
 
 void nested::NestedElement::serialize(eprosima::fastcdr::Cdr &scdr) const
 {
-    if(m_stringTest.length() <= 255)
     scdr << m_stringTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("stringTest field exceeds the maximum length");
     scdr << m_longTest;
-
 }
 
 void nested::NestedElement::deserialize(eprosima::fastcdr::Cdr &dcdr)

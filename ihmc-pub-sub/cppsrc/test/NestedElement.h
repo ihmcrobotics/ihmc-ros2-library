@@ -61,7 +61,7 @@ namespace eprosima
     }
 }
 
-namespace IDLNestedElement
+namespace nested
 {
     /*!
      * @brief This class represents the structure NestedElement defined by the user in the IDL file.
@@ -181,7 +181,7 @@ namespace IDLNestedElement
          * @param current_alignment Buffer alignment.
          * @return Serialized size.
          */
-        eProsima_user_DllExport static size_t getCdrSerializedSize(const NestedElement& data, size_t current_alignment = 0);
+        eProsima_user_DllExport static size_t getCdrSerializedSize(const nested::NestedElement& data, size_t current_alignment = 0);
 
 
         /*!
