@@ -17,13 +17,15 @@
 #define NATIVEPUBLISHERIMPL_H
 
 #include <fastrtps/attributes/PublisherAttributes.h>
+
+#include "rawtopicdatatype.h"
 #include "fastrtpsexception.h"
 #include "nativeparticipantimpl.h"
-#include "publisherhistory.h"
 #include "commonfunctions.h"
 
-#include <fastrtps/rtps/writer/RTPSWriter.h>
-#include <fastrtps/rtps/writer/WriterListener.h>
+#include <fastrtps/Domain.h>
+#include <fastrtps/publisher/Publisher.h>
+#include <fastrtps/publisher/PublisherListener.h>
 
 using namespace eprosima::fastrtps;
 using namespace eprosima::fastrtps::rtps;
@@ -59,41 +61,35 @@ namespace fastRTPS{
                 ThroughputControllerDescriptor* throughputController,
                 NativeParticipantImpl* participant,
                 NativePublisherListener* listener) throw(FastRTPSException);
-        void registerWriter(TopicAttributes* topic,
-                            WriterQos* qos) throw(FastRTPSException);
         virtual ~NativePublisherImpl();
 
-        void create_new_change(ChangeKind_t changeKind, unsigned char* data, int32_t dataLength, int16_t encapsulation, octet* key) throw(FastRTPSException);
-        TopicKind_t getTopicKind();
-        const GUID_t& getGuid();
-        bool clean_history(unsigned int max);
+
+
+        void write(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
+        void dispose(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
+        void unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
+        void dispose_and_unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         int32_t removeAllChange();
         bool wait_for_all_acked(const Time_t& max_wait);
+
+        const GUID_t& getGuid();
         int64_t getGuidLow();
         int64_t getGuidHigh();
 
     private:
-        RTPSWriter* mp_writer;
+        Publisher* publisher;
+        Participant* fastrtpsParticipant;
 
-        ThroughputControllerDescriptor* throughputController;
-        RTPSParticipant* rtpsParticipant;
-        class PublisherWriterListener: public WriterListener
+        class PublisherWriterListener: public PublisherListener
         {
             public:
                 PublisherWriterListener(NativePublisherImpl* p):publisherImpl(p){}
                 virtual ~PublisherWriterListener(){}
-                void onWriterMatched(RTPSWriter* writer,MatchingInfo& info);
+                void onPublicationMatched(Publisher* publisher,MatchingInfo& info);
                 NativePublisherImpl* publisherImpl;
-        }writerListener;
+        }publisherListener;
 
 
-        NativePublisherHistory publisherhistory;
-
-        TopicKind_t topicKind;
-        PublishModeQosPolicyKind publishModeKind;
-        HistoryQosPolicyKind historyQosKind;
-
-        uint32_t high_mark_for_frag_;
         NativePublisherListener* listener;
 
         GuidUnion guid;

@@ -15,8 +15,13 @@
  */
 #include "nativeparticipantimpl.h"
 #include <fastrtps/log/Log.h>
+
+#include <fastrtps/Domain.h>
+#include <fastrtps/attributes/ParticipantAttributes.h>
+
 #include <fastrtps/rtps/builtin/data/WriterProxyData.h>
 #include <fastrtps/rtps/builtin/data/ReaderProxyData.h>
+
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
@@ -25,9 +30,14 @@ NativeParticipantImpl::NativeParticipantImpl(RTPSParticipantAttributes& rtps, Na
     m_rtps_listener(this)
 {
 
+    ParticipantAttributes attributes;
+    attributes.rtps = rtps;
+
+
+
 	try
 	{
-	    part = RTPSDomain::createParticipant(rtps, &m_rtps_listener);		
+        part = Domain::createParticipant(attributes, &m_rtps_listener);
 	}
 	catch(const std::exception &e)
 	{
@@ -51,7 +61,8 @@ NativeParticipantImpl::NativeParticipantImpl(RTPSParticipantAttributes& rtps, Na
 
 NativeParticipantImpl::~NativeParticipantImpl()
 {
-    RTPSDomain::removeRTPSParticipant(part);
+
+    Domain::removeParticipant(part);
 }
 
 int64_t NativeParticipantImpl::getGuidLow()
@@ -64,15 +75,26 @@ int64_t NativeParticipantImpl::getGuidHigh()
     return guid.primitive.high;
 }
 
-RTPSParticipant* NativeParticipantImpl::getParticipant()
+Participant* NativeParticipantImpl::getParticipant()
 {
     return part;
 }
 
-void NativeParticipantImpl::MyRTPSParticipantListener::onRTPSParticipantDiscovery(RTPSParticipant* part, RTPSParticipantDiscoveryInfo rtpsinfo)
+void NativeParticipantImpl::registerType(std::string name, int32_t maximumDataSize, bool hasKey)
+{
+    // This functions adds registered types to a vector of shared ptrs, so they get destroyed when this class gets destructed
+    std::shared_ptr<RawTopicDataType> topicDataType = std::make_shared<RawTopicDataType>(name, maximumDataSize, hasKey);
+    Domain::registerType(part, topicDataType.get());
+    registeredTypes.push_back(topicDataType);
+}
+
+void NativeParticipantImpl::MyRTPSParticipantListener::onRTPSParticipantDiscovery(Participant* part, ParticipantDiscoveryInfo info)
 {
     if(this->mp_participantimpl->listener!=nullptr)
     {
+
+        RTPSParticipantDiscoveryInfo& rtpsinfo = info.rtps;
+
         logInfo(PARTICIPANT,"Remote participant Guid: " << rtpsinfo.m_guid);
         GuidUnion retGuid;
         CommonFunctions::guidcpy(rtpsinfo.m_guid, &retGuid);

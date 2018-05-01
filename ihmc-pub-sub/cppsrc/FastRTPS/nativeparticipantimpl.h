@@ -16,11 +16,21 @@
 #ifndef NATIVEPARTICIPANTIMPL_H
 #define NATIVEPARTICIPANTIMPL_H
 
-#include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
-#include <fastrtps/rtps/participant/RTPSParticipantListener.h>
-#include <fastrtps/rtps/participant/RTPSParticipant.h>
-#include <fastrtps/rtps/RTPSDomain.h>
+#include <memory>
+#include <vector>
+
+
+#include <fastrtps/attributes/ParticipantAttributes.h>
+
+#include <fastrtps/participant/Participant.h>
+#include <fastrtps/participant/ParticipantListener.h>
+#include <fastrtps/qos/WriterQos.h>
+#include <fastrtps/qos/ReaderQos.h>
+
 #include <fastrtps/rtps/reader/ReaderListener.h>
+
+
+#include "rawtopicdatatype.h"
 
 #include "fastrtpsexception.h"
 #include "commonfunctions.h"
@@ -88,21 +98,23 @@ namespace fastRTPS{
         NativeParticipantImpl(RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException);
         int64_t getGuidLow();
         int64_t getGuidHigh();
-        RTPSParticipant* getParticipant();
+        Participant* getParticipant();
+        void registerType(std::string name, int32_t maximumDataSize, bool hasKey);
         void registerEDPReaderListeners(NativeParticipantPublisherEDPListener* publisherListener, NativeParticipantSubscriberEDPListener* subscriberListener) throw(FastRTPSException);
         virtual ~NativeParticipantImpl();
 
     private:
-        RTPSParticipant* part;
+        Participant* part;
         NativeParticipantListener* listener;
         GuidUnion guid;
+        std::vector<std::shared_ptr<RawTopicDataType>> registeredTypes;
 
-        class MyRTPSParticipantListener : public RTPSParticipantListener
+        class MyRTPSParticipantListener : public ParticipantListener
         {
             public:
                 MyRTPSParticipantListener(NativeParticipantImpl* impl): mp_participantimpl(impl){}
                 virtual ~MyRTPSParticipantListener(){}
-                void onRTPSParticipantDiscovery(RTPSParticipant* part, RTPSParticipantDiscoveryInfo info);
+                void onRTPSParticipantDiscovery(Participant* p, ParticipantDiscoveryInfo info);
                 NativeParticipantImpl* mp_participantimpl;
         } m_rtps_listener;
 
