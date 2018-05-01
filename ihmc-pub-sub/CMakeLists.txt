@@ -57,5 +57,4 @@ ENDIF()
 
 add_subdirectory(cppsrc/FastRTPS)
 add_subdirectory(swig/FastRTPS)
-add_subdirectory(cppsrc/test)
 
