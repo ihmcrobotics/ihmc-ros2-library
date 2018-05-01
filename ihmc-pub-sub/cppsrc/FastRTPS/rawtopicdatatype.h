@@ -13,9 +13,36 @@ namespace fastRTPS{
 struct RawDataWrapper
 {
     RawDataWrapper(unsigned char* data, int32_t size, uint16_t encapsulation, unsigned char* key, uint32_t key_length) :
-        data(data), length(size), encapsulation(encapsulation), key(key), key_length(key_length)
+        data(data), length(size), encapsulation(encapsulation), key(key), key_length(key_length), managed(false)
     {
 
+    }
+
+
+    RawDataWrapper(unsigned char *data, int32_t size) :
+        data(data),
+        length(size),
+        encapsulation(0x0),
+        key(nullptr),
+        key_length(0),
+        managed(false)
+    {
+
+    }
+
+    RawDataWrapper(int32_t size, uint16_t encapsulation) :
+        data((unsigned char*)malloc(size)), length(size), encapsulation(encapsulation), key((unsigned char*)malloc(16)), key_length(16), managed(true)
+    {
+
+    }
+
+    virtual ~RawDataWrapper()
+    {
+        if(managed)
+        {
+            free(data);
+            free(key);
+        }
     }
 
     // Use a std::vector here to avoid having to do manual memory management
@@ -25,6 +52,8 @@ struct RawDataWrapper
 
     unsigned char* key;
     uint32_t key_length;
+
+    bool managed;
 };
 
 

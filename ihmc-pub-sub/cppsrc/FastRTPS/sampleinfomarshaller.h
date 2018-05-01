@@ -29,8 +29,6 @@ namespace fastRTPS{
     {
     public:
 
-        bool updateKey;
-
         int16_t encapsulation;
         int32_t dataLength;
 

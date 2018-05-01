@@ -8,18 +8,18 @@
 
 package us.ihmc.rtps.impl.fastRTPS;
 
-public class SWIGTYPE_p_unsigned_char {
+public class SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy {
   private transient long swigCPtr;
 
-  protected SWIGTYPE_p_unsigned_char(long cPtr, @SuppressWarnings("unused") boolean futureUse) {
+  protected SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy(long cPtr, @SuppressWarnings("unused") boolean futureUse) {
     swigCPtr = cPtr;
   }
 
-  protected SWIGTYPE_p_unsigned_char() {
+  protected SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy() {
     swigCPtr = 0;
   }
 
-  protected static long getCPtr(SWIGTYPE_p_unsigned_char obj) {
+  protected static long getCPtr(SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 }

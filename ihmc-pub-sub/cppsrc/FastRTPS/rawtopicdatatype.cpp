@@ -3,9 +3,11 @@
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
-RawTopicDataType::RawTopicDataType(std::string name, int32_t maximumDataSize, bool hasKey) : m_typeSize(static_cast<uint32_t>(maximumDataSize)), m_isGetKeyDefined(hasKey)
+RawTopicDataType::RawTopicDataType(std::string name, int32_t maximumDataSize, bool hasKey)
 {
-    setName(name);
+    setName(name.c_str());
+    m_typeSize = static_cast<uint32_t>(maximumDataSize);
+    m_isGetKeyDefined = hasKey;
 }
 
 bool RawTopicDataType::serialize(void *data, eprosima::fastrtps::rtps::SerializedPayload_t *payload)
@@ -28,8 +30,6 @@ bool RawTopicDataType::deserialize(eprosima::fastrtps::rtps::SerializedPayload_t
 {
     RawDataWrapper* dataWrapper = static_cast<RawDataWrapper*>(data);
     dataWrapper->encapsulation = payload->encapsulation; // Don't trust the encapsulation value here
-
-    dataWrapper->data.resize(payload->length);
     dataWrapper->length = payload->length;
 
     if(payload->length > dataWrapper->length)
@@ -38,6 +38,7 @@ bool RawTopicDataType::deserialize(eprosima::fastrtps::rtps::SerializedPayload_t
     }
 
     memcpy(dataWrapper->data, payload->data, payload->length);
+    dataWrapper->length = payload->length;
 
     return true;
 }
@@ -67,8 +68,9 @@ bool RawTopicDataType::getKey(void *data, eprosima::fastrtps::rtps::InstanceHand
         return false;
     }
 
+
     RawDataWrapper* dataWrapper = static_cast<RawDataWrapper*>(data);
-    if(dataWrapper->key_length > 16)
+    if(dataWrapper->key_length == 0 || dataWrapper->key_length > 16)
     {
         return false;
     }
