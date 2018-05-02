@@ -269,4 +269,25 @@ See [test/us/ihmc/idl/serializers/extra](ihmc-pub-sub-serializers-extra/src/test
 
 
 
+## Building
 
+IHMC Pub Sub has a native component that needs to be build after updating the C++ code. The process is pretty straighforward.
+
+First update the submodules to make sure FastRTPS is included
+
+```
+git submodule update --init --recursive
+```
+
+```
+
+cd ihmc-pub-sub/ihmc-pub-sub
+mkdir build
+cd build
+cmake ..
+make
+make install
+
+```
+
+Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample"
