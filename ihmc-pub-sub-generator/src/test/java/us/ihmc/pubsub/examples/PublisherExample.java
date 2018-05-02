@@ -16,6 +16,7 @@
 package us.ihmc.pubsub.examples;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
@@ -29,6 +30,7 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
+import us.ihmc.pubsub.common.SerializedPayload;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
@@ -100,6 +102,16 @@ public class PublisherExample
          {
             msg.setMsg("Hello World " + (i++));
             publisher.write(msg);
+            
+            System.out.println(dataType.getTypeSize());
+            SerializedPayload payload = new SerializedPayload(dataType.getTypeSize());
+            dataType.serialize(msg, payload);
+            
+            byte[] data = new byte[38];
+            payload.getData().get(data);
+            System.out.println(Arrays.toString(data));
+            
+            System.out.println(payload.getData());
             System.out.println("Publishing: " + msg.getMsgAsString());
             Thread.sleep(1000);
          }
