@@ -39,7 +39,7 @@ NativePublisherImpl::NativePublisherImpl(
 {
 
 
-    PublisherAttributes attr;
+
     attr.throughputController = *throughputController;
     attr.qos.setQos(*qos, true);
     attr.multicastLocatorList = *multicastLocatorList;
@@ -54,17 +54,24 @@ NativePublisherImpl::NativePublisherImpl(
 
     attr.times = *times;
 
+
+}
+
+
+
+NativePublisherImpl::~NativePublisherImpl()
+{
+    Domain::removePublisher(publisher);
+}
+
+void NativePublisherImpl::createPublisher()
+{
     publisher = Domain::createPublisher(fastrtpsParticipant, attr, &publisherListener);
 
     CommonFunctions::guidcpy(publisher->getGuid(), &guid);
 
     logInfo(PUBLISHER, "Guid: " << publisher->getGuid());
 
-}
-
-NativePublisherImpl::~NativePublisherImpl()
-{
-    Domain::removePublisher(publisher);
 }
 
 void NativePublisherImpl::write(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength)

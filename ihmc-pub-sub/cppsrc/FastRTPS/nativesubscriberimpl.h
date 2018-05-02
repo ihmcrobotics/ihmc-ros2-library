@@ -61,6 +61,8 @@ namespace fastRTPS{
                 NativeSubscriberListener* listener) throw(FastRTPSException);
 
 
+        void createSubscriber();
+
         int64_t getGuidLow()
         {
             return guidUnion.primitive.low;
@@ -73,10 +75,6 @@ namespace fastRTPS{
 
 
         void waitForUnreadMessage();
-
-
-        void lock();
-        void unlock();
 
         bool readnextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
         bool takeNextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
@@ -106,6 +104,8 @@ namespace fastRTPS{
 
         GUID_t guid;
         GuidUnion guidUnion;
+        SubscriberAttributes attr;
+
 
         void updateMarshaller(SampleInfoMarshaller* marshaller, SampleInfo_t& sampleInfo, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
 

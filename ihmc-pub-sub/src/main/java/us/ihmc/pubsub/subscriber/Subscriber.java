@@ -15,8 +15,6 @@
  */
 package us.ihmc.pubsub.subscriber;
 
-import java.io.IOException;
-
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -68,7 +66,7 @@ public interface Subscriber
     * 
     * @return True if a sample was read.
     */
-   public boolean readNextData(Object data, SampleInfo info) throws IOException;
+   public boolean readNextData(Object data, SampleInfo info);
    
    /**
     * Take next Data from the Subscriber.
@@ -82,7 +80,7 @@ public interface Subscriber
     * 
     * @return True if a sample was taken.
     */
-   public boolean takeNextData(Object data, SampleInfo info) throws IOException;
+   public boolean takeNextData(Object data, SampleInfo info);
    
    /**
     * Get the Attributes of the Subscriber.

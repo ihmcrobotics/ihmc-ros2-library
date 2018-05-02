@@ -113,11 +113,9 @@ class FastRTPSPublisher implements Publisher
                                      MemoryManagementPolicy_t.swigToEnum(attributes.getHistoryMemoryPolicy().ordinal()), fastRTPSAttributes, qos,
                                      attributes.getTimes(), unicastLocatorList, multicastLocatorList,
                                      outLocatorList, throughputController, participant, nativeListenerImpl);
-
+      impl.createPublisher(); // Create publisher after assigning impl to avoid callbacks with impl being unassigned
       guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
       
-      // Register writer after impl has been assigned, this avoids race conditions due to impl being null during a callback
-      impl.registerWriter(fastRTPSAttributes, qos);
       
       unicastLocatorList.delete();
       multicastLocatorList.delete();
@@ -128,11 +126,34 @@ class FastRTPSPublisher implements Publisher
    @Override
    public void write(Object data) throws IOException
    {
-      ChangeKind_t change = ChangeKind_t.ALIVE;
-      createNewChange(data, change);
+      synchronized(destructorLock)
+      {
+         if(impl == null)
+         {
+            throw new IOException("This publisher has been removed from the domain");
+         }
+         
+        
+         serializeMessage(data);
+         impl.write(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
+      }
+      
    }
 
-   private void createNewChange(Object data, ChangeKind_t change) throws IOException
+   private void serializeMessage(Object data) throws IOException
+   {
+      if (attributes.getTopic().getTopicKind() == TopicKind.WITH_KEY)
+      {
+         keyBuffer.clear();
+         topicDataType.getKey(data, keyBuffer);
+      }
+  
+      payload.getData().clear();
+      topicDataType.serialize(data, payload);
+   }
+   
+   @Override
+   public void dispose(Object data) throws IOException
    {
       synchronized(destructorLock)
       {
@@ -140,17 +161,45 @@ class FastRTPSPublisher implements Publisher
          {
             throw new IOException("This publisher has been removed from the domain");
          }
-         if (attributes.getTopic().getTopicKind() == TopicKind.WITH_KEY)
-         {
-            keyBuffer.clear();
-            topicDataType.getKey(data, keyBuffer);
-         }
-   
-         payload.getData().clear();
-         topicDataType.serialize(data, payload);
-         impl.create_new_change(change, payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer);
+         
+        
+         serializeMessage(data);
+         impl.dispose(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }
    }
+
+   @Override
+   public void unregister(Object data) throws IOException
+   {
+      synchronized(destructorLock)
+      {
+         if(impl == null)
+         {
+            throw new IOException("This publisher has been removed from the domain");
+         }
+         
+        
+         serializeMessage(data);
+         impl.unregister(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
+      }
+   }
+
+   @Override
+   public void dispose_and_unregister(Object data) throws IOException
+   {
+      synchronized(destructorLock)
+      {
+         if(impl == null)
+         {
+            throw new IOException("This publisher has been removed from the domain");
+         }
+         
+        
+         serializeMessage(data);
+         impl.dispose_and_unregister(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
+      }
+   }
+
 
    @Override
    public Guid getGuid()
@@ -182,23 +231,7 @@ class FastRTPSPublisher implements Publisher
       delete();
    }
 
-   @Override
-   public void dispose(Object data) throws IOException
-   {
-      createNewChange(data, ChangeKind_t.NOT_ALIVE_DISPOSED);
-   }
 
-   @Override
-   public void unregister(Object data) throws IOException
-   {
-      createNewChange(data, ChangeKind_t.NOT_ALIVE_UNREGISTERED);
-   }
-
-   @Override
-   public void dispose_and_unregister(Object data) throws IOException
-   {
-      createNewChange(data, ChangeKind_t.NOT_ALIVE_DISPOSED_UNREGISTERED);
-   }
 
    @Override
    public int removeAllChange() throws IOException

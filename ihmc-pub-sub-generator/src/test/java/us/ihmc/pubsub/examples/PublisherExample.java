@@ -15,6 +15,8 @@
  */
 package us.ihmc.pubsub.examples;
 
+import java.io.IOException;
+
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
@@ -33,9 +35,6 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
-
-import java.io.IOException;
-import java.util.function.Consumer;
 
 public class PublisherExample
 {

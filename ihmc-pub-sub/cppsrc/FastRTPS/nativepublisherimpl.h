@@ -64,7 +64,7 @@ namespace fastRTPS{
         virtual ~NativePublisherImpl();
 
 
-
+        void createPublisher();
         void write(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void dispose(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
@@ -91,7 +91,7 @@ namespace fastRTPS{
 
 
         NativePublisherListener* listener;
-
+        PublisherAttributes attr;
         GuidUnion guid;
     };
 }}}}}

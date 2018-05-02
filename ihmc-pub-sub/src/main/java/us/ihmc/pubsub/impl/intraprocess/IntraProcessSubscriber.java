@@ -17,7 +17,6 @@ package us.ihmc.pubsub.impl.intraprocess;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -103,7 +102,7 @@ class IntraProcessSubscriber<T> implements Subscriber
    }
 
    @Override
-   public boolean readNextData(Object data, SampleInfo info) throws IOException
+   public boolean readNextData(Object data, SampleInfo info)
    {
       messageLock.lock();
 
@@ -123,7 +122,7 @@ class IntraProcessSubscriber<T> implements Subscriber
    }
 
    @Override
-   public boolean takeNextData(Object data, SampleInfo info) throws IOException
+   public boolean takeNextData(Object data, SampleInfo info)
    {
       messageLock.lock();
       MessageHolder next = messageQueue.poll();

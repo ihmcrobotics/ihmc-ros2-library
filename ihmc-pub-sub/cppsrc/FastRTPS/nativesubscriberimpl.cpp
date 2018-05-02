@@ -43,7 +43,6 @@ NativeSubscriberImpl::NativeSubscriberImpl(int32_t entityId,
     topicName(topic->getTopicName())
 {
 
-    SubscriberAttributes attr;
     attr.historyMemoryPolicy = memoryManagementPolicy;
     attr.qos = *qos;
     attr.multicastLocatorList = *multicastLocatorList;
@@ -56,18 +55,15 @@ NativeSubscriberImpl::NativeSubscriberImpl(int32_t entityId,
     if(userDefinedID>0)
         attr.setUserDefinedID((uint8_t)userDefinedID);
     attr.times = *times;
+}
 
-
-
+void NativeSubscriberImpl::createSubscriber()
+{
     subscriber = Domain::createSubscriber(fastrtpsParticipant, attr, &readerListener);
-
-
     CommonFunctions::guidcpy(subscriber->getGuid(), &guidUnion);
     logInfo(SUBSCRIBER, "Guid: " << mp_writer->getGuid());
-
-
-
 }
+
 bool NativeSubscriberImpl::isInCleanState()
 {
     return subscriber->isInCleanState();

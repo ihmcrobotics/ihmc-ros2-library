@@ -61,17 +61,9 @@ public class SubscriberExample
       @Override
       public void onNewDataMessage(Subscriber subscriber)
       {
-         try
+         if (subscriber.takeNextData(data, info))
          {
-            if (subscriber.takeNextData(data, info))
-            {
-               System.out.println(data.getSender().toString() + ": " + data.getMsg().toString());
-               Thread.sleep(10);
-            }
-         }
-         catch (IOException | InterruptedException e)
-         {
-            e.printStackTrace();
+            System.out.println(data.getSender().toString() + ": " + data.getMsg().toString());
          }
       }
 
@@ -105,26 +97,11 @@ public class SubscriberExample
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 
-      ChatMessage chatMessage = new ChatMessage();
-      SampleInfo sampleInfo = new SampleInfo();
-      while (true)
-      {
-         try
-         {
-            Thread.sleep(1000);
-            if (subscriber.takeNextData(chatMessage, sampleInfo))
-            {
-               System.out.println("Received message: " + chatMessage + " " + sampleInfo);
-            }
-         }
-         catch (InterruptedException e)
-         {
-         }
-      }
    }
 
-   public static void main(String[] args) throws IOException
+   public static void main(String[] args) throws IOException, InterruptedException
    {
       new SubscriberExample();
+      Thread.currentThread().join();
    }
 }

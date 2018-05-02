@@ -286,6 +286,8 @@ class FastRTPSParticipant implements Participant
          }
       }
 
+      impl.registerType(topicDataType.getName(), topicDataType.getTypeSize(), topicDataType.isGetKeyDefined());
+      
       types.add(topicDataType);
    }
 
