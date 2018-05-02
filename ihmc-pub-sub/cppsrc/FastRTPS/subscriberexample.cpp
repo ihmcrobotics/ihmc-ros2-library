@@ -1,5 +1,5 @@
 #include "nativeparticipantimpl.h"
-#include "nativepublisherimpl.h"
+#include "nativesubscriberimpl.h"
 
 #include <iostream>
 #include <chrono>
@@ -17,15 +17,18 @@ class ExampleParticipantListener : public NativeParticipantListener
 };
 
 
-class ExamplePublisherListener : public NativePublisherListener
+class ExampleSubscriberListener : public NativeSubscriberListener
 {
-    void onWriterMatched(MatchingStatus status, int64_t guidHigh, int64_t guidLow)
+    virtual void onSubscriptionMatched(MatchingStatus status, int64_t guidHigh, int64_t guidLow)
     {
-        std::cout << "Found subscriber " << std::endl;
+        std::cout << "Found publisher" << std::endl;
+    }
+    virtual void onNewDataMessage()
+    {
+        std::cout << "Got callback" << std::endl;
     }
 
 };
-
 
 int main()
 {
@@ -39,8 +42,7 @@ int main()
 
     participant.registerType("chat::ChatMessage", 528, false);
 
-    PublisherAttributes attr;
-
+    SubscriberAttributes attr;
     attr.topic.topicName = "ChatBox1";
     attr.topic.topicDataType = "chat::ChatMessage";
 
@@ -51,20 +53,22 @@ int main()
     attr.topic.historyQos.kind = KEEP_LAST_HISTORY_QOS;
     attr.topic.historyQos.depth = 50;
 
-    ExamplePublisherListener publisherListener;
+    ExampleSubscriberListener subscriberListener;
 
-    NativePublisherImpl publisher(-1, -1, 528, PREALLOCATED_MEMORY_MODE, &attr.topic, &attr.qos,
-                                  &attr.times, &attr.unicastLocatorList, &attr.multicastLocatorList,
-                                  &attr.outLocatorList, &attr.throughputController, &participant, &publisherListener);
-    publisher.createPublisher();
-
-
-    unsigned char data[] = {0, 1, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 74, 97, 118, 97, 0, 0, 0, 0, 14, 0, 0, 0, 72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 32, 48, 0};
-
+    NativeSubscriberImpl subscriber(-1, -1, 528, PREALLOCATED_MEMORY_MODE,
+                                    &attr.topic, &attr.qos, &attr.times, &attr.unicastLocatorList, &attr.multicastLocatorList, &attr.outLocatorList,
+                                    false, &participant, &subscriberListener);
+    subscriber.createSubscriber();
+    std::vector<unsigned char> data(528);
+    SampleInfoMarshaller marshaller;
     for(int i = 0; i < 1000; i++)
     {
-        publisher.write(data,38,CDR_LE, nullptr, 0);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        subscriber.waitForUnreadMessage();
+        if(subscriber.takeNextData(528, data.data(), &marshaller, NO_KEY, SHARED_OWNERSHIP_QOS))
+        {
+            std::cout << "Got message of length " << marshaller.dataLength << std::endl;
+        }
     }
+
 
 }

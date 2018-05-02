@@ -8,6 +8,10 @@ target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES})
 add_executable(PublisherExample publisherexample)
 target_link_libraries(PublisherExample FastRTPSNativeImpl ${FastRTPS_LIBRARIES} pthread)
 
+add_executable(SubscriberExample subscriberexample)
+target_link_libraries(SubscriberExample FastRTPSNativeImpl ${FastRTPS_LIBRARIES} pthread)
+
+
 add_dependencies(FastRTPSNativeImpl FastRTPS)
 
 set_property(TARGET FastRTPSNativeImpl PROPERTY POSITION_INDEPENDENT_CODE TRUE)
