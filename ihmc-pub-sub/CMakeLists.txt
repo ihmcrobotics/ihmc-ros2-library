@@ -27,7 +27,6 @@ ExternalProject_Add(FastRTPS
 	DOWNLOAD_COMMAND ""
 	#UPDATE_COMMAND "${CMAKE_COMMAND}" -E chdir "${PROJECT_SOURCE_DIR}" git submodule update --recursive --init "thirdparty/Fast-RTPS"
 	UPDATE_COMMAND ""
-	PATCH_COMMAND ${APPLE_PATCH_COMMAND}
     INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
     TMP_DIR "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
     CMAKE_GENERATOR "${CMAKE_GENERATOR}"
