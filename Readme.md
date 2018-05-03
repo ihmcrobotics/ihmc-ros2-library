@@ -284,13 +284,15 @@ git submodule update --init --recursive
 cd ihmc-pub-sub/ihmc-pub-sub
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
-make install
+make install/strip
 
 ```
 
-Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample"
+Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample".
+
+Note: When debugging, set CMAKE_BUILD_TYPE to "Debug" and use "make install" instead of "make install/strip" to preserve debugging information.
 
 
 ### Building on Windows
