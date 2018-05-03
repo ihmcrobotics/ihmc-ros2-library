@@ -18,12 +18,6 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 find_package(JNI REQUIRED)
 INCLUDE_DIRECTORIES(${JNI_INCLUDE_DIRS})
 
-IF(APPLE)
-  SET(APPLE_PATCH_COMMAND patch -N -d ${PROJECT_SOURCE_DIR}/thirdparty/Fast-RTPS/thirdparty/fastcdr/src/cpp < ${PROJECT_SOURCE_DIR}/fastcdr.patch || "${CMAKE_COMMAND}" -E echo "Patch skipped")
-ELSE()
-  SET(APPLE_PATCH_COMMAND "")
-ENDIF()
-
 include(ExternalProject)
 SET(FAST_RTPS_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
 ExternalProject_Add(FastRTPS
@@ -38,20 +32,22 @@ ExternalProject_Add(FastRTPS
     TMP_DIR "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
     CMAKE_GENERATOR "${CMAKE_GENERATOR}"
     CMAKE_ARGS
-        "-DEPROSIMA_BUILD=ON"
+        "-DEPROSIMA_BUILD=OFF"
 	"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
         "-DCOMPILE_EXAMPLES=OFF"
 	"-DINTERNAL_DEBUG=ON"
         "-DBUILD_SHARED_LIBS=OFF"
+        "-DBUILD_TESTING=OFF"
+        "-DTHIRDPARTY_fastcdr=OFF"
         "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
         "-DCMAKE_POSITION_INDEPENDENT_CODE=true"
 )
 link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib")
 INCLUDE_DIRECTORIES("${FAST_RTPS_INSTALL_PREFIX}/include")
 IF(WIN32)
-	set(FastRTPS_LIBRARIES libfastcdr-1.0 libfastrtps-1.5 Iphlpapi Shlwapi)
+	set(FastRTPS_LIBRARIES libfastrtps-1.5 Iphlpapi Shlwapi)
 ELSE()
-	set(FastRTPS_LIBRARIES fastcdr fastrtps)
+	set(FastRTPS_LIBRARIES fastrtps)
 ENDIF()
 
 

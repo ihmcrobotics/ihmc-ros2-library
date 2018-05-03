@@ -113,7 +113,7 @@ int32_t NativePublisherImpl::removeAllChange()
 
 bool NativePublisherImpl::wait_for_all_acked(const Time_t &max_wait)
 {
-    publisher->wait_for_all_acked(max_wait);
+    return publisher->wait_for_all_acked(max_wait);
 }
 
 int64_t NativePublisherImpl::getGuidLow()

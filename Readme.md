@@ -291,3 +291,25 @@ make install
 ```
 
 Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample"
+
+
+### Building on Windows
+
+- Install Visual Studio 2017 Community Edition
+- Install SwigWin
+- Install CMake (add to your path)
+- Install JDK 8
+- Install git (optional, useful for submodules. Add to your path)
+
+Start the "x64 Native Tools Command Prompt for VS2017"
+cd to your source directory
+
+
+```
+git submodule update --init --recursive
+mkdir build
+cd build
+set JAVA_HOME=C:\Program Files\Java\[your java version]\
+cmake -DSWIG_EXECUTABLE=[PATH TO swig.exe] ..
+cmake --build . --target install --config RelWithDebInfo
+```
