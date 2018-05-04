@@ -159,7 +159,10 @@ class FastRTPSSubscriber implements Subscriber
                                       attributes.getTimes(), unicastLocatorList, multicastLocatorList, outLocatorList, attributes.isExpectsInlineQos(), participantImpl,
                                       nativeListenerImpl);
 
-      impl.createSubscriber(); // Create subscriber after assigning impl to avoid callbacks with impl being unassigned  
+      if(!impl.createSubscriber()) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
+      {  
+         throw new IOException("Cannot create subscriber");
+      }
       guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
       
       

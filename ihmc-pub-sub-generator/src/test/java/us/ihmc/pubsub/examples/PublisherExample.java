@@ -26,6 +26,7 @@ import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.DurabilityKind;
 import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublishModeKind;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.common.LogLevel;
@@ -87,7 +88,7 @@ public class PublisherExample
       publisherAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setDepth(50);
-      
+      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
       
       Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
       

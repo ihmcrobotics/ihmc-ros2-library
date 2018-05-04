@@ -57,11 +57,26 @@ NativeSubscriberImpl::NativeSubscriberImpl(int32_t entityId,
     attr.times = *times;
 }
 
-void NativeSubscriberImpl::createSubscriber()
+bool NativeSubscriberImpl::createSubscriber()
 {
-    subscriber = Domain::createSubscriber(fastrtpsParticipant, attr, &readerListener);
+    try
+    {
+        subscriber = Domain::createSubscriber(fastrtpsParticipant, attr, &readerListener);
+
+    }
+    catch(const std::exception &e)
+    {
+        return false;
+    }
+
+    if(subscriber == nullptr)
+    {
+        return false;
+    }
+
     CommonFunctions::guidcpy(subscriber->getGuid(), &guidUnion);
     logInfo(SUBSCRIBER, "Guid: " << mp_writer->getGuid());
+    return true;
 }
 
 bool NativeSubscriberImpl::isInCleanState()

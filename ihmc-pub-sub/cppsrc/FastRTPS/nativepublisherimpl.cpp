@@ -41,7 +41,7 @@ NativePublisherImpl::NativePublisherImpl(
 
 
     attr.throughputController = *throughputController;
-    attr.qos.setQos(*qos, true);
+    attr.qos = *qos;
     attr.multicastLocatorList = *multicastLocatorList;
     attr.unicastLocatorList = *unicastLocatorList;
     attr.outLocatorList = *outLocatorList;
@@ -54,7 +54,6 @@ NativePublisherImpl::NativePublisherImpl(
 
     attr.times = *times;
 
-
 }
 
 
@@ -64,13 +63,27 @@ NativePublisherImpl::~NativePublisherImpl()
     Domain::removePublisher(publisher);
 }
 
-void NativePublisherImpl::createPublisher()
+bool NativePublisherImpl::createPublisher()
 {
-    publisher = Domain::createPublisher(fastrtpsParticipant, attr, &publisherListener);
+    try
+    {
+        publisher = Domain::createPublisher(fastrtpsParticipant, attr, &publisherListener);
+    }
+    catch(const std::exception &e)
+    {
+        return false;
+    }
+
+
+    if(publisher == nullptr)
+    {
+        return false;
+    }
 
     CommonFunctions::guidcpy(publisher->getGuid(), &guid);
 
     logInfo(PUBLISHER, "Guid: " << publisher->getGuid());
+    return true;
 
 }
 

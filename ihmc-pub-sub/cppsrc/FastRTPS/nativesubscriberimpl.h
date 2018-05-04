@@ -61,7 +61,7 @@ namespace fastRTPS{
                 NativeSubscriberListener* listener) throw(FastRTPSException);
 
 
-        void createSubscriber();
+        bool createSubscriber();
 
         int64_t getGuidLow()
         {

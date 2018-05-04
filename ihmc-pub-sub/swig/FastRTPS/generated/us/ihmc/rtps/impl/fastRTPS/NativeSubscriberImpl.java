@@ -39,8 +39,8 @@ public class NativeSubscriberImpl {
     this(FastRTPSJNI.new_NativeSubscriberImpl(entityId, userDefinedID, maximumPayloadSize, memoryManagementPolicy.swigValue(), TopicAttributes.getCPtr(topic), topic, ReaderQos.getCPtr(qos), qos, ReaderTimes.getCPtr(times), times, LocatorList_t.getCPtr(unicastLocatorList), unicastLocatorList, LocatorList_t.getCPtr(multicastLocatorList), multicastLocatorList, LocatorList_t.getCPtr(outLocatorList), outLocatorList, expectsInlineQos, NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
   }
 
-  public void createSubscriber() {
-    FastRTPSJNI.NativeSubscriberImpl_createSubscriber(swigCPtr, this);
+  public boolean createSubscriber() {
+    return FastRTPSJNI.NativeSubscriberImpl_createSubscriber(swigCPtr, this);
   }
 
   public long getGuidLow() {

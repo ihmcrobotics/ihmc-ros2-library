@@ -113,7 +113,10 @@ class FastRTPSPublisher implements Publisher
                                      MemoryManagementPolicy_t.swigToEnum(attributes.getHistoryMemoryPolicy().ordinal()), fastRTPSAttributes, qos,
                                      attributes.getTimes(), unicastLocatorList, multicastLocatorList,
                                      outLocatorList, throughputController, participant, nativeListenerImpl);
-      impl.createPublisher(); // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+      if(!impl.createPublisher()) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+      {
+         throw new IOException("Cannot create publisher");
+      }
       guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
       
       
