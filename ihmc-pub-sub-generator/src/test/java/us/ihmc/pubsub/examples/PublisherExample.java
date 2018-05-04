@@ -104,15 +104,6 @@ public class PublisherExample
             msg.setMsg("Hello World " + (i++));
             publisher.write(msg);
             
-            System.out.println(dataType.getTypeSize());
-            SerializedPayload payload = new SerializedPayload(dataType.getTypeSize());
-            dataType.serialize(msg, payload);
-            
-            byte[] data = new byte[38];
-            payload.getData().get(data);
-            System.out.println(Arrays.toString(data));
-            
-            System.out.println(payload.getData());
             System.out.println("Publishing: " + msg.getMsgAsString());
             Thread.sleep(1000);
          }
