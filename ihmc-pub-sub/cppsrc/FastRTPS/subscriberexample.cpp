@@ -40,18 +40,15 @@ int main()
 
     NativeParticipantImpl participant(rtps, &participantListener);
 
-    participant.registerType("chat::ChatMessage", 528, false);
+    participant.registerType("chat::ChatMessage", 64000, false);
 
     SubscriberAttributes attr;
     attr.topic.topicName = "ChatBox1";
     attr.topic.topicDataType = "chat::ChatMessage";
 
 
-    attr.qos.m_reliability.kind = RELIABLE_RELIABILITY_QOS;
+    attr.qos.m_reliability.kind = BEST_EFFORT_RELIABILITY_QOS;
     attr.qos.m_partition.push_back("us/ihmc");
-    attr.qos.m_durability.kind = TRANSIENT_LOCAL_DURABILITY_QOS;
-    attr.topic.historyQos.kind = KEEP_LAST_HISTORY_QOS;
-    attr.topic.historyQos.depth = 50;
 
     ExampleSubscriberListener subscriberListener;
 
@@ -59,12 +56,12 @@ int main()
                                     &attr.topic, &attr.qos, &attr.times, &attr.unicastLocatorList, &attr.multicastLocatorList, &attr.outLocatorList,
                                     false, &participant, &subscriberListener);
     subscriber.createSubscriber();
-    std::vector<unsigned char> data(528);
+    std::vector<unsigned char> data(64000);
     SampleInfoMarshaller marshaller;
-    for(int i = 0; i < 1000; i++)
+    while(true)
     {
         subscriber.waitForUnreadMessage();
-        if(subscriber.takeNextData(528, data.data(), &marshaller, NO_KEY, SHARED_OWNERSHIP_QOS))
+        if(subscriber.takeNextData(64000, data.data(), &marshaller, NO_KEY, SHARED_OWNERSHIP_QOS))
         {
             std::cout << "Got message of length " << marshaller.dataLength << std::endl;
         }
