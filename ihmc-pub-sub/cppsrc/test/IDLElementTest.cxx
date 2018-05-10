@@ -68,6 +68,8 @@ test::IDLElementTest::IDLElementTest()
 
 
 
+
+
 }
 
 test::IDLElementTest::~IDLElementTest()
@@ -94,6 +96,7 @@ test::IDLElementTest::IDLElementTest(const IDLElementTest &x)
     m_longArray = x.m_longArray;
     m_nestedArray = x.m_nestedArray;
     m_stringArray = x.m_stringArray;
+    m_enumArray = x.m_enumArray;
     m_charSeqTest = x.m_charSeqTest;
     m_wcharSeqTest = x.m_wcharSeqTest;
     m_octetSeqTest = x.m_octetSeqTest;
@@ -107,6 +110,7 @@ test::IDLElementTest::IDLElementTest(const IDLElementTest &x)
     m_doubleSeqTest = x.m_doubleSeqTest;
     m_booleanSeqTest = x.m_booleanSeqTest;
     m_nestedSeqTest = x.m_nestedSeqTest;
+    m_enumSeqTest = x.m_enumSeqTest;
     m_stringSeqTest = x.m_stringSeqTest;
 }
 
@@ -130,6 +134,7 @@ test::IDLElementTest::IDLElementTest(IDLElementTest &&x)
     m_longArray = std::move(x.m_longArray);
     m_nestedArray = std::move(x.m_nestedArray);
     m_stringArray = std::move(x.m_stringArray);
+    m_enumArray = std::move(x.m_enumArray);
     m_charSeqTest = std::move(x.m_charSeqTest);
     m_wcharSeqTest = std::move(x.m_wcharSeqTest);
     m_octetSeqTest = std::move(x.m_octetSeqTest);
@@ -143,6 +148,7 @@ test::IDLElementTest::IDLElementTest(IDLElementTest &&x)
     m_doubleSeqTest = std::move(x.m_doubleSeqTest);
     m_booleanSeqTest = std::move(x.m_booleanSeqTest);
     m_nestedSeqTest = std::move(x.m_nestedSeqTest);
+    m_enumSeqTest = std::move(x.m_enumSeqTest);
     m_stringSeqTest = std::move(x.m_stringSeqTest);
 }
 
@@ -166,6 +172,7 @@ test::IDLElementTest& test::IDLElementTest::operator=(const IDLElementTest &x)
     m_longArray = x.m_longArray;
     m_nestedArray = x.m_nestedArray;
     m_stringArray = x.m_stringArray;
+    m_enumArray = x.m_enumArray;
     m_charSeqTest = x.m_charSeqTest;
     m_wcharSeqTest = x.m_wcharSeqTest;
     m_octetSeqTest = x.m_octetSeqTest;
@@ -179,6 +186,7 @@ test::IDLElementTest& test::IDLElementTest::operator=(const IDLElementTest &x)
     m_doubleSeqTest = x.m_doubleSeqTest;
     m_booleanSeqTest = x.m_booleanSeqTest;
     m_nestedSeqTest = x.m_nestedSeqTest;
+    m_enumSeqTest = x.m_enumSeqTest;
     m_stringSeqTest = x.m_stringSeqTest;
     
     return *this;
@@ -204,6 +212,7 @@ test::IDLElementTest& test::IDLElementTest::operator=(IDLElementTest &&x)
     m_longArray = std::move(x.m_longArray);
     m_nestedArray = std::move(x.m_nestedArray);
     m_stringArray = std::move(x.m_stringArray);
+    m_enumArray = std::move(x.m_enumArray);
     m_charSeqTest = std::move(x.m_charSeqTest);
     m_wcharSeqTest = std::move(x.m_wcharSeqTest);
     m_octetSeqTest = std::move(x.m_octetSeqTest);
@@ -217,6 +226,7 @@ test::IDLElementTest& test::IDLElementTest::operator=(IDLElementTest &&x)
     m_doubleSeqTest = std::move(x.m_doubleSeqTest);
     m_booleanSeqTest = std::move(x.m_booleanSeqTest);
     m_nestedSeqTest = std::move(x.m_nestedSeqTest);
+    m_enumSeqTest = std::move(x.m_enumSeqTest);
     m_stringSeqTest = std::move(x.m_stringSeqTest);
     
     return *this;
@@ -264,6 +274,8 @@ size_t test::IDLElementTest::getMaxCdrSerializedSize(size_t current_alignment)
     {
         current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + 255 + 1;
     }
+    current_alignment += ((6) * 4) + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     current_alignment += (25 * 1) + eprosima::fastcdr::Cdr::alignment(current_alignment, 1);
 
@@ -316,6 +328,10 @@ size_t test::IDLElementTest::getMaxCdrSerializedSize(size_t current_alignment)
     for(size_t a = 0; a < 25; ++a)
     {
         current_alignment += nested::NestedElement::getMaxCdrSerializedSize(current_alignment);}
+
+    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+    current_alignment += (25 * 4) + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+
 
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     for(size_t a = 0; a < 25; ++a)
@@ -372,6 +388,7 @@ size_t test::IDLElementTest::getCdrSerializedSize(const test::IDLElementTest& da
             current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + data.stringArray().at(a).size() + 1;
 
     }
+    current_alignment += ((6) * 4) + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     current_alignment += (data.charSeqTest().size() * 1) + eprosima::fastcdr::Cdr::alignment(current_alignment, 1);
 
@@ -426,6 +443,10 @@ size_t test::IDLElementTest::getCdrSerializedSize(const test::IDLElementTest& da
         current_alignment += nested::NestedElement::getCdrSerializedSize(data.nestedSeqTest().at(a), current_alignment);}
 
     current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+    current_alignment += (data.enumSeqTest().size() * 4) + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
+
+
+    current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4);
     for(size_t a = 0; a < data.stringSeqTest().size(); ++a)
     {
         current_alignment += 4 + eprosima::fastcdr::Cdr::alignment(current_alignment, 4) + data.stringSeqTest().at(a).size() + 1;
@@ -437,99 +458,39 @@ size_t test::IDLElementTest::getCdrSerializedSize(const test::IDLElementTest& da
 void test::IDLElementTest::serialize(eprosima::fastcdr::Cdr &scdr) const
 {
     scdr << m_charTest;
-
     scdr << m_wcharTest;
-
     scdr << m_octetTest;
-
     scdr << m_shortTest;
-
     scdr << m_ushortTest;
-
     scdr << m_longTest;
-
     scdr << m_ulongTest;
-
     scdr << m_longlongTest;
-
     scdr << m_ulonglongTest;
-
     scdr << m_floatTest;
-
     scdr << m_doubleTest;
-
     scdr << m_booleanTest;
-
     scdr << (uint32_t)m_colorTest;
-
     scdr << m_nestedElementTest;
-
-    if(m_stringTest.length() <= 255)
     scdr << m_stringTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("stringTest field exceeds the maximum length");
     scdr << m_longArray;
-
     scdr << m_nestedArray;
-
     scdr << m_stringArray;
-
-    if(m_charSeqTest.size() <= 25)
+    scdr << m_enumArray;
     scdr << m_charSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("charSeqTest field exceeds the maximum length");
-    if(m_wcharSeqTest.size() <= 25)
     scdr << m_wcharSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("wcharSeqTest field exceeds the maximum length");
-    if(m_octetSeqTest.size() <= 25)
     scdr << m_octetSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("octetSeqTest field exceeds the maximum length");
-    if(m_shortSeqTest.size() <= 25)
     scdr << m_shortSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("shortSeqTest field exceeds the maximum length");
-    if(m_ushortSeqTest.size() <= 25)
     scdr << m_ushortSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("ushortSeqTest field exceeds the maximum length");
-    if(m_longSeqTest.size() <= 25)
     scdr << m_longSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("longSeqTest field exceeds the maximum length");
-    if(m_ulongSeqTest.size() <= 25)
     scdr << m_ulongSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("ulongSeqTest field exceeds the maximum length");
-    if(m_longlongSeqtest.size() <= 25)
     scdr << m_longlongSeqtest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("longlongSeqtest field exceeds the maximum length");
-    if(m_ulonglongSeqTest.size() <= 25)
     scdr << m_ulonglongSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("ulonglongSeqTest field exceeds the maximum length");
-    if(m_floatSeqTest.size() <= 25)
     scdr << m_floatSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("floatSeqTest field exceeds the maximum length");
-    if(m_doubleSeqTest.size() <= 25)
     scdr << m_doubleSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("doubleSeqTest field exceeds the maximum length");
-    if(m_booleanSeqTest.size() <= 25)
     scdr << m_booleanSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("booleanSeqTest field exceeds the maximum length");
-    if(m_nestedSeqTest.size() <= 25)
     scdr << m_nestedSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("nestedSeqTest field exceeds the maximum length");
-    if(m_stringSeqTest.size() <= 25)
+    scdr << m_enumSeqTest;
     scdr << m_stringSeqTest;
-    else
-        throw eprosima::fastcdr::exception::BadParamException("stringSeqTest field exceeds the maximum length");
 }
 
 void test::IDLElementTest::deserialize(eprosima::fastcdr::Cdr &dcdr)
@@ -552,6 +513,7 @@ void test::IDLElementTest::deserialize(eprosima::fastcdr::Cdr &dcdr)
     dcdr >> m_longArray;
     dcdr >> m_nestedArray;
     dcdr >> m_stringArray;
+    dcdr >> m_enumArray;
     dcdr >> m_charSeqTest;
     dcdr >> m_wcharSeqTest;
     dcdr >> m_octetSeqTest;
@@ -565,6 +527,7 @@ void test::IDLElementTest::deserialize(eprosima::fastcdr::Cdr &dcdr)
     dcdr >> m_doubleSeqTest;
     dcdr >> m_booleanSeqTest;
     dcdr >> m_nestedSeqTest;
+    dcdr >> m_enumSeqTest;
     dcdr >> m_stringSeqTest;
 }
 
@@ -572,6 +535,8 @@ size_t test::IDLElementTest::getKeyMaxCdrSerializedSize(size_t current_alignment
 {
 	size_t current_align = current_alignment;
             
+
+
 
 
 
@@ -615,6 +580,8 @@ bool test::IDLElementTest::isKeyDefined()
 
 void test::IDLElementTest::serializeKey(eprosima::fastcdr::Cdr &scdr) const
 {
+	 
+	 
 	 
 	 
 	 

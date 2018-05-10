@@ -269,4 +269,49 @@ See [test/us/ihmc/idl/serializers/extra](ihmc-pub-sub-serializers-extra/src/test
 
 
 
+## Building
 
+IHMC Pub Sub has a native component that needs to be build after updating the C++ code. The process is pretty straighforward.
+
+First update the submodules to make sure FastRTPS is included
+
+```
+git submodule update --init --recursive
+```
+
+```
+
+cd ihmc-pub-sub/ihmc-pub-sub
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+make install/strip
+
+```
+
+Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample".
+
+Note: When debugging, set CMAKE_BUILD_TYPE to "Debug" and use "make install" instead of "make install/strip" to preserve debugging information.
+
+
+### Building on Windows
+
+- Install Visual Studio 2017 Community Edition
+- Install SwigWin
+- Install CMake (add to your path)
+- Install JDK 8
+- Install git (optional, useful for submodules. Add to your path)
+
+Start the "x64 Native Tools Command Prompt for VS2017"
+cd to your source directory
+
+
+```
+git submodule update --init --recursive
+mkdir build
+cd build
+set JAVA_HOME=C:\Program Files\Java\[your java version]\
+cmake -DSWIG_EXECUTABLE=[PATH TO swig.exe] ..
+cmake --build . --target install --config RelWithDebInfo
+```

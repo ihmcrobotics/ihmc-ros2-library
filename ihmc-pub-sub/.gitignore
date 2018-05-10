@@ -15,4 +15,6 @@ Win32
 .idea/
 **/*.iml
 cmake-build-debug/
+cmake-build-release-visual-studio/
+buildc/
 swig/FastRTPS/generated/us/ihmc/rtps/impl/fastRTPS/FastRTPSJAVA_wrap.cxx

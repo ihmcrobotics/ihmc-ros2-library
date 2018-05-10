@@ -17,17 +17,15 @@
 #define NATIVESUBSCRIBERIMPL_H
 
 #include <fastrtps/attributes/SubscriberAttributes.h>
-#include <fastrtps/rtps/history/ReaderHistory.h>
+#include <fastrtps/subscriber/Subscriber.h>
+#include <fastrtps/subscriber/SubscriberListener.h>
 
 #include "fastrtpsexception.h"
 #include "nativeparticipantimpl.h"
 #include "commonfunctions.h"
 #include "sampleinfomarshaller.h"
-#include <fastrtps/rtps/reader/RTPSReader.h>
-#include <fastrtps/rtps/reader/ReaderListener.h>
-#include <fastrtps/rtps/history/ReaderHistory.h>
-#include <mutex>
-using namespace eprosima::fastrtps::rtps;
+
+
 
 namespace us{
 namespace ihmc{
@@ -35,20 +33,16 @@ namespace rtps{
 namespace impl{
 namespace fastRTPS{
 
-    typedef std::pair<InstanceHandle_t,std::vector<CacheChange_t*>> t_p_I_Change;
-    typedef std::vector<t_p_I_Change> t_v_Inst_Caches;
-
     class NativeSubscriberListener
     {
     public:
-        virtual void onReaderMatched(MatchingStatus status, int64_t guidHigh, int64_t guidLow) {}
-        virtual void onNewCacheChangeAdded() {}
-        virtual bool getKey(int64_t cacheChangePtr, int16_t encoding, int32_t dataLength) { return false; }
+        virtual void onSubscriptionMatched(MatchingStatus status, int64_t guidHigh, int64_t guidLow) {}
+        virtual void onNewDataMessage() {}
         virtual ~NativeSubscriberListener() {}
     };
 
 
-    class NativeSubscriberImpl : public ReaderHistory
+    class NativeSubscriberImpl
     {
     public:
         NativeSubscriberImpl(
@@ -66,8 +60,8 @@ namespace fastRTPS{
                 NativeParticipantImpl* participant,
                 NativeSubscriberListener* listener) throw(FastRTPSException);
 
-        void registerReader(TopicAttributes* topic,
-                            ReaderQos* qos) throw(FastRTPSException);
+
+        bool createSubscriber();
 
         int64_t getGuidLow()
         {
@@ -80,71 +74,40 @@ namespace fastRTPS{
         }
 
 
-        void lock();
-        void unlock();
-
-        int64_t readnextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
-        int64_t takeNextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
-        void getData(int64_t cacheChangePtr, int32_t maxDataLength, unsigned char* data);
-        void updateKey(int64_t cacheChangePtr, unsigned char* key);
-        bool received_change(CacheChange_t* a_change, size_t unknown_missing_changes_up_to);
-        bool remove_change_sub(CacheChange_t* change,t_v_Inst_Caches::iterator* vit=nullptr);
-        bool remove_change_sub_swig(int64_t change);
         void waitForUnreadMessage();
+
+        bool readnextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
+        bool takeNextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
+
         bool isInCleanState();
-
-
-
-        inline void increaseUnreadCount()
-        {
-            ++m_unreadCacheCount;
-        }
-
-        inline void decreaseUnreadCount()
-        {
-            if(m_unreadCacheCount>0)
-                --m_unreadCacheCount;
-        }
-
-        inline int64_t getUnreadCount()
-        {
-            return m_unreadCacheCount;
-        }
+        int64_t getUnreadCount();
 
 
         virtual ~NativeSubscriberImpl();
     private:
-        class SubscriberReaderListener : public ReaderListener
+        class SubscriberReaderListener : public SubscriberListener
         {
         public:
             SubscriberReaderListener(NativeSubscriberImpl* s): subscriberImpl(s){}
             virtual ~SubscriberReaderListener(){}
-            void onReaderMatched(RTPSReader* reader,MatchingInfo& info);
-            void onNewCacheChangeAdded(RTPSReader * reader,const CacheChange_t* const change);
+            void onSubscriptionMatched(Subscriber* subscriber,MatchingInfo& info);
+            void onNewDataMessage(Subscriber* subscriber);
             NativeSubscriberImpl* subscriberImpl;
         }readerListener;
 
-        uint64_t m_unreadCacheCount;
-        t_v_Inst_Caches m_keyedChanges;
-        HistoryQosPolicy m_historyQos;
-        ResourceLimitsQosPolicy m_resourceLimitsQos;
+        Participant* fastrtpsParticipant;
 
-
-        RTPSReader* mp_reader;
-        RTPSParticipant* rtpsParticipant;
-        TopicKind_t topicKind;
-        HistoryQosPolicyKind historyQosKind;
         NativeSubscriberListener* listener;
         std::string topicName;
 
+        Subscriber* subscriber;
 
         GUID_t guid;
         GuidUnion guidUnion;
-
-        void updateMarshaller(SampleInfoMarshaller* marshaller, CacheChange_t* change, WriterProxy* wp, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
-        bool find_Key(CacheChange_t* a_change,t_v_Inst_Caches::iterator* vecPairIterrator);
+        SubscriberAttributes attr;
 
 
+        void updateMarshaller(SampleInfoMarshaller* marshaller, SampleInfo_t& sampleInfo, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
 
     };
 }}}}}

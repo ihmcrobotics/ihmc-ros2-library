@@ -25,7 +25,7 @@
 
 #include "IDLElementTestPubSubTypes.h"
 
-namespace IDLElement
+namespace test
 {
 
     IDLElementTestPubSubType::IDLElementTestPubSubType() {
@@ -48,7 +48,16 @@ namespace IDLElement
         payload->encapsulation = ser.endianness() == eprosima::fastcdr::Cdr::BIG_ENDIANNESS ? CDR_BE : CDR_LE;
         // Serialize encapsulation
         ser.serialize_encapsulation();
-        p_type->serialize(ser); // Serialize the object:
+
+        try
+        {
+            p_type->serialize(ser); // Serialize the object:
+        }
+        catch(eprosima::fastcdr::exception::NotEnoughMemoryException& /*exception*/)
+        {
+            return false;
+        }
+
         payload->length = (uint32_t)ser.getSerializedDataLength(); //Get the serialized length
         return true;
     }
@@ -61,7 +70,16 @@ namespace IDLElement
         // Deserialize encapsulation.
         deser.read_encapsulation();
         payload->encapsulation = deser.endianness() == eprosima::fastcdr::Cdr::BIG_ENDIANNESS ? CDR_BE : CDR_LE;
-        p_type->deserialize(deser); //Deserialize the object:
+
+        try
+        {
+            p_type->deserialize(deser); //Deserialize the object:
+        }
+        catch(eprosima::fastcdr::exception::NotEnoughMemoryException& /*exception*/)
+        {
+            return false;
+        }
+
         return true;
     }
 
@@ -104,4 +122,4 @@ namespace IDLElement
     }
 
 
-} //End of namespace IDLElement
+} //End of namespace test

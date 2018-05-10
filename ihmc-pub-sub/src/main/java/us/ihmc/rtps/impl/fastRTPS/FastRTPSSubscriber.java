@@ -34,17 +34,11 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 class FastRTPSSubscriber implements Subscriber
 {
    private final Object destructorLock = new Object(); 
-
-
-   // We use synchronization objects here because ReentrantLocks allocate memory
-   private final Object newMessageNotification = new Object();
-   private long unreadCountForMessageNotification = 0;
-   
+  
    private NativeSubscriberImpl impl;
 
    private final FastRTPSSubscriberAttributes attributes;
    private final TopicDataType<Object> topicDataType;
-   private final Object topicData;
    private final SubscriberListener listener;
    private final SerializedPayload payload;
    private TopicAttributes fastRTPSAttributes;
@@ -64,7 +58,7 @@ class FastRTPSSubscriber implements Subscriber
    private class NativeSubscriberListenerImpl extends NativeSubscriberListener
    {
       @Override
-      public void onReaderMatched(MatchingStatus status, long guidHigh, long guidLow)
+      public void onSubscriptionMatched(MatchingStatus status, long guidHigh, long guidLow)
       {
          try
          {
@@ -82,15 +76,10 @@ class FastRTPSSubscriber implements Subscriber
       }
 
       @Override
-      public void onNewCacheChangeAdded()
+      public void onNewDataMessage()
       {
          try
          {
-            synchronized(newMessageNotification)
-            {
-               unreadCountForMessageNotification = impl.getUnreadCount();
-               newMessageNotification.notifyAll();
-            }
             
             if (listener != null)
             {
@@ -103,32 +92,6 @@ class FastRTPSSubscriber implements Subscriber
             e.printStackTrace();
          }
       }
-
-      @Override
-      public boolean getKey(long cacheChangePtr, short encoding, int dataLength)
-      {
-         impl.getData(cacheChangePtr, payload.getData().capacity(), payload.getData());
-         preparePayload(encoding, dataLength);
-         if (!topicDataType.isGetKeyDefined())
-         {
-            return false;
-         }
-         try
-         {
-            topicDataType.deserialize(payload, topicData);
-         }
-         catch (IOException e)
-         {
-            return false;
-         }
-         keyBuffer.clear();
-         topicDataType.getKey(topicData, keyBuffer);
-         keyBuffer.flip();
-         impl.updateKey(cacheChangePtr, keyBuffer);
-
-         return true;
-      }
-
    }
 
    private void preparePayload(short encapsulation, int dataLength)
@@ -179,9 +142,14 @@ class FastRTPSSubscriber implements Subscriber
       ReaderQos qos = attributes.getQos().getReaderQos();
       this.attributes = attributes;
       this.topicDataType = (TopicDataType<Object>) topicDataTypeIn.newInstance();
-      this.topicData = topicDataType.createData();
       this.listener = listener;
-      this.payload = new SerializedPayload(topicDataType.getTypeSize());
+      /*
+       * Fast-RTPS can pad messages to 4 byte boundries. Adding 3 to the typesize will make sure the message fits. 
+       * 
+       * See 
+       * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
+       */
+      this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
       this.topicKind = TopicKind_t.swigToEnum(attributes.getTopic().getTopicKind().ordinal());
       this.ownershipQosPolicyKind = qos.getM_ownership().getKind();
 
@@ -197,10 +165,12 @@ class FastRTPSSubscriber implements Subscriber
                                       attributes.getTimes(), unicastLocatorList, multicastLocatorList, outLocatorList, attributes.isExpectsInlineQos(), participantImpl,
                                       nativeListenerImpl);
 
+      if(!impl.createSubscriber()) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
+      {  
+         throw new IOException("Cannot create subscriber");
+      }
       guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
       
-      // Register reader after impl has been assigned, this avoids race conditions due to impl being null during a callback
-      impl.registerReader(fastRTPSAttributes, qos);
       
       unicastLocatorList.delete();
       multicastLocatorList.delete();
@@ -214,32 +184,24 @@ class FastRTPSSubscriber implements Subscriber
    }
 
    @Override
-   public void waitForUnreadMessage(int timeoutInMilliseconds) throws InterruptedException
+   public void waitForUnreadMessage(int timeoutInMilliseconds)
    {
-      synchronized (newMessageNotification)
-      {
          synchronized(destructorLock)
          {
             if(impl == null)
             {
                throw new RuntimeException("This subscriber has been removed from the domain");
             }
-            unreadCountForMessageNotification = impl.getUnreadCount();
+            impl.waitForUnreadMessage();
          }
-         
-         long startTime = System.nanoTime();
-         int timeRemaining = timeoutInMilliseconds;
-         
-         while (unreadCountForMessageNotification == 0 && timeRemaining > 0)
-         {
-            newMessageNotification.wait(timeoutInMilliseconds);
-            timeRemaining -= (System.nanoTime() - startTime) / 1000000;
-         }
-      }
+      
    }
 
    private void updateSampleInfo(SampleInfoMarshaller marshaller, SampleInfo info, ByteBuffer keyBuffer)
    {
+      
+      marshaller.getInstanceHandleValue(keyBuffer);
+      keyBuffer.clear();
       
       info.setDataLength(marshaller.getDataLength());
       info.setOwnershipStrength(marshaller.getOwnershipStrength());
@@ -260,101 +222,68 @@ class FastRTPSSubscriber implements Subscriber
    }
 
    @Override
-   public boolean readNextData(Object data, SampleInfo info) throws IOException
+   public boolean readNextData(Object data, SampleInfo info)
    {
       synchronized(destructorLock)
       {
          if(impl == null)
          {
-            throw new IOException("This subscriber has been removed from the domain");
-         }
+            System.err.println("This subscriber has been removed from the domain");
+            return false;
+         }         
          
-         boolean ret = false;
-         impl.lock();
+         if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
          {
-            long cacheChange = impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind);
-            if (cacheChange != 0)
+            updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+            preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
+            try
             {
-               if (sampleInfoMarshaller.getChangeKind() == ChangeKind_t.ALIVE.swigValue())
-               {
-                  preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
-                  topicDataType.deserialize(payload, data);
-               }
-   
-               if (sampleInfoMarshaller.getUpdateKey())
-               {
-                  keyBuffer.clear();
-                  topicDataType.getKey(data, keyBuffer);
-                  keyBuffer.flip();
-                  impl.updateKey(cacheChange, keyBuffer);
-               }
-               else
-               {
-                  sampleInfoMarshaller.getInstanceHandleValue(keyBuffer);
-                  keyBuffer.clear();
-               }
-               if (info != null)
-               {
-                  updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
-               }
-               ret = true;
+               topicDataType.deserialize(payload, data);
             }
-            else
+            catch (IOException e)
             {
-               ret = false;
+               e.printStackTrace();
+               return false;
             }
+            return true;
          }
-         impl.unlock();
-         return ret;
+         else
+         {
+            return false;
+         }
       }
    }
 
    @Override
-   public boolean takeNextData(Object data, SampleInfo info) throws IOException
+   public boolean takeNextData(Object data, SampleInfo info)
    {
       synchronized(destructorLock)
       {
          if(impl == null)
          {
-            throw new IOException("This subscriber has been removed from the domain");
-         }
+            System.err.println("This subscriber has been removed from the domain");
+            return false;
+         }         
          
-         boolean ret = false;
-         impl.lock();
+         if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
          {
-            long cacheChange = impl.takeNextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind);
-            if (cacheChange != 0)
+            updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+            preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
+            try
             {
-   
-               if (sampleInfoMarshaller.getChangeKind() == ChangeKind_t.ALIVE.swigValue())
-               {
-                  preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
-                  topicDataType.deserialize(payload, data);
-               }
-   
-               if (sampleInfoMarshaller.getUpdateKey())
-               {
-                  keyBuffer.clear();
-                  topicDataType.getKey(data, keyBuffer);
-                  keyBuffer.flip();
-                  impl.updateKey(cacheChange, keyBuffer);
-               }
-               else
-               {
-                  sampleInfoMarshaller.getInstanceHandleValue(keyBuffer);
-                  keyBuffer.clear();
-               }
-               if (info != null)
-               {
-                  updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
-               }
-   
-               impl.remove_change_sub_swig(cacheChange);
-               ret = true;
+               topicDataType.deserialize(payload, data);
             }
+            catch (IOException e)
+            {
+               e.printStackTrace();
+               return false;
+            }
+            return true;
          }
-         impl.unlock();
-         return ret;
+         else
+         {
+            return false;
+         }
       }
    }
 

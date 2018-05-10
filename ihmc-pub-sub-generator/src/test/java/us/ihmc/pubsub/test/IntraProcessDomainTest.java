@@ -86,17 +86,9 @@ public class IntraProcessDomainTest
             public void onNewDataMessage(Subscriber subscriber)
             {
                ChatMessage data = new ChatMessage();
-               try
+               if (subscriber.takeNextData(data, null))
                {
-                  if (subscriber.takeNextData(data, null))
-                  {
-                     messageQueue.add(data);
-                  }
-
-               }
-               catch (IOException e)
-               {
-                  throw new RuntimeException(e);
+                  messageQueue.add(data);
                }
             }
          };

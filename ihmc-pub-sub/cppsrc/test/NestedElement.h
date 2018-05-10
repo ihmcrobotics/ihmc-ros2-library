@@ -61,7 +61,7 @@ namespace eprosima
     }
 }
 
-namespace IDLNestedElement
+namespace nested
 {
     /*!
      * @brief This class represents the structure NestedElement defined by the user in the IDL file.

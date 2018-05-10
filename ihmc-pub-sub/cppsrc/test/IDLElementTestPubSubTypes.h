@@ -29,7 +29,7 @@ using namespace eprosima::fastrtps;
 
 #include "IDLElementTest.h"
 
-namespace IDLElement
+namespace test
 {
 
     /*!

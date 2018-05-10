@@ -62,7 +62,7 @@ namespace eprosima
     }
 }
 
-namespace IDLElement
+namespace test
 {
     /*!
      * @brief This class represents the enumeration Color defined by the user in the IDL file.
@@ -630,6 +630,41 @@ namespace IDLElement
             return m_stringArray;
         }
         /*!
+         * @brief This function copies the value in member enumArray
+         * @param _enumArray New value to be copied in member enumArray
+         */
+        inline eProsima_user_DllExport void enumArray(const std::array<test::Color, 6> &_enumArray)
+        {
+            m_enumArray = _enumArray;
+        }
+
+        /*!
+         * @brief This function moves the value in member enumArray
+         * @param _enumArray New value to be moved in member enumArray
+         */
+        inline eProsima_user_DllExport void enumArray(std::array<test::Color, 6> &&_enumArray)
+        {
+            m_enumArray = std::move(_enumArray);
+        }
+
+        /*!
+         * @brief This function returns a constant reference to member enumArray
+         * @return Constant reference to member enumArray
+         */
+        inline eProsima_user_DllExport const std::array<test::Color, 6>& enumArray() const
+        {
+            return m_enumArray;
+        }
+
+        /*!
+         * @brief This function returns a reference to member enumArray
+         * @return Reference to member enumArray
+         */
+        inline eProsima_user_DllExport std::array<test::Color, 6>& enumArray()
+        {
+            return m_enumArray;
+        }
+        /*!
          * @brief This function copies the value in member charSeqTest
          * @param _charSeqTest New value to be copied in member charSeqTest
          */
@@ -1085,6 +1120,41 @@ namespace IDLElement
             return m_nestedSeqTest;
         }
         /*!
+         * @brief This function copies the value in member enumSeqTest
+         * @param _enumSeqTest New value to be copied in member enumSeqTest
+         */
+        inline eProsima_user_DllExport void enumSeqTest(const std::vector<test::Color> &_enumSeqTest)
+        {
+            m_enumSeqTest = _enumSeqTest;
+        }
+
+        /*!
+         * @brief This function moves the value in member enumSeqTest
+         * @param _enumSeqTest New value to be moved in member enumSeqTest
+         */
+        inline eProsima_user_DllExport void enumSeqTest(std::vector<test::Color> &&_enumSeqTest)
+        {
+            m_enumSeqTest = std::move(_enumSeqTest);
+        }
+
+        /*!
+         * @brief This function returns a constant reference to member enumSeqTest
+         * @return Constant reference to member enumSeqTest
+         */
+        inline eProsima_user_DllExport const std::vector<test::Color>& enumSeqTest() const
+        {
+            return m_enumSeqTest;
+        }
+
+        /*!
+         * @brief This function returns a reference to member enumSeqTest
+         * @return Reference to member enumSeqTest
+         */
+        inline eProsima_user_DllExport std::vector<test::Color>& enumSeqTest()
+        {
+            return m_enumSeqTest;
+        }
+        /*!
          * @brief This function copies the value in member stringSeqTest
          * @param _stringSeqTest New value to be copied in member stringSeqTest
          */
@@ -1189,6 +1259,7 @@ namespace IDLElement
         std::array<int32_t, 10> m_longArray;
         std::array<std::array<nested::NestedElement, 3>, 5> m_nestedArray;
         std::array<std::string, 4> m_stringArray;
+        std::array<test::Color, 6> m_enumArray;
         std::vector<char> m_charSeqTest;
         std::vector<wchar_t> m_wcharSeqTest;
         std::vector<uint8_t> m_octetSeqTest;
@@ -1202,6 +1273,7 @@ namespace IDLElement
         std::vector<double> m_doubleSeqTest;
         std::vector<bool> m_booleanSeqTest;
         std::vector<nested::NestedElement> m_nestedSeqTest;
+        std::vector<test::Color> m_enumSeqTest;
         std::vector<std::string> m_stringSeqTest;
     };
 }
