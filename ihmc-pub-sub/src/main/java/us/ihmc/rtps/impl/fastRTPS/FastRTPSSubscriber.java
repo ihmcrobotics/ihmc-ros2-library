@@ -143,7 +143,13 @@ class FastRTPSSubscriber implements Subscriber
       this.attributes = attributes;
       this.topicDataType = (TopicDataType<Object>) topicDataTypeIn.newInstance();
       this.listener = listener;
-      this.payload = new SerializedPayload(topicDataType.getTypeSize());
+      /*
+       * Fast-RTPS can pad messages to 4 byte boundries. Adding 3 to the typesize will make sure the message fits. 
+       * 
+       * See 
+       * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
+       */
+      this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
       this.topicKind = TopicKind_t.swigToEnum(attributes.getTopic().getTopicKind().ordinal());
       this.ownershipQosPolicyKind = qos.getM_ownership().getKind();
 

@@ -66,12 +66,13 @@ public class PublishSubscribeUInt32Test
       {
          try
          {
-            msg.setPause(false);
-            msg.setSequenceId(0);
+            msg.setPause(i % 2 == 0);
+            msg.setSequenceId(i);
             publisher.write(msg);
 
             System.out.println("Publishing: " + msg.toString());
             Thread.sleep(1000);
+            ++i;
          }
          catch (InterruptedException e)
          {
