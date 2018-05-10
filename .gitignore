@@ -3,8 +3,7 @@
 .settings
 bin
 out
-build*
-cmake*
+build
 build-java
 classes
 .gradle
