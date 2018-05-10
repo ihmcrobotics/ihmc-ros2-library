@@ -62,7 +62,7 @@ repositories {
 }
 	
 dependencies {
-   classpath "us.ihmc:ros2-msg-to-pubsub-generator:0.6.11-alpha"
+   classpath "us.ihmc:ros2-msg-to-pubsub-generator:0.7.0"
 }
 ```
 
@@ -98,16 +98,9 @@ private class SubscriberListenerImpl implements SubscriberListener
    @Override
    public void onNewDataMessage(Subscriber subscriber)
    {
-      try
+      if (subscriber.takeNextData(message, info))	// Note: No memory is allocated as the message is re-used. 
       {
-         if (subscriber.takeNextData(message, info))	// Note: No memory is allocated as the message is re-used. 
-         {
-            // Use data here
-         }
-      }
-      catch (IOException | InterruptedException e)
-      {
-         // Handle exception
+         // Use data here
       }
    }
 
@@ -261,7 +254,7 @@ repositories {
 }
 	
 dependencies {
-	compile group: 'us.ihmc', name: 'ihmc-pub-sub-serializers-extra', version: '0.6.11-alpha'
+	compile group: 'us.ihmc', name: 'ihmc-pub-sub-serializers-extra', version: '0.7.0'
 }
 ```
 
