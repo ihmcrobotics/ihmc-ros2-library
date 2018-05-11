@@ -27,7 +27,7 @@ import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 public class YAMLSerializerTest
 {
 
-   @Test
+   @Test(timeout = 30000)
    public void test() throws IOException
    {
       IDLElementTestPubSubType dataType = new IDLElementTestPubSubType();

@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class PublishSubscribeUInt32Test
 {
-   @Test
+   @Test(timeout = 30000)
    public void testPublishSubscribeUInt32() throws IOException
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
@@ -62,7 +62,7 @@ public class PublishSubscribeUInt32Test
       msg.setSequenceId(0);
 
       int i = 0;
-      while (true)
+      for (; i < 10; i++)
       {
          try
          {

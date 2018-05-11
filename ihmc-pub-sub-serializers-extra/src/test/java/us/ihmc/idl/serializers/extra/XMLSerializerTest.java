@@ -40,7 +40,7 @@ public class XMLSerializerTest
       
       
    }
-   @Test
+   @Test(timeout = 30000)
    public void test() throws IOException
    {
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();

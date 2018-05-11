@@ -108,7 +108,7 @@ public class JSONSerializerTest
       return idlElementTest;
    }
 
-   @Test
+   @Test(timeout = 30000)
    public void testEmpty() throws IOException
    {
       IDLElementTestPubSubType type = new IDLElementTestPubSubType();
@@ -123,7 +123,7 @@ public class JSONSerializerTest
 
    }
 
-   @Test
+   @Test(timeout = 30000)
    public void testWithData() throws IOException
    {
       IDLElementTestPubSubType type = new IDLElementTestPubSubType();
@@ -139,7 +139,7 @@ public class JSONSerializerTest
 
    }
 
-   @Test
+   @Test(timeout = 30000)
    public void testWithMissingData() throws IOException
    {
       IDLElementTestPubSubType type = new IDLElementTestPubSubType();
