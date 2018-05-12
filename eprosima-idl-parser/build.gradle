@@ -8,7 +8,7 @@ buildscript {
       jcenter()
    }
    dependencies {
-      classpath "us.ihmc:ihmc-build:0.13.5"
+      classpath "us.ihmc:ihmc-build:0.13.7"
       classpath "me.champeau.gradle:antlr4-gradle-plugin:0.1"
    }
 }
