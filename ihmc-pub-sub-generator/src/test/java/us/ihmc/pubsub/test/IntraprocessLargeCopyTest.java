@@ -112,6 +112,8 @@ public class IntraprocessLargeCopyTest
       System.err.flush();
 
       System.setErr(systemErr);
+      
+      System.err.println(byteArrayOutputStream.toString());
 
       assertFalse("Standard error contains java.lang.IndexOutOfBoundsException", byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
    }
