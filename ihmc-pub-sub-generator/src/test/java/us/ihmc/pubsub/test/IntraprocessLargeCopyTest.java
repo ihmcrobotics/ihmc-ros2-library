@@ -24,6 +24,8 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -111,10 +113,7 @@ public class IntraprocessLargeCopyTest
 
       System.setErr(systemErr);
 
-      System.err.println("ByteArrayOutputStream.toString(): " + byteArrayOutputStream.toString());
-
-      assertTrue("Standard error is empty", !byteArrayOutputStream.toString().trim().isEmpty());
-      assertTrue("Standard error contains java.lang.IndexOutOfBoundsException", !byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
+      assertFalse("Standard error contains java.lang.IndexOutOfBoundsException", byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
    }
 
    private Publisher createPublisher(PubSubImplementation impl) throws IOException
