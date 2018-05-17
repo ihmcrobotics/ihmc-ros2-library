@@ -1,5 +1,6 @@
 package us.ihmc.pubsub.test;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import us.ihmc.commons.thread.ThreadTools;
@@ -23,21 +24,49 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class IntraprocessLargeCopyTest
 {
+   @Ignore // not working, no output, not sure why
+   @Test(timeout = 300000)
+   public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
+   {
+      Random random = new Random(981239012380L);
+
+      PubSubImplementation impl = PubSubImplementation.FAST_RTPS;
+      
+      performCopyTest(random, impl);
+   }
+   
    @Test(timeout = 300000)
    public void testRepeatedLargeCopiesInIntraprocessCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
 
+      PubSubImplementation impl = PubSubImplementation.INTRAPROCESS;
+      
+      performCopyTest(random, impl);
+   }
+
+   private void performCopyTest(Random random, PubSubImplementation impl) throws InterruptedException
+   {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+      PrintStream systemErr = System.err;
+
+      System.setErr(new PrintStream(byteArrayOutputStream));
+
       Thread subscriberThread = new Thread(() -> {
          try
          {
-            createSubscriber();
+            createSubscriber(impl);
          }
          catch (IOException e)
          {
@@ -52,7 +81,7 @@ public class IntraprocessLargeCopyTest
          Thread publisherThread = new Thread(() -> {
             try
             {
-               Publisher publisher = createPublisher();
+               Publisher publisher = createPublisher(impl);
                publishABunch(publisher, random);
             }
             catch (IOException e)
@@ -76,12 +105,21 @@ public class IntraprocessLargeCopyTest
 
       subscriberThread.join();
       
-      ThreadTools.sleep(10000);
+      ThreadTools.sleep(5000);
+
+      System.err.flush();
+
+      System.setErr(systemErr);
+
+      System.err.println("ByteArrayOutputStream.toString(): " + byteArrayOutputStream.toString());
+
+      assertTrue("Standard error is empty", !byteArrayOutputStream.toString().trim().isEmpty());
+      assertTrue("Standard error contains java.lang.IndexOutOfBoundsException", !byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
    }
 
-   private Publisher createPublisher() throws IOException
+   private Publisher createPublisher(PubSubImplementation impl) throws IOException
    {
-      Domain domain = DomainFactory.getDomain(PubSubImplementation.INTRAPROCESS);
+      Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.ERROR);
 
@@ -104,9 +142,9 @@ public class IntraprocessLargeCopyTest
       return domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
    }
 
-   private Subscriber createSubscriber() throws IOException
+   private Subscriber createSubscriber(PubSubImplementation impl) throws IOException
    {
-      Domain domain = DomainFactory.getDomain(PubSubImplementation.INTRAPROCESS);
+      Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.ERROR);
 
