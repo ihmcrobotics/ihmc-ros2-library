@@ -8,6 +8,7 @@ import us.ihmc.pubsub.TopicDataType;
 
 public class BigMessage extends Packet<BigMessage> implements Settable<BigMessage>, EpsilonComparable<BigMessage>
 {
+   public int id_;
    public us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage>  largeSequence_;
 
    public BigMessage()
@@ -24,7 +25,18 @@ public class BigMessage extends Packet<BigMessage> implements Settable<BigMessag
 
    public void set(BigMessage other)
    {
+      id_ = other.id_;
+
       largeSequence_.set(other.largeSequence_);
+   }
+
+   public void setId(int id)
+   {
+      id_ = id;
+   }
+   public int getId()
+   {
+      return id_;
    }
 
 
@@ -51,12 +63,15 @@ public class BigMessage extends Packet<BigMessage> implements Settable<BigMessag
       if(other == null) return false;
       if(other == this) return true;
 
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.id_, other.id_, epsilon)) return false;
+
       if (this.largeSequence_.size() != other.largeSequence_.size()) { return false; }
       else
       {
          for (int i = 0; i < this.largeSequence_.size(); i++)
          {  if (!this.largeSequence_.get(i).epsilonEquals(other.largeSequence_.get(i), epsilon)) return false; }
       }
+
 
       return true;
    }
@@ -70,6 +85,8 @@ public class BigMessage extends Packet<BigMessage> implements Settable<BigMessag
 
       BigMessage otherMyClass = (BigMessage) other;
 
+      if(this.id_ != otherMyClass.id_) return false;
+
       if (!this.largeSequence_.equals(otherMyClass.largeSequence_)) return false;
 
       return true;
@@ -81,6 +98,8 @@ public class BigMessage extends Packet<BigMessage> implements Settable<BigMessag
       StringBuilder builder = new StringBuilder();
 
       builder.append("BigMessage {");
+      builder.append("id=");
+      builder.append(this.id_);      builder.append(", ");
       builder.append("largeSequence=");
       builder.append(this.largeSequence_);
       builder.append("}");

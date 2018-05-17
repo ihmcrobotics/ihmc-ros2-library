@@ -4,6 +4,7 @@ module test
 {
 	struct BigMessage
 	{
+	    long id;
 		sequence<test::IDLSubmessage, 100000> largeSequence;
 	};
 };
