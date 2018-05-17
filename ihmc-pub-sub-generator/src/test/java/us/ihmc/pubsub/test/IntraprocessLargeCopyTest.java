@@ -1,8 +1,11 @@
 package us.ihmc.pubsub.test;
 
 import org.junit.Test;
+
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
+import us.ihmc.idl.generated.test.IDLSubmessage;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
@@ -72,6 +75,8 @@ public class IntraprocessLargeCopyTest
       });
 
       subscriberThread.join();
+      
+      ThreadTools.sleep(10000);
    }
 
    private Publisher createPublisher() throws IOException
@@ -133,14 +138,16 @@ public class IntraprocessLargeCopyTest
    private void publishABunch(Publisher publisher, Random random) throws IOException
    {
       int i = 0;
-      for (; i < 100; i++)
+      for (; i < 20; i++)
       {
          BigMessage msg = new BigMessage();
-         int i1 = random.nextInt(msg.getLargeSequence().capacity());
-//         System.out.println("Random: " + i1);
-         for (int j = 0; j < i1; j++)
+         IDLSubmessage idlSubmessage = new IDLSubmessage();
+         int randomSize = random.nextInt(100000);
+//         System.out.println("Random: " + randomSize);
+         for (int j = 0; j < randomSize; j++)
          {
-            msg.getLargeSequence().add(j);
+            idlSubmessage.setHello(i + j);
+            msg.getLargeSequence().add().set(idlSubmessage);
          }
          //         try
          {
