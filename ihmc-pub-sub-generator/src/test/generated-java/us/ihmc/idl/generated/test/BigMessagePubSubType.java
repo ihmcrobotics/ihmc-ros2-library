@@ -40,8 +40,9 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    {
       int initial_alignment = current_alignment;
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);current_alignment += (100000 * 8) + us.ihmc.idl.CDR.alignment(current_alignment, 8);
-
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 100000; ++i0)
+      {
+          current_alignment += us.ihmc.idl.generated.test.IDLSubmessagePubSubType.getMaxCdrSerializedSize(current_alignment);}
       return current_alignment - initial_alignment;
    }
 
@@ -55,8 +56,9 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
       int initial_alignment = current_alignment;
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
-      current_alignment += (data.getLargeSequence().size() * 8) + us.ihmc.idl.CDR.alignment(current_alignment, 8);
-
+      for(int i0 = 0; i0 < data.getLargeSequence().size(); ++i0)
+      {
+          current_alignment += us.ihmc.idl.generated.test.IDLSubmessagePubSubType.getCdrSerializedSize(data.getLargeSequence().get(i0), current_alignment);}
 
       return current_alignment - initial_alignment;
    }

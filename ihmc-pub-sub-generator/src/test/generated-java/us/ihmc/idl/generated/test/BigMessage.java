@@ -8,11 +8,11 @@ import us.ihmc.pubsub.TopicDataType;
 
 public class BigMessage extends Packet<BigMessage> implements Settable<BigMessage>, EpsilonComparable<BigMessage>
 {
-   public us.ihmc.idl.IDLSequence.Double  largeSequence_;
+   public us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage>  largeSequence_;
 
    public BigMessage()
    {
-      largeSequence_ = new us.ihmc.idl.IDLSequence.Double (100000, "type_6");
+      largeSequence_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage> (100000, us.ihmc.idl.generated.test.IDLSubmessage.class, new us.ihmc.idl.generated.test.IDLSubmessagePubSubType());
 
    }
 
@@ -28,7 +28,7 @@ public class BigMessage extends Packet<BigMessage> implements Settable<BigMessag
    }
 
 
-   public us.ihmc.idl.IDLSequence.Double  getLargeSequence()
+   public us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage>  getLargeSequence()
    {
       return largeSequence_;
    }
@@ -51,7 +51,12 @@ public class BigMessage extends Packet<BigMessage> implements Settable<BigMessag
       if(other == null) return false;
       if(other == this) return true;
 
-      if (!us.ihmc.idl.IDLTools.epsilonEqualsDoubleSequence(this.largeSequence_, other.largeSequence_, epsilon)) return false;
+      if (this.largeSequence_.size() != other.largeSequence_.size()) { return false; }
+      else
+      {
+         for (int i = 0; i < this.largeSequence_.size(); i++)
+         {  if (!this.largeSequence_.get(i).epsilonEquals(other.largeSequence_.get(i), epsilon)) return false; }
+      }
 
       return true;
    }

@@ -1,7 +1,9 @@
+#include "IDLSubmessage.idl"
+
 module test
 {
 	struct BigMessage
 	{
-		sequence<double, 100000> largeSequence;
+		sequence<test::IDLSubmessage, 100000> largeSequence;
 	};
 };
