@@ -346,7 +346,7 @@ class IntraProcessDomainImpl
                {
                   if (logLevel == LogLevel.INFO)
                   {
-                     IntraProcessLog.info(this, "Publishing " + data + " to " + subscriber);
+//                     IntraProcessLog.info(this, "Publishing " + data + " to " + subscriber);
                   }
 
                   T newData = type.createData();
