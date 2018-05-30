@@ -65,7 +65,7 @@ class IntraProcessDomainImpl
    private final HashMap<String, List<IntraProcessPublisher>> publishers = new HashMap<>();
 
    private LogLevel logLevel;
-
+   
    public IntraProcessDomainImpl(int domainID, LogLevel logLevel)
    {
       this.logLevel = logLevel;
@@ -354,6 +354,7 @@ class IntraProcessDomainImpl
    <T> void write(IntraProcessPublisherAttributes attr, TopicDataType<T> type, T data, SampleInfo info) throws IOException
    {
       domainLock.lock();
+      
       try
       {
          List<IntraProcessSubscriber> topicSubscribers = subscribers.get(attr.getTopic().getTopicName());

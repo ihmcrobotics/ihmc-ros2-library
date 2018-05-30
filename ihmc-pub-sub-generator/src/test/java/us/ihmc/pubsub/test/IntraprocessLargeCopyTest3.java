@@ -34,6 +34,13 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+/**
+ * This test makes sure intraprocess doesn't have threading issues.
+ *
+ * i.e. asserts single thread executor
+ *
+ * @author Duncan Calvert
+ */
 public class IntraprocessLargeCopyTest3
 {
    private static final int NUMBER_OF_MESSAGES_TO_SEND = 80;
