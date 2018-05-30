@@ -78,7 +78,7 @@ public class IntraprocessLargeCopyTest2
 
       assertFalse("Standard error contains java.lang.IndexOutOfBoundsException", byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
       
-      while (messagesReceived.toInteger() < 20)
+      while (messagesReceived.toInteger() < 9)
       {
          Thread.yield();
       }
