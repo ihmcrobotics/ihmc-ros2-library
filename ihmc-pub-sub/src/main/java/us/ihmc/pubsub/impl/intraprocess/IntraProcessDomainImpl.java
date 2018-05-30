@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
@@ -37,7 +39,24 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 class IntraProcessDomainImpl
 {
 
-   private final Executor threadPool = Executors.newCachedThreadPool();
+//   private final Executor threadPool = Executors.newCachedThreadPool(); // give threads a name
+   private final Executor threadPool = Executors.newSingleThreadExecutor(new ThreadFactory()
+   {
+      private final AtomicInteger threadNumber = new AtomicInteger(1);
+
+      @Override
+      public Thread newThread(Runnable r)
+      {
+         Thread t = new Thread(r, "IntraProcessDomainImpl-thread-" + threadNumber.getAndIncrement());
+
+         if (t.isDaemon())
+            t.setDaemon(false);
+         if (t.getPriority() != Thread.NORM_PRIORITY)
+            t.setPriority(Thread.NORM_PRIORITY);
+
+         return t;
+      }
+   });
 
    private final ReentrantLock domainLock = new ReentrantLock();
 
@@ -46,7 +65,7 @@ class IntraProcessDomainImpl
    private final HashMap<String, List<IntraProcessPublisher>> publishers = new HashMap<>();
 
    private LogLevel logLevel;
-
+   
    public IntraProcessDomainImpl(int domainID, LogLevel logLevel)
    {
       this.logLevel = logLevel;
@@ -335,6 +354,7 @@ class IntraProcessDomainImpl
    <T> void write(IntraProcessPublisherAttributes attr, TopicDataType<T> type, T data, SampleInfo info) throws IOException
    {
       domainLock.lock();
+      
       try
       {
          List<IntraProcessSubscriber> topicSubscribers = subscribers.get(attr.getTopic().getTopicName());
@@ -346,7 +366,7 @@ class IntraProcessDomainImpl
                {
                   if (logLevel == LogLevel.INFO)
                   {
-                     IntraProcessLog.info(this, "Publishing " + data + " to " + subscriber);
+//                     IntraProcessLog.info(this, "Publishing " + data + " to " + subscriber);
                   }
 
                   T newData = type.createData();

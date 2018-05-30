@@ -40,7 +40,11 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    {
       int initial_alignment = current_alignment;
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);current_alignment += (100000 * 8) + us.ihmc.idl.CDR.alignment(current_alignment, 8);
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 100000; ++i0)
+      {
+          current_alignment += us.ihmc.idl.generated.test.IDLSubmessagePubSubType.getMaxCdrSerializedSize(current_alignment);}
 
       return current_alignment - initial_alignment;
    }
@@ -55,7 +59,12 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
       int initial_alignment = current_alignment;
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
-      current_alignment += (data.getLargeSequence().size() * 8) + us.ihmc.idl.CDR.alignment(current_alignment, 8);
+
+
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+      for(int i0 = 0; i0 < data.getLargeSequence().size(); ++i0)
+      {
+          current_alignment += us.ihmc.idl.generated.test.IDLSubmessagePubSubType.getCdrSerializedSize(data.getLargeSequence().get(i0), current_alignment);}
 
 
       return current_alignment - initial_alignment;
@@ -63,6 +72,8 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
 
    public static void write(us.ihmc.idl.generated.test.BigMessage data, us.ihmc.idl.CDR cdr)
    {
+      cdr.write_type_2(data.getId());
+
       if(data.getLargeSequence().size() <= 100000)
       cdr.write_type_e(data.getLargeSequence());else
           throw new RuntimeException("largeSequence field exceeds the maximum length");
@@ -71,6 +82,8 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
 
    public static void read(us.ihmc.idl.generated.test.BigMessage data, us.ihmc.idl.CDR cdr)
    {
+      data.setId(cdr.read_type_2());
+      	
       cdr.read_type_e(data.getLargeSequence());	
 
    }
@@ -78,12 +91,14 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    @Override
    public final void serialize(us.ihmc.idl.generated.test.BigMessage data, us.ihmc.idl.InterchangeSerializer ser)
    {
+      ser.write_type_2("id", data.getId());
       ser.write_type_e("largeSequence", data.getLargeSequence());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, us.ihmc.idl.generated.test.BigMessage data)
    {
+      data.setId(ser.read_type_2("id"));
       ser.read_type_e("largeSequence", data.getLargeSequence());
    }
 

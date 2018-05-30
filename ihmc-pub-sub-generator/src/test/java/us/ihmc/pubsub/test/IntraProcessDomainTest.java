@@ -16,6 +16,7 @@
 package us.ihmc.pubsub.test;
 
 import org.junit.Test;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.TopicDataType;
@@ -116,7 +117,12 @@ public class IntraProcessDomainTest
          ChatMessage rec = new ChatMessage();
          SampleInfo info = new SampleInfo();
 
-         assertTrue(subscriber1.readNextData(rec, info));
+         int k = 0;
+         for (; k < 5 && !subscriber1.readNextData(rec, info); k++)
+         {
+            ThreadTools.sleep(100);
+         }
+         assertTrue("could not read data", k < 5);
          assertEquals(msg, rec);
 
          subscriber1.waitForUnreadMessage(100);
