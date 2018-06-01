@@ -1,23 +1,43 @@
-# IHMC Pub/Sub
+# IHMC Pub Sub
 
-This library implements a Java Pub/Sub API for the RTPS protocol. RTPS is the interoperability wire protocol for DDS. This library also implements serialization methods for the 
-Common Data Representation (CDR) format, allowing interoperability with DDS domains. The IHMC Pub/Sub generator can be used to generate a Java implementation from OMG DDS IDL formatted files.
+An allocation free Java library for DDSI-RTPS messaging.
 
-The API is designed to avoid allocating memory except during initialization. 
+## Features
+
+- Allocation free Publisher and Subscriber API in Java
+- Java data type generator for Object Management Group (OMG) IDL files (*.idl)
+
+##### Third Party Vendored Libraries
+
+Uses eProsima's Fast-RTPS C++ via JNI. We also vendor a highly customized version of their IDL parser.
 
 ## Toolchain
 - [IHMC Pub/Sub](https://github.com/ihmcrobotics/ihmc-pub-sub): IHMC Pub/Sub RTPS library
-- [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub-generator): Gradle plugin and standalone application to generate java classes from .idl messages.
+- [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub): Gradle plugin and standalone application to generate java classes from .idl messages.
 - [IHMC RTPS Visualizer](https://github.com/ihmcrobotics/ihmc-rtps-visualizer): GUI to display partitions, topics, participants, subscribers, publisher and publisher data on a RTPS domain.
-- [IHMC Pub/Sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub-serializers-extra): Optional serializer to generated JSON, BSON, YAML, Java Properties and XML(limited) output from .idl messages. 
+- [IHMC Pub/Sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub): Optional serializer to generated JSON, BSON, YAML, Java Properties and XML(limited) output from .idl messages. 
 
 ## License
 The IHMC Pub/Sub library is licensed under the Apache 2.0. See LICENSE.txt
 
 ## Usage
 
-## Generating Java code from .idl messages
-Use the [IHMC Pub/Sub generator](https://github.com/ihmcrobotics/ihmc-pub-sub-generator) to compile your .idl messages into [MessageType].java and [MessagePubSubType].java.
+### Generating Java code from .idl messages
+
+Use the IDLGenerator to compile your .idl messages into [MessageType].java and [MessagePubSubType].java.
+
+```java
+FileTools.deleteQuietly(Paths.get("generated-java")); // remove old files
+
+// Generate Java types for all (*.idl) files in `src/test/idl` and put them in `src/test/generated-java`
+for (Path idl : Files.list(Paths.get("idl")).toArray(Path[]::new))
+{
+   IDLGenerator.execute(idl.toFile(), // *.idl file
+                        "us.ihmc.idl.generated", // package prefix
+                        Paths.get("generated-java").toFile(), // output directory
+                        Arrays.asList(Paths.get("idl").toFile())); // include path
+}
+```
 
 ### Supported operating systems
 IHMC Pub Sub has a native component that is compiled for different operating systems
@@ -31,24 +51,24 @@ IHMC Pub Sub has a native component that is compiled for different operating sys
 - Requires a 64 bit Java 8 compatible JRE.
 - Requires Microsoft Visual C++ 2017 Redistributable (x64). [Download](https://go.microsoft.com/fwlink/?LinkId=746572)
 
+#### Mac OSX
+- Compiled and tested on Sierra
 
 ### Gradle
 Add the IHMC Pub Sub library as dependency
 ```
 repositories {
-    maven {
-        url  "http://dl.bintray.com/ihmcrobotics/maven-release"
-    }
+   maven { url  "http://dl.bintray.com/ihmcrobotics/maven-release" }
 }
 	
 dependencies {
-	compile group: 'us.ihmc', name: 'IHMCPubSub', version: '0.4.0'
+   classpath "us.ihmc:ros2-msg-to-pubsub-generator:0.7.1"
 }
 ```
 
 ### Quick start
 
-Examples for a simple publisher and subscriber can be found in src/us/ihmc/pubsub/example.
+Examples for a simple publisher and subscriber can be found in [ihmc-pub-sub-generator/src/test/java/us/ihmc/pubsub/examples](ihmc-pub-sub-generator/src/test/java/us/ihmc/pubsub/examples).
 
 #### Participant
 A single participant is needed to join a domain. Multiple publisher/subscribers can be added to a participant.
@@ -78,16 +98,9 @@ private class SubscriberListenerImpl implements SubscriberListener
    @Override
    public void onNewDataMessage(Subscriber subscriber)
    {
-      try
+      if (subscriber.takeNextData(message, info))	// Note: No memory is allocated as the message is re-used. 
       {
-         if (subscriber.takeNextData(message, info))	// Note: No memory is allocated as the message is re-used. 
-         {
-            // Use data here
-         }
-      }
-      catch (IOException | InterruptedException e)
-      {
-         // Handle exception
+         // Use data here
       }
    }
 
@@ -112,46 +125,22 @@ The IHMC Pub/Sub library consists of three parts. A generic Pub/Sub API, a RTPS 
 
 The Pub/Sub API is based on the eProsima Fast-RTPS C++ Api. The API is decoupled from the implementation, allowing multiple implementations. Currently only Fast-RTPS is provided as a backend.
 
-### RTPS implementation
-
-The RTPS implementation uses eProsima Fast-RTPS under the hood. Care has been taken to avoid any allocations in the Java code when reader/writing to topics. All functionality in the Pub/Sub API is implemented for 
-the eProsima Fast-RTPS layer.  
-
-
-## Documentation
-
-All classes contain JavaDoc, which can be accessed on [https://readthedocs.org/projects/ihmc-pubsub/](https://readthedocs.org/projects/ihmc-pubsub/).
-
-
 ### See also
 The eProsima Fast RTPS documentation can be useful as a reference guide on more advanced features and the inner working of the RTPS layer [http://eprosima-fast-rtps.readthedocs.io/en/latest/](http://eprosima-fast-rtps.readthedocs.io/en/latest/). 
 
-## Supported platforms
-
-The library is supported on the following Operating Systems
-- Linux (Compiled and tested on Ubuntu 16.04)
-- Windows 10 (Should Windows 8 not work, please file a bug report.)
-- Mac OS (Compiled and tested on Sierra)
-
-
 ## Compilation
-
-### Initialize submodule:
-
-`git submodule update --init --recursive`
 
 ### Java code compilation
 ```
 gradle build
 gradle publishToMavenLocal
-
 ```
 
 ### Native code Compilation
 
 This step is optional, the native libraries have been included in the source code repository.
 
-FastRTPS is included as a GIT submodule. The CMake build system will automatically build FastRTPS if neccessary.
+FastRTPS is included as a Git submodule. The CMake build system will automatically build FastRTPS if neccessary.
 
 #### Linux
 Requirements
@@ -193,5 +182,129 @@ Use CMake GUI to create the Visual Studio makefiles.
 
 Note: Only the Release configuration builds.
 
+# IHMC Pub/Sub Generator
+
+The IHMC Pub/Sub generator creates Java classes from OMG DDS IDL formatted files. The resulting classes can be used in conjunction with [IHMC Pub/Sub](https://github.com/ihmcrobotics/ihmc-pub-sub) to serialize and deserialize to the Common Data Representation(CDR) format.
+
+## Features
+- Pure Java serialization/deserialization. Allows message generation without having to compile native libraries.
+- Allocation free during serialization/deserialization. All elements of the message are preallocated. 
+- StringBuilder instead of string allow allocation free string deserialzation.
+- Support for wchar and wstring to map directly to Java's UTF-16.
+- Automatically generated equals() and toString() methods for testing and debugging.
+- Support for #include directives and other C preprocessor directives. The include search path is the current directory and the parent directory of the .idl file.
+- Optional (using [IHMC pub/sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub) ) serialization and deserialization to JSON/BSON/YAML and XML.
+- @Abstract(type="[fully qualified class name]") annotation to generate an abstract Pub/Sub type. This allows reusing exisiting Java data objects in combination with IDL specified data without marshalling. Use [Name]PubSubType.setImplementation() to implement.  
+ 
+### Limitations
+- Sequences of arrays and arrays of sequences are not supported.
+- Long Doubles are not supported due to limitations in the Java language.
+- Union, alias, value, sparse, set and map are not implemented.
+- Interfaces are not implemented.
+
+### Compatibility notes
+- CDR Byte stream is validated against FastCDR generated byte stream.
+- FastRTPS's fastrtpsgen does not seem to support wstring and Sequence\<Enum\>
 
 
+## Usage
+
+The IHMC Pub/Sub generator can either be used as a gradle plugin (recommended) or standalone library.
+
+This creates a task to compile IDL files. The following properties can be set
+- idlFiles: FileCollection of idl files to compile [Required]
+- inludeDirs: FileCollection of include directories
+- targetDirectory: File target directory
+
+```
+task generateIDL(type: us.ihmc.idl.generator.IDLGeneratorTask) {
+	idlFiles = fileTree(dir: 'idl')
+	includeDirs = files(".")
+	targetDirectory = file("generated")
+	packagePrefix = "us.ihmc.idl.generated"
+}
+```
+
+### Java application
+Run us.ihmc.idl.generator.IDLGenerator. There are three options for generating IDL files
+
+- No command line arguments: Dialogs will popup to select the IDL file and provide a target directory and package name.
+- Command line arguments: us.ihmc.idl.generator.IDLGenerator \[idl filename\] \[package\] \[target directory\] 
+- Call directly from Java: us.ihmc.idl.generator.IDLGenerator.execute(String idlFilename, String packageName, File targetDirectory)
+
+# IHMC Pub/Sub Extra datatypes
+
+The IHMC pub sub extra datatypes library provides support for serializing and deserialization of IDL datatypes to the following other formats
+
+- JSON
+- BSON
+- YAML
+- XML
+
+This library uses Jackson internally. Unlike IHMC Pub Sub, the functionality in this library will allocate objects when used.
+
+## Usage
+
+### Gradle
+
+Add the IHMC Pub Sub Serializers Extra library as dependency
+```
+repositories {
+    maven { url  "http://dl.bintray.com/ihmcrobotics/maven-release" }
+}
+	
+dependencies {
+	compile group: 'us.ihmc', name: 'ihmc-pub-sub-serializers-extra', version: '0.7.1'
+}
+```
+
+See [test/us/ihmc/idl/serializers/extra](ihmc-pub-sub-serializers-extra/src/test/java/us/ihmc/idl/serializers/extra) for examples as test cases.
+
+
+
+## Building
+
+IHMC Pub Sub has a native component that needs to be build after updating the C++ code. The process is pretty straighforward.
+
+First update the submodules to make sure FastRTPS is included
+
+```
+git submodule update --init --recursive
+```
+
+```
+
+cd ihmc-pub-sub/ihmc-pub-sub
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+make install/strip
+
+```
+
+Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample".
+
+Note: When debugging, set CMAKE_BUILD_TYPE to "Debug" and use "make install" instead of "make install/strip" to preserve debugging information.
+
+
+### Building on Windows
+
+- Install Visual Studio 2017 Community Edition
+- Install SwigWin
+- Install CMake (add to your path)
+- Install JDK 8
+- Install git (optional, useful for submodules. Add to your path)
+
+Start the "x64 Native Tools Command Prompt for VS2017"
+cd to your source directory
+
+
+```
+git submodule update --init --recursive
+mkdir build
+cd build
+set JAVA_HOME=C:\Program Files\Java\[your java version]\
+cmake -DSWIG_EXECUTABLE=[PATH TO swig.exe] ..
+cmake --build . --target install --config RelWithDebInfo
+```

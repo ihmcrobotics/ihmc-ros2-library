@@ -1,0 +1,33 @@
+module geometry
+{
+    //@Abstract(type="java.lang.Object", impl="null")
+    @TypeCode(type="geometry::Vector")
+    struct Vector {
+        string<128> frame;
+
+        double x;
+        double y;
+        double z;
+
+        sequence<double> bla;
+        double waa[3];
+    };
+
+    struct Box
+    {
+        Vector center;
+        double w;
+        double l;
+        double h;
+    };
+
+    struct Polygon
+    {
+        sequence<Vector> points;
+    };
+
+    struct Triangle
+    {
+        Vector points[3];
+    };
+};

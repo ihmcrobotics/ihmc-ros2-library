@@ -1,0 +1,33 @@
+buildscript {
+   repositories {
+      maven { url "https://plugins.gradle.org/m2/" }
+      mavenLocal()
+      jcenter()
+   }
+   dependencies {
+      classpath "us.ihmc:ihmc-build:0.13.7"
+   }
+}
+apply plugin: "us.ihmc.ihmc-build"
+
+ihmc {
+   loadProductProperties("../group.gradle.properties")
+
+   configureDependencyResolution()
+   configurePublications()
+}
+
+mainDependencies {
+    compile group: "us.ihmc", name: "ihmc-pub-sub", version: version
+    compile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.8.7"
+    compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-yaml", version: "2.8.7"
+    compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-xml", version: "2.8.7"
+    compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-properties", version: "2.8.7"
+    compile group: "org.codehaus.woodstox", name: "woodstox-core-asl", version: "4.1.4"
+    compile group: "de.undercouch", name: "bson4jackson", version: "2.7.0"
+}
+
+testDependencies {
+    compile group: "us.ihmc", name: "ihmc-pub-sub-generator-test", version: version
+    compile group: "junit", name: "junit", version: "4.11"
+}

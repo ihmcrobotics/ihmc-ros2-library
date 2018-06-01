@@ -1,0 +1,360 @@
+group JavaType;
+
+main(ctx, definitions, package) ::= <<
+$if(package)$
+package $package$;
+$endif$
+
+
+$definitions$
+>>
+
+interface(ctx, parent, interface, exports, extension) ::= <<
+$javadocpubsub(type="interface", name=interface.name, filename=[ctx.filename, ".idl"])$
+public class $interface.name$PubSubType 
+{
+   $extension$
+
+   $exports$
+}
+>>
+
+struct_type(ctx, parent, struct, extension, typecode) ::= <<
+$javadocpubsub(type="struct", name=struct.name, filename=[ctx.filename, ".idl"])$
+public class $struct.name$PubSubType implements us.ihmc.pubsub.TopicDataType<$struct.javaTypename$>
+{
+   public static final java.lang.String name = "$typecode$";
+
+$if(struct.abstract)$
+   private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
+   private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();
+
+   private static Abstract$struct.name$PubSubTypeImplementation impl = $struct.abstractimpl$;
+   
+   /**
+    * Abstract implementation of $struct.name$PubSubType.
+    *
+    * Extend this class to create a custom PubSubType for @Abstract idl datatypes.
+    *
+    */
+   public static abstract class Abstract$struct.name$PubSubTypeImplementation
+   {
+   /**
+    * Copy src into dest.
+    *
+    * @param src Source object to copy data from
+    * @param dest Destination object to copy data to
+    */
+   protected abstract void copy($struct.javaTypename$ src, $struct.javaTypename$ dest);
+$struct.members : { member |
+   /**
+    * Getter for $member.javaName$
+    *
+    * @param data object to read from
+    * @return value of X
+    */
+   protected abstract $member.typecode.javaTypename$ get$member.javaName$($struct.javaTypename$ data);
+$if(!member.typecode.isType_e)$
+$if(member.typecode.primitive)$
+   /**
+    * Setter for $member.javaName$
+    *
+    * @param data object to write to
+    * @param $member.name$ value
+    */
+   protected abstract void set$member.javaName$($struct.javaTypename$ data, $member.typecode.javaTypename$ $member.name$);
+$endif$
+$endif$
+}; separator="\n"$
+      public abstract $struct.javaTypename$ createData();
+   }
+
+   private static Abstract$struct.name$PubSubTypeImplementation getImpl()
+   {
+     if(impl == null)
+     {
+      throw new RuntimeException("Abstract pub/sub type implementation not set. Call setImplementation(Abstract$struct.name$PubSubTypeImplementation implementation) before using this type.");
+     }
+     return impl;
+   }
+   
+   public static void setImplementation(Abstract$struct.name$PubSubTypeImplementation implementation)
+   {
+     $struct.name$PubSubType.impl = implementation;
+   }
+
+   public static int getMaxCdrSerializedSize()
+   {
+     return getMaxCdrSerializedSize(0);
+   }
+
+   public static int getMaxCdrSerializedSize(int current_alignment)
+   {
+      int initial_alignment = current_alignment;
+
+      $struct.members : { member |$max_serialized_size(ctx=ctx, typecode=member.typecode, var="current_alignment")$}; separator=""$
+
+      return current_alignment - initial_alignment;
+   }
+
+   public final static int getCdrSerializedSize($struct.javaTypename$ data)
+   {
+     return getCdrSerializedSize(data, 0);
+   }
+
+   public final static int getCdrSerializedSize($struct.javaTypename$ data, int current_alignment)
+   {
+      int initial_alignment = current_alignment;
+
+$struct.members : { member |
+      $serialized_size(ctx=ctx, object=member, data=["getImpl().get", member.javaName, "(data)"], var="current_alignment")$
+}; separator="\n"$
+
+      return current_alignment - initial_alignment;
+   }
+
+   @Override
+   public void serialize($struct.javaTypename$ data, us.ihmc.pubsub.common.SerializedPayload serializedPayload) throws java.io.IOException
+   {
+      serializeCDR.serialize(serializedPayload);
+      write(data, serializeCDR);
+      serializeCDR.finishSerialize();
+   }
+
+   @Override
+   public void deserialize(us.ihmc.pubsub.common.SerializedPayload serializedPayload, $struct.javaTypename$ data) throws java.io.IOException
+   {
+      deserializeCDR.deserialize(serializedPayload);
+      read(data, deserializeCDR);
+      deserializeCDR.finishDeserialize();
+   }
+
+   public static void write($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
+   {
+$struct.members : { member |
+      $object_serialization(ctx=ctx, object=member, arg="data", element="getImpl().")$
+}; separator="\n"$
+   }
+
+   public static void read($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
+   {
+      $struct.members : { member |$object_deserialization(ctx=ctx, object=member, arg="data", argsep=",", element="getImpl().")$}; separator="\n"$
+   }
+
+   @Override
+   public final void serialize($struct.javaTypename$ data, us.ihmc.idl.InterchangeSerializer ser)
+   {
+$struct.members : { member |
+$if(member.typecode.isType_a)$
+      ser.write_$member.typecode.stType$("$member.name$", new $member.typecode.pubsubTypename$(), getImpl().get$member.javaName$(data));
+$elseif(member.typecode.isType_f)$
+$if(member.typecode.contentTypeCode.isType_a)$
+      ser.write_$member.typecode.stType$("$member.name$", new $member.typecode.contentTypeCode.pubsubTypename$(), getImpl().get$member.javaName$(data));
+$else$
+      ser.write_$member.typecode.stType$("$member.name$", getImpl().get$member.javaName$(data));
+$endif$
+$else$
+      ser.write_$member.typecode.stType$("$member.name$", getImpl().get$member.javaName$(data));
+$endif$
+}; separator="\n"$
+   }
+
+   @Override
+   public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, $struct.javaTypename$ data)
+   {
+$struct.members : { member |
+$if(member.typecode.isType_c)$
+      getImpl().set$member.javaName$(data, ($member.typecode.javaTypename$)ser.read_$member.typecode.stType$("$member.name$", $member.typecode.javaTypename$.class));
+     $elseif(member.typecode.isType_a)$
+      ser.read_type_a("$member.name$", new $member.typecode.pubsubTypename$(), getImpl().get$member.javaName$(data));
+$elseif(member.typecode.isType_f)$
+$if(member.typecode.contentTypeCode.isType_a)$
+      ser.read_$member.typecode.stType$("$member.name$", new $member.typecode.contentTypeCode.pubsubTypename$(), getImpl().get$member.javaName$(data));
+$else$
+      ser.read_$member.typecode.stType$("$member.name$", getImpl().get$member.javaName$(data));
+$endif$
+$elseif(member.typecode.primitive)$
+      getImpl().set$member.javaName$(data, ser.read_$member.typecode.stType$("$member.name$"));
+$else$
+      ser.read_$member.typecode.stType$("$member.name$", getImpl().get$member.javaName$(data));
+$endif$
+}; separator="\n"$
+   }
+
+   public static void staticCopy($struct.javaTypename$ src, $struct.javaTypename$ dest)
+   {
+      getImpl().copy(src, dest);
+   }
+
+   @Override
+   public $struct.javaTypename$ createData()
+   {
+      return getImpl().createData();
+   }
+$else$
+   private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
+   private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();
+
+   @Override
+   public void serialize($struct.javaTypename$ data, us.ihmc.pubsub.common.SerializedPayload serializedPayload) throws java.io.IOException
+   {
+      serializeCDR.serialize(serializedPayload);
+      write(data, serializeCDR);
+      serializeCDR.finishSerialize();
+   }
+
+   @Override
+   public void deserialize(us.ihmc.pubsub.common.SerializedPayload serializedPayload, $struct.javaTypename$ data) throws java.io.IOException
+   {
+      deserializeCDR.deserialize(serializedPayload);
+      read(data, deserializeCDR);
+      deserializeCDR.finishDeserialize();
+   }
+
+   public static int getMaxCdrSerializedSize()
+   {
+      return getMaxCdrSerializedSize(0);
+   }
+
+   public static int getMaxCdrSerializedSize(int current_alignment)
+   {
+      int initial_alignment = current_alignment;
+
+$struct.members : { member |
+      $max_serialized_size(ctx=ctx, typecode=member.typecode, var="current_alignment")$
+}; separator="\n"$
+
+      return current_alignment - initial_alignment;
+   }
+
+   public final static int getCdrSerializedSize($struct.javaTypename$ data)
+   {
+      return getCdrSerializedSize(data, 0);
+   }
+
+   public final static int getCdrSerializedSize($struct.javaTypename$ data, int current_alignment)
+   {
+      int initial_alignment = current_alignment;
+
+$struct.members : { member |
+      $serialized_size(ctx=ctx, object=member, data=["data.get", member.javaName, "()"], var="current_alignment")$
+}; separator="\n"$
+
+      return current_alignment - initial_alignment;
+   }
+
+   public static void write($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
+   {
+$struct.members : { member |
+      $object_serialization(ctx=ctx, object=member, arg="", element="data.")$
+}; separator="\n"$
+   }
+
+   public static void read($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
+   {
+$struct.members : { member |
+      $object_deserialization(ctx=ctx, object=member, arg="", argsep="", element="data.")$
+}; separator=""$
+   }
+
+   @Override
+   public final void serialize($struct.javaTypename$ data, us.ihmc.idl.InterchangeSerializer ser)
+   {
+$struct.members : { member |
+$if(member.typecode.isType_a)$
+      ser.write_$member.typecode.stType$("$member.name$", new $member.typecode.pubsubTypename$(), data.get$member.javaName$());
+$elseif(member.typecode.isType_f)$
+$if(member.typecode.contentTypeCode.isType_a)$
+      ser.write_$member.typecode.stType$("$member.name$", new $member.typecode.contentTypeCode.pubsubTypename$(), data.get$member.javaName$());
+$else$
+      ser.write_$member.typecode.stType$("$member.name$", data.get$member.javaName$());
+$endif$
+$else$
+      ser.write_$member.typecode.stType$("$member.name$", data.get$member.javaName$());
+$endif$
+}; separator="\n"$
+   }
+
+   @Override
+   public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, $struct.javaTypename$ data)
+   {
+$struct.members : { member |
+$if(member.typecode.isType_c)$
+      data.set$member.javaName$(($member.typecode.javaTypename$)ser.read_$member.typecode.stType$("$member.name$", $member.typecode.javaTypename$.class));
+$elseif(member.typecode.isType_a)$
+      ser.read_type_a("$member.name$", new $member.typecode.pubsubTypename$(), data.get$member.javaName$());
+$elseif(member.typecode.isType_f)$
+$if(member.typecode.contentTypeCode.isType_a)$
+      ser.read_$member.typecode.stType$("$member.name$", new $member.typecode.contentTypeCode.pubsubTypename$(), data.get$member.javaName$());
+$else$
+      ser.read_$member.typecode.stType$("$member.name$", data.get$member.javaName$());
+$endif$
+$elseif(member.typecode.primitive)$
+      data.set$member.javaName$(ser.read_$member.typecode.stType$("$member.name$"));
+$else$
+      ser.read_$member.typecode.stType$("$member.name$", data.get$member.javaName$());
+$endif$
+}; separator="\n"$
+   }
+
+   public static void staticCopy($struct.javaTypename$ src, $struct.javaTypename$ dest)
+   {
+      dest.set(src);
+   }
+
+   @Override
+   public $struct.javaTypename$ createData()
+   {
+      return new $struct.javaTypename$();
+   }
+$endif$
+
+   @Override
+   public int getTypeSize()
+   {
+      return us.ihmc.idl.CDR.getTypeSize(getMaxCdrSerializedSize());
+   }
+
+   @Override
+   public java.lang.String getName()
+   {
+      return name;
+   }
+   
+   public void serialize($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
+   {
+      write(data, cdr);
+   }
+
+   public void deserialize($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
+   {
+      read(data, cdr);
+   }
+   
+   public void copy($struct.javaTypename$ src, $struct.javaTypename$ dest)
+   {
+      staticCopy(src, dest);
+   }
+
+   @Override
+   public $struct.name$PubSubType newInstance()
+   {
+      return new $struct.name$PubSubType();
+   }
+   $extension$
+}$\n$
+>>
+
+union_type(ctx, parent, union, extension, typecode) ::= <<
+/**
+* No pub sub type for Union types is provided. Use struct to define topic data types.
+*
+*/
+>>
+
+enum_type(ctx, parent, enum, extension, typecode) ::= <<
+/**
+* No pub sub type for Enum types is provided. Use structs to define topic data types.
+*
+*/
+>>

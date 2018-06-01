@@ -1,0 +1,45 @@
+buildscript {
+   repositories {
+      mavenCentral()
+      maven { url "http://dl.bintray.com/ihmcrobotics/maven-release" }
+      maven { url "http://dl.bintray.com/ihmcrobotics/maven-vendor" }
+      maven { url "https://plugins.gradle.org/m2/" }
+      mavenLocal()
+      jcenter()
+   }
+   dependencies {
+      classpath "us.ihmc:ihmc-build:0.13.7"
+//      classpath group: "us.ihmc", name: "ihmc-pub-sub-generator", version: version
+      classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
+   }
+}
+apply plugin: "us.ihmc.ihmc-build"
+apply plugin: "com.github.hierynomus.license"
+
+ihmc {
+   loadProductProperties("../group.gradle.properties")
+
+   configureDependencyResolution()
+   javaDirectory("main", "../../swig/FastRTPS/generated")
+   configurePublications()
+}
+
+// For swig builds
+//buildDir = 'build-java'
+
+license {
+   header rootProject.file('license-header.txt')
+   ext.year = Calendar.getInstance().get(Calendar.YEAR)
+   strictCheck true
+}
+
+mainDependencies {
+   compile group: 'us.ihmc', name: 'IHMCNativeLibraryLoader', version: '1.0'
+   compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+   compile group: "us.ihmc", name: "euclid-core", version: "0.4.13"
+}
+
+testDependencies {
+   compile group: 'junit', name: 'junit', version: '4.11'
+   compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.19.1"
+}

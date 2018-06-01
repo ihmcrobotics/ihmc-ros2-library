@@ -3,7 +3,7 @@
 .settings
 bin
 out
-build
+build*
 build-java
 classes
 .gradle
@@ -16,3 +16,4 @@ Win32
 **/*.iml
 cmake-build-debug/
 swig/FastRTPS/generated/us/ihmc/rtps/impl/fastRTPS/FastRTPSJAVA_wrap.cxx
+**/pit-reports
