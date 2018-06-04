@@ -19,7 +19,7 @@ bool RawTopicDataType::serialize(void *data, eprosima::fastrtps::rtps::Serialize
 
     if(payload->max_size < dataWrapper->length)
     {
-        std::cerr << "[rawtopicdatatype.cpp] In function serialize(): Payload max size " << std::string(payload->max_size) << " exceeds datawrapper max size" << std::endl;
+        std::cerr << "[rawtopicdatatype.cpp] In function serialize(): Payload max size " << std::to_string(payload->max_size) << " exceeds datawrapper max size" << std::to_string(dataWrapper->length) << std::endl;
         return false;
     }
 
@@ -35,7 +35,7 @@ bool RawTopicDataType::deserialize(eprosima::fastrtps::rtps::SerializedPayload_t
 
     if(payload->length > dataWrapper->length)
     {
-        std::cerr << "[rawtopicdatatype.cpp] In function deserialize(): Payload max size " << std::string(payload->max_size) << " exceeds datawrapper max size" << std::endl;
+        std::cerr << "[rawtopicdatatype.cpp] In function deserialize(): Payload max size " << std::to_string(payload->max_size) << " exceeds datawrapper max size"  << std::to_string(dataWrapper->length) << std::endl;
         return false;
     }
 
