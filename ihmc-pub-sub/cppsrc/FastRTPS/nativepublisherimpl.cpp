@@ -90,25 +90,39 @@ bool NativePublisherImpl::createPublisher()
 void NativePublisherImpl::write(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength)
 {
     RawDataWrapper dataWrapper(data, dataLength, (uint16_t)encapsulation, key, keyLength);
-    publisher->write(&dataWrapper);
+    if(!publisher->write(&dataWrapper))
+    {
+        std::cerr << "[nativepublisherimpl.cpp] In function write(): Cannot write data" << std::endl;
+    }
 }
 
 void NativePublisherImpl::dispose(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength)
 {
     RawDataWrapper dataWrapper(data, dataLength, (uint16_t)encapsulation, key, keyLength);
-    publisher->dispose(&dataWrapper);
+    if(!publisher->dispose(&dataWrapper))
+    {
+        std::cerr << "[nativepublisherimpl.cpp] In function dispose(): Cannot dispose data" << std::endl;
+    }
+
 }
 
 void NativePublisherImpl::unregister(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char *key, int32_t keyLength)
 {
     RawDataWrapper dataWrapper(data, dataLength, (uint16_t)encapsulation, key, keyLength);
-    publisher->unregister(&dataWrapper);
+    if(!publisher->unregister(&dataWrapper))
+    {
+        std::cerr << "[nativepublisherimpl.cpp] In function unregister(): Cannot unregister data" << std::endl;
+
+    }
 }
 
 void NativePublisherImpl::dispose_and_unregister(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char *key, int32_t keyLength)
 {
     RawDataWrapper dataWrapper(data, dataLength, (uint16_t)encapsulation, key, keyLength);
-    publisher->dispose_and_unregister(&dataWrapper);
+    if(!publisher->dispose_and_unregister(&dataWrapper))
+    {
+        std::cerr << "[nativepublisherimpl.cpp] In function dispose_and_unregister(): Cannot dispose_and_unregister data" << std::endl;
+    }
 }
 
 int32_t NativePublisherImpl::removeAllChange()
