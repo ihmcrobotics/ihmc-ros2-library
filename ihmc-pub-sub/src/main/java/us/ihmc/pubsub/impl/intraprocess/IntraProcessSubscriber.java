@@ -52,7 +52,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    private final Guid guid;
    private final IntraProcessSubscriberAttributes attr;
    private IntraProcessParticipant participant;
-   private SubscriberListener listener;
+   private SubscriberListener<T> listener;
 
    
    private final LinkedList<MessageHolder> messageQueue;
@@ -60,7 +60,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    private boolean available = true;
 
    IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr,
-                          SubscriberListener listener)
+                          SubscriberListener<T> listener)
          throws IOException
    {
       @SuppressWarnings("unchecked")

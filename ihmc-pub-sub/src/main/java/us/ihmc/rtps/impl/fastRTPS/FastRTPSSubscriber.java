@@ -39,7 +39,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
 
    private final FastRTPSSubscriberAttributes attributes;
    private final TopicDataType<T> topicDataType;
-   private final SubscriberListener listener;
+   private final SubscriberListener<T> listener;
    private final SerializedPayload payload;
    private TopicAttributes fastRTPSAttributes;
    private final Guid guid = new Guid();
@@ -110,7 +110,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
 
    }
 
-   FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, FastRTPSSubscriberAttributes attributes, SubscriberListener listener,
+   FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, FastRTPSSubscriberAttributes attributes, SubscriberListener<T> listener,
                       NativeParticipantImpl participantImpl)
          throws IOException
    {
