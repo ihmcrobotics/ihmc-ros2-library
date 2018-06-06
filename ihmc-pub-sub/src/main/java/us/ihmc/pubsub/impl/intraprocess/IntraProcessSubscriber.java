@@ -29,7 +29,7 @@ import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
-class IntraProcessSubscriber<T> implements Subscriber
+class IntraProcessSubscriber<T> implements Subscriber<T>
 {
 
    private class MessageHolder
@@ -63,6 +63,7 @@ class IntraProcessSubscriber<T> implements Subscriber
                           SubscriberListener listener)
          throws IOException
    {
+      @SuppressWarnings("unchecked")
       TopicDataType<T> topicDataType = (TopicDataType<T>) intraProcessParticipant.getTopicDataType(attr.getTopic().getTopicDataType());
       if (topicDataType == null)
       {
@@ -102,7 +103,7 @@ class IntraProcessSubscriber<T> implements Subscriber
    }
 
    @Override
-   public boolean readNextData(Object data, SampleInfo info)
+   public boolean readNextData(T data, SampleInfo info)
    {
       messageLock.lock();
 
@@ -122,13 +123,13 @@ class IntraProcessSubscriber<T> implements Subscriber
    }
 
    @Override
-   public boolean takeNextData(Object data, SampleInfo info)
+   public boolean takeNextData(T data, SampleInfo info)
    {
       messageLock.lock();
       MessageHolder next = messageQueue.poll();
       if (next != null)
       {
-         topicDataType.copy(next.message, (T) data);
+         topicDataType.copy(next.message, data);
          if(info != null)
          {
             info.set(next.info);
@@ -161,7 +162,7 @@ class IntraProcessSubscriber<T> implements Subscriber
       return available;
    }
 
-   public void notifySubscriberListener(IntraProcessPublisher publisher, MatchingStatus matchedMatching)
+   public void notifySubscriberListener(IntraProcessPublisher<T> publisher, MatchingStatus matchedMatching)
    {
       if (listener != null)
       {

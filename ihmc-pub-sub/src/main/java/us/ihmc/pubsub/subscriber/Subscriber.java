@@ -19,7 +19,7 @@ import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.SampleInfo;
 
-public interface Subscriber
+public interface Subscriber<T>
 {
    /**
     * Get the associated GUID.
@@ -29,7 +29,7 @@ public interface Subscriber
     * @return the associated GUID
     */
    public Guid getGuid();
-   
+
    /**
     * Method to block the current thread until an unread message is available.
     * 
@@ -55,7 +55,7 @@ public interface Subscriber
     * @throws InterruptedException
     */
    public void waitForUnreadMessage(int timeoutInMilliseconds) throws InterruptedException;
-   
+
    /**
     * Read next unread Data from the Subscriber.
     * 
@@ -66,8 +66,8 @@ public interface Subscriber
     * 
     * @return True if a sample was read.
     */
-   public boolean readNextData(Object data, SampleInfo info);
-   
+   public boolean readNextData(T data, SampleInfo info);
+
    /**
     * Take next Data from the Subscriber.
     * 
@@ -80,17 +80,17 @@ public interface Subscriber
     * 
     * @return True if a sample was taken.
     */
-   public boolean takeNextData(Object data, SampleInfo info);
-   
+   public boolean takeNextData(T data, SampleInfo info);
+
    /**
     * Get the Attributes of the Subscriber.
-    *  
+    * 
     * This method does not allocate memory
     * 
     * @return Attributes of the subscriber
     */
    public SubscriberAttributes getAttributes();
-   
+
    /**
     * Returns there is a clean state with all Publishers. It occurs when the Subscriber received all samples sent by Publishers. In other words, its WriterProxies are up to date.
     * 
@@ -99,7 +99,7 @@ public interface Subscriber
     * @return There is a clean state with all Publishers.
     */
    public boolean isInCleanState();
-   
+
    /**
     * Checks if this publisher is available to read data from the domain 
     * 

@@ -31,14 +31,14 @@ import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
-class FastRTPSSubscriber implements Subscriber
+class FastRTPSSubscriber<T> implements Subscriber<T>
 {
    private final Object destructorLock = new Object(); 
   
    private NativeSubscriberImpl impl;
 
    private final FastRTPSSubscriberAttributes attributes;
-   private final TopicDataType<Object> topicDataType;
+   private final TopicDataType<T> topicDataType;
    private final SubscriberListener listener;
    private final SerializedPayload payload;
    private TopicAttributes fastRTPSAttributes;
@@ -110,8 +110,7 @@ class FastRTPSSubscriber implements Subscriber
 
    }
 
-   @SuppressWarnings("unchecked")
-   FastRTPSSubscriber(TopicDataType<?> topicDataTypeIn, FastRTPSSubscriberAttributes attributes, SubscriberListener listener,
+   FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, FastRTPSSubscriberAttributes attributes, SubscriberListener listener,
                       NativeParticipantImpl participantImpl)
          throws IOException
    {
@@ -141,7 +140,7 @@ class FastRTPSSubscriber implements Subscriber
 
       ReaderQos qos = attributes.getQos().getReaderQos();
       this.attributes = attributes;
-      this.topicDataType = (TopicDataType<Object>) topicDataTypeIn.newInstance();
+      this.topicDataType = topicDataTypeIn.newInstance();
       this.listener = listener;
       /*
        * Fast-RTPS can pad messages to 4 byte boundries. Adding 3 to the typesize will make sure the message fits. 
@@ -222,7 +221,7 @@ class FastRTPSSubscriber implements Subscriber
    }
 
    @Override
-   public boolean readNextData(Object data, SampleInfo info)
+   public boolean readNextData(T data, SampleInfo info)
    {
       synchronized(destructorLock)
       {
@@ -255,7 +254,7 @@ class FastRTPSSubscriber implements Subscriber
    }
 
    @Override
-   public boolean takeNextData(Object data, SampleInfo info)
+   public boolean takeNextData(T data, SampleInfo info)
    {
       synchronized(destructorLock)
       {
@@ -317,7 +316,7 @@ class FastRTPSSubscriber implements Subscriber
       }
    }
 
-   TopicDataType<Object> getTopicDataType()
+   TopicDataType<T> getTopicDataType()
    {
       return topicDataType;
    }
