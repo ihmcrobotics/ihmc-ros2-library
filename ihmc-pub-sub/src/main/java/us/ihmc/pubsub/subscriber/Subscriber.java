@@ -83,6 +83,50 @@ public interface Subscriber<T>
    public boolean takeNextData(T data, SampleInfo info);
 
    /**
+    * Read next unread Data from the Subscriber.
+    * 
+    * <b>This method allocates memory.</b>
+    * 
+    * @return the next Data from the Subscriber, or {@code null} if no sample could be read.
+    */
+   public T readNextData();
+
+   /**
+    * Read next unread Data from the Subscriber.
+    * 
+    * <b>This method allocates memory.</b>
+    * 
+    * @param info a SampleInfo structure that informs you about your sample.
+    * 
+    * @return the next Data from the Subscriber, or {@code null} if no sample could be read.
+    */
+   public T readNextData(SampleInfo info);
+
+   /**
+    * Take next Data from the Subscriber.
+    * 
+    * The data is removed from the subscriber.
+    * 
+    * <b>This method allocates memory.</b>
+    * 
+    * @return the next Data from the Subscriber, or {@code null} if no sample could be read.
+    */
+   public T takeNextData();
+
+   /**
+    * Take next Data from the Subscriber.
+    * 
+    * The data is removed from the subscriber.
+    * 
+    * <b>This method allocates memory.</b>
+    * 
+    * @param info a SampleInfo structure that informs you about your sample.
+    * 
+    * @return the next Data from the Subscriber, or {@code null} if no sample could be read.
+    */
+   public T takeNextData(SampleInfo info);
+
+   /**
     * Get the Attributes of the Subscriber.
     * 
     * This method does not allocate memory

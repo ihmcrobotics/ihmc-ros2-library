@@ -233,7 +233,10 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          
          if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
          {
-            updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+            if (info != null)
+            {
+               updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+            }
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
@@ -254,6 +257,22 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
    }
 
    @Override
+   public T readNextData()
+   {
+      return readNextData(null);
+   }
+
+   @Override
+   public T readNextData(SampleInfo info)
+   {
+      T nextData = topicDataType.createData();
+      if (readNextData(nextData, info))
+         return nextData;
+      else
+         return null;
+   }
+
+   @Override
    public boolean takeNextData(T data, SampleInfo info)
    {
       synchronized(destructorLock)
@@ -266,7 +285,10 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          
          if(impl.takeNextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
          {
-            updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+            if (info != null)
+            {
+               updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+            }
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
@@ -284,6 +306,22 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             return false;
          }
       }
+   }
+
+   @Override
+   public T takeNextData()
+   {
+      return takeNextData(null);
+   }
+
+   @Override
+   public T takeNextData(SampleInfo info)
+   {
+      T nextData = topicDataType.createData();
+      if (takeNextData(nextData, info))
+         return nextData;
+      else
+         return null;
    }
 
    @Override

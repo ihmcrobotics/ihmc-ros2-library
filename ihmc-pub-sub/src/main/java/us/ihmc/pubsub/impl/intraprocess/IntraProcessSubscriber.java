@@ -111,7 +111,10 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
       if (next != null)
       {
          topicDataType.copy(next.message, (T) data);
-         info.set(next.info);
+         if (info != null)
+         {
+            info.set(next.info);
+         }
          messageLock.unlock();
          return true;
       }
@@ -120,6 +123,22 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
          messageLock.unlock();
          return false;
       }
+   }
+
+   @Override
+   public T readNextData()
+   {
+      return readNextData(null);
+   }
+
+   @Override
+   public T readNextData(SampleInfo info)
+   {
+      T nextData = topicDataType.createData();
+      if (readNextData(nextData, info))
+         return nextData;
+      else
+         return null;
    }
 
    @Override
@@ -142,6 +161,22 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
          messageLock.unlock();
          return false;
       }
+   }
+
+   @Override
+   public T takeNextData()
+   {
+      return takeNextData(null);
+   }
+
+   @Override
+   public T takeNextData(SampleInfo info)
+   {
+      T nextData = topicDataType.createData();
+      if (takeNextData(nextData, info))
+         return nextData;
+      else
+         return null;
    }
 
    @Override
