@@ -265,7 +265,7 @@ class FastRTPSSubscriber implements Subscriber
             return false;
          }         
          
-         if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
+         if(impl.takeNextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
          {
             updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
