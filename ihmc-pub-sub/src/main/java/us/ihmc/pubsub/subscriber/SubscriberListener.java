@@ -23,14 +23,14 @@ import us.ihmc.pubsub.common.MatchingInfo;
  * @author Jesper Smith
  *
  */
-public interface SubscriberListener
+public interface SubscriberListener<T>
 {
    /**
     * Virtual function to be implemented by the user containing the actions to be performed when a new Data Message is received
     * 
     * @param subscriber 
     */
-   public void onNewDataMessage(Subscriber subscriber);
+   public void onNewDataMessage(Subscriber<T> subscriber);
 
    /**
     * Virtual method to be called when the subscriber is matched with a new Writer (or unmatched); i.e., when a writer publishing in the same topic is discovered
@@ -38,5 +38,5 @@ public interface SubscriberListener
     * @param subscriber
     * @param info
     */
-   public void onSubscriptionMatched(Subscriber subscriber, MatchingInfo info);
+   public void onSubscriptionMatched(Subscriber<T> subscriber, MatchingInfo info);
 }
