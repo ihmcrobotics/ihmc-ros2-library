@@ -90,7 +90,7 @@ public class IDLElementTest extends Packet<IDLElementTest> implements Settable<I
 
       booleanSeqTest_ = new us.ihmc.idl.IDLSequence.Boolean (25, "type_7");
 
-      nestedSeqTest_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.nested.NestedElement> (25, us.ihmc.idl.generated.nested.NestedElement.class, new us.ihmc.idl.generated.nested.NestedElementPubSubType());
+      nestedSeqTest_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.nested.NestedElement> (25, new us.ihmc.idl.generated.nested.NestedElementPubSubType());
       enumSeqTest_ = new us.ihmc.idl.IDLSequence.Enum<us.ihmc.idl.generated.test.Color>(25, us.ihmc.idl.generated.test.Color.class, us.ihmc.idl.generated.test.Color.values);
 
       stringSeqTest_ = new us.ihmc.idl.IDLSequence.StringBuilderHolder (25, "type_d");

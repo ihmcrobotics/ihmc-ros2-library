@@ -27,7 +27,7 @@ ihmc {
 mainDependencies {
    compile group: "org.antlr", name: "antlr4", version: "4.2.2"
    compile group: "org.antlr", name: "stringtemplate", version: "3.2"
-   compile group: "us.ihmc", name: "ihmc-commons", version: "0.19.1"
+   compile group: "us.ihmc", name: "ihmc-commons", version: "0.20.0"
 }
 
 antlr4.source = project.file("src/main/antlr4/omg")
