@@ -17,6 +17,8 @@ package us.ihmc.idl;
 
 import gnu.trove.list.array.*;
 import org.apache.commons.lang3.NotImplementedException;
+import us.ihmc.commons.lists.PreallocatedEnumList;
+import us.ihmc.commons.lists.RecyclingArrayList;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
@@ -595,7 +597,7 @@ public interface IDLSequence
       }
    }
 
-   public static class StringBuilderHolder extends RecyclingArrayListPubSub<StringBuilder> implements IDLSequence
+   public static class StringBuilderHolder extends RecyclingArrayList<StringBuilder> implements IDLSequence
    {
       private final int type;
 
@@ -605,7 +607,7 @@ public interface IDLSequence
        */
       public StringBuilderHolder(int maxSize, String typeCode)
       {
-         super(StringBuilder.class, StringBuilder::new, maxSize);
+         super(maxSize, StringBuilder::new);
          switch (typeCode)
          {
          case "type_d":
@@ -831,19 +833,18 @@ public interface IDLSequence
     * @param <T> Element type
     */
    @SuppressWarnings("rawtypes")
-   public static class Object<T> extends RecyclingArrayListPubSub<T> implements IDLSequence
+   public static class Object<T> extends RecyclingArrayList<T> implements IDLSequence
    {
       private final TopicDataType<T> topicDataType;
      
       /**
        * 
        * @param maxSize Maximum size of this sequence
-       * @param clazz Class to store
        * @param topicDataType TopicDataType to preallocate data if desired
        */
-      public Object(int maxSize, Class<T> clazz, TopicDataType<T> topicDataType)
+      public Object(int maxSize, TopicDataType<T> topicDataType)
       {
-         super(clazz, topicDataType::createData, maxSize);
+         super(maxSize, topicDataType::createData);
          this.topicDataType = topicDataType;
          
       }

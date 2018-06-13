@@ -145,6 +145,7 @@ bool NativeSubscriberImpl::readnextData(int32_t maxDataLength, unsigned char* da
         return true;
 
     }
+    std::cerr << "[nativesubscriberimpl.cpp] In function readnextData: Cannot read next data from subscriber" << std::endl;
     return false;
 }
 
@@ -164,6 +165,7 @@ bool NativeSubscriberImpl::takeNextData(int32_t maxDataLength, unsigned char* da
         return true;
 
     }
+    std::cerr << "[nativesubscriberimpl.cpp] In function takeNextData: Cannot read next data from subscriber" << std::endl;
     return false;
 
 }
