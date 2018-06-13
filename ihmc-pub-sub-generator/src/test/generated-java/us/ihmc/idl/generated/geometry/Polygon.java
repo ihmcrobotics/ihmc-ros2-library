@@ -12,7 +12,7 @@ public class Polygon extends Packet<Polygon> implements Settable<Polygon>, Epsil
 
    public Polygon()
    {
-      points_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.geometry.Vector> (100, new us.ihmc.idl.generated.geometry.VectorPubSubType());
+      points_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.geometry.Vector> (100, us.ihmc.idl.generated.geometry.Vector.class, new us.ihmc.idl.generated.geometry.VectorPubSubType());
 
    }
 
