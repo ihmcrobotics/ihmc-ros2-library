@@ -15,8 +15,15 @@
  */
 package us.ihmc.idl;
 
-import gnu.trove.list.array.*;
 import org.apache.commons.lang3.NotImplementedException;
+
+import gnu.trove.list.array.TByteArrayList;
+import gnu.trove.list.array.TCharArrayList;
+import gnu.trove.list.array.TDoubleArrayList;
+import gnu.trove.list.array.TFloatArrayList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.list.array.TLongArrayList;
+import gnu.trove.list.array.TShortArrayList;
 import us.ihmc.commons.lists.PreallocatedEnumList;
 import us.ihmc.commons.lists.RecyclingArrayList;
 import us.ihmc.pubsub.TopicDataType;
@@ -832,11 +839,22 @@ public interface IDLSequence
     *
     * @param <T> Element type
     */
-   @SuppressWarnings("rawtypes")
    public static class Object<T> extends RecyclingArrayList<T> implements IDLSequence
    {
       private final TopicDataType<T> topicDataType;
-     
+
+      /**
+       * @deprecated Use {@link #IDLSequence(int, TopicDataType)} instead.
+       * 
+       * @param maxSize Maximum size of this sequence
+       * @param clazz Class to store
+       * @param topicDataType TopicDataType to preallocate data if desired
+       */
+      public Object(int maxSize, Class<T> clazz, TopicDataType<T> topicDataType)
+      {
+         this(maxSize, topicDataType);
+      }
+
       /**
        * 
        * @param maxSize Maximum size of this sequence
@@ -861,7 +879,6 @@ public interface IDLSequence
          return java.lang.Integer.MAX_VALUE;
       }
 
-      @SuppressWarnings("unchecked")
       @Override
       public void readElement(int i, CDR cdr)
       {
