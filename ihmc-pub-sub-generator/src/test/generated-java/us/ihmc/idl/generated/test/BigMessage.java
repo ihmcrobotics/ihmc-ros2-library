@@ -13,7 +13,7 @@ public class BigMessage extends Packet<BigMessage> implements Settable<BigMessag
 
    public BigMessage()
    {
-      largeSequence_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage> (100000, new us.ihmc.idl.generated.test.IDLSubmessagePubSubType());
+      largeSequence_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage> (100000, us.ihmc.idl.generated.test.IDLSubmessage.class, new us.ihmc.idl.generated.test.IDLSubmessagePubSubType());
 
    }
 
