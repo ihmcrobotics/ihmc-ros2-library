@@ -56,7 +56,7 @@ $elseif(member.typecode.ContentTypeCode.primitive)$
 $elseif(member.typecode.ContentTypeCode.isType_d)$
       $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, "$member.typecode.ContentTypeCode.stType$");$\n$
 $else$
-      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, $member.typecode.ContentTypeCode.JavaTypename$.class, new $member.typecode.ContentTypeCode.pubsubTypename$());$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, new $member.typecode.ContentTypeCode.pubsubTypename$());$\n$
 $endif$
 $elseif(member.typecode.isType_f)$
       $member.name$_ = new $member.typecode.ContentTypeCode.JavaTypename$[$member.typecode.Dimensions;separator="]["$];$\n$
