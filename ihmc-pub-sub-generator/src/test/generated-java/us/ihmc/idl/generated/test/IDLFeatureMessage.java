@@ -53,14 +53,14 @@ public class IDLFeatureMessage extends Packet<IDLFeatureMessage> implements Sett
    public IDLFeatureMessage()
    {
       num1_ = new us.ihmc.idl.generated.test.IDLSubmessage();
-      num2_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage> (100, us.ihmc.idl.generated.test.IDLSubmessage.class, new us.ihmc.idl.generated.test.IDLSubmessagePubSubType());
+      num2_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage> (100, new us.ihmc.idl.generated.test.IDLSubmessagePubSubType());
       num3_ = new us.ihmc.idl.generated.test.IDLSubmessage[3];
 
       for(int i1 = 0; i1 < num3_.length; ++i1)
       {
           num3_[i1] = new us.ihmc.idl.generated.test.IDLSubmessage();
       }
-      num4_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage> (3, us.ihmc.idl.generated.test.IDLSubmessage.class, new us.ihmc.idl.generated.test.IDLSubmessagePubSubType());
+      num4_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.idl.generated.test.IDLSubmessage> (3, new us.ihmc.idl.generated.test.IDLSubmessagePubSubType());
       str1_ = new java.lang.StringBuilder(255);
       str2_ = new java.lang.StringBuilder(10);
       str3_ = new us.ihmc.idl.IDLSequence.StringBuilderHolder (5, "type_d");
