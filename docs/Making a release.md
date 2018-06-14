@@ -87,12 +87,38 @@ Note: Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few t
 
 #### Step 4: Touch up
 
-- Git flow release via CLI or SmartGit. Use `release/X.X.X` as the branch name.
-- Find and Replace old version with new version. Make sure to search over all files, not just *.gradle.
-- Update README.md to reflect any changed procedures, new features, etc.
+First, perform a git-flow release. Optionally, use you Git GUI program to do this.
 
-#### Step 5: Release
+```
+> git flow release start X.X.X
+```
 
-- Git flow finish release.
+You now be on a branch called `release/X.X.X`.
+
+Run a "Find and replace" on all files (not just *.gradle) in the repo to replace the old version with new version. Make sure to search over all files, not just *.gradle.
+
+Update the README.md to document any changed procedures, new features, etc.
+
+Perform a git-flow finish release.
+
+```
+> git flow release finish X.X.X
+```
+
+#### Step 5: Publish artifacts
+
+Publish artifacts to Bintray.
 
 `gradle publishAll -PpublishUrl=ihmcRelease`
+
+Go to [https://bintray.com/ihmcrobotics/maven-release](https://bintray.com/ihmcrobotics/maven-release) and "Publish All".
+
+#### Step 6: Draft and publish release on GitHub
+
+1. Go to [https://github.com/ihmcrobotics/ihmc-pub-sub/releases](https://github.com/ihmcrobotics/ihmc-pub-sub/releases)
+1. Click "Draft a new release"
+1. Enter version X.X.X as the tag name
+1. Title the release "X.X.X Release Notes"
+1. Document all features, API changes, regressions, bug fixes, etc.
+1. Tick the "This is a pre-release" box
+1. Click "Publish release"
