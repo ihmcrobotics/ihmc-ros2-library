@@ -32,7 +32,7 @@ public class JSONSerializerTest
    {
 
       test.setCharTest('3');
-      test.setWcharTest('Ω');
+      test.setWcharTest('w');
       test.setOctetTest((byte) 0xa);
       test.setShortTest((short) -16);
       test.setUshortTest(15);
@@ -77,7 +77,7 @@ public class JSONSerializerTest
             {
             case 1:
                test.getCharSeqTest().add(String.valueOf(i).charAt(0));
-               test.getWcharSeqTest().add('Ω');
+               test.getWcharSeqTest().add('w');
                test.getOctetSeqTest().add((byte) (i * 2));
                test.getShortSeqTest().add((short) (-2 * i + 1));
                test.getBooleanSeqTest().add(i % 2 == 0);
