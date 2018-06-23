@@ -37,6 +37,10 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 /**
  * This test makes sure intraprocess doesn't have threading issues.
  *
+ * Create a publisher and subscriber in this thread and send 80 messages with up to 100,000 longs.
+ *
+ * This one sends and expects to receive 80 messages while asserting no IndexOutOfBounds exceptions.
+ *
  * i.e. asserts single thread executor
  *
  * @author Duncan Calvert

@@ -1,8 +1,6 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Ignore;
 import org.junit.Test;
-
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
@@ -24,16 +22,19 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static org.junit.Assert.assertFalse;
+
+/**
+ *  Start a subscriber and 5 publisher threads, each sending 20 messages with up to 100,000 longs.
+ *
+ *  Assert that IndexOutOfBoundsException exceptions do not occur in any threads.
+ */
 public class IntraprocessLargeCopyTest
 {
 //   @Ignore // not working, no output, not sure why
@@ -65,6 +66,7 @@ public class IntraprocessLargeCopyTest
 
       System.setErr(new PrintStream(byteArrayOutputStream));
 
+      // start subscriber in separate thread
       Thread subscriberThread = new Thread(() -> {
          try
          {
@@ -77,6 +79,8 @@ public class IntraprocessLargeCopyTest
       }, "SubscriberThread");
       subscriberThread.start();
 
+
+      // start 5 publisher threads
       ArrayList<Thread> threads = new ArrayList<>();
       for (int i = 0; i < 5; i++)
       {
@@ -94,6 +98,8 @@ public class IntraprocessLargeCopyTest
          publisherThread.start();
          threads.add(publisherThread);
       }
+
+      // join with all of the publisher threads
       threads.stream().forEach(thread -> {
          try
          {
@@ -105,8 +111,11 @@ public class IntraprocessLargeCopyTest
          }
       });
 
+      // join with the subscriber thread
       subscriberThread.join();
-      
+
+
+      // wait for things to happen
       ThreadTools.sleep(5000);
 
       System.err.flush();
@@ -115,6 +124,7 @@ public class IntraprocessLargeCopyTest
       
       System.err.println(byteArrayOutputStream.toString());
 
+      // this captures the output of the program to make sure bad threading exceptions didn't happen
       assertFalse("Standard error contains java.lang.IndexOutOfBoundsException", byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
    }
 
@@ -177,15 +187,18 @@ public class IntraprocessLargeCopyTest
    private void publishABunch(Publisher publisher, Random random) throws IOException
    {
       int i = 0;
+      // send 20 messages
       for (; i < 20; i++)
       {
          BigMessage msg = new BigMessage();
          IDLSubmessage idlSubmessage = new IDLSubmessage();
+
+         // pack each message to a random size up to 100000
          int randomSize = random.nextInt(100000);
 //         System.out.println("Random: " + randomSize);
          for (int j = 0; j < randomSize; j++)
          {
-            idlSubmessage.setHello(i + j);
+            idlSubmessage.setHello(i + j);  // set the values to all be different
             msg.getLargeSequence().add().set(idlSubmessage);
          }
          //         try
@@ -212,6 +225,7 @@ public class IntraprocessLargeCopyTest
       {
          if (subscriber.takeNextData(data, info))
          {
+            // wait 100 ms
             try
             {
                Thread.sleep(100);
@@ -220,6 +234,8 @@ public class IntraprocessLargeCopyTest
             {
                e.printStackTrace();
             }
+
+            // try copying the message to break threading
             BigMessage copied = new BigMessage();
             copied.set(data);
             System.out.println("Received: " + i++ + " Copied size: " + copied.getLargeSequence().size());
