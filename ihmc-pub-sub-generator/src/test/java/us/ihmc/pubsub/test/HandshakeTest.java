@@ -1,10 +1,14 @@
 package us.ihmc.pubsub.test;
 
 import org.junit.Test;
+import us.ihmc.commons.PrintTools;
+import us.ihmc.commons.allocations.AllocationTest;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.IDLSequence;
 import us.ihmc.idl.generated.test.*;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
+import us.ihmc.pubsub.DomainFactory.*;
 import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -19,17 +23,29 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-public class HandshakeTest
+import static org.junit.Assert.*;
+
+public class HandshakeTest extends AllocationTest
 {
+   public static final int NUMBER_OF_MESSAGES_TO_SEND = 20;
+
+   public int sendIndex = 0;
+
    @Test(timeout = 30000)
    public void testPublishSubscribeFooHandshake() throws IOException
    {
+      PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;
+
+      setRecordConstructorAllocations(true);
+      setRecordStaticMemberInitialization(true);
+
       Random random = new Random(29103902183L);
 
-
-      Domain domain = DomainFactory.getDomain(DomainFactory.PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
 
       domain.setLogLevel(LogLevel.INFO);
 
@@ -44,7 +60,9 @@ public class HandshakeTest
       domain.registerType(participant, dataType);
 
       PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
+      publisherAttributes.getQos().setDurabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
+                                                           DurabilityKind.VOLATILE_DURABILITY_QOS
+                                                           : DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setDepth(50);
       publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
@@ -52,26 +70,58 @@ public class HandshakeTest
       FooHandshakePubSubType dataType2 = new FooHandshakePubSubType();
 
       SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType2, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
+      subscriberAttributes.getQos().setDurabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
+                                                            DurabilityKind.VOLATILE_DURABILITY_QOS
+                                                            : DurabilityKind.VOLATILE_DURABILITY_QOS);
       subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
 
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+      SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
 
       Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
 
-      FooHandshake msg;
+      List<FooHandshake> preallocatedHandshakes = new ArrayList<>();
+      for (int n = 0; n < NUMBER_OF_MESSAGES_TO_SEND + 1; n++)
+      {
+         System.out.println("Constructing random handshake " + n + "...");
+         preallocatedHandshakes.add(constructRandomHandshake(random, n));
+      }
 
-      int i = 0;
-      for (; i < 10; i++)
+      writeNHandshakes(publisher, preallocatedHandshakes, 1); // warmup
+
+      startRecordingAllocations(); // start recording
+
+      writeNHandshakes(publisher, preallocatedHandshakes, NUMBER_OF_MESSAGES_TO_SEND);
+
+      stopRecordingAllocations();  // stop recording
+
+      ThreadTools.sleep(100);
+
+      for (int i = 0; i < subscriberListener.i; i++)
+      {
+         PrintTools.info(this, "Message received: " + subscriberListener.receivedMessages[i].getDt());
+      }
+
+      List<Throwable> allocations = pollAllocations();
+
+      for (Throwable allocation : allocations)
+      {
+         allocation.printStackTrace();
+      }
+
+      assertTrue("allocated", allocations.size() == 0);
+      assertEquals("did not receive all", NUMBER_OF_MESSAGES_TO_SEND + 1, subscriberListener.i);
+   }
+
+   private void writeNHandshakes(Publisher publisher, List<FooHandshake> preallocatedHandshakes, int handshakesToWrite) throws IOException
+   {
+      for (int i = 0; i < handshakesToWrite; i++)
       {
          try
          {
-            msg = constructRandomHandshake(random, i);
-            publisher.write(msg);
+            publisher.write(preallocatedHandshakes.get(sendIndex++));
 
-            System.out.println("Publishing: " + msg.toString());
-            Thread.sleep(1000);
-            ++i;
+            Thread.sleep(100);
          }
          catch (InterruptedException e)
          {
@@ -81,15 +131,22 @@ public class HandshakeTest
 
    private class SubscriberListenerImpl implements SubscriberListener
    {
-      private final FooHandshake data = new FooHandshake();
       private final SampleInfo info = new SampleInfo();
+      public final FooHandshake[] receivedMessages = new FooHandshake[NUMBER_OF_MESSAGES_TO_SEND + 1];
+      {
+         for (int i = 0; i < receivedMessages.length; i++)
+         {
+            receivedMessages[i] = new FooHandshake();
+         }
+      }
+      public int i = 0;
 
       @Override
       public void onNewDataMessage(Subscriber subscriber)
       {
-         if (subscriber.takeNextData(data, info))
+         if (subscriber.takeNextData(receivedMessages[i++], info))
          {
-            System.out.println("Received: " + data.toString());
+            // do nothing
          }
       }
 
