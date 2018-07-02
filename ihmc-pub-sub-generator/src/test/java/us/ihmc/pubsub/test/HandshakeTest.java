@@ -112,7 +112,7 @@ public class HandshakeTest
       }
       System.out.println(message);
 
-      assertTrue("allocated: \n" + message, allocations.size() == 0);
+      assertTrue("allocated " + allocations.size() + ": \n" + message, allocations.size() == 0);
       assertTrue("did not receive all", subscriberListener.i >= NUMBER_OF_MESSAGES_TO_SEND - 1);
    }
 
