@@ -3,7 +3,8 @@ package us.ihmc.pubsub.test;
 import org.junit.Ignore;
 import org.junit.Test;
 import us.ihmc.commons.PrintTools;
-import us.ihmc.commons.allocations.AllocationTest;
+import us.ihmc.commons.allocations.AllocationProfiler;
+import us.ihmc.commons.allocations.AllocationRecord;
 import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-public class PublishSubscribeUInt32AllocationTest extends AllocationTest
+public class PublishSubscribeUInt32AllocationTest
 {
    public static final int NUMBER_OF_MESSAGES_TO_SEND = 30;
 
@@ -47,8 +48,7 @@ public class PublishSubscribeUInt32AllocationTest extends AllocationTest
 
    public void runAllocationTest(PubSubImplementation pubSubImplementation) throws IOException
    {
-      setRecordConstructorAllocations(true);
-      setRecordStaticMemberInitialization(true);
+      AllocationProfiler allocationProfiler = new AllocationProfiler();
 
       Domain domain = DomainFactory.getDomain(pubSubImplementation);
 
@@ -91,11 +91,11 @@ public class PublishSubscribeUInt32AllocationTest extends AllocationTest
 
       publishNMessages(publisher, msg, 1); // warmup
 
-      startRecordingAllocations(); // start recording
+      allocationProfiler.startRecordingAllocations(); // start recording
 
       publishNMessages(publisher, msg, NUMBER_OF_MESSAGES_TO_SEND);
 
-      stopRecordingAllocations();  // stop recording
+      allocationProfiler.stopRecordingAllocations();  // stop recording
 
       for (StatusMessage message : subscriberListener.receivedMessages)
       {
@@ -103,11 +103,11 @@ public class PublishSubscribeUInt32AllocationTest extends AllocationTest
             PrintTools.info(this, "Message received: " + message.toString());
       }
 
-      List<Throwable> allocations = pollAllocations();
+      List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
 
-      for (Throwable allocation : allocations)
+      for (AllocationRecord allocation : allocations)
       {
-         allocation.printStackTrace();
+         System.out.println(allocation);
       }
 
       assertTrue("allocated", allocations.size() == 0);

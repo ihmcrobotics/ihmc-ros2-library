@@ -2,13 +2,14 @@ package us.ihmc.pubsub.test;
 
 import org.junit.Test;
 import us.ihmc.commons.PrintTools;
-import us.ihmc.commons.allocations.AllocationTest;
+import us.ihmc.commons.allocations.AllocationProfiler;
+import us.ihmc.commons.allocations.AllocationRecord;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.IDLSequence;
 import us.ihmc.idl.generated.test.*;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.*;
+import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -27,9 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class HandshakeTest extends AllocationTest
+public class HandshakeTest
 {
    public static final int NUMBER_OF_MESSAGES_TO_SEND = 20;
 
@@ -40,8 +42,7 @@ public class HandshakeTest extends AllocationTest
    {
       PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;
 
-      setRecordConstructorAllocations(true);
-      setRecordStaticMemberInitialization(true);
+      AllocationProfiler allocationProfiler = new AllocationProfiler();
 
       Random random = new Random(29103902183L);
 
@@ -89,11 +90,11 @@ public class HandshakeTest extends AllocationTest
 
       writeNHandshakes(publisher, preallocatedHandshakes, 1); // warmup
 
-      startRecordingAllocations(); // start recording
+      allocationProfiler.startRecordingAllocations(); // start recording
 
       writeNHandshakes(publisher, preallocatedHandshakes, NUMBER_OF_MESSAGES_TO_SEND);
 
-      stopRecordingAllocations();  // stop recording
+      allocationProfiler.stopRecordingAllocations();  // stop recording
 
       ThreadTools.sleep(100);
 
@@ -102,15 +103,17 @@ public class HandshakeTest extends AllocationTest
          PrintTools.info(this, "Message received: " + subscriberListener.receivedMessages[i].getDt());
       }
 
-      List<Throwable> allocations = pollAllocations();
+      List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
 
-      for (Throwable allocation : allocations)
+      String message = "";
+      for (AllocationRecord allocation : allocations)
       {
-         allocation.printStackTrace();
+         message += allocation.toString() + "\n";
       }
+      System.out.println(message);
 
-      assertTrue("allocated", allocations.size() == 0);
-      assertEquals("did not receive all", NUMBER_OF_MESSAGES_TO_SEND + 1, subscriberListener.i);
+      assertTrue("allocated: \n" + message, allocations.size() == 0);
+      assertTrue("did not receive all", subscriberListener.i >= NUMBER_OF_MESSAGES_TO_SEND - 1);
    }
 
    private void writeNHandshakes(Publisher publisher, List<FooHandshake> preallocatedHandshakes, int handshakesToWrite) throws IOException
