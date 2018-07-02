@@ -60,6 +60,10 @@ license {
 //}
 
 ihmc.sourceSetProject("test").test {
+
+   forkEvery = 1
+   maxParallelForks = 1
+
    ihmc.sourceSetProject("test").configurations.compile.findAll { it.name.contains("java-allocation-instrumenter") }.each {
       def javaAgentArg = "-javaagent:" + it.getAbsolutePath()
       println("[ihmc-pub-sub-group] Java agent JVM arg: " + javaAgentArg)
