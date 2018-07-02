@@ -105,12 +105,14 @@ public class PublishSubscribeUInt32AllocationTest
 
       List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
 
+      String message = "";
       for (AllocationRecord allocation : allocations)
       {
-         System.out.println(allocation);
+         message += allocation.toString() + "\n";
       }
+      System.out.println(message);
 
-      assertTrue("allocated", allocations.size() == 0);
+      assertTrue("allocated " + allocations.size() + ": \n" + message, allocations.size() == 0);
    }
 
    private void publishNMessages(Publisher publisher, StatusMessage msg, int numberOfMessagesToSend) throws IOException

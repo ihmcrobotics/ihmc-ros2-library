@@ -43,6 +43,7 @@ public class HandshakeTest
       PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;
 
       AllocationProfiler allocationProfiler = new AllocationProfiler();
+      allocationProfiler.excludeAllocationsInsideMethod("java.lang.ThreadGroup.add");
 
       Random random = new Random(29103902183L);
 
