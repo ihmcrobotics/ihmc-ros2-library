@@ -66,9 +66,9 @@ public class FastRTPSDomain implements Domain
             throw e;
          }
       }
-      Runtime.getRuntime().addShutdownHook(new Thread((Runnable) () -> {
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
          stopAll();
-      })); 
+      }, "IHMCPubSub-FastRTPSDomain-StopAll"));
    }
 
    @Override
