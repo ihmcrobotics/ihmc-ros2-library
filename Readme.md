@@ -274,7 +274,7 @@ git submodule update --init --recursive
 
 ```
 
-cd ihmc-pub-sub/ihmc-pub-sub
+cd ihmc-pub-sub
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
