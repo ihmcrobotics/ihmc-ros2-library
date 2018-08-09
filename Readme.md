@@ -275,8 +275,8 @@ git submodule update --init --recursive
 ```
 
 cd ihmc-pub-sub
-mkdir build
-cd build
+mkdir buildc
+cd buildc
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 make install/strip
@@ -302,8 +302,8 @@ cd to your source directory
 
 ```
 git submodule update --init --recursive
-mkdir build
-cd build
+md buildc
+cd buildc
 set JAVA_HOME=C:\Program Files\Java\[your java version]\
 cmake -DSWIG_EXECUTABLE=[PATH TO swig.exe] ..
 cmake --build . --target install --config RelWithDebInfo
