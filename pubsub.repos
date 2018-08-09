@@ -1,0 +1,29 @@
+repositories:
+    ihmc/ihmc-pub-sub-group:
+        url: https://stash.ihmc.us/scm/libs/ihmc-pub-sub-group.git
+        type: git
+        version: develop
+    eprosima/Fast-RTPS:
+        url: https://github.com/eProsima/Fast-RTPS.git
+        type: git
+        version: ede928724f8f670d5c83acec0d5eddd45aa76e48
+    thirdparty/android-ifaddrs:
+        url: https://github.com/michalsrb/android-ifaddrs.git
+        type: git
+        version: 7b1ce82817226e481d3cda0a5d06b66ebcc211f8
+    thirdparty/asio:
+        url: https://github.com/chriskohlhoff/asio.git
+        type: git
+        version: 230c0d2ae035c5ce1292233fcab03cea0d341264
+    thirdparty/fastcdr:
+        url: https://github.com/eProsima/Fast-CDR.git
+        type: git
+        version: 8d1489780cd58947e5f7104b84641f680224cdea
+    thirdparty/idl:
+        url: https://github.com/eProsima/IDL-Parser.git
+        type: git
+        version: 634c1f83013ee657238bbb8d9765565627c99715
+    thirdparty/tinyxml2:
+        url: https://github.com/leethomason/tinyxml2.git
+        type: git
+        version: 6.0.0
