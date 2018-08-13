@@ -308,3 +308,15 @@ set JAVA_HOME=C:\Program Files\Java\[your java version]\
 cmake -DSWIG_EXECUTABLE=[PATH TO swig.exe] ..
 cmake --build . --target install --config RelWithDebInfo
 ```
+
+## Developing with Eclipse
+
+```
+# clone ihmc-pub-sub-group
+cd ..
+mkdir ebuild
+cd ebuild
+cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug -D CMAKE_ECLIPSE_VERSION="4.8 (Photon)" ../ihmc-pub-sub-group/ihmc-pub-sub
+# Import "existing projects into Eclipse"
+```
+See more: https://gitlab.kitware.com/cmake/community/wikis/doc/editors/Eclipse-CDT4-Generator
