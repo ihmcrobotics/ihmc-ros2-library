@@ -135,7 +135,7 @@ public class IntraprocessLargeCopyTest
       domain.setLogLevel(LogLevel.ERROR);
 
       ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(1);
+      attributes.setDomainId(215);
       attributes.setLeaseDuration(Time.Infinite);
       attributes.setName("StatusTest");
 
@@ -160,7 +160,7 @@ public class IntraprocessLargeCopyTest
       domain.setLogLevel(LogLevel.ERROR);
 
       ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(1);
+      attributes.setDomainId(215);
       attributes.setLeaseDuration(Time.Infinite);
       attributes.setName("StatusTest");
 

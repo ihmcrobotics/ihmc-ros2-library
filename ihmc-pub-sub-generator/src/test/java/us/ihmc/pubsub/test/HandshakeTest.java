@@ -52,7 +52,7 @@ public class HandshakeTest
       domain.setLogLevel(LogLevel.INFO);
 
       ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(1);
+      attributes.setDomainId(215);
       attributes.setLeaseDuration(Time.Infinite);
       attributes.setName("StatusTest");
 
