@@ -1,10 +1,6 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Ignore;
 import org.junit.Test;
-import us.ihmc.commons.PrintTools;
-import us.ihmc.commons.allocations.AllocationProfiler;
-import us.ihmc.commons.allocations.AllocationRecord;
 import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
@@ -25,32 +21,13 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 import java.io.IOException;
-import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-
-public class PublishSubscribeUInt32AllocationTest
+public class PublishSubscribeUInt64Test
 {
-   public static final int NUMBER_OF_MESSAGES_TO_SEND = 30;
-
    @Test(timeout = 30000)
-   public void testPublishSubscribeUInt32AllocationsFastRTPS() throws IOException
+   public void testPublishSubscribeUInt32() throws IOException
    {
-      runAllocationTest(PubSubImplementation.FAST_RTPS);
-   }
-
-   @Ignore // intraprocess does not need to be allocation-free for now - @dcalvert
-   @Test(timeout = 30000)
-   public void testPublishSubscribeUInt32AllocationsIntraprocess() throws IOException
-   {
-      runAllocationTest(PubSubImplementation.INTRAPROCESS);
-   }
-
-   public void runAllocationTest(PubSubImplementation pubSubImplementation) throws IOException
-   {
-      AllocationProfiler allocationProfiler = new AllocationProfiler();
-
-      Domain domain = DomainFactory.getDomain(pubSubImplementation);
+      Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
 
       domain.setLogLevel(LogLevel.INFO);
 
@@ -65,9 +42,7 @@ public class PublishSubscribeUInt32AllocationTest
       domain.registerType(participant, dataType);
 
       PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
-                                                           DurabilityKind.VOLATILE_DURABILITY_QOS
-                                                           : DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
+      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setDepth(50);
       publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
@@ -75,13 +50,10 @@ public class PublishSubscribeUInt32AllocationTest
       StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
 
       SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType2, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      subscriberAttributes.getQos().setDurabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
-                                                            DurabilityKind.VOLATILE_DURABILITY_QOS
-                                                            : DurabilityKind.VOLATILE_DURABILITY_QOS);
+      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
       subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
 
-      SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 
       Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
 
@@ -89,36 +61,8 @@ public class PublishSubscribeUInt32AllocationTest
       msg.setPause(false);
       msg.setSequenceId(0);
 
-      publishNMessages(publisher, msg, 1); // warmup
-
-      allocationProfiler.startRecordingAllocations(); // start recording
-
-      publishNMessages(publisher, msg, NUMBER_OF_MESSAGES_TO_SEND);
-
-      allocationProfiler.stopRecordingAllocations();  // stop recording
-
-      for (StatusMessage message : subscriberListener.receivedMessages)
-      {
-         if (message != null)
-            PrintTools.info(this, "Message received: " + message.toString());
-      }
-
-      List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
-
-      String message = "";
-      for (AllocationRecord allocation : allocations)
-      {
-         message += allocation.toString() + "\n";
-      }
-      System.out.println(message);
-
-      assertTrue("allocated " + allocations.size() + ": \n" + message, allocations.size() == 0);
-   }
-
-   private void publishNMessages(Publisher publisher, StatusMessage msg, int numberOfMessagesToSend) throws IOException
-   {
       int i = 0;
-      for (; i < numberOfMessagesToSend; i++)
+      for (; i < 10; i++)
       {
          try
          {
@@ -126,6 +70,7 @@ public class PublishSubscribeUInt32AllocationTest
             msg.setSequenceId(i);
             publisher.write(msg);
 
+            System.out.println("Publishing: " + msg.toString());
             Thread.sleep(1000);
             ++i;
          }
@@ -137,22 +82,15 @@ public class PublishSubscribeUInt32AllocationTest
 
    private class SubscriberListenerImpl implements SubscriberListener
    {
+      private final StatusMessage data = new StatusMessage();
       private final SampleInfo info = new SampleInfo();
-      public final StatusMessage[] receivedMessages = new StatusMessage[NUMBER_OF_MESSAGES_TO_SEND];
-      {
-         for (int i = 0; i < NUMBER_OF_MESSAGES_TO_SEND; i++)
-         {
-            receivedMessages[i] = new StatusMessage();
-         }
-      }
-      public int i = 0;
 
       @Override
       public void onNewDataMessage(Subscriber subscriber)
       {
-         if (subscriber.takeNextData(receivedMessages[i++], info))
+         if (subscriber.takeNextData(data, info))
          {
-            // do nothing, success
+            System.out.println("Received: " + data.toString());
          }
       }
 
