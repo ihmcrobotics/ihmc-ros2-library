@@ -28,7 +28,6 @@ public class IDLElementTestTest
 {
    private void populateIDLElementTest(IDLElementTest test)
    {
-
       test.setCharTest('3');
       test.setWcharTest('\u03a9');
       test.setOctetTest((byte) 0xa);
@@ -332,7 +331,6 @@ public class IDLElementTestTest
       IDLElementTest other = new IDLElementTest();
       type.deserialize(payload, other);
       assertEquals(test, other);
-
    }
 
    @Ignore // TODO Recompile cpp soon
