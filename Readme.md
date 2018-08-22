@@ -304,9 +304,8 @@ cd to your source directory
 git submodule update --init --recursive
 md buildc
 cd buildc
-set JAVA_HOME=C:\Program Files\Java\[your java version]\
-cmake -DSWIG_EXECUTABLE=[PATH TO swig.exe] ..
-cmake --build . --target install --config RelWithDebInfo
+cmake ..
+cmake --build . --target install --config Release
 ```
 
 ## Developing with Eclipse
