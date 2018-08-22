@@ -1,6 +1,3 @@
-#ifndef __controller_msgs__msg__PauseWalkingMessage__idl__
-#define __controller_msgs__msg__PauseWalkingMessage__idl__
-
 module test
 {
   /**
