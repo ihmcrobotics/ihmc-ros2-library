@@ -126,7 +126,7 @@ public class CDR
     */
    public int read_type_3()
    {
-      return read_type_1() & 0xFFFF;
+      return Short.toUnsignedInt(read_type_1());
    }
 
    public void write_type_3(int val)
@@ -139,7 +139,7 @@ public class CDR
     */
    public long read_type_4()
    {
-      return read_type_2() & 0xFFFFFFFF;
+      return Integer.toUnsignedLong(read_type_2());
    }
 
    public void write_type_4(long val)
