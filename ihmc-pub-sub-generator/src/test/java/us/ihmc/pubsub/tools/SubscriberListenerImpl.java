@@ -36,6 +36,4 @@ public class SubscriberListenerImpl<T> implements SubscriberListener
       System.out.println("Status: " + info.getStatus());
       System.out.println("Guid: " + info.getGuid().toString());
    }
-
-
 }
