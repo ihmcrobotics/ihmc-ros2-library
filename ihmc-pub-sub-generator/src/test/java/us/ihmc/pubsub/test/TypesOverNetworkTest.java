@@ -1,9 +1,8 @@
 package us.ihmc.pubsub.test;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.junit.Test;
-import us.ihmc.idl.generated.nested.NestedElement;
+import us.ihmc.idl.CDR;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 import us.ihmc.pubsub.tools.PubSubTester;
@@ -12,6 +11,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * This test shows that passing invalid values of signed java types does not work.
+ */
 public class TypesOverNetworkTest
 {
    @Test(timeout = 30000)
@@ -57,7 +59,7 @@ public class TypesOverNetworkTest
             tester.publisher.write(messageArray[i]);
 
             System.out.println("Publishing: " + messageArray[i].getStringTestAsString());
-            Thread.sleep(100);
+            Thread.sleep(200);
          }
          catch (InterruptedException e)
          {
@@ -66,8 +68,40 @@ public class TypesOverNetworkTest
 
       tester.domain.stopAll();
 
+      System.out.println("Num errors: " + errors.size());
+
       for (AssertionError error : errors)
          throw error;
+   }
+
+   private IDLElementTest populateIDLElementTest(IDLElementTest test, Random random, int index)
+   {
+      test.setCharTest(RandomStringUtils.random(1, 32, 127, false, false, null, random).charAt(0));
+      test.setWcharTest(RandomStringUtils.random(1, 32, 127, false, false, null, random).charAt(0));
+      test.setOctetTest(nextByte(random));
+      test.setShortTest((short) random.nextInt(Short.MAX_VALUE + 1));
+      test.setUshortTest(random.nextInt(CDR.UNSIGNED_SHORT_MAX));
+      test.setLongTest(random.nextInt());
+      long uint32 = random.nextLong();
+      test.setUlongTest((uint32 < 0 ? -uint32 : uint32) % CDR.UNSIGNED_INT_MAX);
+      test.setLonglongTest(random.nextLong());
+      test.setUlonglongTest(random.nextLong());
+      test.setFloatTest(random.nextFloat());
+      test.setDoubleTest(random.nextDouble());
+      test.setBooleanTest(random.nextBoolean());
+      test.setColorTest(Color.values[random.nextInt(Color.values.length - 1)]);
+      test.getNestedElementTest().setLongTest(random.nextInt());
+      test.getNestedElementTest().getStringTest().append(RandomStringUtils.random(20, 32, 127, false, false, null, random));
+      test.getStringTest().append(index);
+
+      return test;
+   }
+
+   private byte nextByte(Random random)
+   {
+      byte[] bytes = new byte[1];
+      random.nextBytes(bytes);
+      return bytes[0];
    }
 
    public ArrayList<AssertionError> epsilonEquals(IDLElementTest msg, IDLElementTest other, double epsilon)
@@ -274,86 +308,5 @@ public class TypesOverNetworkTest
       }
 
       return errors;
-   }
-
-   private IDLElementTest populateIDLElementTest(IDLElementTest test, Random random, int index)
-   {
-      test.setCharTest(RandomStringUtils.random(1, 32, 127, false, false, null, random).charAt(0));
-      test.setWcharTest(RandomStringUtils.random(1, 32, 127, false, false, null, random).charAt(0));
-      test.setOctetTest(nextByte(random));
-      test.setShortTest((short) random.nextInt(Short.MAX_VALUE + 1));
-      test.setUshortTest(random.nextInt());
-      test.setLongTest(random.nextInt());
-      test.setUlongTest(random.nextLong());
-      test.setLonglongTest(random.nextLong());
-      test.setUlonglongTest(random.nextLong());
-      test.setFloatTest(random.nextFloat());
-      test.setDoubleTest(random.nextDouble());
-      test.setBooleanTest(random.nextBoolean());
-      test.setColorTest(Color.values[random.nextInt(Color.values.length - 1)]);
-      test.getNestedElementTest().setLongTest(random.nextInt());
-      test.getNestedElementTest().getStringTest().append(RandomStringUtils.random(20, 32, 127, false, false, null, random));
-      test.getStringTest().append(index);
-
-      // We don't really need to test arrays and stuff here.
-//      for (int i = 0; i < 10; i++)
-//      {
-//         test.getLongArray()[i] = random.nextInt();
-//      }
-//
-//      for (int a = 0; a < 5; a++)
-//      {
-//         for (int b = 0; b < 3; b++)
-//         {
-//            test.getNestedArray()[a][b].setLongTest(random.nextInt());
-//            test.getNestedArray()[a][b].getStringTest().append(RandomStringUtils.random(20, 32, 127, false, false, null, random));
-//         }
-//      }
-//
-//      for (int i = 0; i < 4; i++)
-//      {
-//         test.getStringArray()[i].append(RandomStringUtils.random(20, 32, 127, false, false, null, random));
-//      }
-//
-//      for (int s = 1; s < 4; s++)
-//      {
-//         for (int w = 0; w < 5; w++)
-//         {
-//            int i = s + s * w;
-//
-//            switch (s)
-//            {
-//            case 1:
-//               test.getCharSeqTest().add(RandomStringUtils.random(1, 32, 127, false, false, null, random).charAt(0));
-//               test.getWcharSeqTest().add(RandomStringUtils.random(1, 32, 127, false, false, null, random).charAt(0));
-//               test.getOctetSeqTest().add(nextByte(random));
-//               test.getShortSeqTest().add((short) random.nextInt(Short.MAX_VALUE + 1));
-//               test.getBooleanSeqTest().add(random.nextBoolean());
-//            case 2:
-//               test.getUshortSeqTest().add(random.nextInt());
-//               test.getLongSeqTest().add(random.nextInt());
-//               test.getUlongSeqTest().add(random.nextInt());
-//               test.getLonglongSeqtest().add(random.nextLong());
-//            case 3:
-//               test.getUlonglongSeqTest().add(random.nextLong());
-//               test.getFloatSeqTest().add(random.nextFloat());
-//               test.getDoubleSeqTest().add(random.nextDouble());
-//               NestedElement elem = test.getNestedSeqTest().add();
-//               elem.setLongTest(random.nextInt());
-//               elem.getStringTest().append(RandomStringUtils.random(20, 32, 127, false, false, null, random));
-//               StringBuilder builder = test.getStringSeqTest().add();
-//               builder.append(RandomStringUtils.random(20, 32, 127, false, false, null, random));
-//            }
-//         }
-//      }
-
-      return test;
-   }
-
-   private byte nextByte(Random random)
-   {
-      byte[] bytes = new byte[1];
-      random.nextBytes(bytes);
-      return bytes[0];
    }
 }

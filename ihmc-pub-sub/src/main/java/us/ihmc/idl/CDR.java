@@ -32,7 +32,9 @@ import us.ihmc.pubsub.common.SerializedPayload;
 public class CDR
 {
    private static final int encapsulation_size = 4;
-   
+   public static final int UNSIGNED_SHORT_MAX = 65535;
+   public static final long UNSIGNED_INT_MAX = 4294967295L;
+
    private SerializedPayload payload;
    private ByteBuffer buf;
    private static short options = 0x0;
@@ -131,6 +133,11 @@ public class CDR
 
    public void write_type_3(int val)
    {
+      if (val < 0)
+         throw new RuntimeException("(CDR.java:134): int " + val + " cannot be cast to unsigned short. cannot be negative");
+      else if (val > UNSIGNED_SHORT_MAX)
+         throw new RuntimeException("(CDR.java:134): int " + val + " cannot be cast to unsigned short. UNSIGNED_SHORT_MAX = " + UNSIGNED_SHORT_MAX);
+
       write_type_1((short) val);
    }
 
@@ -144,6 +151,11 @@ public class CDR
 
    public void write_type_4(long val)
    {
+      if (val < 0)
+         throw new RuntimeException("(CDR.java:134): long " + val + " cannot be cast to unsigned int. cannot be negative");
+      else if (val > UNSIGNED_INT_MAX)
+         throw new RuntimeException("(CDR.java:134): long " + val + " cannot be cast to unsigned int. UNSIGNED_INT_MAX = " + UNSIGNED_INT_MAX);
+
       write_type_2((int) val);
    }
 
