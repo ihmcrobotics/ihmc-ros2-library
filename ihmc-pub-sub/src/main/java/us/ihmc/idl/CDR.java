@@ -32,7 +32,9 @@ import us.ihmc.pubsub.common.SerializedPayload;
 public class CDR
 {
    private static final int encapsulation_size = 4;
-   
+   public static final int UNSIGNED_SHORT_MAX = 0xFFFF;
+   public static final long UNSIGNED_INT_MAX = 0xFFFFFFFFL;
+
    private SerializedPayload payload;
    private ByteBuffer buf;
    private static short options = 0x0;
@@ -126,11 +128,16 @@ public class CDR
     */
    public int read_type_3()
    {
-      return read_type_1() & 0xFFFF;
+      return Short.toUnsignedInt(read_type_1());
    }
 
    public void write_type_3(int val)
    {
+      if (val < 0)
+         throw new ArithmeticException("(CDR.java:134): int " + val + " cannot be cast to unsigned short. cannot be negative");
+      else if (val > UNSIGNED_SHORT_MAX)
+         throw new ArithmeticException("(CDR.java:134): int " + val + " cannot be cast to unsigned short. UNSIGNED_SHORT_MAX = " + UNSIGNED_SHORT_MAX);
+
       write_type_1((short) val);
    }
 
@@ -139,11 +146,16 @@ public class CDR
     */
    public long read_type_4()
    {
-      return read_type_2() & 0xFFFFFFFF;
+      return Integer.toUnsignedLong(read_type_2());
    }
 
    public void write_type_4(long val)
    {
+      if (val < 0)
+         throw new ArithmeticException("(CDR.java:134): long " + val + " cannot be cast to unsigned int. cannot be negative");
+      else if (val > UNSIGNED_INT_MAX)
+         throw new ArithmeticException("(CDR.java:134): long " + val + " cannot be cast to unsigned int. UNSIGNED_INT_MAX = " + UNSIGNED_INT_MAX);
+
       write_type_2((int) val);
    }
 
