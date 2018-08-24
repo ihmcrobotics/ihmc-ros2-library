@@ -5,6 +5,7 @@ import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.allocations.AllocationProfiler;
 import us.ihmc.commons.allocations.AllocationRecord;
 import us.ihmc.commons.thread.ThreadTools;
+import us.ihmc.idl.CDR;
 import us.ihmc.idl.IDLSequence;
 import us.ihmc.idl.generated.test.*;
 import us.ihmc.pubsub.Domain;
@@ -214,7 +215,7 @@ public class HandshakeTest
 
          for (int j = 0; j < 700; j++)
          {
-            fooGraphicObjectMessage.getYoVariableIndex().add(random.nextInt());
+            fooGraphicObjectMessage.getYoVariableIndex().add(random.nextInt(CDR.UNSIGNED_SHORT_MAX));
          }
 
          FooAppearanceDefinitionMessage appearance = fooGraphicObjectMessage.getAppearance();
@@ -244,7 +245,7 @@ public class HandshakeTest
 
          for (int j = 0; j < 700; j++)
          {
-            fooGraphicObjectMessage.getYoVariableIndex().add(random.nextInt());
+            fooGraphicObjectMessage.getYoVariableIndex().add(random.nextInt(CDR.UNSIGNED_SHORT_MAX));
          }
 
          FooAppearanceDefinitionMessage appearance = fooGraphicObjectMessage.getAppearance();
@@ -266,7 +267,7 @@ public class HandshakeTest
       {
          FooYoRegistryDefinition fooYoRegistryDefinition = registries.add();
          fooYoRegistryDefinition.setName("iasodoiasd" + i);
-         fooYoRegistryDefinition.setParent(random.nextInt());
+         fooYoRegistryDefinition.setParent(random.nextInt(CDR.UNSIGNED_SHORT_MAX));
       }
 
       IDLSequence.Object<FooYoVariableDefinition> variables = fooHandshake.getVariables();
@@ -275,12 +276,12 @@ public class HandshakeTest
          FooYoVariableDefinition fooYoVariableDefinition = variables.add();
          fooYoVariableDefinition.setAllowNullValues(random.nextBoolean());
          fooYoVariableDefinition.setDescription("Diosfopjka" + i);
-         fooYoVariableDefinition.setEnumType(random.nextInt());
+         fooYoVariableDefinition.setEnumType(random.nextInt(CDR.UNSIGNED_SHORT_MAX));
          fooYoVariableDefinition.setIsParameter(random.nextBoolean());
          fooYoVariableDefinition.setLoadStatus(FooLoadStatus.FooLoaded);
          fooYoVariableDefinition.setMax(random.nextDouble());
          fooYoVariableDefinition.setMin(random.nextDouble());
-         fooYoVariableDefinition.setRegistry(random.nextInt());
+         fooYoVariableDefinition.setRegistry(random.nextInt(CDR.UNSIGNED_SHORT_MAX));
          fooYoVariableDefinition.setType(FooYoType.FooDoubleYoVariable);
       }
 
