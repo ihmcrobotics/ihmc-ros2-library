@@ -62,7 +62,7 @@ repositories {
 }
 	
 dependencies {
-   classpath "us.ihmc:ros2-msg-to-pubsub-generator:0.8.3"
+   compile group: "us.ihmc" name: "ihmc-pub-sub" version: "0.8.4"
 }
 ```
 
