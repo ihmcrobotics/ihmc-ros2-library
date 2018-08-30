@@ -114,66 +114,63 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                       NativeParticipantImpl participantImpl)
          throws IOException
    {
-
-      LocatorList_t unicastLocatorList = new LocatorList_t();
-      FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getUnicastLocatorList(), unicastLocatorList);
-      LocatorList_t multicastLocatorList = new LocatorList_t();
-      FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getMulticastLocatorList(), multicastLocatorList);
-      LocatorList_t outLocatorList = new LocatorList_t();
-      FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getOutLocatorList(), outLocatorList);
-      
-      
-      
-      
-      if (!unicastLocatorList.isValid())
+      synchronized (destructorLock)
       {
-         throw new IllegalArgumentException("Unicast Locator List for Subscriber contains invalid Locator");
-      }
-      if (!multicastLocatorList.isValid())
-      {
-         throw new IllegalArgumentException(" Multicast Locator List for Subscriber contains invalid Locator");
-      }
-      if (!outLocatorList.isValid())
-      {
-         throw new IllegalArgumentException("Output Locator List for Subscriber contains invalid Locator");
-      }
+         LocatorList_t unicastLocatorList = new LocatorList_t();
+         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getUnicastLocatorList(), unicastLocatorList);
+         LocatorList_t multicastLocatorList = new LocatorList_t();
+         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getMulticastLocatorList(), multicastLocatorList);
+         LocatorList_t outLocatorList = new LocatorList_t();
+         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getOutLocatorList(), outLocatorList);
 
-      ReaderQos qos = attributes.getQos().getReaderQos();
-      this.attributes = attributes;
-      this.topicDataType = topicDataTypeIn.newInstance();
-      this.listener = listener;
-      /*
-       * Fast-RTPS can pad messages to 4 byte boundries. Adding 3 to the typesize will make sure the message fits. 
-       * 
-       * See 
-       * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
-       */
-      this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
-      this.topicKind = TopicKind_t.swigToEnum(attributes.getTopic().getTopicKind().ordinal());
-      this.ownershipQosPolicyKind = qos.getM_ownership().getKind();
+         if (!unicastLocatorList.isValid())
+         {
+            throw new IllegalArgumentException("Unicast Locator List for Subscriber contains invalid Locator");
+         }
+         if (!multicastLocatorList.isValid())
+         {
+            throw new IllegalArgumentException(" Multicast Locator List for Subscriber contains invalid Locator");
+         }
+         if (!outLocatorList.isValid())
+         {
+            throw new IllegalArgumentException("Output Locator List for Subscriber contains invalid Locator");
+         }
 
-      fastRTPSAttributes = attributes.createFastRTPSTopicAttributes();
+         ReaderQos qos = attributes.getQos().getReaderQos();
+         this.attributes = attributes;
+         this.topicDataType = topicDataTypeIn.newInstance();
+         this.listener = listener;
+         /*
+          * Fast-RTPS can pad messages to 4 byte boundries. Adding 3 to the typesize will make sure the message fits.
+          *
+          * See
+          * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
+          */
+         this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
+         this.topicKind = TopicKind_t.swigToEnum(attributes.getTopic().getTopicKind().ordinal());
+         this.ownershipQosPolicyKind = qos.getM_ownership().getKind();
 
-      if (!qos.checkQos() || !fastRTPSAttributes.checkQos())
-      {
-         throw new IllegalArgumentException("Invalid QoS settings");
+         fastRTPSAttributes = attributes.createFastRTPSTopicAttributes();
+
+         if (!qos.checkQos() || !fastRTPSAttributes.checkQos())
+         {
+            throw new IllegalArgumentException("Invalid QoS settings");
+         }
+
+         impl = new NativeSubscriberImpl(attributes.getEntityID(), attributes.getUserDefinedID(), topicDataType.getTypeSize(),
+                                         MemoryManagementPolicy_t.swigToEnum(attributes.getHistoryMemoryPolicy().ordinal()), fastRTPSAttributes, qos, attributes.getTimes(), unicastLocatorList, multicastLocatorList, outLocatorList, attributes.isExpectsInlineQos(),
+                                         participantImpl, nativeListenerImpl);
+
+         if (!impl.createSubscriber()) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
+         {
+            throw new IOException("Cannot create subscriber");
+         }
+         guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
+
+         unicastLocatorList.delete();
+         multicastLocatorList.delete();
+         outLocatorList.delete();
       }
-
-      impl = new NativeSubscriberImpl(attributes.getEntityID(), attributes.getUserDefinedID(), topicDataType.getTypeSize(),
-                                      MemoryManagementPolicy_t.swigToEnum(attributes.getHistoryMemoryPolicy().ordinal()), fastRTPSAttributes, qos,
-                                      attributes.getTimes(), unicastLocatorList, multicastLocatorList, outLocatorList, attributes.isExpectsInlineQos(), participantImpl,
-                                      nativeListenerImpl);
-
-      if(!impl.createSubscriber()) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
-      {  
-         throw new IOException("Cannot create subscriber");
-      }
-      guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
-      
-      
-      unicastLocatorList.delete();
-      multicastLocatorList.delete();
-      outLocatorList.delete();
    }
 
    @Override
