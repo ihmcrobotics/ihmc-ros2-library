@@ -72,58 +72,55 @@ class FastRTPSPublisher implements Publisher
                             NativeParticipantImpl participant)
          throws IOException, IllegalArgumentException
    {
-      LocatorList_t unicastLocatorList = new LocatorList_t();
-      FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getUnicastLocatorList(), unicastLocatorList);
-      LocatorList_t multicastLocatorList = new LocatorList_t();
-      FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getMulticastLocatorList(), multicastLocatorList);
-      LocatorList_t outLocatorList = new LocatorList_t();
-      FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getOutLocatorList(), outLocatorList);
-      
-      
-      
-      
-      if (!unicastLocatorList.isValid())
+      synchronized (destructorLock)
       {
-         throw new IllegalArgumentException("Unicast Locator List for Publisher contains invalid Locator");
-      }
-      if (!multicastLocatorList.isValid())
-      {
-         throw new IllegalArgumentException(" Multicast Locator List for Publisher contains invalid Locator");
-      }
-      if (!outLocatorList.isValid())
-      {
-         throw new IllegalArgumentException("Output Locator List for Publisher contains invalid Locator");
-      }
+         LocatorList_t unicastLocatorList = new LocatorList_t();
+         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getUnicastLocatorList(), unicastLocatorList);
+         LocatorList_t multicastLocatorList = new LocatorList_t();
+         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getMulticastLocatorList(), multicastLocatorList);
+         LocatorList_t outLocatorList = new LocatorList_t();
+         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getOutLocatorList(), outLocatorList);
 
-      this.attributes = attributes;
-      this.topicDataType = (TopicDataType<Object>) topicDataTypeIn.newInstance();
-      this.listener = listener;
-      this.payload = new SerializedPayload(topicDataType.getTypeSize());
+         if (!unicastLocatorList.isValid())
+         {
+            throw new IllegalArgumentException("Unicast Locator List for Publisher contains invalid Locator");
+         }
+         if (!multicastLocatorList.isValid())
+         {
+            throw new IllegalArgumentException(" Multicast Locator List for Publisher contains invalid Locator");
+         }
+         if (!outLocatorList.isValid())
+         {
+            throw new IllegalArgumentException("Output Locator List for Publisher contains invalid Locator");
+         }
 
-      fastRTPSAttributes = attributes.createFastRTPSTopicAttributes();
-      throughputController = attributes.createTroughputControllerDescriptor();
+         this.attributes = attributes;
+         this.topicDataType = (TopicDataType<Object>) topicDataTypeIn.newInstance();
+         this.listener = listener;
+         this.payload = new SerializedPayload(topicDataType.getTypeSize());
 
-      WriterQos qos = attributes.getQos().getWriterQos();
-      if (!qos.checkQos() || !fastRTPSAttributes.checkQos())
-      {
-         throw new IllegalArgumentException("Invalid QoS settings");
+         fastRTPSAttributes = attributes.createFastRTPSTopicAttributes();
+         throughputController = attributes.createTroughputControllerDescriptor();
+
+         WriterQos qos = attributes.getQos().getWriterQos();
+         if (!qos.checkQos() || !fastRTPSAttributes.checkQos())
+         {
+            throw new IllegalArgumentException("Invalid QoS settings");
+         }
+
+         impl = new NativePublisherImpl(attributes.getEntityID(), attributes.getUserDefinedID(), topicDataType.getTypeSize(),
+                                        MemoryManagementPolicy_t.swigToEnum(attributes.getHistoryMemoryPolicy().ordinal()), fastRTPSAttributes, qos, attributes.getTimes(), unicastLocatorList, multicastLocatorList,
+                                        outLocatorList, throughputController, participant, nativeListenerImpl);
+         if (!impl.createPublisher()) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+         {
+            throw new IOException("Cannot create publisher");
+         }
+         guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
+
+         unicastLocatorList.delete();
+         multicastLocatorList.delete();
+         outLocatorList.delete();
       }
-
-      impl = new NativePublisherImpl(attributes.getEntityID(), attributes.getUserDefinedID(), topicDataType.getTypeSize(),
-                                     MemoryManagementPolicy_t.swigToEnum(attributes.getHistoryMemoryPolicy().ordinal()), fastRTPSAttributes, qos,
-                                     attributes.getTimes(), unicastLocatorList, multicastLocatorList,
-                                     outLocatorList, throughputController, participant, nativeListenerImpl);
-      if(!impl.createPublisher()) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
-      {
-         throw new IOException("Cannot create publisher");
-      }
-      guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
-      
-      
-      unicastLocatorList.delete();
-      multicastLocatorList.delete();
-      outLocatorList.delete();
-
    }
 
    @Override

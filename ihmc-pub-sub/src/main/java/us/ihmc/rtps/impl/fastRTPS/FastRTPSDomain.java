@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang3.SystemUtils;
 
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
@@ -83,15 +84,25 @@ public class FastRTPSDomain implements Domain
    public synchronized Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
          throws IOException, IllegalArgumentException
    {
+      Publisher publisher = null;
+
       for (int i = 0; i < participants.size(); i++)
       {
          if (participants.get(i) == participant)
          {
-            return participants.get(i).createPublisher(publisherAttributes, listener);
+            publisher = participants.get(i).createPublisher(publisherAttributes, listener);
+            break;
          }
       }
-      throw new IllegalArgumentException("Participant is not part of this domain.");
 
+      if (publisher == null)
+      {
+         throw new IllegalArgumentException("Participant is not part of this domain.");
+      }
+
+      ThreadTools.sleep(1);
+
+      return publisher;
    }
 
    @Override
