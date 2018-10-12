@@ -24,8 +24,8 @@ import gnu.trove.list.array.TFloatArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.list.array.TLongArrayList;
 import gnu.trove.list.array.TShortArrayList;
-import us.ihmc.commons.lists.BoundedRecyclingArrayList;
 import us.ihmc.commons.lists.PreallocatedEnumList;
+import us.ihmc.commons.lists.RecyclingArrayList;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
@@ -604,7 +604,7 @@ public interface IDLSequence
       }
    }
 
-   public static class StringBuilderHolder extends BoundedRecyclingArrayList<StringBuilder> implements IDLSequence
+   public static class StringBuilderHolder extends RecyclingArrayList<StringBuilder> implements IDLSequence
    {
       private final int type;
 
@@ -614,7 +614,7 @@ public interface IDLSequence
        */
       public StringBuilderHolder(int maxSize, String typeCode)
       {
-         super(maxSize, maxSize, StringBuilder::new);
+         super(maxSize, StringBuilder::new);
          switch (typeCode)
          {
          case "type_d":
@@ -632,6 +632,12 @@ public interface IDLSequence
       public void resetQuick()
       {
          clear();
+      }
+
+      @Override
+      public int capacity()
+      {
+         return java.lang.Integer.MAX_VALUE;
       }
 
       @Override
@@ -833,7 +839,7 @@ public interface IDLSequence
     *
     * @param <T> Element type
     */
-   public static class Object<T> extends BoundedRecyclingArrayList<T> implements IDLSequence
+   public static class Object<T> extends RecyclingArrayList<T> implements IDLSequence
    {
       private final TopicDataType<T> topicDataType;
 
@@ -856,7 +862,7 @@ public interface IDLSequence
        */
       public Object(int maxSize, TopicDataType<T> topicDataType)
       {
-         super(maxSize, maxSize, topicDataType::createData);
+         super(maxSize, topicDataType::createData);
          this.topicDataType = topicDataType;
          
       }
@@ -865,6 +871,12 @@ public interface IDLSequence
       public void resetQuick()
       {
          clear();
+      }
+
+      @Override
+      public int capacity()
+      {
+         return java.lang.Integer.MAX_VALUE;
       }
 
       @Override
