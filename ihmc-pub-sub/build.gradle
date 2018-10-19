@@ -1,20 +1,8 @@
-buildscript {
-   repositories {
-      mavenCentral()
-      maven { url "http://dl.bintray.com/ihmcrobotics/maven-release" }
-      maven { url "http://dl.bintray.com/ihmcrobotics/maven-vendor" }
-      maven { url "https://plugins.gradle.org/m2/" }
-      mavenLocal()
-      jcenter()
-   }
-   dependencies {
-      classpath "us.ihmc:ihmc-build:0.15.1"
-//      classpath group: "us.ihmc", name: "ihmc-pub-sub-generator", version: version
-      classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0"
-   }
+plugins {
+   id("us.ihmc.ihmc-build") version "0.15.1"
+   id("us.ihmc.ihmc-ci") version "1.1.3"
+   id("com.github.hierynomus.license") version "0.14.0"
 }
-apply plugin: "us.ihmc.ihmc-build"
-apply plugin: "com.github.hierynomus.license"
 
 ihmc {
    loadProductProperties("../group.gradle.properties")
