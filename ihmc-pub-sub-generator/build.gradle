@@ -1,6 +1,6 @@
 plugins {
    id("us.ihmc.ihmc-build") version "0.15.4"
-   id("us.ihmc.ihmc-ci") version "1.1.6"
+   id("us.ihmc.ihmc-ci") version "2.1"
    id("com.github.hierynomus.license") version "0.14.0"
 }
 
@@ -50,14 +50,14 @@ license {
 //   packagePrefix = "us.ihmc.idl.generated"
 //}
 
-ihmc.sourceSetProject("test").test {
-
-   forkEvery = 0
-   maxParallelForks = 1
-
-   ihmc.sourceSetProject("test").configurations.compile.findAll { it.name.contains("java-allocation-instrumenter") }.each {
-      def javaAgentArg = "-javaagent:" + it.getAbsolutePath()
-      println("[ihmc-pub-sub-group] Java agent JVM arg: " + javaAgentArg)
-      jvmArgs javaAgentArg
-   }
-}
+//ihmc.sourceSetProject("test").test {
+//
+//   forkEvery = 0
+//   maxParallelForks = 1
+//
+//   ihmc.sourceSetProject("test").configurations.compile.findAll { it.name.contains("java-allocation-instrumenter") }.each {
+//      def javaAgentArg = "-javaagent:" + it.getAbsolutePath()
+//      println("[ihmc-pub-sub-group] Java agent JVM arg: " + javaAgentArg)
+//      jvmArgs javaAgentArg
+//   }
+//}
