@@ -52,7 +52,7 @@ license {
 
 ihmc.sourceSetProject("test").test {
 
-   forkEvery = 1
+   forkEvery = 0
    maxParallelForks = 1
 
    ihmc.sourceSetProject("test").configurations.compile.findAll { it.name.contains("java-allocation-instrumenter") }.each {

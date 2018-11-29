@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 
 public class HandshakeTest
 {
-   public static final int NUMBER_OF_MESSAGES_TO_SEND = 20;
+   public static final int NUMBER_OF_MESSAGES_TO_SEND = 5;
 
    public int sendIndex = 0;
 
