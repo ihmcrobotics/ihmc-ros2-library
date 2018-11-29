@@ -15,7 +15,7 @@
  */
 package us.ihmc.pubsub.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class IntraProcessDomainTest
 {
@@ -56,7 +56,7 @@ public class IntraProcessDomainTest
       assertEquals(expectedGuidPrefix, info.getGuid().getGuidPrefix());
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testMessagePassing() throws IOException, InterruptedException
    {
       TopicDataType<?> typeOfTheDay = new ChatMessagePubSubType();
@@ -180,7 +180,7 @@ public class IntraProcessDomainTest
       }
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testConnectionLogic() throws IOException, InterruptedException
    {
       // Setup participant with subscriber and publisher listeners

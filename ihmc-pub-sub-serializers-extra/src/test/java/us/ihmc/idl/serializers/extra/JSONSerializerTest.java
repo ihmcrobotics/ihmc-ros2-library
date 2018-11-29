@@ -15,12 +15,12 @@
  */
 package us.ihmc.idl.serializers.extra;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.nested.NestedElement;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
@@ -108,7 +108,7 @@ public class JSONSerializerTest
       return idlElementTest;
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEmpty() throws IOException
    {
       IDLElementTestPubSubType type = new IDLElementTestPubSubType();
@@ -123,7 +123,7 @@ public class JSONSerializerTest
 
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testWithData() throws IOException
    {
       IDLElementTestPubSubType type = new IDLElementTestPubSubType();
@@ -139,7 +139,7 @@ public class JSONSerializerTest
 
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testWithMissingData() throws IOException
    {
       IDLElementTestPubSubType type = new IDLElementTestPubSubType();

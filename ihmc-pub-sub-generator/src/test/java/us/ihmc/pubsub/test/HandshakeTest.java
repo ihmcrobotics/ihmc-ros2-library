@@ -1,6 +1,7 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.allocations.AllocationProfiler;
 import us.ihmc.commons.allocations.AllocationRecord;
@@ -29,8 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class HandshakeTest
 {
@@ -38,7 +38,8 @@ public class HandshakeTest
 
    public int sendIndex = 0;
 
-   @Test(timeout = 30000)
+   @Tag("allocation")
+   @Test// timeout = 30000
    public void testPublishSubscribeFooHandshake() throws IOException
    {
       PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;

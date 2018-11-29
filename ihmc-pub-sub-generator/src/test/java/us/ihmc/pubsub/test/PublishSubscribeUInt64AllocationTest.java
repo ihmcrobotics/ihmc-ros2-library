@@ -1,7 +1,8 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.allocations.AllocationProfiler;
 import us.ihmc.commons.allocations.AllocationRecord;
@@ -27,20 +28,22 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 public class PublishSubscribeUInt64AllocationTest
 {
    public static final int NUMBER_OF_MESSAGES_TO_SEND = 30;
 
-   @Test(timeout = 30000)
+   @Tag("allocation")
+   @Test// timeout = 30000
    public void testPublishSubscribeUInt32AllocationsFastRTPS() throws IOException
    {
       runAllocationTest(PubSubImplementation.FAST_RTPS);
    }
 
-   @Ignore // intraprocess does not need to be allocation-free for now - @dcalvert
-   @Test(timeout = 30000)
+   @Disabled // intraprocess does not need to be allocation-free for now - @dcalvert
+   @Tag("allocation")
+   @Test// timeout = 30000
    public void testPublishSubscribeUInt32AllocationsIntraprocess() throws IOException
    {
       runAllocationTest(PubSubImplementation.INTRAPROCESS);

@@ -15,11 +15,11 @@
  */
 package us.ihmc.idl.serializers.extra;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import us.ihmc.idl.generated.test.IDLElementTest;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
@@ -27,7 +27,7 @@ import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 public class YAMLSerializerTest
 {
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void test() throws IOException
    {
       IDLElementTestPubSubType dataType = new IDLElementTestPubSubType();

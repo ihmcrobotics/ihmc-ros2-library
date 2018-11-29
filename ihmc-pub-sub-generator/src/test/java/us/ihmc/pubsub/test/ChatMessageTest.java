@@ -1,17 +1,17 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.common.SerializedPayload;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class ChatMessageTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testHelloWorld() throws IOException
    {
       byte[] javaHelloWorld = { // just copy and paste terminal output for regression test

@@ -1,13 +1,11 @@
 package us.ihmc.pubsub.test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static us.ihmc.robotics.Assert.*;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import us.ihmc.idl.generated.nested.NestedElement;
 import us.ihmc.idl.generated.test.Color;
@@ -106,7 +104,7 @@ public class IDLElementTestTest
       return idlElementTest;
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testIDLElementEquals()
    {
       IDLElementTest orig = createPopulatedIDLElementTest();
@@ -306,7 +304,7 @@ public class IDLElementTestTest
 
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testIDLElementTestSet()
    {
       IDLElementTest a = createPopulatedIDLElementTest();
@@ -319,7 +317,7 @@ public class IDLElementTestTest
       assertEquals(a, b);
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testIDLElementSerializeDeserialize() throws IOException
    {
       IDLElementTest test = new IDLElementTest();
@@ -335,8 +333,8 @@ public class IDLElementTestTest
 
    }
 
-   @Ignore // TODO Recompile cpp soon
-   @Test(timeout = 30000)
+   @Disabled // TODO Recompile cpp soon
+   @Test// timeout = 30000
    public void testIDLElementWithFastRTPSGenCPPCode() throws IOException
    {
       IDLElementTest test = new IDLElementTest();

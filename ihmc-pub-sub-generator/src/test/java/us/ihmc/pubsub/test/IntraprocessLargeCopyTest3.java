@@ -1,6 +1,6 @@
 package us.ihmc.pubsub.test;
 
-import static org.junit.Assert.assertFalse;
+import static us.ihmc.robotics.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.util.Random;
 
 import org.gradle.internal.impldep.org.apache.commons.lang.mutable.MutableInt;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
@@ -49,7 +49,7 @@ public class IntraprocessLargeCopyTest3
 {
    private static final int NUMBER_OF_MESSAGES_TO_SEND = 80;
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
@@ -59,7 +59,7 @@ public class IntraprocessLargeCopyTest3
       performCopyTest(random, impl);
    }
    
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testRepeatedLargeCopiesInIntraprocessCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);

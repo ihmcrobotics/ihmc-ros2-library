@@ -1,14 +1,14 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class MessageCopyTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testObjectSequencesCopy()
    {
       IDLElementTest a = new IDLElementTest();

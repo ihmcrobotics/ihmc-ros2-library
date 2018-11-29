@@ -1,13 +1,13 @@
 package us.ihmc.idl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.idl.IDLSequence;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class StringBuilderHolderTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testStringBuilderHolder()
    {
       IDLSequence.StringBuilderHolder a = new IDLSequence.StringBuilderHolder(10, "type_d");

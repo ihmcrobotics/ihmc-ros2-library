@@ -1,6 +1,6 @@
 package us.ihmc.idl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.MutationTestFacilitator;
 import us.ihmc.idl.IDLSequence.Byte;
 import us.ihmc.idl.IDLSequence.Char;
@@ -13,11 +13,11 @@ import us.ihmc.idl.IDLSequence.Short;
 import us.ihmc.idl.IDLSequence.StringBuilderHolder;
 import us.ihmc.idl.IDLSequence.Boolean;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class IDLToolsTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testStringBuilderEquals()
    {
       assertTrue("StringBuilders not equal", IDLTools.equals(new StringBuilder("hi"), new StringBuilder("hi")));
@@ -28,14 +28,14 @@ public class IDLToolsTest
       assertFalse("StringBuilders equal", IDLTools.equals(new StringBuilder("a"), new StringBuilder("b")));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testStringBuilderEpsilonEquals()
    {
       assertTrue("StringBuilders not equal", IDLTools.epsilonEqualsStringBuilder(new StringBuilder("hi"), new StringBuilder("hi"), 0.0));
       assertFalse("StringBuilders equal", IDLTools.epsilonEqualsStringBuilder(new StringBuilder("hi"), new StringBuilder("bye"), 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsBoolean()
    {
       assertTrue("Booleans not equal", IDLTools.epsilonEqualsBoolean(true, true, 0.0));
@@ -43,7 +43,7 @@ public class IDLToolsTest
       assertFalse("Booleans equal", IDLTools.epsilonEqualsBoolean(true, false, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEquals()
    {
       assertTrue("Doubles not equal", IDLTools.epsilonEquals(0.0, 0.0, 0.0));
@@ -60,7 +60,7 @@ public class IDLToolsTest
 
    private enum SampleEnum { ONE, TWO }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsEnum()
    {
       assertTrue("Enums not equal", IDLTools.epsilonEqualsEnum(SampleEnum.ONE, SampleEnum.ONE, 0.0));
@@ -68,7 +68,7 @@ public class IDLToolsTest
       assertFalse("Enums equal", IDLTools.epsilonEqualsEnum(SampleEnum.ONE, SampleEnum.TWO, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testStringBuilderEpsilonEqualsSequence()
    {
       StringBuilderHolder a;
@@ -118,7 +118,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsEnumSequence()
    {
       Enum<SampleEnum> a;
@@ -168,7 +168,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceBoolean()
    {
       Boolean a;
@@ -218,7 +218,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceByte()
    {
       Byte a;
@@ -268,7 +268,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceChar()
    {
       Char a;
@@ -292,7 +292,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsCharSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceShort()
    {
       Short a;
@@ -316,7 +316,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsShortSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceInteger()
    {
       Integer a;
@@ -340,7 +340,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsIntegerSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceLong()
    {
       Long a;
@@ -364,7 +364,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsLongSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceFloat()
    {
       Float a;
@@ -388,7 +388,7 @@ public class IDLToolsTest
       assertFalse("Sequences equal", IDLTools.epsilonEqualsFloatSequence(a, b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEpsilonEqualsSequenceDouble()
    {
       Double a;

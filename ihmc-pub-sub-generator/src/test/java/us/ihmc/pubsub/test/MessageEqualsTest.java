@@ -1,14 +1,14 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 
-import static org.junit.Assert.*;
+import static us.ihmc.robotics.Assert.*;
 
 public class MessageEqualsTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testEmptyMessagesEqual()
    {
       IDLElementTest a = new IDLElementTest();
@@ -18,7 +18,7 @@ public class MessageEqualsTest
       assertTrue("not equal", a.epsilonEquals(b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testMessagesNotEqual1()
    {
       IDLElementTest a = new IDLElementTest();
@@ -31,7 +31,7 @@ public class MessageEqualsTest
       assertFalse("is equal", a.epsilonEquals(b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testFullMessagesEqual()
    {
       IDLElementTest a = new IDLElementTest();
@@ -44,7 +44,7 @@ public class MessageEqualsTest
       assertTrue("not equal", a.epsilonEquals(b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testMessagesNotEqual2()
    {
       IDLElementTest a = new IDLElementTest();
@@ -60,7 +60,7 @@ public class MessageEqualsTest
       assertFalse("is equal", a.epsilonEquals(b, 0.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testMessagesNotEqual3()
    {
       IDLElementTest a = new IDLElementTest();
@@ -76,7 +76,7 @@ public class MessageEqualsTest
       assertFalse("is equal", a.epsilonEquals(b, 0.5));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testMessagesEqual3()
    {
       IDLElementTest a = new IDLElementTest();
@@ -92,7 +92,7 @@ public class MessageEqualsTest
       assertTrue("not equal", a.epsilonEquals(b, 1.0));
    }
 
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testCopyConstructor()
    {
       IDLElementTest a = new IDLElementTest();

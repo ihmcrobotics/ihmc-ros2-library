@@ -1,6 +1,6 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
@@ -28,7 +28,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
+import static us.ihmc.robotics.Assert.*;
 
 /**
  *  Start a subscriber and 5 publisher threads, each sending 20 messages with up to 100,000 longs.
@@ -37,8 +37,8 @@ import static org.junit.Assert.assertFalse;
  */
 public class IntraprocessLargeCopyTest
 {
-//   @Ignore // not working, no output, not sure why
-   @Test(timeout = 300000)
+//   @Disabled // not working, no output, not sure why
+   @Test// timeout = 300000
    public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
@@ -48,7 +48,7 @@ public class IntraprocessLargeCopyTest
       performCopyTest(random, impl);
    }
    
-   @Test(timeout = 300000)
+   @Test// timeout = 300000
    public void testRepeatedLargeCopiesInIntraprocessCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);

@@ -1,7 +1,7 @@
 package us.ihmc.pubsub.test;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.idl.CDR;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class TypesOverNetworkTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testSerializationOfAllTypesOverRealNetwork() throws IOException
    {
       PubSubTester<IDLElementTest> tester = new PubSubTester<>(IDLElementTest::new);

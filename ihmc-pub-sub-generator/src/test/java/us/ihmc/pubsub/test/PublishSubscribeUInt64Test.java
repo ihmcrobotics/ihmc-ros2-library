@@ -1,6 +1,6 @@
 package us.ihmc.pubsub.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class PublishSubscribeUInt64Test
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testPublishSubscribeUInt32() throws IOException
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);

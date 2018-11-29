@@ -31,7 +31,6 @@ dependencies {
 testDependencies {
    compile group: "us.ihmc", name: "ihmc-pub-sub-test", version: version
    compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.25.0"
-   compile group: "junit", name: "junit", version: "4.12"
 }
 
 license {
