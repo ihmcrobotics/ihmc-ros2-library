@@ -1,6 +1,6 @@
 plugins {
    id("us.ihmc.ihmc-build") version "0.15.4"
-   id("us.ihmc.ihmc-ci") version "1.1.6"
+   id("us.ihmc.ihmc-ci") version "2.4"
 }
 
 ihmc {
@@ -22,5 +22,5 @@ mainDependencies {
 
 testDependencies {
     compile group: "us.ihmc", name: "ihmc-pub-sub-generator-test", version: version
-    compile group: "junit", name: "junit", version: "4.11"
+    compile group: "junit", name: "junit", version: "4.12"
 }

@@ -1,6 +1,6 @@
 plugins {
    id("us.ihmc.ihmc-build") version "0.15.4"
-   id("us.ihmc.ihmc-ci") version "1.1.6"
+   id("us.ihmc.ihmc-ci") version "2.4"
    id("com.github.hierynomus.license") version "0.14.0"
 }
 
@@ -25,10 +25,10 @@ mainDependencies {
    compile group: 'us.ihmc', name: 'IHMCNativeLibraryLoader', version: '1.0'
    compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
    compile group: "us.ihmc", name: "euclid-core", version: "0.6.1"
-   compile group: "us.ihmc", name: "ihmc-commons", version: "0.24.0"
+   compile group: "us.ihmc", name: "ihmc-commons", version: "0.25.0"
 }
 
 testDependencies {
-   compile group: 'junit', name: 'junit', version: '4.11'
-   compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.24.0"
+   compile group: 'junit', name: 'junit', version: '4.12'
+   compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.25.0"
 }
