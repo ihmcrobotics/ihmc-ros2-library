@@ -1,6 +1,6 @@
 plugins {
    id("us.ihmc.ihmc-build") version "0.15.5"
-   id("us.ihmc.ihmc-ci") version "2.4"
+   id("us.ihmc.ihmc-ci") version "3.4"
    id("com.github.hierynomus.license") version "0.14.0"
 }
 
