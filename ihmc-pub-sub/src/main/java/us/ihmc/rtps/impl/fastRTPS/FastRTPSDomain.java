@@ -206,7 +206,7 @@ public class FastRTPSDomain implements Domain
    @Override
    public synchronized void stopAll()
    {
-      for(int i = 0; i < participants.size(); i++)
+      for(int i = participants.size() -1; i >= 0; i--)
       {
          removeParticipant(participants.get(i));
       }
