@@ -1,6 +1,7 @@
 plugins {
    id("us.ihmc.ihmc-build") version "0.15.7"
    id("us.ihmc.ihmc-ci") version "4.23"
+   id("us.ihmc.ihmc-cd") version "0.1"
    id("com.github.hierynomus.license") version "0.14.0"
 }
 
@@ -30,7 +31,7 @@ dependencies {
 
 testDependencies {
    compile group: "us.ihmc", name: "ihmc-pub-sub-test", version: version
-   compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.25.4"
+   compile group: "us.ihmc", name: "ihmc-commons-testing", version: "0.26.3"
 }
 
 license {
