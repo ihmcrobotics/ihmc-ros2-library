@@ -13,12 +13,12 @@ ihmc {
 
 mainDependencies {
     compile group: "us.ihmc", name: "ihmc-pub-sub", version: version
-    compile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.8.7"
-    compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-yaml", version: "2.8.7"
-    compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-xml", version: "2.8.7"
-    compile group: "com.fasterxml.jackson.dataformat", name: "jackson-dataformat-properties", version: "2.8.7"
-    compile group: "org.codehaus.woodstox", name: "woodstox-core-asl", version: "4.1.4"
-    compile group: "de.undercouch", name: "bson4jackson", version: "2.7.0"
+    api("com.fasterxml.jackson.core:jackson-databind:2.8.7")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.7")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.8.7")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-properties:2.8.7")
+    api("org.codehaus.woodstox:woodstox-core-asl:4.1.4")
+    api("de.undercouch:bson4jackson:2.7.0")
 }
 
 testDependencies {
