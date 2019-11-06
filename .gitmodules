@@ -1,4 +1,4 @@
 [submodule "ihmc-pub-sub/thirdparty/Fast-RTPS"]
 	path = ihmc-pub-sub/thirdparty/Fast-RTPS
 	url = https://github.com/ihmcrobotics/Fast-RTPS.git
-        branch = 1.9.x
+        branch = "1.9.x"
