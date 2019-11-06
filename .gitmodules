@@ -2,3 +2,6 @@
 	path = ihmc-pub-sub/thirdparty/Fast-RTPS
 	url = https://github.com/ihmcrobotics/Fast-RTPS.git
         branch = "1.9.x"
+[submodule "ihmc-pub-sub/thirdparty/foonathan_memory_vendor"]
+	path = ihmc-pub-sub/thirdparty/foonathan_memory_vendor
+	url = https://github.com/eProsima/foonathan_memory_vendor
