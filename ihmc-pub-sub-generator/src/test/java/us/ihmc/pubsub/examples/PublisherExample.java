@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
@@ -97,7 +98,9 @@ public class PublisherExample
          FastRTPSPublisherAttributes fastRTPSPublisherAttributes = (FastRTPSPublisherAttributes) publisherAttributes;
          Time_t heartbeatPeriod = new Time_t();
          heartbeatPeriod.setSeconds(0);
-         heartbeatPeriod.setFraction(100);
+         long fraction = (long) (0.1 * 2e32); // 100 ms
+         LogTools.info("Fraction: {}", fraction);
+         heartbeatPeriod.setFraction(fraction);
          fastRTPSPublisherAttributes.getTimes().setHeartbeatPeriod(heartbeatPeriod);
       }
       
