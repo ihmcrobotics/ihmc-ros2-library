@@ -17,16 +17,18 @@ find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 
 include(ExternalProject)
-set(FAST_RTPS_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
+set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
+message(STATUS "FastRTPS Install Prefix: ${FAST_RTPS_INSTALL_PREFIX}")
+
 ExternalProject_Add(FastRTPS
     SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/Fast-RTPS"
-    BINARY_DIR "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-build"
-    STAMP_DIR "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-stamp"
+    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-build"
+    STAMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-stamp"
     DOWNLOAD_COMMAND ""
     #UPDATE_COMMAND "${CMAKE_COMMAND}" -E chdir "${PROJECT_SOURCE_DIR}" git submodule update --recursive --init "thirdparty/Fast-RTPS"
     UPDATE_COMMAND ""
     INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
-    TMP_DIR "${PROJECT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
+    TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
     CMAKE_GENERATOR "${CMAKE_GENERATOR}"
     CMAKE_ARGS
     "-DEPROSIMA_BUILD=OFF"
@@ -36,7 +38,7 @@ ExternalProject_Add(FastRTPS
     "-DBUILD_SHARED_LIBS=OFF"
     "-DBUILD_TESTING=OFF"
     "-DTHIRDPARTY=ON"
-    "-DTHIRDPARTY_fastcdr=ON"
+    "-DTHIRDPARTY_fastcdr=OFF"
     "-DTINYXML2_FROM_SOURCE=ON"
     "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
     "-DCMAKE_POSITION_INDEPENDENT_CODE=true"

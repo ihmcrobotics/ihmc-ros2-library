@@ -435,19 +435,6 @@ class FastRTPSParticipant implements Participant
    }
 
    @Override
-   public void registerEndpointDiscoveryListeners(PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener,
-                                                  SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener)
-         throws IOException
-   {
-      nativeParticipantPublisherEDPListenerImpl = publisherEndpointDiscoveryListener == null ? null
-            : new NativeParticipantPublisherEDPListenerImpl(publisherEndpointDiscoveryListener);
-      nativeParticipantSubscriberEDPListenerImpl = subscriberEndpointDiscoveryListener == null ? null
-            : new NativeParticipantSubscriberEDPListenerImpl(subscriberEndpointDiscoveryListener);
-
-      impl.registerEDPReaderListeners(nativeParticipantPublisherEDPListenerImpl, nativeParticipantSubscriberEDPListenerImpl);
-   }
-
-   @Override
    public synchronized boolean isAvailable()
    {
       return impl != null;

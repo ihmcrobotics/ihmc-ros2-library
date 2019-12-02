@@ -55,7 +55,7 @@ namespace fastRTPS{
                 ReaderTimes* times,
                 LocatorList_t* unicastLocatorList,
                 LocatorList_t* multicastLocatorList,
-                LocatorList_t* outLocatorList,
+                LocatorList_t* remoteLocatorList,
                 bool expectsInlineQos,
                 NativeParticipantImpl* participant,
                 NativeSubscriberListener* listener) throw(FastRTPSException);

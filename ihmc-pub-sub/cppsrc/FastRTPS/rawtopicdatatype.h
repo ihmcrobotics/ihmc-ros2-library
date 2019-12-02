@@ -98,7 +98,7 @@ public:
      * @param[out] ihandle Pointer to the Handle.
      * @return True if correct.
      */
-    virtual bool getKey(void* data, eprosima::fastrtps::rtps::InstanceHandle_t* ihandle);
+    virtual bool getKey(void* data, eprosima::fastrtps::rtps::InstanceHandle_t* ihandle, bool force_md5);
 
 
 
