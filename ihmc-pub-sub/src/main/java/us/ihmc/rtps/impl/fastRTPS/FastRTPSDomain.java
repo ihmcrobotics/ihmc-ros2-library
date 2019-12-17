@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.SystemUtils;
 
 import us.ihmc.commons.thread.ThreadTools;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
@@ -67,8 +68,11 @@ public class FastRTPSDomain implements Domain
             throw e;
          }
       }
-      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      Runtime.getRuntime().addShutdownHook(new Thread(() ->
+      {
+         LogTools.info("FastRTPS domain is going down.");
          stopAll();
+         ThreadTools.sleep(10);
       }, "IHMCPubSub-FastRTPSDomain-StopAll"));
    }
 
