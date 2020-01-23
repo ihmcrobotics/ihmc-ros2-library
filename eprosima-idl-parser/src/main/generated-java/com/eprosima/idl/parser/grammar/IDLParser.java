@@ -8,6 +8,7 @@ package com.eprosima.idl.parser.grammar;
     import com.eprosima.idl.generator.manager.TemplateGroup;
     import com.eprosima.idl.generator.manager.TemplateUtil;
     import com.eprosima.idl.parser.typecode.*;
+    import com.eprosima.idl.parser.tree.Module;
     import com.eprosima.idl.parser.tree.*;
     import com.eprosima.idl.util.Pair;
     import com.eprosima.idl.parser.strategy.DefaultErrorStrategy;
