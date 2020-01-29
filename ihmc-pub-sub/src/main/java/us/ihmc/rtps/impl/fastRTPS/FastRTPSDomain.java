@@ -72,6 +72,7 @@ public class FastRTPSDomain implements Domain
       {
          LogTools.info("FastRTPS domain is going down.");
          stopAll();
+         // It appears that without a small sleep, the printout does not show up.
          ThreadTools.sleep(10);
       }, "IHMCPubSub-FastRTPSDomain-StopAll"));
    }
