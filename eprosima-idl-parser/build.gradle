@@ -17,7 +17,7 @@ ihmc {
 mainDependencies {
    api("org.antlr:antlr4:4.2.2")
    api("org.antlr:stringtemplate:3.2")
-   api("us.ihmc:ihmc-commons:0.28.0")
+   api("us.ihmc:ihmc-commons:0.28.1")
 }
 
 antlr4.source = project.file("src/main/antlr4/omg")
