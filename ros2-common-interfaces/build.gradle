@@ -56,7 +56,7 @@ task show() {
    doLast {
       project.gradle.includedBuilds.each { println it }
       buildscript.configurations.classpath.each { println "Buildscript: " + it }
-      configurations.compile.each { println "Compile: " + it }
+      configurations.runtime.each { println "Runtime: " + it }
    }
 }
 
