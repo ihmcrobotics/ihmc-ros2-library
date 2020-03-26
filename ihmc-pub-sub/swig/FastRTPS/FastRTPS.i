@@ -87,45 +87,37 @@ namespace fastrtps{
 #include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
 
 
+
 %}
 #define DOXYGEN_SHOULD_SKIP_THIS_PUBLIC Y
 #define RTPS_DllAPI
 namespace eprosima{
 namespace fastrtps{
-namespace rtps{
 
+namespace rtps{
     typedef unsigned char octet;
+}
 
 
     struct Time_t{
-        //!Seconds
         int32_t seconds;
-        //!Fraction of second (1 fraction = 1/(2^32) seconds)
-        uint32_t fraction;
-        //! Default constructor. Sets values to zero.
+        uint32_t nanosec;
+        
         Time_t();
-        /**
-        * @param sec Seconds
-        * @param frac Fraction of second
-        */
-        Time_t(int32_t sec,uint32_t frac);
+        
+        Time_t(
+            int32_t sec,
+            uint32_t nsec);
+
 
     };
-    typedef Time_t Duration_t;
+    using Duration_t = Time_t;
 
-    enum  DISCOVERY_STATUS
-    {
-        DISCOVERED_RTPSPARTICIPANT,
-        CHANGED_QOS_RTPSPARTICIPANT,
-        REMOVED_RTPSPARTICIPANT,
-        DROPPED_RTPSPARTICIPANT
-    };
 
-}}}
+}}
 
 %include <fastrtps/rtps/common/Locator.h>
 %include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
-
 
 // Support for PublisherAttributes and SubscriberAttributes
 %{

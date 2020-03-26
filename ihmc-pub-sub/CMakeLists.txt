@@ -57,18 +57,19 @@ ExternalProject_Add(FastRTPS
     "-DTHIRDPARTY=ON"
     "-DTHIRDPARTY_fastcdr=ON"
     "-DTINYXML2_FROM_SOURCE=ON"
+    "-DNO_TLS=ON"
     "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
     "-DCMAKE_POSITION_INDEPENDENT_CODE=true"
     "-Dfoonathan_memory_DIR=${FOONATHAN_INSTALL_PREFIX}/lib/foonathan_memory/cmake/"
 )
 ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
 
-link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib")
+link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib" "${FOONATHAN_INSTALL_PREFIX}/lib")
 include_directories("${FAST_RTPS_INSTALL_PREFIX}/include")
 if(WIN32)
 	set(FastRTPS_LIBRARIES libfastrtps-1.5 Iphlpapi Shlwapi)
 else()
-	set(FastRTPS_LIBRARIES fastrtps)
+	set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.6.2 dl)
 endif()
 
 add_subdirectory(cppsrc/FastRTPS)
