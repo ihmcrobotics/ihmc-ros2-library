@@ -17,6 +17,23 @@ find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 
 include(ExternalProject)
+set(FOONATHAN_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-install")
+message(STATUS "Foonathan memory prefix: ${FOONATHAN_INSTALL_PREFIX}")
+
+ExternalProject_Add(FoonathanMemory
+    SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/foonathan_memory_vendor/"
+    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-build"
+    STAMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-stamp"
+    DOWNLOAD_COMMAND ""
+    UPDATE_COMMAND ""
+    INSTALL_DIR "${FOONATHAN_INSTALL_PREFIX}"
+    TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-tmp"
+    CMAKE_GENERATOR "${CMAKE_GENERATOR}"
+    CMAKE_ARGS  
+        "-DCMAKE_INSTALL_PREFIX=${FOONATHAN_INSTALL_PREFIX}"
+    )
+
+
 set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
 message(STATUS "FastRTPS Install Prefix: ${FAST_RTPS_INSTALL_PREFIX}")
 
@@ -38,11 +55,14 @@ ExternalProject_Add(FastRTPS
     "-DBUILD_SHARED_LIBS=OFF"
     "-DBUILD_TESTING=OFF"
     "-DTHIRDPARTY=ON"
-    "-DTHIRDPARTY_fastcdr=OFF"
+    "-DTHIRDPARTY_fastcdr=ON"
     "-DTINYXML2_FROM_SOURCE=ON"
     "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
     "-DCMAKE_POSITION_INDEPENDENT_CODE=true"
+    "-Dfoonathan_memory_DIR=${FOONATHAN_INSTALL_PREFIX}/lib/foonathan_memory/cmake/"
 )
+ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
+
 link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib")
 include_directories("${FAST_RTPS_INSTALL_PREFIX}/include")
 if(WIN32)
