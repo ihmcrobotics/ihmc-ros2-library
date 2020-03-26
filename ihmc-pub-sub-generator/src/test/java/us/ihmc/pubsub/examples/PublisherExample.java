@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
@@ -38,6 +39,8 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
+import us.ihmc.rtps.impl.fastRTPS.FastRTPSPublisherAttributes;
+import us.ihmc.rtps.impl.fastRTPS.Time_t;
 
 public class PublisherExample
 {
@@ -89,6 +92,17 @@ public class PublisherExample
       publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
       publisherAttributes.getTopic().getHistoryQos().setDepth(50);
       publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+      // example of how to set the heartbeat
+      if (publisherAttributes instanceof FastRTPSPublisherAttributes)
+      {
+         FastRTPSPublisherAttributes fastRTPSPublisherAttributes = (FastRTPSPublisherAttributes) publisherAttributes;
+         Time_t heartbeatPeriod = new Time_t();
+         heartbeatPeriod.setSeconds(0);
+         long fraction = (long) (0.1 * 2e32); // 100 ms
+         LogTools.info("Fraction: {}", fraction);
+         heartbeatPeriod.setFraction(fraction);
+         fastRTPSPublisherAttributes.getTimes().setHeartbeatPeriod(heartbeatPeriod);
+      }
       
       Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
       

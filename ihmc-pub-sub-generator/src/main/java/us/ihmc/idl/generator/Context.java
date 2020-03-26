@@ -15,6 +15,7 @@
 package us.ihmc.idl.generator;
 
 import com.eprosima.idl.parser.exception.ParseException;
+import com.eprosima.idl.parser.tree.Module;
 import com.eprosima.idl.parser.tree.*;
 import com.eprosima.idl.parser.typecode.StructTypeCode;
 import com.eprosima.idl.parser.typecode.TypeCode;
