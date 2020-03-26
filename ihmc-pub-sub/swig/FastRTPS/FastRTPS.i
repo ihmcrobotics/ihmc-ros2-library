@@ -47,10 +47,18 @@ namespace std {
 
 
 
-// Support for RTPSParticipantAttribuges
+// Support for RTPSParticipantAttributes
 namespace eprosima{
 namespace fastrtps{
     namespace rtps{
+    
+        // Empty declaration of RemoteLocatorList to allow getting locators using helper functions
+        struct RemoteLocatorList
+        {
+            private:
+                RemoteLocatorList();
+        };
+    
         %ignore LocatorList_t::begin;
         %ignore LocatorList_t::end;
         %ignore RTPSParticipantAttributes::throughputController;
@@ -67,7 +75,10 @@ namespace fastrtps{
         %ignore RemoteReaderAttributes::guid;
         %ignore RemoteWriterAttributes::guid;
         %ignore GUID_t;
+        
+        
     }
+    %ignore TopicAttributes::getTopicDiscoveryKind;
     %ignore TopicAttributes::getTopicKind;
     %ignore TopicAttributes::getTopicName;
     %ignore TopicAttributes::getTopicDataType;
@@ -128,6 +139,51 @@ namespace rtps{
 namespace eprosima{
 namespace fastrtps{
 namespace rtps{
+
+
+    struct ParticipantDiscoveryInfo
+    {
+    
+        enum DISCOVERY_STATUS
+        {
+            DISCOVERED_PARTICIPANT,
+            CHANGED_QOS_PARTICIPANT,
+            REMOVED_PARTICIPANT,
+            DROPPED_PARTICIPANT
+        };
+        
+        private:
+            ParticipantDiscoveryInfo();
+    };
+    
+    struct WriterDiscoveryInfo
+    {
+        enum  DISCOVERY_STATUS
+        {
+            DISCOVERED_WRITER,
+            CHANGED_QOS_WRITER,
+            REMOVED_WRITER
+        };
+        
+        private:
+            WriterDiscoveryInfo();
+    };
+    
+    
+    struct ReaderDiscoveryInfo
+    {
+        enum DISCOVERY_STATUS
+        {
+            DISCOVERED_READER,
+            CHANGED_QOS_READER,
+            REMOVED_READER
+        };
+        
+        private:
+            ReaderDiscoveryInfo();
+    };
+
+
     //!Reliability enum used for internal purposes
     //!@ingroup COMMON_MODULE
     typedef enum ReliabilityKind_t{
@@ -156,6 +212,12 @@ namespace rtps{
         WITH_KEY
     }TopicKind_t;
 
+    typedef enum TopicDiscoveryKind_t
+    {
+        NO_CHECK,
+        MINIMAL,
+        COMPLETE
+    }TopicDiscoveryKind_t;
 
     enum ChangeKind_t{
         ALIVE,                //!< ALIVE
@@ -218,6 +280,7 @@ namespace fastRTPS{
 #include "loglevel.h"
 #include "sampleinfomarshaller.h"
 
+
 octet getLocatorOctet(int octet, Locator_t* locator)
 {
     return locator->address[octet];
@@ -239,6 +302,38 @@ Locator_t* getLocator(LocatorList_t* list, int index)
     return &(*element);
 }
 
+
+Locator_t* getRemoteUnicastLocator(eprosima::fastrtps::rtps::RemoteLocatorList* list, int index)
+{
+    if(index > list->unicast.size() || index < 0)
+    {
+        return nullptr;
+    }
+    
+    return &(list->unicast.at(index));
+}
+
+Locator_t* getRemoteMulticastLocator(eprosima::fastrtps::rtps::RemoteLocatorList* list, int index)
+{
+    if(index > list->multicast.size() || index < 0)
+    {
+        return nullptr;
+    }
+    
+    return &(list->multicast.at(index));
+}
+
+int getRemoteMulticastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list)
+{
+    return list->multicast.size();
+}
+
+int getRemoteUnicastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list)
+{
+    return list->unicast.size();
+}
+
+
 using namespace us::ihmc::rtps::impl::fastRTPS;
 %}
 
@@ -251,3 +346,7 @@ using namespace us::ihmc::rtps::impl::fastRTPS;
 octet getLocatorOctet(int octet, Locator_t* locator);
 void setLocatorOctet(Locator_t* locator, int oct, octet value);
 Locator_t* getLocator(LocatorList_t* list, int index);
+Locator_t* getRemoteUnicastLocator(eprosima::fastrtps::rtps::RemoteLocatorList* list, int index);
+Locator_t* getRemoteMulticastLocator(eprosima::fastrtps::rtps::RemoteLocatorList* list, int index);
+int getRemoteMulticastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list);
+int getRemoteUnicastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list);

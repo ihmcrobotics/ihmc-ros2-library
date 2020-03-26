@@ -36,7 +36,7 @@ namespace fastRTPS{
         int32_t ownershipStrength;
 
         int32_t time_seconds;
-        int64_t time_fraction;
+        int64_t time_nsec;
 
         unsigned char instanceHandle_value[16];
 

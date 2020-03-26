@@ -8,11 +8,10 @@
 
 package us.ihmc.rtps.impl.fastRTPS;
 
-public final class DISCOVERY_STATUS {
-  public final static DISCOVERY_STATUS DISCOVERED_PARTICIPANT = new DISCOVERY_STATUS("DISCOVERED_PARTICIPANT");
-  public final static DISCOVERY_STATUS CHANGED_QOS_PARTICIPANT = new DISCOVERY_STATUS("CHANGED_QOS_PARTICIPANT");
-  public final static DISCOVERY_STATUS REMOVED_PARTICIPANT = new DISCOVERY_STATUS("REMOVED_PARTICIPANT");
-  public final static DISCOVERY_STATUS DROPPED_PARTICIPANT = new DISCOVERY_STATUS("DROPPED_PARTICIPANT");
+public final class TopicDiscoveryKind_t {
+  public final static TopicDiscoveryKind_t NO_CHECK = new TopicDiscoveryKind_t("NO_CHECK");
+  public final static TopicDiscoveryKind_t MINIMAL = new TopicDiscoveryKind_t("MINIMAL");
+  public final static TopicDiscoveryKind_t COMPLETE = new TopicDiscoveryKind_t("COMPLETE");
 
   public final int swigValue() {
     return swigValue;
@@ -22,33 +21,33 @@ public final class DISCOVERY_STATUS {
     return swigName;
   }
 
-  public static DISCOVERY_STATUS swigToEnum(int swigValue) {
+  public static TopicDiscoveryKind_t swigToEnum(int swigValue) {
     if (swigValue < swigValues.length && swigValue >= 0 && swigValues[swigValue].swigValue == swigValue)
       return swigValues[swigValue];
     for (int i = 0; i < swigValues.length; i++)
       if (swigValues[i].swigValue == swigValue)
         return swigValues[i];
-    throw new IllegalArgumentException("No enum " + DISCOVERY_STATUS.class + " with value " + swigValue);
+    throw new IllegalArgumentException("No enum " + TopicDiscoveryKind_t.class + " with value " + swigValue);
   }
 
-  private DISCOVERY_STATUS(String swigName) {
+  private TopicDiscoveryKind_t(String swigName) {
     this.swigName = swigName;
     this.swigValue = swigNext++;
   }
 
-  private DISCOVERY_STATUS(String swigName, int swigValue) {
+  private TopicDiscoveryKind_t(String swigName, int swigValue) {
     this.swigName = swigName;
     this.swigValue = swigValue;
     swigNext = swigValue+1;
   }
 
-  private DISCOVERY_STATUS(String swigName, DISCOVERY_STATUS swigEnum) {
+  private TopicDiscoveryKind_t(String swigName, TopicDiscoveryKind_t swigEnum) {
     this.swigName = swigName;
     this.swigValue = swigEnum.swigValue;
     swigNext = this.swigValue+1;
   }
 
-  private static DISCOVERY_STATUS[] swigValues = { DISCOVERED_PARTICIPANT, CHANGED_QOS_PARTICIPANT, REMOVED_PARTICIPANT, DROPPED_PARTICIPANT };
+  private static TopicDiscoveryKind_t[] swigValues = { NO_CHECK, MINIMAL, COMPLETE };
   private static int swigNext = 0;
   private final int swigValue;
   private final String swigName;

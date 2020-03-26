@@ -18,6 +18,8 @@ package us.ihmc.rtps.impl.fastRTPS;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 
+import us.ihmc.pubsub.attributes.Locator;
+import us.ihmc.pubsub.attributes.Locator.Kind;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.common.Time;
 
@@ -25,6 +27,7 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
 {
    private final RTPSParticipantAttributes rtps = new RTPSParticipantAttributes();
    private final BuiltinAttributes builtin = rtps.getBuiltin();
+   private final DiscoverySettings discoveryConfig = builtin.getDiscovery_config();
    private final Time_t time = new Time_t();
    
    FastRTPSParticipantAttributes()
@@ -58,26 +61,31 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
    public void setLeaseDuration(Time time)
    {
       this.time.setSeconds(time.getSeconds());
-      this.time.setFraction(time.getFraction());
-      builtin.setLeaseDuration(this.time);
+      this.time.setNanosec(time.getNanoseconds());
+      discoveryConfig.setLeaseDuration(this.time);
+      
    }
    
    public void bindToAddress(InetAddress... addresses)
    {
       for(InetAddress address : addresses)
       {
-         Locator_t locator = new Locator_t();
+         Locator locator = new Locator();
+         Locator_t locatorN = new Locator_t();
          if(address instanceof Inet4Address)
          {
-            locator.setKind(FastRTPSCommonFunctions.LOCATOR_KIND_UDPv4);
-            locator.set_IP4_address(address.getHostAddress());
+            locator.setKind(Kind.LOCATOR_KIND_UDPv4);
+            locator.setIPv4Adress(address);
+
+            FastRTPSCommonFunctions.convertToCPPLocator(locator, locatorN);           
+            
          }
          else
          {
             throw new RuntimeException("Only IPv4 addresses are tested and supported");
          }
-         rtps.getDefaultOutLocatorList().push_back(locator);
-         rtps.getDefaultUnicastLocatorList().push_back(locator);
+         
+         rtps.getDefaultUnicastLocatorList().push_back(locatorN);
       }
    }
    

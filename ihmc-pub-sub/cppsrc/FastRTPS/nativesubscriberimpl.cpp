@@ -104,7 +104,7 @@ void NativeSubscriberImpl::updateMarshaller(SampleInfoMarshaller* marshaller, Sa
     marshaller->sampleIdentity_sequenceNumberHigh = sampleInfo.sample_identity.sequence_number().high;
     marshaller->sampleIdentity_sequenceNumberLow = sampleInfo.sample_identity.sequence_number().low;
     marshaller->time_seconds = sampleInfo.sourceTimestamp.seconds();
-    marshaller->time_fraction = sampleInfo.sourceTimestamp.fraction();
+    marshaller->time_nsec = sampleInfo.sourceTimestamp.nanosec();
 
 
     if(ownerShipQosKind == EXCLUSIVE_OWNERSHIP_QOS)

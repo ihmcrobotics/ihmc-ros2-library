@@ -205,7 +205,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
 
       Time time = info.getSourceTimestamp();
       time.setSeconds(marshaller.getTime_seconds());
-      time.setFraction(marshaller.getTime_fraction());
+      time.set(marshaller.getTime_nsec());
 
       SampleIdentity id = info.getSampleIdentity();
       id.getGuid().fromPrimitives(marshaller.getSampleIdentity_GuidHigh(), marshaller.getSampleIdentity_GuidLow());

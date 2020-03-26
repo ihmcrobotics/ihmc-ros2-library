@@ -89,7 +89,7 @@ void NativeParticipantImpl::registerType(std::string name, int32_t maximumDataSi
     registeredTypes.push_back(topicDataType);
 }
 
-void NativeParticipantImpl::MyRTPSParticipantListener::onRTPSParticipantDiscovery(Participant* part, ParticipantDiscoveryInfo info)
+void NativeParticipantImpl::MyParticipantListener::onParticipantDiscovery(Participant *participant, ParticipantDiscoveryInfo &&info)
 {
     if(this->mp_participantimpl->listener!=nullptr)
     {
@@ -103,8 +103,57 @@ void NativeParticipantImpl::MyRTPSParticipantListener::onRTPSParticipantDiscover
     }
 }
 
-
-fixed_string<255> NativeParticipantListener::getName(int64_t infoPtr)
+void NativeParticipantImpl::MyParticipantListener::onSubscriberDiscovery(Participant *participant, ReaderDiscoveryInfo &&info)
 {
-    return ((ParticipantProxyData*) infoPtr)->m_participantName;
+    const ReaderProxyData&  proxyData = info.info;
+
+    GuidUnion guid;
+    CommonFunctions::guidcpy(proxyData.guid(), &guid);
+    GuidUnion participantGuid;
+    CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
+
+    this->mp_participantimpl->listener->onSubscriberDiscovery(info.status, guid.primitive.high, guid.primitive.low, proxyData.m_expectsInlineQos,
+                                                              &proxyData.remote_locators(),
+                                                              participantGuid.primitive.high,
+                                                              participantGuid.primitive.low,
+                                                              proxyData.typeName().to_string(),
+                                                              proxyData.topicName().to_string(),
+                                                              proxyData.userDefinedId(),
+                                                              proxyData.topicKind(),
+                                                              &proxyData.m_qos);
+}
+
+void NativeParticipantImpl::MyParticipantListener::onPublisherDiscovery(Participant *participant, WriterDiscoveryInfo &&info)
+{
+
+    if(this->mp_participantimpl->listener!=nullptr)
+    {
+
+        const WriterProxyData& proxyData = info.info;
+        GuidUnion guid;
+        CommonFunctions::guidcpy(proxyData.guid(), &guid);
+        GuidUnion participantGuid;
+        CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
+
+
+        this->mp_participantimpl->listener->onPublisherDiscovery(info.status,
+                                                                 guid.primitive.high,
+                                                                 guid.primitive.low,
+                                                                 &proxyData.remote_locators(),
+                                                                 participantGuid.primitive.high,
+                                                                 participantGuid.primitive.low,
+                                                                 proxyData.typeName().to_string(),
+                                                                 proxyData.topicName().to_string(),
+                                                                 proxyData.userDefinedId(),
+                                                                 proxyData.typeMaxSerialized(),
+                                                                 proxyData.topicKind(),
+                                                                 &proxyData.m_qos);
+    }
+
+}
+
+
+std::string NativeParticipantListener::getName(int64_t infoPtr)
+{
+    return ((ParticipantProxyData*) infoPtr)->m_participantName.to_string();
 }

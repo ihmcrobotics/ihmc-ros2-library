@@ -16,14 +16,16 @@ class SwigDirector_NativeParticipantListener : public us::ihmc::rtps::impl::fast
 public:
     void swig_connect_director(JNIEnv *jenv, jobject jself, jclass jcls, bool swig_mem_own, bool weak_global);
     SwigDirector_NativeParticipantListener(JNIEnv *jenv);
-    virtual void onParticipantDiscovery(int64_t infoPtr, int64_t guidHigh, int64_t guidLow, ParticipantDiscoveryInfo::DISCOVERY_STATUS status);
+    virtual void onParticipantDiscovery(int64_t infoPtr, int64_t guidHigh, int64_t guidLow, eprosima::fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERY_STATUS status);
+    virtual void onPublisherDiscovery(eprosima::fastrtps::rtps::WriterDiscoveryInfo::DISCOVERY_STATUS discovery_status, int64_t guidHigh, int64_t guidLow, eprosima::fastrtps::rtps::RemoteLocatorList const *remoteLocatorList, int64_t participantGuidHigh, int64_t participantGuidLow, std::string typeName, std::string topicName, int32_t userDefinedId, int64_t typeMaxSerialized, eprosima::fastrtps::rtps::TopicKind_t topicKind, eprosima::fastrtps::WriterQos const *writerQoS);
+    virtual void onSubscriberDiscovery(eprosima::fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERY_STATUS discovery_status, int64_t guidHigh, int64_t guidLow, bool expectsInlineQos, eprosima::fastrtps::rtps::RemoteLocatorList const *remoteLocatorList, int64_t participantGuidHigh, int64_t participantGuidLow, std::string typeName, std::string topicName, int32_t userDefinedId, eprosima::fastrtps::rtps::TopicKind_t topicKind, eprosima::fastrtps::ReaderQos const *readerQoS);
     virtual ~SwigDirector_NativeParticipantListener();
 public:
     bool swig_overrides(int n) {
-      return (n < 1 ? swig_override[n] : false);
+      return (n < 3 ? swig_override[n] : false);
     }
 protected:
-    Swig::BoolArray<1> swig_override;
+    Swig::BoolArray<3> swig_override;
 };
 
 class SwigDirector_NativePublisherListener : public us::ihmc::rtps::impl::fastRTPS::NativePublisherListener, public Swig::Director {

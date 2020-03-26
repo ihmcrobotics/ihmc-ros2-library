@@ -91,6 +91,15 @@ public class IntraProcessParticipant implements Participant
    {
       return attributes;
    }
+   
+   @Override
+   public void registerEndpointDiscoveryListeners(PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener,
+                                                  SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener)
+         throws IOException
+   {
+      this.subscriberEndpointDiscoveryListener = subscriberEndpointDiscoveryListener;
+      this.publisherEndpointDiscoveryListener = publisherEndpointDiscoveryListener;
+   }
 
    @Override
    public int get_no_publisher(String target_topic)

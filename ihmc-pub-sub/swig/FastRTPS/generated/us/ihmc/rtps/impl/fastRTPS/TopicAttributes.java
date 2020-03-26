@@ -39,8 +39,8 @@ public class TopicAttributes {
     this(FastRTPSJNI.new_TopicAttributes__SWIG_0(), true);
   }
 
-  public TopicAttributes(String name, String dataType, TopicKind_t tKind, SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t tDiscovery) {
-    this(FastRTPSJNI.new_TopicAttributes__SWIG_1(name, dataType, tKind.swigValue(), SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t.getCPtr(tDiscovery)), true);
+  public TopicAttributes(String name, String dataType, TopicKind_t tKind, TopicDiscoveryKind_t tDiscovery) {
+    this(FastRTPSJNI.new_TopicAttributes__SWIG_1(name, dataType, tKind.swigValue(), tDiscovery.swigValue()), true);
   }
 
   public TopicAttributes(String name, String dataType, TopicKind_t tKind) {
@@ -51,10 +51,6 @@ public class TopicAttributes {
     this(FastRTPSJNI.new_TopicAttributes__SWIG_3(name, dataType), true);
   }
 
-  public SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t getTopicDiscoveryKind() {
-    return new SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t(FastRTPSJNI.TopicAttributes_getTopicDiscoveryKind(swigCPtr, this), true);
-  }
-
   public void setTopicKind(TopicKind_t value) {
     FastRTPSJNI.TopicAttributes_topicKind_set(swigCPtr, this, value.swigValue());
   }
@@ -63,12 +59,12 @@ public class TopicAttributes {
     return TopicKind_t.swigToEnum(FastRTPSJNI.TopicAttributes_topicKind_get(swigCPtr, this));
   }
 
-  public void setTopicDiscoveryKind(SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t value) {
-    FastRTPSJNI.TopicAttributes_topicDiscoveryKind_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t.getCPtr(value));
+  public void setTopicDiscoveryKind(TopicDiscoveryKind_t value) {
+    FastRTPSJNI.TopicAttributes_topicDiscoveryKind_set(swigCPtr, this, value.swigValue());
   }
 
-  public SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t getTopicDiscoveryKind() {
-    return new SWIGTYPE_p_eprosima__fastrtps__rtps__TopicDiscoveryKind_t(FastRTPSJNI.TopicAttributes_topicDiscoveryKind_get(swigCPtr, this), true);
+  public TopicDiscoveryKind_t getTopicDiscoveryKind() {
+    return TopicDiscoveryKind_t.swigToEnum(FastRTPSJNI.TopicAttributes_topicDiscoveryKind_get(swigCPtr, this));
   }
 
   public void setTopicName(SWIGTYPE_p_string_255 value) {
