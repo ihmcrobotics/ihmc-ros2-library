@@ -42,7 +42,7 @@ public class FastRTPSDomain implements Domain
       if (instance == null)
       {
          FastRTPSDomain.useSystemFastRTPS = useSystemFastRTPS;
-         instance = new FastRTPSDomain();
+         instance = new FastRTPSDomain(useSystemFastRTPS);
       }
       
       if(FastRTPSDomain.useSystemFastRTPS != useSystemFastRTPS)
@@ -61,11 +61,11 @@ public class FastRTPSDomain implements Domain
       return instance;
    }
 
-   private FastRTPSDomain()
+   private FastRTPSDomain(boolean useSystemFastRTPS)
    {
       try
       {
-         FastRTPSNativeLibraryDescription nativeLibraryDescription = new FastRTPSNativeLibraryDescription(false);
+         FastRTPSNativeLibraryDescription nativeLibraryDescription = new FastRTPSNativeLibraryDescription(useSystemFastRTPS);
          NativeLibraryLoader.loadLibrary(nativeLibraryDescription);
          
          // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
