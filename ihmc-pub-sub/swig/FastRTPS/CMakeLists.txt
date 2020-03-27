@@ -17,6 +17,4 @@ swig_add_module(FastRTPSWrapper java FastRTPS.i)
 add_dependencies(FastRTPSWrapper FastRTPSNativeImpl)
 swig_link_libraries(FastRTPSWrapper FastRTPSNativeImpl ${SWIG_OPT_LINKER_FLAGS})
 install(TARGETS FastRTPSWrapper RUNTIME DESTINATION src/main/resources/us/ihmc/rtps/impl/fastRTPS LIBRARY DESTINATION src/main/resources/us/ihmc/rtps/impl/fastRTPS)
-if(APPLE)
-    set_target_properties(FastRTPSWrapper PROPERTIES SUFFIX ".dylib")
-endif(APPLE)
+
