@@ -46,6 +46,8 @@ public class FastRTPSJNI {
   public final static native long Time_t_nanosec_get(long jarg1, Time_t jarg1_);
   public final static native long new_Time_t__SWIG_0();
   public final static native long new_Time_t__SWIG_1(int jarg1, long jarg2);
+  public final static native void Time_t_fraction(long jarg1, Time_t jarg1_, long jarg2);
+  public final static native void Time_t_setFraction(long jarg1, Time_t jarg1_, long jarg2);
   public final static native void delete_Time_t(long jarg1);
   public final static native void Locator_t_kind_set(long jarg1, Locator_t jarg1_, int jarg2);
   public final static native int Locator_t_kind_get(long jarg1, Locator_t jarg1_);

@@ -65,11 +65,18 @@ public class FastRTPSDomain implements Domain
    {
       try
       {
-         FastRTPSNativeLibraryDescription nativeLibraryDescription = new FastRTPSNativeLibraryDescription(useSystemFastRTPS);
-         NativeLibraryLoader.loadLibrary(nativeLibraryDescription);
          
-         // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
-         FastRTPSJNI.LogLevel_setLogLevel(0);
+         if(useSystemFastRTPS)
+         {
+            System.loadLibrary("FastRTPSWrapper");
+         }
+         else
+         {
+            NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
+   
+            // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
+            FastRTPSJNI.LogLevel_setLogLevel(0);
+         }
       }
       catch (UnsatisfiedLinkError e)
       {

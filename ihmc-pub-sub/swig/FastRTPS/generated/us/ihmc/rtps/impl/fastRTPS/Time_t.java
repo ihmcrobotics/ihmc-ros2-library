@@ -59,4 +59,12 @@ public class Time_t {
     this(FastRTPSJNI.new_Time_t__SWIG_1(sec, nsec), true);
   }
 
+  public void fraction(long frac) {
+    FastRTPSJNI.Time_t_fraction(swigCPtr, this, frac);
+  }
+
+  public void setFraction(long value) {
+    FastRTPSJNI.Time_t_setFraction(swigCPtr, this, value);
+  }
+
 }

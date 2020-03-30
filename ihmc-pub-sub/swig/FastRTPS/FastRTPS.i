@@ -119,6 +119,19 @@ namespace rtps{
         Time_t(
             int32_t sec,
             uint32_t nsec);
+        
+        
+        
+        // For supporting older code
+        void fraction(uint32_t frac);
+        
+        %extend { 
+            inline void setFraction(uint32_t value)
+            {
+                $self->fraction(value);
+            }    
+        
+        }
 
 
     };
