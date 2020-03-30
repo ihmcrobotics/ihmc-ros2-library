@@ -202,10 +202,13 @@ git submodule update --init --recursive
 cd ihmc-pub-sub-group/ihmc-pub-sub
 mkdir buildc
 cd buildc
-cmake -DCMAKE_BUILD_TYPE=Release ..
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+cmake -DCMAKE_BUILD_TYPE=Release -DSTANDALONE_PLUGIN=ON ..
 make
 make install/strip
 ```
+
+Note: Replace /usr/lib/jvm/java-8-openjdk-amd64/ with your installation of the OpenJDK 8.
 
 Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample".
 

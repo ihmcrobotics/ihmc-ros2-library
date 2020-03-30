@@ -16,5 +16,13 @@ set(SWIG_OPT_LINKER_FLAGS "")
 swig_add_module(FastRTPSWrapper java FastRTPS.i)
 add_dependencies(FastRTPSWrapper FastRTPSNativeImpl)
 swig_link_libraries(FastRTPSWrapper FastRTPSNativeImpl ${SWIG_OPT_LINKER_FLAGS})
-install(TARGETS FastRTPSWrapper RUNTIME DESTINATION src/main/resources/us/ihmc/rtps/impl/fastRTPS LIBRARY DESTINATION src/main/resources/us/ihmc/rtps/impl/fastRTPS)
+
+
+if(STANDALONE_PLUGIN)
+    # Install in classpath
+    install(TARGETS FastRTPSWrapper RUNTIME DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} LIBRARY DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
+else()
+    # Install in library
+    install(TARGETS FastRTPSWrapper RUNTIME DESTINATION bin LIBRARY DESTINATION lib)
+endif()
 
