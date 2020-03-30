@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.1)
-project(IHMCPubSub)
+cmake_minimum_required(VERSION 3.5)
+project(ihmc-pub-sub)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_BUILD_TYPE Release)
@@ -91,11 +91,13 @@ if(STANDALONE_PLUGIN)
     endif()
 
 else(STANDALONE_PLUGIN)
-    find_package(FastRTPS REQUIRED)
-    find_package(FastCDR REQUIRED)
+    find_package(fastrtps REQUIRED)
     
-    link_directories("${FastCDR_LIBRARIES}" "${FastRTPS_LIBRARIES}")
-    include_directories("${FastCDR_INCLUDE_DIRS}" "${FastRTPS_INCLUDE_DIRS}")
+    link_directories("${FastRTPS_LIB_DIR}")
+    include_directories("${FastRTPS_INCLUDE_DIR}")
+    
+    set(FastRTPS_LIBRARIES fastcdr fastrtps)
+    add_custom_target(FastRTPS)
 endif(STANDALONE_PLUGIN)
 
 

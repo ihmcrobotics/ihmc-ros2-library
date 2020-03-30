@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.1)
-project(IHMCPubSub)
+cmake_minimum_required(VERSION 3.5)
+project(ihmc-pub-sub)
 
 find_package(SWIG REQUIRED)
 
