@@ -93,8 +93,8 @@ if(STANDALONE_PLUGIN)
 else(STANDALONE_PLUGIN)
     find_package(fastrtps REQUIRED)
     
-    link_directories("${FastRTPS_LIB_DIR}")
-    include_directories("${FastRTPS_INCLUDE_DIR}")
+    link_directories("${fastrtps_LIB_DIR}")
+    include_directories("${fastrtps_INCLUDE_DIR}")
     
     set(FastRTPS_LIBRARIES fastcdr fastrtps)
     add_custom_target(FastRTPS)
