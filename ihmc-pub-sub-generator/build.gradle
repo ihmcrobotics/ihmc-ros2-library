@@ -26,7 +26,7 @@ dependencies {
    compile gradleApi()
    compile group: "us.ihmc", name: "eprosima-idl-parser", version: version
    api("org.anarres:jcpp:1.4.12")
-   api("us.ihmc:euclid:0.13.0")
+   api("us.ihmc:euclid:0.13.1")
 }
 
 testDependencies {
