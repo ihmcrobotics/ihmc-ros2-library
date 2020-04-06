@@ -109,7 +109,7 @@ Perform a git-flow finish release.
 
 Publish artifacts to Bintray.
 
-`gradle publishAll -PpublishUrl=ihmcRelease`
+`gradle compositePublish -PpublishUrl=ihmcRelease`
 
 Go to [https://bintray.com/ihmcrobotics/maven-release](https://bintray.com/ihmcrobotics/maven-release) and "Publish All".
 
