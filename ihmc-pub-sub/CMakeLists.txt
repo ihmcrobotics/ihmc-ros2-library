@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(ihmc-pub-sub)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -18,12 +18,15 @@ endif()
 
 
 
-find_package(JNI REQUIRED)
+
+include(FindOrDownloadJDK)
 include_directories(${JNI_INCLUDE_DIRS})
 
 
 
 if(STANDALONE_PLUGIN)
+
+    include(ExternalProject)
 
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX
@@ -33,7 +36,6 @@ if(STANDALONE_PLUGIN)
 
     SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS")
 
-    include(ExternalProject)
     set(FOONATHAN_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-install")
     message(STATUS "Foonathan memory prefix: ${FOONATHAN_INSTALL_PREFIX}")
 

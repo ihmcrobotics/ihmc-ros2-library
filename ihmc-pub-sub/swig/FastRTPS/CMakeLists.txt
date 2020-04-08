@@ -14,7 +14,7 @@ set_property(SOURCE FastRTPS.i PROPERTY SWIG_FLAGS "-package" "us.ihmc.rtps.impl
 set(SWIG_OPT_LINKER_FLAGS "")
 
 swig_add_module(FastRTPSWrapper java FastRTPS.i)
-add_dependencies(FastRTPSWrapper FastRTPSNativeImpl)
+add_dependencies(FastRTPSWrapper FastRTPSNativeImpl JDK)
 swig_link_libraries(FastRTPSWrapper FastRTPSNativeImpl ${SWIG_OPT_LINKER_FLAGS})
 
 
