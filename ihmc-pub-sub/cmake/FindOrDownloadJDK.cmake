@@ -30,7 +30,6 @@ else()
     # Unset libraries
     unset(JNI_INCLUDE_DIRS)
 
-    message(STATUS "JNI not found, downloading.")
     if(WIN32)
         SET(JDK_URL "https://cdn.azul.com/zulu/bin/zulu8.44.0.11-ca-jdk8.0.242-win_x64.zip")
     elseif(APPLE)
@@ -38,6 +37,8 @@ else()
     else()
         SET(JDK_URL "https://cdn.azul.com/zulu/bin/zulu8.44.0.11-ca-jdk8.0.242-linux_x64.tar.gz")
     endif()
+    
+    message(STATUS "JNI not found, downloading from ${JDK_URL}")
 
 
     ExternalProject_Add(JDK
