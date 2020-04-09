@@ -56,6 +56,12 @@ if(STANDALONE_PLUGIN)
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
     message(STATUS "FastRTPS Install Prefix: ${FAST_RTPS_INSTALL_PREFIX}")
 
+	if(WIN32)
+		SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/share/foonathan_memory/cmake/")
+	else()
+		SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/lib/foonathan_memory/cmake/")
+	endif()
+
     ExternalProject_Add(FastRTPS
         SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/Fast-RTPS"
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-build"
@@ -79,7 +85,7 @@ if(STANDALONE_PLUGIN)
         "-DNO_TLS=ON"
         "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
         "-DCMAKE_POSITION_INDEPENDENT_CODE=true"
-        "-Dfoonathan_memory_DIR=${FOONATHAN_INSTALL_PREFIX}/lib/foonathan_memory/cmake/"
+        "-Dfoonathan_memory_DIR=${foonathan_memory_DIR}"
         "-DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}"
     )
     ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)

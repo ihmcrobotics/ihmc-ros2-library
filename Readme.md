@@ -216,37 +216,35 @@ Note: When debugging, set CMAKE_BUILD_TYPE to "Debug" and use "make install" ins
 
 #### Windows
 
+Note: Due to path length limitations, the commpilation can fail. If you did not setup long paths on windows, it is recommended to checkout in C:\ws and compile from there.
+
 ##### Requirements:
 
-- CMake [https://cmake.org/download/](https://cmake.org/download/). Recommended edition: Windows win64-x64 installer
-- Visual Studio 2017 Community [https://www.visualstudio.com/downloads/](https://www.visualstudio.com/downloads/). 
-	- Make sure to select "Desktop Development with C++" and select "MFC and ATL support (x86 and x64)" under Optional.
-- Swig: Version 3.0.8 or later
-	- Unpack in C:\swigwin-3.0.8 or modify later commands accordingly
-- JDK 1.8
+- CMake [https://cmake.org/download/](https://cmake.org/download/). Recommended edition: Windows win64-x64 installer. Make sure to add to your path.
+- Visual Studio 2019 Community [https://www.visualstudio.com/downloads/](https://www.visualstudio.com/downloads/). 
+	- Make sure to select "Desktop Development with C++" and select "C++ MFC for latest v142 build tools" under Optional.
+	- Restart after installation and start visual studio (!)
+- Swig: Version 3.0.12 or later (make sure to use version 3. 3.0.12 is recommended, as it is the same version as in Ubuntu 18.04)
+	- Unpack in C:\swigwin-3.0.12 or modify later commands accordingly
 - 64 bit Git for Windows  setup [https://git-scm.com/download/win](https://git-scm.com/download/win).
 	- Make sure to have "Use Git from the Windows Command Prompt" selected so it gets added to your path.
 
 ##### Configuration:
 
 Use CMake GUI to create the Visual Studio makefiles.
-- Start the x64 Native Tools Command Prompt for VS 2017
+- Start the x64 Native Tools Command Prompt for VS 2019
 - Create [source directory]]\build
 - cd [source directory]\build
-- Run "C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 15 2017 Win64" -DSWIG_EXECUTABLE="C:\swigwin-3.0.8\swig.exe" ..
+- Run "C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 16 2019" -A x64 -DSWIG_EXECUTABLE="C:\swigwin-3.0.12\swig.exe"  -DSTANDALONE_PLUGIN=ON ..
 	
 ##### Compilation:
+
 
 - Navigate to [source code directory]/build
 - Run "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release --target install
 
 Note: On Windows, only the Release configuration builds.
 
-- Install Visual Studio 2017 Community Edition
-- Install SwigWin
-- Install CMake (add to your path)
-- Install JDK 8
-- Install git (optional, useful for submodules. Add to your path)
 
 Start the "x64 Native Tools Command Prompt for VS2017"
 cd to your source directory
