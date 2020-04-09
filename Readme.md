@@ -229,35 +229,24 @@ Note: Due to path length limitations, the commpilation can fail. If you did not 
 - 64 bit Git for Windows  setup [https://git-scm.com/download/win](https://git-scm.com/download/win).
 	- Make sure to have "Use Git from the Windows Command Prompt" selected so it gets added to your path.
 
-##### Configuration:
+##### Configuration and compilation:
 
 Use CMake GUI to create the Visual Studio makefiles.
 - Start the x64 Native Tools Command Prompt for VS 2019
-- Create [source directory]]\build
-- cd [source directory]\build
-- Run "C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 16 2019" -A x64 -DSWIG_EXECUTABLE="C:\swigwin-3.0.12\swig.exe"  -DSTANDALONE_PLUGIN=ON ..
-	
-##### Compilation:
 
+```
+cd [Source directory]\ihmc-pub-sub-group\ihmc-pub-sub
+md buildc
+cd buildc
+"C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 16 2019" -A x64 -DSWIG_EXECUTABLE="C:\swigwin-3.0.12\swig.exe"  -DSTANDALONE_PLUGIN=ON ..
+"C:\Program Files\CMake\bin\cmake.exe" --build . --config Release --target install
+```
 
-- Navigate to [source code directory]/build
-- Run "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release --target install
 
 Note: On Windows, only the Release configuration builds.
 
 
-Start the "x64 Native Tools Command Prompt for VS2017"
-cd to your source directory
-
-```
-cd ihmc-pub-sub-group/ihmc-pub-sub
-md buildc
-cd buildc
-cmake ..
-cmake --build . --target install --config Release
-```
-
-## Developing with Eclipse
+## Developing native code with Eclipse
 
 ```
 # clone ihmc-pub-sub-group
