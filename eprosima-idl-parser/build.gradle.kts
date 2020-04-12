@@ -20,8 +20,10 @@ mainDependencies {
    api("us.ihmc:ihmc-commons:0.28.2")
 }
 
-antlr4.source = project.file("src/main/antlr4/omg")
-antlr4.output = project.file("src/main/generated-java/com/eprosima/idl/parser/grammar")
-antlr4.listener = false
-antlr4.visitor = false
-antlr4.extraArgs = ["-package", "com.eprosima.idl.parser.grammar"]
+tasks.named("antlr4", me.champeau.gradle.Antlr4Task::class) {
+   source = project.file("src/main/antlr4/omg")
+   output = project.file("src/main/generated-java/com/eprosima/idl/parser/grammar")
+   listener = false
+   visitor = false
+   extraArgs = listOf("-package", "com.eprosima.idl.parser.grammar")
+}
