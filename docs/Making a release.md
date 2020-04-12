@@ -1,6 +1,6 @@
 # Making a release
 
-#### Step 1: Build native libs
+#### Step 1: Build native libs (Only if native build changed)
 
 Skip this step if the C++ side did not change, including the version of Fast-RTPS.
 
@@ -60,7 +60,7 @@ Hit windows key, type `x64 Native Tools Command Prompt for VS 2017`, hit enter. 
 > cmake --build . --config Release --target install
 ```
 
-#### Step 2: Generate messages
+#### Step 2: Generate messages (Only if test messages changed. Only affects tests.)
 
 Run `us.ihmc.pubsub.examples.GenerateTestMessages`, located in `ihmc-pub-sub-generator/src/test/java`.
 
@@ -70,7 +70,7 @@ Note 1: You must run `GenerateTestMessages.main()` from the `ihmc-pub-sub-genera
 
 Note 2: In IntelliJ, you may need to build with Eclipse compiler with "Build, no error check".
 
-#### Step 3: Run tests
+#### Step 3: Run tests (Alternatively, check Bamboo is passing)
 
 ```
 > cd /path/to/ihmc-pub-sub-group
@@ -85,25 +85,12 @@ file:///path/to/ihmc-pub-sub-group/ihmc-pub-sub-generator/src/test/build/reports
 
 Note: Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few times to see if it passes.
 
-#### Step 4: Touch up
+#### Step 4: Update version numbers
 
-First, perform a git-flow release. Optionally, use you Git GUI program to do this.
-
-```
-> git flow release start X.X.X
-```
-
-You now be on a branch called `release/X.X.X`.
-
-Run a "Find and replace" on all files (not just *.gradle) in the repo to replace the old version with new version. Make sure to search over all files, not just *.gradle.
+Run a "Find and replace" on all files (not just *.gradle) in the repo to replace the old version with new version.
+Make sure to search over all files, not just *.gradle.
 
 Update the README.md to document any changed procedures, new features, etc.
-
-Perform a git-flow finish release.
-
-```
-> git flow release finish X.X.X
-```
 
 #### Step 5: Publish artifacts
 
