@@ -16,12 +16,6 @@ ihmc {
 // For swig builds
 //buildDir = 'build-java'
 
-license {
-   header rootProject.file('license-header.txt')
-   ext.year = Calendar.getInstance().get(Calendar.YEAR)
-   strictCheck true
-}
-
 mainDependencies {
    api("us.ihmc:ihmc-native-library-loader:1.2.1")
    api("net.sf.trove4j:trove4j:3.0.3")
