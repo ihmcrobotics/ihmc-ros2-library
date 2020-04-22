@@ -202,7 +202,6 @@ git submodule update --init --recursive
 cd ihmc-pub-sub-group/ihmc-pub-sub
 mkdir buildc
 cd buildc
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 cmake -DCMAKE_BUILD_TYPE=Release -DSTANDALONE_PLUGIN=ON ..
 make
 make install/strip
@@ -244,6 +243,44 @@ cd buildc
 
 
 Note: On Windows, only the Release configuration builds.
+
+
+#### Mac OS X
+
+Note: You can use macincloud.com to get a VM with a build setup
+
+Requirements 
+- XCode (run at least once to accept the license terms)
+- CMake
+
+
+##### Installing Swig
+
+Note: If you have brew installed, you can do brew install swig instead of compiling from source.
+
+
+- Download swig swig-3.0.12.tar.gz from https://sourceforge.net/projects/swig/files/swig/swig-3.0.12/
+- Unpack swig-3.0.12.tar.gz in ~/Downloads
+
+```
+cd ~/Downloads/swig-3.0.12
+./configure --prefix=/Users/[username]/usr --without-pcre
+make -j4
+make install
+```
+
+
+#### Compiling ihmc-pub-sub
+
+
+```
+cd ihmc-pub-sub-group/ihmc-pub-sub
+mkdir buildc
+cd buildc
+cmake -DSWIG_EXECUTABLE=/Users/[username]/usr/bin/swig -DCMAKE_BUILD_TYPE=Release -DSTANDALONE_PLUGIN=ON ..
+make
+make install
+```
 
 
 ## Developing native code with Eclipse
