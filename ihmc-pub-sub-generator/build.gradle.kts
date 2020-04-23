@@ -19,13 +19,13 @@ app.entrypoint("IDLGenerator", "us.ihmc.idl.generator.IDLGenerator")
 
 mainDependencies {
    api(dependencies.gradleApi())
-   api("us.ihmc:eprosima-idl-parser:version")
+   api("us.ihmc:eprosima-idl-parser:source")
    api("org.anarres:jcpp:1.4.12")
    api("us.ihmc:euclid:0.13.1")
 }
 
 testDependencies {
-   api("us.ihmc:ihmc-pub-sub-test:$version")
+   api("us.ihmc:ihmc-pub-sub-test:source")
    api("us.ihmc:ihmc-commons-testing:0.28.2")
 }
 
