@@ -33,7 +33,7 @@ NativeSubscriberImpl::NativeSubscriberImpl(int32_t entityId,
                                            ReaderTimes* times,
                                            LocatorList_t* unicastLocatorList,
                                            LocatorList_t* multicastLocatorList,
-                                           LocatorList_t* outLocatorList,
+                                           LocatorList_t* remoteLocatorList,
                                            bool expectsInlineQos,
                                            NativeParticipantImpl* participant,
                                            NativeSubscriberListener* listener) throw(FastRTPSException) :
@@ -48,7 +48,7 @@ NativeSubscriberImpl::NativeSubscriberImpl(int32_t entityId,
     attr.multicastLocatorList = *multicastLocatorList;
     attr.topic = *topic;
     attr.unicastLocatorList = *unicastLocatorList;
-    attr.outLocatorList = *outLocatorList;
+    attr.remoteLocatorList = *remoteLocatorList;
     attr.expectsInlineQos = expectsInlineQos;
     if(entityId>0)
         attr.setEntityID((uint8_t)entityId);
@@ -103,8 +103,8 @@ void NativeSubscriberImpl::updateMarshaller(SampleInfoMarshaller* marshaller, Sa
     marshaller->sampleIdentity_GuidLow = guid.primitive.low;
     marshaller->sampleIdentity_sequenceNumberHigh = sampleInfo.sample_identity.sequence_number().high;
     marshaller->sampleIdentity_sequenceNumberLow = sampleInfo.sample_identity.sequence_number().low;
-    marshaller->time_seconds = sampleInfo.sourceTimestamp.seconds;
-    marshaller->time_fraction = sampleInfo.sourceTimestamp.fraction;
+    marshaller->time_seconds = sampleInfo.sourceTimestamp.seconds();
+    marshaller->time_nsec = sampleInfo.sourceTimestamp.nanosec();
 
 
     if(ownerShipQosKind == EXCLUSIVE_OWNERSHIP_QOS)

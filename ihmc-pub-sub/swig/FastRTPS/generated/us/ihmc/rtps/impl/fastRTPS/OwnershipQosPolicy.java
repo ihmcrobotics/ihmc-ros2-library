@@ -39,16 +39,16 @@ public class OwnershipQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_OwnershipQosPolicy(), true);
   }
 
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.OwnershipQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  }
+
   public void setKind(OwnershipQosPolicyKind value) {
     FastRTPSJNI.OwnershipQosPolicy_kind_set(swigCPtr, this, value.swigValue());
   }
 
   public OwnershipQosPolicyKind getKind() {
     return OwnershipQosPolicyKind.swigToEnum(FastRTPSJNI.OwnershipQosPolicy_kind_get(swigCPtr, this));
-  }
-
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.OwnershipQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

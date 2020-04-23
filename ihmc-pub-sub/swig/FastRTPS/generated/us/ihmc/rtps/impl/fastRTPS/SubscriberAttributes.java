@@ -35,10 +35,6 @@ public class SubscriberAttributes {
     }
   }
 
-  public SubscriberAttributes() {
-    this(FastRTPSJNI.new_SubscriberAttributes(), true);
-  }
-
   public void setTopic(TopicAttributes value) {
     FastRTPSJNI.SubscriberAttributes_topic_set(swigCPtr, this, TopicAttributes.getCPtr(value), value);
   }
@@ -84,12 +80,12 @@ public class SubscriberAttributes {
     return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
   }
 
-  public void setOutLocatorList(LocatorList_t value) {
-    FastRTPSJNI.SubscriberAttributes_outLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setRemoteLocatorList(LocatorList_t value) {
+    FastRTPSJNI.SubscriberAttributes_remoteLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
   }
 
-  public LocatorList_t getOutLocatorList() {
-    long cPtr = FastRTPSJNI.SubscriberAttributes_outLocatorList_get(swigCPtr, this);
+  public LocatorList_t getRemoteLocatorList() {
+    long cPtr = FastRTPSJNI.SubscriberAttributes_remoteLocatorList_get(swigCPtr, this);
     return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
   }
 
@@ -115,6 +111,18 @@ public class SubscriberAttributes {
 
   public SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy getProperties() {
     return new SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy(FastRTPSJNI.SubscriberAttributes_properties_get(swigCPtr, this), true);
+  }
+
+  public void setMatched_publisher_allocation(SWIGTYPE_p_ResourceLimitedContainerConfig value) {
+    FastRTPSJNI.SubscriberAttributes_matched_publisher_allocation_set(swigCPtr, this, SWIGTYPE_p_ResourceLimitedContainerConfig.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_ResourceLimitedContainerConfig getMatched_publisher_allocation() {
+    return new SWIGTYPE_p_ResourceLimitedContainerConfig(FastRTPSJNI.SubscriberAttributes_matched_publisher_allocation_get(swigCPtr, this), true);
+  }
+
+  public SubscriberAttributes() {
+    this(FastRTPSJNI.new_SubscriberAttributes(), true);
   }
 
   public short getUserDefinedID() {

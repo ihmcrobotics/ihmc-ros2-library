@@ -9,7 +9,7 @@ using namespace us::ihmc::rtps::impl::fastRTPS;
 
 class ExampleParticipantListener : public NativeParticipantListener
 {
-    void onParticipantDiscovery(int64_t infoPtr, int64_t guidHigh, int64_t guidLow, DISCOVERY_STATUS status)
+    void onParticipantDiscovery(int64_t infoPtr, int64_t guidHigh, int64_t guidLow, ParticipantDiscoveryInfo::DISCOVERY_STATUS status)
     {
         std::cout << "Discovered participant " << getName(infoPtr) << std::endl;
     }
@@ -53,7 +53,7 @@ int main()
 
     NativePublisherImpl publisher(-1, -1, 528, PREALLOCATED_MEMORY_MODE, &attr.topic, &attr.qos,
                                   &attr.times, &attr.unicastLocatorList, &attr.multicastLocatorList,
-                                  &attr.outLocatorList, &attr.throughputController, &participant, &publisherListener);
+                                  &attr.remoteLocatorList, &attr.throughputController, &participant, &publisherListener);
     publisher.createPublisher();
 
 

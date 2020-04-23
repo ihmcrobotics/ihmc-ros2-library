@@ -35,6 +35,14 @@ public class PresentationQosPolicy extends QosPolicy {
     super.delete();
   }
 
+  public PresentationQosPolicy() {
+    this(FastRTPSJNI.new_PresentationQosPolicy(), true);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.PresentationQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  }
+
   public void setAccess_scope(PresentationQosPolicyAccessScopeKind value) {
     FastRTPSJNI.PresentationQosPolicy_access_scope_set(swigCPtr, this, value.swigValue());
   }
@@ -57,14 +65,6 @@ public class PresentationQosPolicy extends QosPolicy {
 
   public boolean getOrdered_access() {
     return FastRTPSJNI.PresentationQosPolicy_ordered_access_get(swigCPtr, this);
-  }
-
-  public PresentationQosPolicy() {
-    this(FastRTPSJNI.new_PresentationQosPolicy(), true);
-  }
-
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.PresentationQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

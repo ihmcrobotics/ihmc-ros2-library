@@ -21,6 +21,7 @@
 
 #include <fastrtps/rtps/builtin/data/WriterProxyData.h>
 #include <fastrtps/rtps/builtin/data/ReaderProxyData.h>
+#include <fastrtps/rtps/reader/StatefulReader.h>
 
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
@@ -88,86 +89,71 @@ void NativeParticipantImpl::registerType(std::string name, int32_t maximumDataSi
     registeredTypes.push_back(topicDataType);
 }
 
-void NativeParticipantImpl::MyRTPSParticipantListener::onRTPSParticipantDiscovery(Participant* part, ParticipantDiscoveryInfo info)
+void NativeParticipantImpl::MyParticipantListener::onParticipantDiscovery(Participant *participant, ParticipantDiscoveryInfo &&info)
 {
     if(this->mp_participantimpl->listener!=nullptr)
     {
-
-        RTPSParticipantDiscoveryInfo& rtpsinfo = info.rtps;
+        ParticipantProxyData proxy_data = info.info;
 
         logInfo(PARTICIPANT,"Remote participant Guid: " << rtpsinfo.m_guid);
         GuidUnion retGuid;
-        CommonFunctions::guidcpy(rtpsinfo.m_guid, &retGuid);
+        CommonFunctions::guidcpy(proxy_data.m_guid, &retGuid);
 
-        this->mp_participantimpl->listener->onParticipantDiscovery((int64_t)&rtpsinfo, retGuid.primitive.high, retGuid.primitive.low, rtpsinfo.m_status);
+        this->mp_participantimpl->listener->onParticipantDiscovery((int64_t)&proxy_data, retGuid.primitive.high, retGuid.primitive.low, info.status);
     }
+}
+
+void NativeParticipantImpl::MyParticipantListener::onSubscriberDiscovery(Participant *participant, ReaderDiscoveryInfo &&info)
+{
+    const ReaderProxyData&  proxyData = info.info;
+
+    GuidUnion guid;
+    CommonFunctions::guidcpy(proxyData.guid(), &guid);
+    GuidUnion participantGuid;
+    CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
+
+    this->mp_participantimpl->listener->onSubscriberDiscovery(info.status, guid.primitive.high, guid.primitive.low, proxyData.m_expectsInlineQos,
+                                                              &proxyData.remote_locators(),
+                                                              participantGuid.primitive.high,
+                                                              participantGuid.primitive.low,
+                                                              proxyData.typeName().to_string(),
+                                                              proxyData.topicName().to_string(),
+                                                              proxyData.userDefinedId(),
+                                                              proxyData.topicKind(),
+                                                              &proxyData.m_qos);
+}
+
+void NativeParticipantImpl::MyParticipantListener::onPublisherDiscovery(Participant *participant, WriterDiscoveryInfo &&info)
+{
+
+    if(this->mp_participantimpl->listener!=nullptr)
+    {
+
+        const WriterProxyData& proxyData = info.info;
+        GuidUnion guid;
+        CommonFunctions::guidcpy(proxyData.guid(), &guid);
+        GuidUnion participantGuid;
+        CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
+
+
+        this->mp_participantimpl->listener->onPublisherDiscovery(info.status,
+                                                                 guid.primitive.high,
+                                                                 guid.primitive.low,
+                                                                 &proxyData.remote_locators(),
+                                                                 participantGuid.primitive.high,
+                                                                 participantGuid.primitive.low,
+                                                                 proxyData.typeName().to_string(),
+                                                                 proxyData.topicName().to_string(),
+                                                                 proxyData.userDefinedId(),
+                                                                 proxyData.typeMaxSerialized(),
+                                                                 proxyData.topicKind(),
+                                                                 &proxyData.m_qos);
+    }
+
 }
 
 
 std::string NativeParticipantListener::getName(int64_t infoPtr)
 {
-    return ((RTPSParticipantDiscoveryInfo*) infoPtr)->m_RTPSParticipantName;
-}
-
-void NativeParticipantImpl::registerEDPReaderListeners(NativeParticipantPublisherEDPListener *publisherListener, NativeParticipantSubscriberEDPListener *subscriberListener) throw(FastRTPSException)
-{
-    std::pair<StatefulReader*,StatefulReader*> EDP_Readers = this->part->getEDPReaders();
-    if(EDP_Readers.first == nullptr || EDP_Readers.second == nullptr)
-    {
-        throw FastRTPSException("No Endpoint Discovery Protocol Readers provided, Participant is connected in static mode.");
-    }
-
-    if(publisherListener != nullptr)
-    {
-        EDP_Readers.second->setListener(publisherListener->getReaderListener());
-    }
-    if(subscriberListener != nullptr)
-    {
-        EDP_Readers.first->setListener(subscriberListener->getReaderListener());
-    }
-}
-
-void NativeParticipantPublisherEDPListener::MyRTPSReaderListener::onNewCacheChangeAdded(RTPSReader *reader, const CacheChange_t * const change_in)
-{
-    CacheChange_t* change = (CacheChange_t*) change_in;
-    if(change->kind == ALIVE){
-
-        WriterProxyData proxyData;
-        CDRMessage_t tempMsg;
-        tempMsg.msg_endian = change->serializedPayload.encapsulation == PL_CDR_BE ? BIGEND:LITTLEEND;
-        tempMsg.length = change->serializedPayload.length;
-        memcpy(tempMsg.buffer,change->serializedPayload.data,tempMsg.length);
-        if(proxyData.readFromCDRMessage(&tempMsg)){
-
-            GuidUnion guid;
-            CommonFunctions::guidcpy(proxyData.guid(), &guid);
-            GuidUnion participantGuid;
-            CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
-
-            mp_listener->publisherTopicChange(proxyData.isAlive(), guid.primitive.high, guid.primitive.low, &proxyData.unicastLocatorList(), &proxyData.multicastLocatorList(), participantGuid.primitive.high, participantGuid.primitive.low,
-                                              proxyData.typeName(), proxyData.topicName(), proxyData.userDefinedId(), proxyData.typeMaxSerialized(), proxyData.topicKind(), &proxyData.m_qos);
-        }
-    }
-}
-
-void NativeParticipantSubscriberEDPListener::MyRTPSReaderListener::onNewCacheChangeAdded(RTPSReader* reader, const CacheChange_t* const change_in)
-{
-    CacheChange_t* change = (CacheChange_t*) change_in;
-    if(change->kind == ALIVE){
-
-        ReaderProxyData proxyData;
-        CDRMessage_t tempMsg;
-        tempMsg.msg_endian = change->serializedPayload.encapsulation == PL_CDR_BE ? BIGEND:LITTLEEND;
-        tempMsg.length = change->serializedPayload.length;
-        memcpy(tempMsg.buffer,change->serializedPayload.data,tempMsg.length);
-        if(proxyData.readFromCDRMessage(&tempMsg)){
-            GuidUnion guid;
-            CommonFunctions::guidcpy(proxyData.guid(), &guid);
-            GuidUnion participantGuid;
-            CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
-
-            mp_listener->subscriberTopicChange(proxyData.isAlive(), guid.primitive.high, guid.primitive.low, proxyData.m_expectsInlineQos, &proxyData.unicastLocatorList(), &proxyData.multicastLocatorList(), participantGuid.primitive.high, participantGuid.primitive.low,
-                                               proxyData.typeName(), proxyData.topicName(), proxyData.userDefinedId(), proxyData.topicKind(), &proxyData.m_qos);
-        }
-    }
+    return ((ParticipantProxyData*) infoPtr)->m_participantName.to_string();
 }

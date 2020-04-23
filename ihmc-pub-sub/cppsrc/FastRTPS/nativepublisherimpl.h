@@ -26,6 +26,7 @@
 #include <fastrtps/Domain.h>
 #include <fastrtps/publisher/Publisher.h>
 #include <fastrtps/publisher/PublisherListener.h>
+#include <fastrtps/rtps/common/Time_t.h>
 
 using namespace eprosima::fastrtps;
 using namespace eprosima::fastrtps::rtps;
@@ -57,7 +58,7 @@ namespace fastRTPS{
                 WriterTimes* times,
                 LocatorList_t* unicastLocatorList,
                 LocatorList_t* multicastLocatorList,
-                LocatorList_t* outLocatorList,
+                LocatorList_t* remoteLocatorList,
                 ThroughputControllerDescriptor* throughputController,
                 NativeParticipantImpl* participant,
                 NativePublisherListener* listener) throw(FastRTPSException);
@@ -70,7 +71,7 @@ namespace fastRTPS{
         void unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void dispose_and_unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         int32_t removeAllChange();
-        bool wait_for_all_acked(const Time_t& max_wait);
+        bool wait_for_all_acked(const eprosima::fastrtps::Time_t& max_wait);
 
         const GUID_t& getGuid();
         int64_t getGuidLow();

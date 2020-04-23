@@ -12,6 +12,7 @@ public final class MemoryManagementPolicy_t {
   public final static MemoryManagementPolicy_t PREALLOCATED_MEMORY_MODE = new MemoryManagementPolicy_t("PREALLOCATED_MEMORY_MODE");
   public final static MemoryManagementPolicy_t PREALLOCATED_WITH_REALLOC_MEMORY_MODE = new MemoryManagementPolicy_t("PREALLOCATED_WITH_REALLOC_MEMORY_MODE");
   public final static MemoryManagementPolicy_t DYNAMIC_RESERVE_MEMORY_MODE = new MemoryManagementPolicy_t("DYNAMIC_RESERVE_MEMORY_MODE");
+  public final static MemoryManagementPolicy_t DYNAMIC_REUSABLE_MEMORY_MODE = new MemoryManagementPolicy_t("DYNAMIC_REUSABLE_MEMORY_MODE");
 
   public final int swigValue() {
     return swigValue;
@@ -47,7 +48,7 @@ public final class MemoryManagementPolicy_t {
     swigNext = this.swigValue+1;
   }
 
-  private static MemoryManagementPolicy_t[] swigValues = { PREALLOCATED_MEMORY_MODE, PREALLOCATED_WITH_REALLOC_MEMORY_MODE, DYNAMIC_RESERVE_MEMORY_MODE };
+  private static MemoryManagementPolicy_t[] swigValues = { PREALLOCATED_MEMORY_MODE, PREALLOCATED_WITH_REALLOC_MEMORY_MODE, DYNAMIC_RESERVE_MEMORY_MODE, DYNAMIC_REUSABLE_MEMORY_MODE };
   private static int swigNext = 0;
   private final int swigValue;
   private final String swigName;

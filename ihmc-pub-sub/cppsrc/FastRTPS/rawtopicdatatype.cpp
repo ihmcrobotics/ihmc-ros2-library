@@ -63,7 +63,7 @@ void RawTopicDataType::deleteData(void *data)
     delete((RawDataWrapper*) data);
 }
 
-bool RawTopicDataType::getKey(void *data, eprosima::fastrtps::rtps::InstanceHandle_t *ihandle)
+bool RawTopicDataType::getKey(void *data, eprosima::fastrtps::rtps::InstanceHandle_t *ihandle, bool force_md5)
 {
     if(!m_isGetKeyDefined)
     {

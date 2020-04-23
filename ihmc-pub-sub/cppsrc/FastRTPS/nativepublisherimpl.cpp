@@ -29,7 +29,7 @@ NativePublisherImpl::NativePublisherImpl(
         WriterTimes* times,
         LocatorList_t* unicastLocatorList,
         LocatorList_t* multicastLocatorList,
-        LocatorList_t* outLocatorList,
+        LocatorList_t* remoteLocatorList,
         ThroughputControllerDescriptor* throughputController,
         NativeParticipantImpl* participant,
         NativePublisherListener* listener) throw(FastRTPSException) :
@@ -44,7 +44,7 @@ NativePublisherImpl::NativePublisherImpl(
     attr.qos = *qos;
     attr.multicastLocatorList = *multicastLocatorList;
     attr.unicastLocatorList = *unicastLocatorList;
-    attr.outLocatorList = *outLocatorList;
+    attr.remoteLocatorList = *remoteLocatorList;
     attr.topic = *topic;
     attr.historyMemoryPolicy = memoryManagementPolicy;
     if(entityId>0)
@@ -138,7 +138,7 @@ int32_t NativePublisherImpl::removeAllChange()
     }
 }
 
-bool NativePublisherImpl::wait_for_all_acked(const Time_t &max_wait)
+bool NativePublisherImpl::wait_for_all_acked(const eprosima::fastrtps::Time_t &max_wait)
 {
     return publisher->wait_for_all_acked(max_wait);
 }

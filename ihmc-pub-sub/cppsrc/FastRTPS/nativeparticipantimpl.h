@@ -48,47 +48,17 @@ namespace fastRTPS{
     class NativeParticipantListener
     {
     public:
-        virtual void onParticipantDiscovery(int64_t infoPtr, int64_t guidHigh, int64_t guidLow, DISCOVERY_STATUS status) {}
+        virtual void onParticipantDiscovery(int64_t infoPtr, int64_t guidHigh, int64_t guidLow, ParticipantDiscoveryInfo::DISCOVERY_STATUS status) {}
+
+        virtual void onPublisherDiscovery(WriterDiscoveryInfo::DISCOVERY_STATUS discovery_status, int64_t guidHigh, int64_t guidLow, const RemoteLocatorList* remoteLocatorList, int64_t participantGuidHigh, int64_t participantGuidLow,
+                                          std::string typeName, std::string topicName, int32_t userDefinedId, int64_t typeMaxSerialized,  TopicKind_t topicKind, const WriterQos* writerQoS) {}
+
+        virtual void onSubscriberDiscovery(ReaderDiscoveryInfo::DISCOVERY_STATUS discovery_status, int64_t guidHigh, int64_t guidLow, bool expectsInlineQos, const RemoteLocatorList* remoteLocatorList, int64_t participantGuidHigh, int64_t participantGuidLow,
+                                           std::string typeName, std::string topicName, int32_t userDefinedId, TopicKind_t topicKind, const ReaderQos* readerQoS) {}
+
+
         std::string getName(int64_t infoPtr);
         virtual ~NativeParticipantListener() {}
-    };
-
-    class NativeParticipantPublisherEDPListener
-    {
-    public:
-        NativeParticipantPublisherEDPListener() : readerListener(this) {}
-        virtual void publisherTopicChange(bool isAlive, int64_t guidHigh, int64_t guidLow, LocatorList_t* unicastLocatorList, LocatorList_t* multicastLocatorList, int64_t participantGuidHigh, int64_t participantGuidLow,
-                                          std::string typeName, std::string topicName, int32_t userDefinedId, int64_t typeMaxSerialized,  TopicKind_t topicKind, WriterQos* writerQoS) {}
-        virtual ~NativeParticipantPublisherEDPListener() {}
-        ReaderListener* getReaderListener() { return &readerListener; }
-    private:
-        class MyRTPSReaderListener : public ReaderListener
-        {
-        public:
-            MyRTPSReaderListener(NativeParticipantPublisherEDPListener* listener) : mp_listener(listener) {}
-            virtual void onNewCacheChangeAdded(RTPSReader* reader, const CacheChange_t* const change);
-        private:
-            NativeParticipantPublisherEDPListener* mp_listener;
-        } readerListener;
-    };
-
-    class NativeParticipantSubscriberEDPListener
-    {
-    public:
-        NativeParticipantSubscriberEDPListener() : readerListener(this) {}
-        virtual void subscriberTopicChange(bool isAlive, int64_t guidHigh, int64_t guidLow, bool expectsInlineQos,  LocatorList_t* unicastLocatorList, LocatorList_t* multicastLocatorList, int64_t participantGuidHigh, int64_t participantGuidLow,
-                                           std::string typeName, std::string topicName, int32_t userDefinedId, TopicKind_t topicKind, ReaderQos* readerQoS) {}
-        virtual ~NativeParticipantSubscriberEDPListener() {}
-        ReaderListener* getReaderListener() { return &readerListener; }
-    private:
-        class MyRTPSReaderListener : public ReaderListener
-        {
-        public:
-            MyRTPSReaderListener(NativeParticipantSubscriberEDPListener* listener) : mp_listener(listener) {}
-            virtual void onNewCacheChangeAdded(RTPSReader* reader, const CacheChange_t* const change);
-        private:
-            NativeParticipantSubscriberEDPListener* mp_listener;
-        } readerListener;
     };
 
 
@@ -100,7 +70,6 @@ namespace fastRTPS{
         int64_t getGuidHigh();
         Participant* getParticipant();
         void registerType(std::string name, int32_t maximumDataSize, bool hasKey);
-        void registerEDPReaderListeners(NativeParticipantPublisherEDPListener* publisherListener, NativeParticipantSubscriberEDPListener* subscriberListener) throw(FastRTPSException);
         virtual ~NativeParticipantImpl();
 
     private:
@@ -109,12 +78,22 @@ namespace fastRTPS{
         GuidUnion guid;
         std::vector<std::shared_ptr<RawTopicDataType>> registeredTypes;
 
-        class MyRTPSParticipantListener : public ParticipantListener
+        class MyParticipantListener : public eprosima::fastrtps::ParticipantListener
         {
             public:
-                MyRTPSParticipantListener(NativeParticipantImpl* impl): mp_participantimpl(impl){}
-                virtual ~MyRTPSParticipantListener(){}
-                void onRTPSParticipantDiscovery(Participant* p, ParticipantDiscoveryInfo info);
+                MyParticipantListener(NativeParticipantImpl* impl): mp_participantimpl(impl){}
+                virtual ~MyParticipantListener(){}
+
+                void onParticipantDiscovery(Participant* participant, eprosima::fastrtps::rtps::ParticipantDiscoveryInfo&& info) override;
+
+                void onSubscriberDiscovery(
+                        eprosima::fastrtps::Participant * participant,
+                        eprosima::fastrtps::rtps::ReaderDiscoveryInfo && info) override;
+
+                void onPublisherDiscovery(
+                        eprosima::fastrtps::Participant * participant,
+                        eprosima::fastrtps::rtps::WriterDiscoveryInfo  && info) override;
+
                 NativeParticipantImpl* mp_participantimpl;
         } m_rtps_listener;
 

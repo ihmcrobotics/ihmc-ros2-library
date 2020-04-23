@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.1)
-project(IHMCPubSub)
+cmake_minimum_required(VERSION 3.5)
+project(ihmc-pub-sub)
 
 find_package(SWIG REQUIRED)
 
@@ -14,9 +14,15 @@ set_property(SOURCE FastRTPS.i PROPERTY SWIG_FLAGS "-package" "us.ihmc.rtps.impl
 set(SWIG_OPT_LINKER_FLAGS "")
 
 swig_add_module(FastRTPSWrapper java FastRTPS.i)
-add_dependencies(FastRTPSWrapper FastRTPSNativeImpl)
+add_dependencies(FastRTPSWrapper FastRTPSNativeImpl JDK)
 swig_link_libraries(FastRTPSWrapper FastRTPSNativeImpl ${SWIG_OPT_LINKER_FLAGS})
-install(TARGETS FastRTPSWrapper RUNTIME DESTINATION src/main/resources/us/ihmc/rtps/impl/fastRTPS LIBRARY DESTINATION src/main/resources/us/ihmc/rtps/impl/fastRTPS)
-if(APPLE)
-    set_target_properties(FastRTPSWrapper PROPERTIES SUFFIX ".dylib")
-endif(APPLE)
+
+
+if(STANDALONE_PLUGIN)
+    # Install in classpath
+    install(TARGETS FastRTPSWrapper RUNTIME DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} LIBRARY DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
+else()
+    # Install in library
+    install(TARGETS FastRTPSWrapper RUNTIME DESTINATION bin LIBRARY DESTINATION lib)
+endif()
+

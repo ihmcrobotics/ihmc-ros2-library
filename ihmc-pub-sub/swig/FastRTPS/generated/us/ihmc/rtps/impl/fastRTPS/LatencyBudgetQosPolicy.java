@@ -39,6 +39,10 @@ public class LatencyBudgetQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_LatencyBudgetQosPolicy(), true);
   }
 
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.LatencyBudgetQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  }
+
   public void setDuration(Time_t value) {
     FastRTPSJNI.LatencyBudgetQosPolicy_duration_set(swigCPtr, this, Time_t.getCPtr(value), value);
   }
@@ -46,10 +50,6 @@ public class LatencyBudgetQosPolicy extends QosPolicy {
   public Time_t getDuration() {
     long cPtr = FastRTPSJNI.LatencyBudgetQosPolicy_duration_get(swigCPtr, this);
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
-  }
-
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.LatencyBudgetQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

@@ -35,8 +35,8 @@ public class NativeSubscriberImpl {
     }
   }
 
-  public NativeSubscriberImpl(int entityId, int userDefinedID, int maximumPayloadSize, MemoryManagementPolicy_t memoryManagementPolicy, TopicAttributes topic, ReaderQos qos, ReaderTimes times, LocatorList_t unicastLocatorList, LocatorList_t multicastLocatorList, LocatorList_t outLocatorList, boolean expectsInlineQos, NativeParticipantImpl participant, NativeSubscriberListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeSubscriberImpl(entityId, userDefinedID, maximumPayloadSize, memoryManagementPolicy.swigValue(), TopicAttributes.getCPtr(topic), topic, ReaderQos.getCPtr(qos), qos, ReaderTimes.getCPtr(times), times, LocatorList_t.getCPtr(unicastLocatorList), unicastLocatorList, LocatorList_t.getCPtr(multicastLocatorList), multicastLocatorList, LocatorList_t.getCPtr(outLocatorList), outLocatorList, expectsInlineQos, NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
+  public NativeSubscriberImpl(int entityId, int userDefinedID, int maximumPayloadSize, MemoryManagementPolicy_t memoryManagementPolicy, TopicAttributes topic, ReaderQos qos, ReaderTimes times, LocatorList_t unicastLocatorList, LocatorList_t multicastLocatorList, LocatorList_t remoteLocatorList, boolean expectsInlineQos, NativeParticipantImpl participant, NativeSubscriberListener listener) throws java.io.IOException {
+    this(FastRTPSJNI.new_NativeSubscriberImpl(entityId, userDefinedID, maximumPayloadSize, memoryManagementPolicy.swigValue(), TopicAttributes.getCPtr(topic), topic, ReaderQos.getCPtr(qos), qos, ReaderTimes.getCPtr(times), times, LocatorList_t.getCPtr(unicastLocatorList), unicastLocatorList, LocatorList_t.getCPtr(multicastLocatorList), multicastLocatorList, LocatorList_t.getCPtr(remoteLocatorList), remoteLocatorList, expectsInlineQos, NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
   }
 
   public boolean createSubscriber() {
