@@ -181,7 +181,9 @@ gradle publishToMavenLocal
 
 ### Native code Compilation
 
-This step is optional, the native libraries have been included in the source code repository.
+This section is for rebuilding the native side of the project.
+Compiled binaries have already been included in the source code repository.
+Therefore, this section is mainly for maintainers.
 
 FastRTPS is included as a Git submodule. Update the submodules to make sure FastRTPS is included:
 

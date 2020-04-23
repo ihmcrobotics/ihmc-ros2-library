@@ -1,76 +1,17 @@
 # Making a release
 
-#### Step 1: Build native libs (Only if native build changed)
+#### Step 1: Generate messages (Only if test messages changed. Only affects tests.)
 
-Skip this step if the C++ side did not change, including the version of Fast-RTPS.
-
-```
-# clone Fast-RTPS and dependencies to specified version
-> git submodule update --init --recursive
-```
-
-##### Linux
-
-```
-> !unfinshed command plz help! sudo apt install build-essential swig open-jdk-8-jdk
-
-> mkdir build
-> cd build
-> cmake ..
-> make 
-> make install
-```
-
-##### Mac
-
-Mac users should use [Homebrew](https://brew.sh/) to install required packages.
-
-```
-> !unfinshed command plz help! brew install build-essential swig open-jdk-8-jdk
-
-> mkdir build
-> cd build
-> cmake ..
-> make 
-> make install
-```
-
-##### Windows
-
-Install Visual Studio 2017 Community [https://www.visualstudio.com/downloads/](https://www.visualstudio.com/downloads/).
-- Make sure to select "Desktop Development with C++" and select "MFC and ATL support (x86 and x64)" under Optional.
-
-Windows users should use [Chocolatey](https://chocolatey.org/) to install required packages.
-
-Hit windows key, type `cmd`, hit enter. Right-click `Command Prompt' and select "Run as administrator".
-
-```
-> choco install -y git swig cmake which
-
-# get the location of swig.exe for later
-> which swig
-```
-
-Hit windows key, type `x64 Native Tools Command Prompt for VS 2017`, hit enter. In `ihmc-pub-sub-group/ihmc-pub-sub`, run:
-
-```
-> mkdir build
-> cd build
-> cmake -G "Visual Studio 14 2015 Win64" -DSWIG_EXECUTABLE="\path\to\swig.exe" ..
-> cmake --build . --config Release --target install
-```
-
-#### Step 2: Generate messages (Only if test messages changed. Only affects tests.)
-
-Run `us.ihmc.pubsub.examples.GenerateTestMessages`, located in `ihmc-pub-sub-generator/src/test/java`.
+In `ihmc-pub-sub-generator/src/test/java`, run `us.ihmc.pubsub.examples.GenerateTestMessages` (with 
+"Build, no error check" if using IntelliJ).
 
 Make sure the generated files have LF (Unix) line separators.
 
-Note 1: You must run `GenerateTestMessages.main()` from the `ihmc-pub-sub-generator/src/test` directory.
+#### Step 2: Ensure tests are passing
 
-Note 2: In IntelliJ, you may need to build with Eclipse compiler with "Build, no error check".
+Use Bamboo or run tests manually.
 
-#### Step 3: Run tests (Alternatively, check Bamboo is passing)
+##### Running tests locally
 
 ```
 > cd /path/to/ihmc-pub-sub-group
@@ -85,14 +26,14 @@ file:///path/to/ihmc-pub-sub-group/ihmc-pub-sub-generator/src/test/build/reports
 
 Note: Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few times to see if it passes.
 
-#### Step 4: Update version numbers
+#### Step 3: Update version numbers
 
 Run a "Find and replace" on all files (not just *.gradle) in the repo to replace the old version with new version.
 Make sure to search over all files, not just *.gradle.
 
 Update the README.md to document any changed procedures, new features, etc.
 
-#### Step 5: Publish artifacts
+#### Step 4: Publish artifacts
 
 Publish artifacts to Bintray.
 
@@ -100,7 +41,7 @@ Publish artifacts to Bintray.
 
 Go to [https://bintray.com/ihmcrobotics/maven-release](https://bintray.com/ihmcrobotics/maven-release) and "Publish All".
 
-#### Step 6: Draft and publish release on GitHub
+#### Step 5: Draft and publish release on GitHub
 
 1. Go to [https://github.com/ihmcrobotics/ihmc-pub-sub/releases](https://github.com/ihmcrobotics/ihmc-pub-sub/releases)
 1. Click "Draft a new release"

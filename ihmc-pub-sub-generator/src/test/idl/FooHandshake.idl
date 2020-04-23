@@ -26,7 +26,7 @@ module test {
 		FooUnloaded,
 		FooDefault,
 		FooLoaded
-	}
+	};
 	
 	struct FooYoVariableDefinition
 	{
