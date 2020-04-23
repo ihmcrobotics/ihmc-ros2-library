@@ -26,12 +26,9 @@ file:///path/to/ihmc-pub-sub-group/ihmc-pub-sub-generator/src/test/build/reports
 
 Note: Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few times to see if it passes.
 
-#### Step 3: Update version numbers
+#### Step 3: Update version
 
-Run a "Find and replace" on all files (not just *.gradle) in the repo to replace the old version with new version.
-Make sure to search over all files, not just *.gradle.
-
-Update the README.md to document any changed procedures, new features, etc.
+In `ihmc-pub-sub-group/gradle.properties`, up the version number.
 
 #### Step 4: Publish artifacts
 
