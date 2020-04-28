@@ -80,10 +80,11 @@ public class Locator
       {
          
          byte[] address = inetAddress.getAddress();
-         address[12] = address[0];
-         address[13] = address[1];
-         address[14] = address[2];
-         address[15] = address[3];
+
+         this.address[12] = address[0];
+         this.address[13] = address[1];
+         this.address[14] = address[2];
+         this.address[15] = address[3];
       }
       else
       {
