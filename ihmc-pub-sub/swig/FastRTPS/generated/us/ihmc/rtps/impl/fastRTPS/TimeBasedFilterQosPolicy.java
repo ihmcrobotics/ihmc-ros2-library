@@ -39,10 +39,6 @@ public class TimeBasedFilterQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_TimeBasedFilterQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.TimeBasedFilterQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
-  }
-
   public void setMinimum_separation(Time_t value) {
     FastRTPSJNI.TimeBasedFilterQosPolicy_minimum_separation_set(swigCPtr, this, Time_t.getCPtr(value), value);
   }
@@ -50,6 +46,10 @@ public class TimeBasedFilterQosPolicy extends QosPolicy {
   public Time_t getMinimum_separation() {
     long cPtr = FastRTPSJNI.TimeBasedFilterQosPolicy_minimum_separation_get(swigCPtr, this);
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.TimeBasedFilterQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

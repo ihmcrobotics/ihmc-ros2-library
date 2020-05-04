@@ -15,9 +15,6 @@
  */
 package us.ihmc.pubsub.attributes;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-
 /**
  * Class Locator, uniquely identifies a communication channel for a particular transport.
  * 
@@ -67,32 +64,6 @@ public class Locator
       address[13] = o2;
       address[14] = o3;
       address[15] = o4;
-   }
-
-   public void setIPv4Adress(InetAddress inetAddress)
-   {
-      if (this.kind != Kind.LOCATOR_KIND_UDPv4)
-      {
-         throw new RuntimeException("Trying to set IPv4 address on locator that is not of kind LOCATOR_KIND_UDPv4");
-      }
-      
-      if(inetAddress instanceof Inet4Address)
-      {
-         
-         byte[] address = inetAddress.getAddress();
-
-         this.address[12] = address[0];
-         this.address[13] = address[1];
-         this.address[14] = address[2];
-         this.address[15] = address[3];
-      }
-      else
-      {
-         throw new RuntimeException("Trying to set a non-IPv4 address on a locator of kind LOCATOR_KIND_UDPv4");
-
-      }
-      
-      
    }
 
    /**

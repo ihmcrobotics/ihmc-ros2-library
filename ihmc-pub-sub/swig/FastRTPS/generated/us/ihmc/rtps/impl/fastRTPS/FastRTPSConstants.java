@@ -14,9 +14,6 @@ public interface FastRTPSConstants {
   public final static int LOCATOR_KIND_RESERVED = 0;
   public final static int LOCATOR_KIND_UDPv4 = 1;
   public final static int LOCATOR_KIND_UDPv6 = 2;
-  public final static int LOCATOR_KIND_TCPv4 = 4;
-  public final static int LOCATOR_KIND_TCPv6 = 8;
   public final static int PARAMETER_KIND_LENGTH = 4;
-  public final static int PARAMETER_BOOL_LENGTH = 4;
   public final static int PARAMETER_PRESENTATION_LENGTH = 8;
 }

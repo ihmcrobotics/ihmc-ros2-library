@@ -39,10 +39,6 @@ public class DeadlineQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_DeadlineQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DeadlineQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
-  }
-
   public void setPeriod(Time_t value) {
     FastRTPSJNI.DeadlineQosPolicy_period_set(swigCPtr, this, Time_t.getCPtr(value), value);
   }
@@ -50,6 +46,10 @@ public class DeadlineQosPolicy extends QosPolicy {
   public Time_t getPeriod() {
     long cPtr = FastRTPSJNI.DeadlineQosPolicy_period_get(swigCPtr, this);
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.DeadlineQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

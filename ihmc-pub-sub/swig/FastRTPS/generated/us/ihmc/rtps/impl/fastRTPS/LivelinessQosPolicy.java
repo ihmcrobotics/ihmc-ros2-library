@@ -39,10 +39,6 @@ public class LivelinessQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_LivelinessQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.LivelinessQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
-  }
-
   public void setKind(LivelinessQosPolicyKind value) {
     FastRTPSJNI.LivelinessQosPolicy_kind_set(swigCPtr, this, value.swigValue());
   }
@@ -67,6 +63,10 @@ public class LivelinessQosPolicy extends QosPolicy {
   public Time_t getAnnouncement_period() {
     long cPtr = FastRTPSJNI.LivelinessQosPolicy_announcement_period_get(swigCPtr, this);
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.LivelinessQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

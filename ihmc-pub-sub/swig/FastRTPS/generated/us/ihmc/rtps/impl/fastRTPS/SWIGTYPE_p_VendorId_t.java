@@ -8,18 +8,18 @@
 
 package us.ihmc.rtps.impl.fastRTPS;
 
-public class SWIGTYPE_p_ResourceLimitedContainerConfig {
+public class SWIGTYPE_p_VendorId_t {
   private transient long swigCPtr;
 
-  protected SWIGTYPE_p_ResourceLimitedContainerConfig(long cPtr, @SuppressWarnings("unused") boolean futureUse) {
+  protected SWIGTYPE_p_VendorId_t(long cPtr, @SuppressWarnings("unused") boolean futureUse) {
     swigCPtr = cPtr;
   }
 
-  protected SWIGTYPE_p_ResourceLimitedContainerConfig() {
+  protected SWIGTYPE_p_VendorId_t() {
     swigCPtr = 0;
   }
 
-  protected static long getCPtr(SWIGTYPE_p_ResourceLimitedContainerConfig obj) {
+  protected static long getCPtr(SWIGTYPE_p_VendorId_t obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 }

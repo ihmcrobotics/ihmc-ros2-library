@@ -75,12 +75,12 @@ public class SampleInfoMarshaller {
     return FastRTPSJNI.SampleInfoMarshaller_time_seconds_get(swigCPtr, this);
   }
 
-  public void setTime_nsec(long value) {
-    FastRTPSJNI.SampleInfoMarshaller_time_nsec_set(swigCPtr, this, value);
+  public void setTime_fraction(long value) {
+    FastRTPSJNI.SampleInfoMarshaller_time_fraction_set(swigCPtr, this, value);
   }
 
-  public long getTime_nsec() {
-    return FastRTPSJNI.SampleInfoMarshaller_time_nsec_get(swigCPtr, this);
+  public long getTime_fraction() {
+    return FastRTPSJNI.SampleInfoMarshaller_time_fraction_get(swigCPtr, this);
   }
 
   public void setInstanceHandle_value(SWIGTYPE_p_unsigned_char value) {

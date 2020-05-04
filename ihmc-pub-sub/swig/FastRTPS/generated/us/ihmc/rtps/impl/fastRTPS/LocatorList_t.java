@@ -47,10 +47,6 @@ public class LocatorList_t {
     return FastRTPSJNI.LocatorList_t_size(swigCPtr, this);
   }
 
-  public LocatorList_t assign(LocatorList_t list) {
-    return new LocatorList_t(FastRTPSJNI.LocatorList_t_assign(swigCPtr, this, LocatorList_t.getCPtr(list), list), false);
-  }
-
   public void clear() {
     FastRTPSJNI.LocatorList_t_clear(swigCPtr, this);
   }

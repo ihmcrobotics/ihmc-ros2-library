@@ -174,33 +174,6 @@ public class ReaderQos {
     return (cPtr == 0) ? null : new LifespanQosPolicy(cPtr, false);
   }
 
-  public void setM_dataRepresentation(DataRepresentationQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_dataRepresentation_set(swigCPtr, this, DataRepresentationQosPolicy.getCPtr(value), value);
-  }
-
-  public DataRepresentationQosPolicy getM_dataRepresentation() {
-    long cPtr = FastRTPSJNI.ReaderQos_m_dataRepresentation_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new DataRepresentationQosPolicy(cPtr, false);
-  }
-
-  public void setM_typeConsistency(TypeConsistencyEnforcementQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_typeConsistency_set(swigCPtr, this, TypeConsistencyEnforcementQosPolicy.getCPtr(value), value);
-  }
-
-  public TypeConsistencyEnforcementQosPolicy getM_typeConsistency() {
-    long cPtr = FastRTPSJNI.ReaderQos_m_typeConsistency_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new TypeConsistencyEnforcementQosPolicy(cPtr, false);
-  }
-
-  public void setM_disablePositiveACKs(DisablePositiveACKsQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_disablePositiveACKs_set(swigCPtr, this, DisablePositiveACKsQosPolicy.getCPtr(value), value);
-  }
-
-  public DisablePositiveACKsQosPolicy getM_disablePositiveACKs() {
-    long cPtr = FastRTPSJNI.ReaderQos_m_disablePositiveACKs_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new DisablePositiveACKsQosPolicy(cPtr, false);
-  }
-
   public void setQos(ReaderQos readerqos, boolean first_time) {
     FastRTPSJNI.ReaderQos_setQos(swigCPtr, this, ReaderQos.getCPtr(readerqos), readerqos, first_time);
   }

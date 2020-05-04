@@ -16,9 +16,11 @@
 package us.ihmc.pubsub.examples;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
@@ -30,6 +32,7 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
+import us.ihmc.pubsub.common.SerializedPayload;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
@@ -95,8 +98,9 @@ public class PublisherExample
          FastRTPSPublisherAttributes fastRTPSPublisherAttributes = (FastRTPSPublisherAttributes) publisherAttributes;
          Time_t heartbeatPeriod = new Time_t();
          heartbeatPeriod.setSeconds(0);
-         long nsec = (long) (0.1 * 1e9); // 100 ms
-         heartbeatPeriod.setNanosec(nsec);
+         long fraction = (long) (0.1 * 2e32); // 100 ms
+         LogTools.info("Fraction: {}", fraction);
+         heartbeatPeriod.setFraction(fraction);
          fastRTPSPublisherAttributes.getTimes().setHeartbeatPeriod(heartbeatPeriod);
       }
       

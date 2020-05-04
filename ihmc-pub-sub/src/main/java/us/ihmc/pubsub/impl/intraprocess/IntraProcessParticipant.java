@@ -91,7 +91,7 @@ public class IntraProcessParticipant implements Participant
    {
       return attributes;
    }
-   
+
    @Override
    public void registerEndpointDiscoveryListeners(PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener,
                                                   SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener)

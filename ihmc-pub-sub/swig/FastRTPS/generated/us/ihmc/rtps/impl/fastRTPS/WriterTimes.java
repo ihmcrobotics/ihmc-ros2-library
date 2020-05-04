@@ -35,6 +35,10 @@ public class WriterTimes {
     }
   }
 
+  public WriterTimes() {
+    this(FastRTPSJNI.new_WriterTimes(), true);
+  }
+
   public void setInitialHeartbeatDelay(Time_t value) {
     FastRTPSJNI.WriterTimes_initialHeartbeatDelay_set(swigCPtr, this, Time_t.getCPtr(value), value);
   }
@@ -69,10 +73,6 @@ public class WriterTimes {
   public Time_t getNackSupressionDuration() {
     long cPtr = FastRTPSJNI.WriterTimes_nackSupressionDuration_get(swigCPtr, this);
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
-  }
-
-  public WriterTimes() {
-    this(FastRTPSJNI.new_WriterTimes(), true);
   }
 
 }

@@ -35,20 +35,20 @@ public class DestinationOrderQosPolicy extends QosPolicy {
     super.delete();
   }
 
-  public DestinationOrderQosPolicy() {
-    this(FastRTPSJNI.new_DestinationOrderQosPolicy(), true);
-  }
-
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DestinationOrderQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
-  }
-
   public void setKind(DestinationOrderQosPolicyKind value) {
     FastRTPSJNI.DestinationOrderQosPolicy_kind_set(swigCPtr, this, value.swigValue());
   }
 
   public DestinationOrderQosPolicyKind getKind() {
     return DestinationOrderQosPolicyKind.swigToEnum(FastRTPSJNI.DestinationOrderQosPolicy_kind_get(swigCPtr, this));
+  }
+
+  public DestinationOrderQosPolicy() {
+    this(FastRTPSJNI.new_DestinationOrderQosPolicy(), true);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.DestinationOrderQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

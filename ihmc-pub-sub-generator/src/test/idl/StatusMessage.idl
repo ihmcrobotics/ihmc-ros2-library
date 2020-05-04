@@ -1,6 +1,3 @@
-#ifndef __test__StatusMessage__
-#define __test__StatusMessage__
-
 module test
 {
   /**

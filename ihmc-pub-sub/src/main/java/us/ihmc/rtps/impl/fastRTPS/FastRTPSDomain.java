@@ -1,11 +1,17 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC) Licensed under the Apache
- * License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package us.ihmc.rtps.impl.fastRTPS;
 
@@ -34,56 +40,28 @@ public class FastRTPSDomain implements Domain
 {
    private final ArrayList<FastRTPSParticipant> participants = new ArrayList<>();
 
-   private static boolean useSystemFastRTPS = false;
+   
    private static FastRTPSDomain instance = null;
-
-   public static synchronized FastRTPSDomain getInstance(boolean useSystemFastRTPS)
+   public static synchronized FastRTPSDomain getInstance()
    {
-      if (instance == null)
+      if(instance == null)
       {
-         FastRTPSDomain.useSystemFastRTPS = useSystemFastRTPS;
-         instance = new FastRTPSDomain(useSystemFastRTPS);
+         instance = new FastRTPSDomain();
       }
-      
-      if(FastRTPSDomain.useSystemFastRTPS != useSystemFastRTPS)
-      {
-         if(useSystemFastRTPS)
-         {
-            throw new RuntimeException("Loading FastRTPS using the system FastRTPS library, but the builtin FastRTPS library is already loaded.");
-         }
-         else
-         {
-            throw new RuntimeException("Loading FastRTPS using the builtin FastRTPS library, but the system FastRTPS library is already loaded.");
-         }
-      }
-      
-      
       return instance;
    }
-
-   private FastRTPSDomain(boolean useSystemFastRTPS)
+   
+   private FastRTPSDomain()
    {
       try
       {
-         
-         if(useSystemFastRTPS)
-         {
-            System.loadLibrary("FastRTPSWrapper");
-         }
-         else
-         {
-            NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
-   
-            // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
-            FastRTPSJNI.LogLevel_setLogLevel(0);
-         }
+         NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
       }
-      catch (UnsatisfiedLinkError e)
+      catch(UnsatisfiedLinkError e)
       {
-         if (SystemUtils.IS_OS_WINDOWS)
+         if(SystemUtils.IS_OS_WINDOWS)
          {
-            throw new UnsatisfiedLinkError("Cannot load library, make sure to install Microsoft Visual C++ 2019 Redistributable (x64) (https://aka.ms/vs/16/release/vc_redist.x64.exe). "
-                  + e.getMessage());
+            throw new UnsatisfiedLinkError("Cannot load library, make sure to install Microsoft Visual C++ 2017 Redistributable (x64) (https://go.microsoft.com/fwlink/?LinkId=746572) ");
          }
          else
          {
@@ -233,7 +211,7 @@ public class FastRTPSDomain implements Domain
    @Override
    public synchronized void stopAll()
    {
-      for (int i = participants.size() - 1; i >= 0; i--)
+      for(int i = participants.size() -1; i >= 0; i--)
       {
          removeParticipant(participants.get(i));
       }
@@ -244,7 +222,7 @@ public class FastRTPSDomain implements Domain
    {
       return new FastRTPSSubscriberAttributes();
    }
-
+   
    @Override
    public FastRTPSPublisherAttributes createPublisherAttributes()
    {
@@ -262,5 +240,6 @@ public class FastRTPSDomain implements Domain
    {
       us.ihmc.rtps.impl.fastRTPS.LogLevel.setLogLevel(level.getLevel());
    }
+
 
 }

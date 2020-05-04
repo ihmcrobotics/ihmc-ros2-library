@@ -35,14 +35,6 @@ public class DurabilityServiceQosPolicy extends QosPolicy {
     super.delete();
   }
 
-  public DurabilityServiceQosPolicy() {
-    this(FastRTPSJNI.new_DurabilityServiceQosPolicy(), true);
-  }
-
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DurabilityServiceQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
-  }
-
   public void setService_cleanup_delay(Time_t value) {
     FastRTPSJNI.DurabilityServiceQosPolicy_service_cleanup_delay_set(swigCPtr, this, Time_t.getCPtr(value), value);
   }
@@ -90,6 +82,14 @@ public class DurabilityServiceQosPolicy extends QosPolicy {
 
   public int getMax_samples_per_instance() {
     return FastRTPSJNI.DurabilityServiceQosPolicy_max_samples_per_instance_get(swigCPtr, this);
+  }
+
+  public DurabilityServiceQosPolicy() {
+    this(FastRTPSJNI.new_DurabilityServiceQosPolicy(), true);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.DurabilityServiceQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

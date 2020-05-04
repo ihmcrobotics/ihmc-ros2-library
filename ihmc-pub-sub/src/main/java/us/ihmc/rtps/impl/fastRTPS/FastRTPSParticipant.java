@@ -1,11 +1,17 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC) Licensed under the Apache
- * License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package us.ihmc.rtps.impl.fastRTPS;
 
@@ -44,15 +50,15 @@ class FastRTPSParticipant implements Participant
 
    private final NativeParticipantListenerImpl nativeListener = new NativeParticipantListenerImpl();
 
-   private PublisherEndpointDiscoveryListener publisherDiscoveryListener = null;
-   private SubscriberEndpointDiscoveryListener subscriberDiscoveryListener = null;
+   private NativeParticipantPublisherEDPListenerImpl nativeParticipantPublisherEDPListenerImpl = null;
+   private NativeParticipantSubscriberEDPListenerImpl nativeParticipantSubscriberEDPListenerImpl = null;
 
    private class NativeParticipantListenerImpl extends NativeParticipantListener
    {
       private final FastRTPSParticipantDiscoveryInfo discoveryInfo = new FastRTPSParticipantDiscoveryInfo();
 
       @Override
-      public void onParticipantDiscovery(long infoPtr, long guidHigh, long guidLow, ParticipantDiscoveryInfo.DISCOVERY_STATUS status)
+      public void onParticipantDiscovery(long infoPtr, long guidHigh, long guidLow, DISCOVERY_STATUS status)
       {
          try
          {
@@ -67,118 +73,107 @@ class FastRTPSParticipant implements Participant
             e.printStackTrace();
          }
       }
+   }
 
-      @Override
-      public void onPublisherDiscovery(WriterDiscoveryInfo.DISCOVERY_STATUS discovery_status, long guidHigh, long guidLow, RemoteLocatorList remoteLocatorList,
-                                       long participantGuidHigh, long participantGuidLow, String typeName, String topicName, int userDefinedId,
-                                       long typeMaxSerialized, TopicKind_t topicKind, WriterQos writerQoS)
+   private class NativeParticipantPublisherEDPListenerImpl extends NativeParticipantPublisherEDPListener
+   {
+      private final PublisherEndpointDiscoveryListener listener;
+
+      public NativeParticipantPublisherEDPListenerImpl(PublisherEndpointDiscoveryListener listener)
       {
-         {
-            if (publisherDiscoveryListener != null)
-            {
-               try
-               {
-                  Guid guid = new Guid();
-                  guid.fromPrimitives(guidHigh, guidLow);
-
-                  Guid participantGuid = new Guid();
-                  participantGuid.fromPrimitives(participantGuidHigh, participantGuidLow);
-
-                  ArrayList<Locator> unicastLocatorListOut = new ArrayList<>();
-                  ArrayList<Locator> multicastLocatorListOut = new ArrayList<>();
-
-                  for (int i = 0; i < FastRTPS.getRemoteUnicastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteUnicastLocator(remoteLocatorList, i), out);
-                     unicastLocatorListOut.add(out);
-                  }
-
-                  for (int i = 0; i < FastRTPS.getRemoteMulticastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteMulticastLocator(remoteLocatorList, i), out);
-                     multicastLocatorListOut.add(out);
-                  }
-
-                  FastRTPSWriterQosHolder writerQosOut = new FastRTPSWriterQosHolder(writerQoS);
-
-                  boolean isAlive = discovery_status != WriterDiscoveryInfo.DISCOVERY_STATUS.REMOVED_WRITER;
-
-                  publisherDiscoveryListener.publisherTopicChange(isAlive,
-                                                                  guid,
-                                                                  unicastLocatorListOut,
-                                                                  multicastLocatorListOut,
-                                                                  participantGuid,
-                                                                  typeName,
-                                                                  topicName,
-                                                                  userDefinedId,
-                                                                  typeMaxSerialized,
-                                                                  FastRTPSCommonFunctions.toJavaTopicKind(topicKind),
-                                                                  writerQosOut);
-               }
-               catch (Throwable e)
-               {
-                  e.printStackTrace();
-               }
-            }
-         }
+         this.listener = listener;
       }
 
       @Override
-      public void onSubscriberDiscovery(ReaderDiscoveryInfo.DISCOVERY_STATUS discovery_status, long guidHigh, long guidLow, boolean expectsInlineQos,
-                                        RemoteLocatorList remoteLocatorList, long participantGuidHigh, long participantGuidLow, String typeName,
+      public void publisherTopicChange(boolean isAlive, long guidHigh, long guidLow, LocatorList_t unicastLocatorList, LocatorList_t multicastLocatorList,
+                                       long participantGuidHigh, long participantGuidLow, String typeName, String topicName, int userDefinedId,
+                                       long typeMaxSerialized, TopicKind_t topicKind, WriterQos writerQoS)
+      {
+         try
+         {
+            Guid guid = new Guid();
+            guid.fromPrimitives(guidHigh, guidLow);
+
+            Guid participantGuid = new Guid();
+            participantGuid.fromPrimitives(participantGuidHigh, participantGuidLow);
+
+            ArrayList<Locator> unicastLocatorListOut = new ArrayList<>();
+            ArrayList<Locator> multicastLocatorListOut = new ArrayList<>();
+
+            for (int i = 0; i < unicastLocatorList.size(); i++)
+            {
+               Locator out = new Locator();
+               FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getLocator(unicastLocatorList, i), out);
+               unicastLocatorListOut.add(out);
+            }
+
+            for (int i = 0; i < multicastLocatorList.size(); i++)
+            {
+               Locator out = new Locator();
+               FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getLocator(multicastLocatorList, i), out);
+               multicastLocatorListOut.add(out);
+            }
+
+            FastRTPSWriterQosHolder writerQosOut = new FastRTPSWriterQosHolder(writerQoS);
+
+            listener.publisherTopicChange(isAlive, guid, unicastLocatorListOut, multicastLocatorListOut, participantGuid, typeName, topicName, userDefinedId,
+                                          typeMaxSerialized, FastRTPSCommonFunctions.toJavaTopicKind(topicKind), writerQosOut);
+         }
+         catch (Throwable e)
+         {
+            e.printStackTrace();
+         }
+
+      }
+   }
+
+   private class NativeParticipantSubscriberEDPListenerImpl extends NativeParticipantSubscriberEDPListener
+   {
+      private final SubscriberEndpointDiscoveryListener listener;
+
+      public NativeParticipantSubscriberEDPListenerImpl(SubscriberEndpointDiscoveryListener listener)
+      {
+         this.listener = listener;
+      }
+
+      @Override
+      public void subscriberTopicChange(boolean isAlive, long guidHigh, long guidLow, boolean expectsInlineQos, LocatorList_t unicastLocatorList,
+                                        LocatorList_t multicastLocatorList, long participantGuidHigh, long participantGuidLow, String typeName,
                                         String topicName, int userDefinedId, TopicKind_t topicKind, ReaderQos readerQoS)
       {
+         try
          {
-            if (subscriberDiscoveryListener != null)
+            Guid guid = new Guid();
+            guid.fromPrimitives(guidHigh, guidLow);
+
+            Guid participantGuid = new Guid();
+            participantGuid.fromPrimitives(participantGuidHigh, participantGuidLow);
+
+            ArrayList<Locator> unicastLocatorListOut = new ArrayList<>();
+            ArrayList<Locator> multicastLocatorListOut = new ArrayList<>();
+
+            for (int i = 0; i < unicastLocatorList.size(); i++)
             {
-               try
-               {
-                  Guid guid = new Guid();
-                  guid.fromPrimitives(guidHigh, guidLow);
-
-                  Guid participantGuid = new Guid();
-                  participantGuid.fromPrimitives(participantGuidHigh, participantGuidLow);
-
-                  ArrayList<Locator> unicastLocatorListOut = new ArrayList<>();
-                  ArrayList<Locator> multicastLocatorListOut = new ArrayList<>();
-
-                  for (int i = 0; i < FastRTPS.getRemoteUnicastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteUnicastLocator(remoteLocatorList, i), out);
-                     unicastLocatorListOut.add(out);
-                  }
-
-                  for (int i = 0; i < FastRTPS.getRemoteMulticastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteMulticastLocator(remoteLocatorList, i), out);
-                     multicastLocatorListOut.add(out);
-                  }
-
-                  ReaderQosHolder readerQosOut = new FastRTPSReaderQosHolder(readerQoS);
-
-                  boolean isAlive = discovery_status != ReaderDiscoveryInfo.DISCOVERY_STATUS.REMOVED_READER;
-
-                  subscriberDiscoveryListener.subscriberTopicChange(isAlive,
-                                                                    guid,
-                                                                    expectsInlineQos,
-                                                                    unicastLocatorListOut,
-                                                                    multicastLocatorListOut,
-                                                                    participantGuid,
-                                                                    typeName,
-                                                                    topicName,
-                                                                    userDefinedId,
-                                                                    FastRTPSCommonFunctions.toJavaTopicKind(topicKind),
-                                                                    readerQosOut);
-               }
-               catch (Throwable e)
-               {
-                  e.printStackTrace();
-               }
+               Locator out = new Locator();
+               FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getLocator(unicastLocatorList, i), out);
+               unicastLocatorListOut.add(out);
             }
+
+            for (int i = 0; i < multicastLocatorList.size(); i++)
+            {
+               Locator out = new Locator();
+               FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getLocator(multicastLocatorList, i), out);
+               multicastLocatorListOut.add(out);
+            }
+
+            ReaderQosHolder readerQosOut = new FastRTPSReaderQosHolder(readerQoS);
+
+            listener.subscriberTopicChange(isAlive, guid, expectsInlineQos, unicastLocatorListOut, multicastLocatorListOut, participantGuid, typeName,
+                                           topicName, userDefinedId, FastRTPSCommonFunctions.toJavaTopicKind(topicKind), readerQosOut);
+         }
+         catch (Throwable e)
+         {
+            e.printStackTrace();
          }
       }
    }
@@ -212,6 +207,15 @@ class FastRTPSParticipant implements Participant
       }
       impl.delete();
       nativeListener.delete();
+      if(nativeParticipantPublisherEDPListenerImpl != null)
+      {
+         nativeParticipantPublisherEDPListenerImpl.delete();
+      }
+      
+      if(nativeParticipantSubscriberEDPListenerImpl != null)
+      {
+         nativeParticipantSubscriberEDPListenerImpl.delete();
+      }
    }
 
    private void getGuid(Guid guid)
@@ -283,7 +287,7 @@ class FastRTPSParticipant implements Participant
       }
 
       impl.registerType(topicDataType.getName(), topicDataType.getTypeSize(), topicDataType.isGetKeyDefined());
-
+      
       types.add(topicDataType);
    }
 
@@ -313,7 +317,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (attributes.rtps().getBuiltin().getDiscovery_config().getUse_STATIC_EndpointDiscoveryProtocol())
+      if (attributes.rtps().getBuiltin().getUse_STATIC_EndpointDiscoveryProtocol())
       {
          if (publisherAttributes.getUserDefinedID() <= 0)
          {
@@ -346,7 +350,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (attributes.rtps().getBuiltin().getDiscovery_config().getUse_STATIC_EndpointDiscoveryProtocol())
+      if (attributes.rtps().getBuiltin().getUse_STATIC_EndpointDiscoveryProtocol())
       {
          if (subscriberAttributes.getUserDefinedID() <= 0)
          {
@@ -435,8 +439,12 @@ class FastRTPSParticipant implements Participant
                                                   SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener)
          throws IOException
    {
-      this.publisherDiscoveryListener = publisherEndpointDiscoveryListener;
-      this.subscriberDiscoveryListener = subscriberEndpointDiscoveryListener;
+      nativeParticipantPublisherEDPListenerImpl = publisherEndpointDiscoveryListener == null ? null
+            : new NativeParticipantPublisherEDPListenerImpl(publisherEndpointDiscoveryListener);
+      nativeParticipantSubscriberEDPListenerImpl = subscriberEndpointDiscoveryListener == null ? null
+            : new NativeParticipantSubscriberEDPListenerImpl(subscriberEndpointDiscoveryListener);
+
+      impl.registerEDPReaderListeners(nativeParticipantPublisherEDPListenerImpl, nativeParticipantSubscriberEDPListenerImpl);
    }
 
    @Override

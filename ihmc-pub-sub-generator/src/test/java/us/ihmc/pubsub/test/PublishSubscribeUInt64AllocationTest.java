@@ -8,7 +8,6 @@ import us.ihmc.commons.allocations.AllocationProfiler;
 import us.ihmc.commons.allocations.AllocationRecord;
 import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
-import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
@@ -163,9 +162,9 @@ public class PublishSubscribeUInt64AllocationTest
       @Override
       public void onSubscriptionMatched(Subscriber subscriber, MatchingInfo info)
       {
-         LogTools.debug("New publisher matched");
-         LogTools.debug("Status: " + info.getStatus());
-         LogTools.debug("Guid: " + info.getGuid().toString());
+         System.out.println("New publisher matched");
+         System.out.println("Status: " + info.getStatus());
+         System.out.println("Guid: " + info.getGuid().toString());
       }
    }
 
@@ -174,10 +173,10 @@ public class PublishSubscribeUInt64AllocationTest
       @Override
       public void onParticipantDiscovery(Participant participant, ParticipantDiscoveryInfo info)
       {
-         LogTools.debug("New participant discovered");
-         LogTools.debug("Status: " + info.getStatus());
-         LogTools.debug("Guid: " + info.getGuid().toString());
-         LogTools.debug("Name: " + info.getName());
+         System.out.println("New participant discovered");
+         System.out.println("Status: " + info.getStatus());
+         System.out.println("Guid: " + info.getGuid().toString());
+         System.out.println("Name: " + info.getName());
       }
    }
 
@@ -186,9 +185,9 @@ public class PublishSubscribeUInt64AllocationTest
       @Override
       public void onPublicationMatched(Publisher publisher, MatchingInfo info)
       {
-         LogTools.debug("New subscriber matched");
-         LogTools.debug("Status: " + info.getStatus());
-         LogTools.debug("Guid: " + info.getGuid().toString());
+         System.out.println("New subscriber matched");
+         System.out.println("Status: " + info.getStatus());
+         System.out.println("Guid: " + info.getGuid().toString());
       }
    }
 }

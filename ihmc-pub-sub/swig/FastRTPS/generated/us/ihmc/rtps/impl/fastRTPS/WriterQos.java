@@ -192,15 +192,6 @@ public class WriterQos {
     return (cPtr == 0) ? null : new PublishModeQosPolicy(cPtr, false);
   }
 
-  public void setM_disablePositiveACKs(DisablePositiveACKsQosPolicy value) {
-    FastRTPSJNI.WriterQos_m_disablePositiveACKs_set(swigCPtr, this, DisablePositiveACKsQosPolicy.getCPtr(value), value);
-  }
-
-  public DisablePositiveACKsQosPolicy getM_disablePositiveACKs() {
-    long cPtr = FastRTPSJNI.WriterQos_m_disablePositiveACKs_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new DisablePositiveACKsQosPolicy(cPtr, false);
-  }
-
   public void setQos(WriterQos qos, boolean first_time) {
     FastRTPSJNI.WriterQos_setQos(swigCPtr, this, WriterQos.getCPtr(qos), qos, first_time);
   }

@@ -43,16 +43,16 @@ public class QosPolicy {
     this(FastRTPSJNI.new_QosPolicy__SWIG_1(b_sendAlways), true);
   }
 
-  public boolean sendAlways() {
-    return FastRTPSJNI.QosPolicy_sendAlways(swigCPtr, this);
-  }
-
   public void setHasChanged(boolean value) {
     FastRTPSJNI.QosPolicy_hasChanged_set(swigCPtr, this, value);
   }
 
   public boolean getHasChanged() {
     return FastRTPSJNI.QosPolicy_hasChanged_get(swigCPtr, this);
+  }
+
+  public boolean sendAlways() {
+    return FastRTPSJNI.QosPolicy_sendAlways(swigCPtr, this);
   }
 
 }

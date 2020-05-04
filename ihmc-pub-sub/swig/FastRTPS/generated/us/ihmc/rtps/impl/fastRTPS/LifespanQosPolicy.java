@@ -39,10 +39,6 @@ public class LifespanQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_LifespanQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.LifespanQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
-  }
-
   public void setDuration(Time_t value) {
     FastRTPSJNI.LifespanQosPolicy_duration_set(swigCPtr, this, Time_t.getCPtr(value), value);
   }
@@ -50,6 +46,10 @@ public class LifespanQosPolicy extends QosPolicy {
   public Time_t getDuration() {
     long cPtr = FastRTPSJNI.LifespanQosPolicy_duration_get(swigCPtr, this);
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.LifespanQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }
