@@ -43,20 +43,28 @@ public class Time_t {
     return FastRTPSJNI.Time_t_seconds_get(swigCPtr, this);
   }
 
-  public void setFraction(long value) {
-    FastRTPSJNI.Time_t_fraction_set(swigCPtr, this, value);
+  public void setNanosec(long value) {
+    FastRTPSJNI.Time_t_nanosec_set(swigCPtr, this, value);
   }
 
-  public long getFraction() {
-    return FastRTPSJNI.Time_t_fraction_get(swigCPtr, this);
+  public long getNanosec() {
+    return FastRTPSJNI.Time_t_nanosec_get(swigCPtr, this);
   }
 
   public Time_t() {
     this(FastRTPSJNI.new_Time_t__SWIG_0(), true);
   }
 
-  public Time_t(int sec, long frac) {
-    this(FastRTPSJNI.new_Time_t__SWIG_1(sec, frac), true);
+  public Time_t(int sec, long nsec) {
+    this(FastRTPSJNI.new_Time_t__SWIG_1(sec, nsec), true);
+  }
+
+  public void fraction(long frac) {
+    FastRTPSJNI.Time_t_fraction(swigCPtr, this, frac);
+  }
+
+  public void setFraction(long value) {
+    FastRTPSJNI.Time_t_setFraction(swigCPtr, this, value);
   }
 
 }

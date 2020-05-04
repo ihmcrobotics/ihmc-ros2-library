@@ -35,6 +35,14 @@ public class HistoryQosPolicy extends QosPolicy {
     super.delete();
   }
 
+  public HistoryQosPolicy() {
+    this(FastRTPSJNI.new_HistoryQosPolicy(), true);
+  }
+
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.HistoryQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  }
+
   public void setKind(HistoryQosPolicyKind value) {
     FastRTPSJNI.HistoryQosPolicy_kind_set(swigCPtr, this, value.swigValue());
   }
@@ -49,14 +57,6 @@ public class HistoryQosPolicy extends QosPolicy {
 
   public int getDepth() {
     return FastRTPSJNI.HistoryQosPolicy_depth_get(swigCPtr, this);
-  }
-
-  public HistoryQosPolicy() {
-    this(FastRTPSJNI.new_HistoryQosPolicy(), true);
-  }
-
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.HistoryQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

@@ -29,7 +29,7 @@ public class Time
    public static final Time Invalid = new Time(-1, 0xffffffff);
 
    private int seconds;
-   private long fraction;
+   private long nsec;
 
    /**
     * 
@@ -38,10 +38,10 @@ public class Time
     * @param seconds
     * @param fraction Fraction of second (1 fraction = 1/(2^32) seconds) 
     */
-   public Time(int seconds, long fraction)
+   public Time(int seconds, long nsec)
    {
       this.seconds = seconds;
-      this.fraction = fraction;
+      this.nsec = nsec;
    }
 
    public Time()
@@ -52,7 +52,7 @@ public class Time
    public void set(long nanoseconds)
    {
       this.seconds = (int) (nanoseconds / 1000000000l);
-      this.fraction = ((nanoseconds % 1000000000l) * 4294967296l) / 1000000000l;
+      this.nsec = (nanoseconds % 1000000000l);
    }
    
    public int getSeconds()
@@ -65,25 +65,24 @@ public class Time
       this.seconds = seconds;
    }
 
-   public long getFraction()
+   public void setNanoseconds(long nsec)
    {
-      return fraction;
+      this.nsec = nsec;
    }
-
-   public void setFraction(long fraction)
+   
+   public long getNanoseconds()
    {
-      this.fraction = fraction;
+      return nsec;
    }
-
    
    public String toString()
    {
-      return String.format("%.2f", seconds + (fraction / Math.pow(2, 32)));
+      return String.format("%.2f", seconds + ((double) nsec / 1000000000l));
    }
 
    public void set(Time sourceTimestamp)
    {
       this.seconds = sourceTimestamp.seconds;
-      this.fraction = sourceTimestamp.fraction;
+      this.nsec = sourceTimestamp.nsec;
    }
 }

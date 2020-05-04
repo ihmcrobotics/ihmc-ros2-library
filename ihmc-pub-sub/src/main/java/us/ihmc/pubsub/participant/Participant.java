@@ -62,6 +62,7 @@ public interface Participant
     * @throws IOException when the Endpoint Discovery protocol is not used.
     */
    public void registerEndpointDiscoveryListeners(PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener, SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener) throws IOException;
+
    
    /**
     * 

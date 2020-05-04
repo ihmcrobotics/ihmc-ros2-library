@@ -35,10 +35,6 @@ public class EndpointAttributes {
     }
   }
 
-  public EndpointAttributes() {
-    this(FastRTPSJNI.new_EndpointAttributes(), true);
-  }
-
   public void setEndpointKind(EndpointKind_t value) {
     FastRTPSJNI.EndpointAttributes_endpointKind_set(swigCPtr, this, value.swigValue());
   }
@@ -71,6 +67,14 @@ public class EndpointAttributes {
     return DurabilityKind_t.swigToEnum(FastRTPSJNI.EndpointAttributes_durabilityKind_get(swigCPtr, this));
   }
 
+  public void setPersistence_guid(SWIGTYPE_p_GUID_t value) {
+    FastRTPSJNI.EndpointAttributes_persistence_guid_set(swigCPtr, this, SWIGTYPE_p_GUID_t.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_GUID_t getPersistence_guid() {
+    return new SWIGTYPE_p_GUID_t(FastRTPSJNI.EndpointAttributes_persistence_guid_get(swigCPtr, this), true);
+  }
+
   public void setUnicastLocatorList(LocatorList_t value) {
     FastRTPSJNI.EndpointAttributes_unicastLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
   }
@@ -89,12 +93,12 @@ public class EndpointAttributes {
     return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
   }
 
-  public void setOutLocatorList(LocatorList_t value) {
-    FastRTPSJNI.EndpointAttributes_outLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setRemoteLocatorList(LocatorList_t value) {
+    FastRTPSJNI.EndpointAttributes_remoteLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
   }
 
-  public LocatorList_t getOutLocatorList() {
-    long cPtr = FastRTPSJNI.EndpointAttributes_outLocatorList_get(swigCPtr, this);
+  public LocatorList_t getRemoteLocatorList() {
+    long cPtr = FastRTPSJNI.EndpointAttributes_remoteLocatorList_get(swigCPtr, this);
     return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
   }
 
@@ -104,6 +108,10 @@ public class EndpointAttributes {
 
   public SWIGTYPE_p_PropertyPolicy getProperties() {
     return new SWIGTYPE_p_PropertyPolicy(FastRTPSJNI.EndpointAttributes_properties_get(swigCPtr, this), true);
+  }
+
+  public EndpointAttributes() {
+    this(FastRTPSJNI.new_EndpointAttributes(), true);
   }
 
   public short getUserDefinedID() {

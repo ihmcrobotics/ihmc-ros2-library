@@ -51,8 +51,4 @@ public class NativeParticipantImpl {
     FastRTPSJNI.NativeParticipantImpl_registerType(swigCPtr, this, name, maximumDataSize, hasKey);
   }
 
-  public void registerEDPReaderListeners(NativeParticipantPublisherEDPListener publisherListener, NativeParticipantSubscriberEDPListener subscriberListener) throws java.io.IOException {
-    FastRTPSJNI.NativeParticipantImpl_registerEDPReaderListeners(swigCPtr, this, NativeParticipantPublisherEDPListener.getCPtr(publisherListener), publisherListener, NativeParticipantSubscriberEDPListener.getCPtr(subscriberListener), subscriberListener);
-  }
-
 }
