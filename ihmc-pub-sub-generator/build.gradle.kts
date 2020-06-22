@@ -21,7 +21,7 @@ mainDependencies {
    api(dependencies.gradleApi())
    api("us.ihmc:eprosima-idl-parser:source")
    api("org.anarres:jcpp:1.4.12")
-   api("us.ihmc:euclid:0.14.2")
+   api("us.ihmc:euclid:0.15.0")
 }
 
 testDependencies {
