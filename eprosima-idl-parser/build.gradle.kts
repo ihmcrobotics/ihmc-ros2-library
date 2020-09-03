@@ -1,5 +1,5 @@
 plugins {
-   id("us.ihmc.ihmc-build") version "0.20.1"
+   id("us.ihmc.ihmc-build") version "0.21.0"
    id("us.ihmc.ihmc-ci") version "5.3"
    id("us.ihmc.ihmc-cd") version "1.8"
    id("me.champeau.gradle.antlr4") version "0.1"
@@ -17,7 +17,7 @@ ihmc {
 mainDependencies {
    api("org.antlr:antlr4:4.2.2")
    api("org.antlr:stringtemplate:3.2")
-   api("us.ihmc:ihmc-commons:0.29.0")
+   api("us.ihmc:ihmc-commons:0.30.2")
 }
 
 tasks.named("antlr4", me.champeau.gradle.Antlr4Task::class) {

@@ -2,8 +2,10 @@
 
 #### Step 1: Generate messages (Only if test messages changed. Only affects tests.)
 
-In `ihmc-pub-sub-generator/src/test/java`, run `us.ihmc.pubsub.examples.GenerateTestMessages` (with 
-"Build, no error check" if using IntelliJ).
+Run `us.ihmc.pubsub.examples.GenerateTestMessages` 
+with `ihmc-pub-sub-generator/src/test` set as the working directory.
+
+> Note: If using IntelliJ, this might require "Build, no error check"
 
 Make sure the generated files have LF (Unix) line separators.
 
@@ -28,7 +30,7 @@ Note: Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few t
 
 #### Step 3: Update version
 
-In `ihmc-pub-sub-group/gradle.properties`, up the version number.
+In `ihmc-pub-sub-group/group.gradle.properties`, up the version number.
 
 #### Step 4: Publish artifacts
 
