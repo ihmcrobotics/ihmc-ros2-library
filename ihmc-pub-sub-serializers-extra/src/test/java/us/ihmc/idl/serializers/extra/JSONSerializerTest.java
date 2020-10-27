@@ -15,8 +15,6 @@
  */
 package us.ihmc.idl.serializers.extra;
 
-import static us.ihmc.robotics.Assert.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,6 +23,8 @@ import us.ihmc.idl.generated.nested.NestedElement;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JSONSerializerTest
 {
@@ -120,7 +120,6 @@ public class JSONSerializerTest
       IDLElementTest res = serializer.deserialize(data);
 
       assertEquals(idlElementTest, res);
-
    }
 
    @Test// timeout = 30000
@@ -134,9 +133,7 @@ public class JSONSerializerTest
       byte[] data = serializer.serializeToBytes(idlElementTest);
       IDLElementTest res = serializer.deserialize(data);
 
-
       assertEquals(idlElementTest, res);
-
    }
 
    @Test// timeout = 30000
@@ -147,7 +144,7 @@ public class JSONSerializerTest
 
       IDLElementTest empty = serializer.deserialize("{\"test::IDLElementTest\":{}}");
       assertEquals(type.createData(), empty);
-      
+
       InputStream dataStream = getClass().getResourceAsStream("IDLElementTest.incomplete.json");
       IDLElementTest incomplete = serializer.deserialize(dataStream);
       assertNotNull(incomplete);

@@ -28,7 +28,7 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 import java.io.IOException;
 import java.util.List;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PublishSubscribeUInt64AllocationTest
 {
@@ -115,7 +115,7 @@ public class PublishSubscribeUInt64AllocationTest
       }
       System.out.println(message);
 
-      assertTrue("allocated " + allocations.size() + ": \n" + message, allocations.size() == 0);
+      assertTrue(allocations.size() == 0, "allocated " + allocations.size() + ": \n" + message);
    }
 
    private void publishNMessages(Publisher publisher, StatusMessage msg, int numberOfMessagesToSend) throws IOException

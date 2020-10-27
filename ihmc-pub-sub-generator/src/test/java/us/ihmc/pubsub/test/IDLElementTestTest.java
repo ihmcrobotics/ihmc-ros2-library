@@ -1,7 +1,5 @@
 package us.ihmc.pubsub.test;
 
-import static us.ihmc.robotics.Assert.*;
-
 import java.io.IOException;
 
 import org.junit.jupiter.api.Disabled;
@@ -12,6 +10,8 @@ import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 import us.ihmc.pubsub.common.SerializedPayload;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test cases for the IDLElementTest type. 
@@ -330,7 +330,6 @@ public class IDLElementTestTest
       IDLElementTest other = new IDLElementTest();
       type.deserialize(payload, other);
       assertEquals(test, other);
-
    }
 
    @Disabled // TODO Recompile cpp soon

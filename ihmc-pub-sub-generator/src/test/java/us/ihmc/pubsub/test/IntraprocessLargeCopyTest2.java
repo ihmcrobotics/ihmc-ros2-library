@@ -1,7 +1,5 @@
 package us.ihmc.pubsub.test;
 
-import static us.ihmc.robotics.Assert.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -33,6 +31,8 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *  Create a publisher and subscriber in this thread and send 20 messages with up to 100,000 longs.
@@ -84,8 +84,8 @@ public class IntraprocessLargeCopyTest2
       System.err.println(byteArrayOutputStream.toString());
 
       // capture all the output for analysis
-      assertFalse("Standard error contains java.lang.IndexOutOfBoundsException", byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
-
+      assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"),
+                                                   "Standard error contains java.lang.IndexOutOfBoundsException");
 
       // make sure to receive at least 9 of 20 messages
       while (messagesReceived.toInteger() < 9)

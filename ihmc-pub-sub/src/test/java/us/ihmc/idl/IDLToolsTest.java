@@ -13,49 +13,51 @@ import us.ihmc.idl.IDLSequence.Short;
 import us.ihmc.idl.IDLSequence.StringBuilderHolder;
 import us.ihmc.idl.IDLSequence.Boolean;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IDLToolsTest
 {
    @Test// timeout = 30000
    public void testStringBuilderEquals()
    {
-      assertTrue("StringBuilders not equal", IDLTools.equals(new StringBuilder("hi"), new StringBuilder("hi")));
-      assertTrue("StringBuilders not equal", IDLTools.equals(new StringBuilder("a"), new StringBuilder("a")));
-      assertFalse("StringBuilders equal", IDLTools.equals(new StringBuilder("hi"), new StringBuilder("bye")));
-      assertFalse("StringBuilders equal", IDLTools.equals(new StringBuilder("bii"), new StringBuilder("bye")));
-      assertFalse("StringBuilders equal", IDLTools.equals(new StringBuilder("hii"), new StringBuilder("bye")));
-      assertFalse("StringBuilders equal", IDLTools.equals(new StringBuilder("a"), new StringBuilder("b")));
+      assertTrue(IDLTools.equals(new StringBuilder("hi"), new StringBuilder("hi")), "StringBuilders not equal");
+      assertTrue(IDLTools.equals(new StringBuilder("a"), new StringBuilder("a")), "StringBuilders not equal");
+      assertFalse(IDLTools.equals(new StringBuilder("hi"), new StringBuilder("bye")), "StringBuilders equal");
+      assertFalse(IDLTools.equals(new StringBuilder("bii"), new StringBuilder("bye")), "StringBuilders equal");
+      assertFalse(IDLTools.equals(new StringBuilder("hii"), new StringBuilder("bye")), "StringBuilders equal");
+      assertFalse(IDLTools.equals(new StringBuilder("a"), new StringBuilder("b")), "StringBuilders equal");
    }
 
    @Test// timeout = 30000
    public void testStringBuilderEpsilonEquals()
    {
-      assertTrue("StringBuilders not equal", IDLTools.epsilonEqualsStringBuilder(new StringBuilder("hi"), new StringBuilder("hi"), 0.0));
-      assertFalse("StringBuilders equal", IDLTools.epsilonEqualsStringBuilder(new StringBuilder("hi"), new StringBuilder("bye"), 0.0));
+      assertTrue(IDLTools.epsilonEqualsStringBuilder(new StringBuilder("hi"), new StringBuilder("hi"), 0.0),
+                                                  "StringBuilders not equal");
+      assertFalse(IDLTools.epsilonEqualsStringBuilder(new StringBuilder("hi"), new StringBuilder("bye"), 0.0),
+                                                   "StringBuilders equal");
    }
 
    @Test// timeout = 30000
    public void testEpsilonEqualsBoolean()
    {
-      assertTrue("Booleans not equal", IDLTools.epsilonEqualsBoolean(true, true, 0.0));
-      assertTrue("Booleans not equal", IDLTools.epsilonEqualsBoolean(false, false, 0.0));
-      assertFalse("Booleans equal", IDLTools.epsilonEqualsBoolean(true, false, 0.0));
+      assertTrue(IDLTools.epsilonEqualsBoolean(true, true, 0.0), "Booleans not equal");
+      assertTrue(IDLTools.epsilonEqualsBoolean(false, false, 0.0), "Booleans not equal");
+      assertFalse(IDLTools.epsilonEqualsBoolean(true, false, 0.0), "Booleans equal");
    }
 
    @Test// timeout = 30000
    public void testEpsilonEquals()
    {
-      assertTrue("Doubles not equal", IDLTools.epsilonEquals(0.0, 0.0, 0.0));
-      assertTrue("Doubles not equal", IDLTools.epsilonEquals(0.1, 0.2, 0.1));
-      assertFalse("Doubles equal", IDLTools.epsilonEquals(0.0, 0.1, 0.05));
-      assertFalse("Doubles equal", IDLTools.epsilonEquals(0.0, 5.0, 1.0));
-      assertFalse("Doubles equal", IDLTools.epsilonEquals(0.0, 5.0, 0.0));
-      assertTrue("Doubles not equal", IDLTools.epsilonEqualsPrimitive(0.0, 0.0, 0.0));
-      assertTrue("Doubles not equal", IDLTools.epsilonEqualsPrimitive(0.1, 0.2, 0.1));
-      assertFalse("Doubles equal", IDLTools.epsilonEqualsPrimitive(0.0, 0.1, 0.05));
-      assertFalse("Doubles equal", IDLTools.epsilonEqualsPrimitive(0.0, 5.0, 1.0));
-      assertFalse("Doubles equal", IDLTools.epsilonEqualsPrimitive(0.0, 5.0, 0.0));
+      assertTrue(IDLTools.epsilonEquals(0.0, 0.0, 0.0), "Doubles not equal");
+      assertTrue(IDLTools.epsilonEquals(0.1, 0.2, 0.1), "Doubles not equal");
+      assertFalse(IDLTools.epsilonEquals(0.0, 0.1, 0.05), "Doubles equal");
+      assertFalse(IDLTools.epsilonEquals(0.0, 5.0, 1.0), "Doubles equal");
+      assertFalse(IDLTools.epsilonEquals(0.0, 5.0, 0.0), "Doubles equal");
+      assertTrue(IDLTools.epsilonEqualsPrimitive(0.0, 0.0, 0.0), "Doubles not equal");
+      assertTrue(IDLTools.epsilonEqualsPrimitive(0.1, 0.2, 0.1), "Doubles not equal");
+      assertFalse(IDLTools.epsilonEqualsPrimitive(0.0, 0.1, 0.05), "Doubles equal");
+      assertFalse(IDLTools.epsilonEqualsPrimitive(0.0, 5.0, 1.0), "Doubles equal");
+      assertFalse(IDLTools.epsilonEqualsPrimitive(0.0, 5.0, 0.0), "Doubles equal");
    }
 
    private enum SampleEnum { ONE, TWO }
@@ -63,9 +65,9 @@ public class IDLToolsTest
    @Test// timeout = 30000
    public void testEpsilonEqualsEnum()
    {
-      assertTrue("Enums not equal", IDLTools.epsilonEqualsEnum(SampleEnum.ONE, SampleEnum.ONE, 0.0));
-      assertTrue("Enums not equal", IDLTools.epsilonEqualsEnum(SampleEnum.TWO, SampleEnum.TWO, 0.0));
-      assertFalse("Enums equal", IDLTools.epsilonEqualsEnum(SampleEnum.ONE, SampleEnum.TWO, 0.0));
+      assertTrue(IDLTools.epsilonEqualsEnum(SampleEnum.ONE, SampleEnum.ONE, 0.0), "Enums not equal");
+      assertTrue(IDLTools.epsilonEqualsEnum(SampleEnum.TWO, SampleEnum.TWO, 0.0), "Enums not equal");
+      assertFalse(IDLTools.epsilonEqualsEnum(SampleEnum.ONE, SampleEnum.TWO, 0.0), "Enums equal");
    }
 
    @Test// timeout = 30000
@@ -76,28 +78,28 @@ public class IDLToolsTest
 
       a = new StringBuilderHolder(10, "type_d");
       b = new StringBuilderHolder(10, "type_d");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0), "Sequences not equal");
 
       a = new StringBuilderHolder(5, "type_d");
       b = new StringBuilderHolder(10, "type_d");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0), "Sequences not equal");
 
       a = new StringBuilderHolder(5, "type_d");
       b = new StringBuilderHolder(10, "type_d");
       a.add("blah");
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0), "Sequences equal");
 
       a = new StringBuilderHolder(10, "type_d");
       b = new StringBuilderHolder(10, "type_d");
       a.add("one");
       b.add("one");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0), "Sequences not equal");
 
       a = new StringBuilderHolder(5, "type_d");
       b = new StringBuilderHolder(10, "type_d");
       a.add("one");
       b.add("two");
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0), "Sequences equal");
 
       a = new StringBuilderHolder(10, "type_d");
       b = new StringBuilderHolder(10, "type_d");
@@ -107,7 +109,7 @@ public class IDLToolsTest
       b.add("one");
       b.add("two");
       b.add("thr");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0), "Sequences not equal");
 
       a = new StringBuilderHolder(5, "type_d");
       b = new StringBuilderHolder(10, "type_d");
@@ -115,7 +117,7 @@ public class IDLToolsTest
       a.add("one");
       b.add("one");
       b.add("two");
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsStringBuilderSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -126,28 +128,28 @@ public class IDLToolsTest
 
       a = new Enum<>(10, SampleEnum.class, SampleEnum.values());
       b = new Enum<>(10, SampleEnum.class, SampleEnum.values());
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsEnumSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Enum<>(5, SampleEnum.class, SampleEnum.values());
       b = new Enum<>(10, SampleEnum.class, SampleEnum.values());
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsEnumSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Enum<>(5, SampleEnum.class, SampleEnum.values());
       b = new Enum<>(10, SampleEnum.class, SampleEnum.values());
       a.add(SampleEnum.ONE);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsEnumSequence(a, b, 0.0), "Sequences equal");
 
       a = new Enum<>(10, SampleEnum.class, SampleEnum.values());
       b = new Enum<>(10, SampleEnum.class, SampleEnum.values());
       a.add(SampleEnum.ONE);
       b.add(SampleEnum.ONE);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsEnumSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Enum<>(5, SampleEnum.class, SampleEnum.values());
       b = new Enum<>(10, SampleEnum.class, SampleEnum.values());
       a.add(SampleEnum.ONE);
       b.add(SampleEnum.TWO);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsEnumSequence(a, b, 0.0), "Sequences equal");
 
       a = new Enum<>(10, SampleEnum.class, SampleEnum.values());
       b = new Enum<>(10, SampleEnum.class, SampleEnum.values());
@@ -157,7 +159,7 @@ public class IDLToolsTest
       b.add(SampleEnum.ONE);
       b.add(SampleEnum.TWO);
       b.add(SampleEnum.TWO);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsEnumSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Enum<>(5, SampleEnum.class, SampleEnum.values());
       b = new Enum<>(10, SampleEnum.class, SampleEnum.values());
@@ -165,7 +167,7 @@ public class IDLToolsTest
       a.add(SampleEnum.ONE);
       b.add(SampleEnum.ONE);
       b.add(SampleEnum.TWO);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsEnumSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsEnumSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -176,28 +178,28 @@ public class IDLToolsTest
 
       a = new Boolean(10, "type_7");
       b = new Boolean(10, "type_7");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Boolean(5, "type_7");
       b = new Boolean(10, "type_7");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Boolean(5, "type_7");
       b = new Boolean(10, "type_7");
       a.add(true);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0), "Sequences equal");
 
       a = new Boolean(10, "type_7");
       b = new Boolean(10, "type_7");
       a.add(true);
       b.add(true);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Boolean(5, "type_7");
       b = new Boolean(10, "type_7");
       a.add(true);
       b.add(false);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0), "Sequences equal");
 
       a = new Boolean(10, "type_7");
       b = new Boolean(10, "type_7");
@@ -207,7 +209,7 @@ public class IDLToolsTest
       b.add(true);
       b.add(false);
       b.add(true);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Boolean(5, "type_7");
       b = new Boolean(10, "type_7");
@@ -215,7 +217,7 @@ public class IDLToolsTest
       a.add(true);
       b.add(true);
       b.add(false);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsBooleanSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -226,28 +228,28 @@ public class IDLToolsTest
 
       a = new Byte(10, "type_9");
       b = new Byte(10, "type_9");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsByteSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Byte(5, "type_9");
       b = new Byte(10, "type_9");
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsByteSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Byte(5, "type_9");
       b = new Byte(10, "type_9");
       a.add((byte) 0);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsByteSequence(a, b, 0.0), "Sequences equal");
 
       a = new Byte(10, "type_9");
       b = new Byte(10, "type_9");
       a.add((byte) 0);
       b.add((byte) 0);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsByteSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Byte(5, "type_9");
       b = new Byte(10, "type_9");
       a.add((byte) 0);
       b.add((byte) 255);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsByteSequence(a, b, 0.0), "Sequences equal");
 
       a = new Byte(10, "type_9");
       b = new Byte(10, "type_9");
@@ -257,7 +259,7 @@ public class IDLToolsTest
       b.add((byte) 0);
       b.add((byte) 255);
       b.add((byte) -1);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsByteSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Byte(5, "type_9");
       b = new Byte(10, "type_9");
@@ -265,7 +267,7 @@ public class IDLToolsTest
       a.add((byte) 0);
       b.add((byte) 0);
       b.add((byte) 255);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsByteSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsByteSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -281,7 +283,7 @@ public class IDLToolsTest
       b.add('a');
       b.add('b');
       b.add('c');
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsCharSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsCharSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Char(5, "type_8");
       b = new Char(10, "type_8");
@@ -289,7 +291,7 @@ public class IDLToolsTest
       a.add('a');
       b.add('a');
       b.add('b');
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsCharSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsCharSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -305,7 +307,7 @@ public class IDLToolsTest
       b.add((short) 0);
       b.add((short) 4);
       b.add((short) -1);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsShortSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsShortSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Short(5, "type_1");
       b = new Short(10, "type_1");
@@ -313,7 +315,7 @@ public class IDLToolsTest
       a.add((short) 0);
       b.add((short) 0);
       b.add((short) 4);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsShortSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsShortSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -329,7 +331,7 @@ public class IDLToolsTest
       b.add(0);
       b.add(4);
       b.add(-1);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsIntegerSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsIntegerSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Integer(5, "type_2");
       b = new Integer(10, "type_2");
@@ -337,7 +339,7 @@ public class IDLToolsTest
       a.add(0);
       b.add(0);
       b.add(4);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsIntegerSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsIntegerSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -353,7 +355,7 @@ public class IDLToolsTest
       b.add((long) 0);
       b.add((long) 4);
       b.add((long) -1);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsLongSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsLongSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Long(5, "type_11");
       b = new Long(10, "type_11");
@@ -361,7 +363,7 @@ public class IDLToolsTest
       a.add((long) 0);
       b.add((long) 0);
       b.add((long) 4);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsLongSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsLongSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -377,7 +379,7 @@ public class IDLToolsTest
       b.add((float) 0);
       b.add((float) 4);
       b.add((float) -1);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsFloatSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsFloatSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Float(5, "type_5");
       b = new Float(10, "type_5");
@@ -385,7 +387,7 @@ public class IDLToolsTest
       a.add((float) 0);
       b.add((float) 0);
       b.add((float) 4);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsFloatSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsFloatSequence(a, b, 0.0), "Sequences equal");
    }
 
    @Test// timeout = 30000
@@ -401,7 +403,7 @@ public class IDLToolsTest
       b.add(0.0);
       b.add(1.5);
       b.add(-3.0);
-      assertTrue("Sequences not equal", IDLTools.epsilonEqualsDoubleSequence(a, b, 0.0));
+      assertTrue(IDLTools.epsilonEqualsDoubleSequence(a, b, 0.0), "Sequences not equal");
 
       a = new Double(5, "type_6");
       b = new Double(10, "type_6");
@@ -409,7 +411,7 @@ public class IDLToolsTest
       a.add(0.0);
       b.add(0.0);
       b.add(1.5);
-      assertFalse("Sequences equal", IDLTools.epsilonEqualsDoubleSequence(a, b, 0.0));
+      assertFalse(IDLTools.epsilonEqualsDoubleSequence(a, b, 0.0), "Sequences equal");
    }
 
    public static void main(String[] args)

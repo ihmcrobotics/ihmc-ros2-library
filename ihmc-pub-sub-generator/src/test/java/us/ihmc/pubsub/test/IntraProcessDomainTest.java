@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IntraProcessDomainTest
 {
@@ -122,7 +122,7 @@ public class IntraProcessDomainTest
          {
             ThreadTools.sleep(100);
          }
-         assertTrue("could not read data", k < 5);
+         assertTrue(k < 5, "could not read data");
          assertEquals(msg, rec);
 
          subscriber1.waitForUnreadMessage(100);
@@ -139,14 +139,14 @@ public class IntraProcessDomainTest
          assertFalse(subscriber1.takeNextData(rec, info));
          assertFalse(subscriber2.takeNextData(rec, info));
          assertFalse(subscriber3.takeNextData(msg, info));
-         
+
          for(int i = 0; i < 10; i++)
          {
             String msgText = "Test " + i;
             msg.setMsg(msgText);
             publisher1.write(msg);
             subscriber1.waitForUnreadMessage(100);
-            
+
             assertTrue(subscriber1.takeNextData(rec, info));
             assertEquals(msg, rec);
             assertEquals(msgText, rec.getMsgAsString());
@@ -154,11 +154,10 @@ public class IntraProcessDomainTest
             assertEquals(publisher1.getGuid(), info.getSampleIdentity().getGuid());
             assertEquals(i + 1l, info.getSampleIdentity().getSequenceNumber().get());
             assertEquals(ChangeKind.ALIVE, info.getSampleKind());
-            
+
             ChatMessage rec2 = messageQueue.poll(5000, TimeUnit.MILLISECONDS);
             assertEquals(msg, rec2);
             assertEquals(msgText, rec2.getMsgAsString());
-            
          }
          
          boolean failed = false;
@@ -171,9 +170,8 @@ public class IntraProcessDomainTest
          {
             failed = true;
          }
-         
+
          assertTrue(failed);
-         
       } finally
       {
          domain.stopAll();
@@ -263,8 +261,8 @@ public class IntraProcessDomainTest
 
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, subscriber2.getGuid(), publisherMatched.poll(1, TimeUnit.SECONDS));
 
-         assertEquals(1, participant.get_no_publisher(topic));
-         assertEquals(2, participant.get_no_subscribers(topic));
+         assertEquals(1, (long) participant.get_no_publisher(topic));
+         assertEquals(2, (long) participant.get_no_subscribers(topic));
 
          // Create a new participant, see if original participant listeners get triggered
          Participant participant2 = domain.createParticipant(domain.createParticipantAttributes(1, "participant2"));
@@ -293,8 +291,8 @@ public class IntraProcessDomainTest
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, publisherMatched.poll(1, TimeUnit.SECONDS));
 
-         assertEquals(2, participant2.get_no_publisher(topic));
-         assertEquals(2, participant2.get_no_subscribers(topic));
+         assertEquals(2, (long) participant2.get_no_publisher(topic));
+         assertEquals(2, (long) participant2.get_no_subscribers(topic));
 
          // Create a bunch of non-matching subscribers and publishers and make sure they only trigger the subscriber/publisher listeners
          PublisherAttributes pubAtt3 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT, partition);
@@ -316,8 +314,8 @@ public class IntraProcessDomainTest
          // Make sure no subscribers matched
          assertEquals(null, subscriberMatched.poll(1, TimeUnit.SECONDS));
 
-         assertEquals(5, participant2.get_no_publisher(topic));
-         assertEquals(1, participant2.get_no_publisher(topic + "Invalid"));
+         assertEquals(5, (long) participant2.get_no_publisher(topic));
+         assertEquals(1, (long) participant2.get_no_publisher(topic + "Invalid"));
 
          SubscriberAttributes subAtt3 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT);
          guid = domain.createSubscriber(participant2, subAtt3).getGuid();
@@ -332,8 +330,8 @@ public class IntraProcessDomainTest
          guid = domain.createSubscriber(participant2, subAtt5).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         assertEquals(4, participant2.get_no_subscribers(topic));
-         assertEquals(1, participant2.get_no_subscribers(topic + "Invalid"));
+         assertEquals(4, (long) participant2.get_no_subscribers(topic));
+         assertEquals(1, (long) participant2.get_no_subscribers(topic + "Invalid"));
 
          assertEquals(null, publisherMatched.poll(1, TimeUnit.SECONDS));
 
@@ -351,10 +349,10 @@ public class IntraProcessDomainTest
          checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, participant2.getGuid().getGuidPrefix(), subscriberMatched.poll(1, TimeUnit.SECONDS));
          assertEquals(null, subscriberMatched.poll(1, TimeUnit.SECONDS));
 
-         assertEquals(0, participant2.get_no_publisher(topic));
-         assertEquals(0, participant2.get_no_publisher(topic + "Invalid"));
-         assertEquals(0, participant2.get_no_subscribers(topic));
-         assertEquals(0, participant2.get_no_subscribers(topic + "Invalid"));
+         assertEquals(0, (long) participant2.get_no_publisher(topic));
+         assertEquals(0, (long) participant2.get_no_publisher(topic + "Invalid"));
+         assertEquals(0, (long) participant2.get_no_subscribers(topic));
+         assertEquals(0, (long) participant2.get_no_subscribers(topic + "Invalid"));
 
          // Check removing of subscriber
          domain.removeSubscriber(subscriber2);
@@ -365,8 +363,8 @@ public class IntraProcessDomainTest
          checkMatchingInfo(MatchingStatus.REMOVED_MATCHING, publisher1.getGuid(), subscriberMatched.poll(1, TimeUnit.SECONDS));
          assertEquals(null, publisherMatched.poll(1, TimeUnit.SECONDS));
 
-         assertEquals(0, participant.get_no_publisher(topic));
-         assertEquals(1, participant.get_no_subscribers(topic));
+         assertEquals(0, (long) participant.get_no_publisher(topic));
+         assertEquals(1, (long) participant.get_no_subscribers(topic));
 
          assertFalse(publisher1.isAvailable());
          assertFalse(subscriber2.isAvailable());
@@ -374,7 +372,6 @@ public class IntraProcessDomainTest
 
          assertTrue(participant.isAvailable());
          assertFalse(participant2.isAvailable());
-
       }
       finally
       {

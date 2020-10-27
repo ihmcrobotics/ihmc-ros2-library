@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HandshakeTest
 {
@@ -117,8 +117,8 @@ public class HandshakeTest
       System.out.println(message);
 
       LogTools.info("Recieved: " + subscriberListener.i + "/" + NUMBER_OF_MESSAGES_TO_SEND + " messages");
-      assertTrue("allocated " + allocations.size() + ": \n" + message, allocations.size() == 0);
-      assertTrue("did not receive all", subscriberListener.i >= 1);
+      assertTrue(allocations.size() == 0, "allocated " + allocations.size() + ": \n" + message);
+      assertTrue(subscriberListener.i >= 1, "did not receive all");
    }
 
    private void writeNHandshakes(Publisher publisher, List<FooHandshake> preallocatedHandshakes, int handshakesToWrite) throws IOException

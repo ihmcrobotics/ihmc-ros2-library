@@ -15,14 +15,14 @@
  */
 package us.ihmc.idl.serializers.extra;
 
-import static us.ihmc.robotics.Assert.*;
-
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.idl.generated.test.IDLElementTest;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class YAMLSerializerTest
 {
@@ -39,9 +39,8 @@ public class YAMLSerializerTest
       System.out.println(data);
     
       IDLElementTest result = serializer.deserialize(data);
-      
+
       assertEquals(testElement, result);
-      
    }
 
 }

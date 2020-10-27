@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageEqualsTest
 {
@@ -14,8 +14,8 @@ public class MessageEqualsTest
       IDLElementTest a = new IDLElementTest();
       IDLElementTest b = new IDLElementTest();
 
-      assertTrue("not equal", a.equals(b));
-      assertTrue("not equal", a.epsilonEquals(b, 0.0));
+      assertTrue(a.equals(b), "not equal");
+      assertTrue(a.epsilonEquals(b, 0.0), "not equal");
    }
 
    @Test// timeout = 30000
@@ -27,8 +27,8 @@ public class MessageEqualsTest
       a.setBooleanTest(true);
       b.setBooleanTest(false);
 
-      assertFalse("is equal", a.equals(b));
-      assertFalse("is equal", a.epsilonEquals(b, 0.0));
+      assertFalse(a.equals(b), "is equal");
+      assertFalse(a.epsilonEquals(b, 0.0), "is equal");
    }
 
    @Test// timeout = 30000
@@ -40,8 +40,8 @@ public class MessageEqualsTest
       createFullMessage(a);
       createFullMessage(b);
 
-      assertTrue("not equal", a.equals(b));
-      assertTrue("not equal", a.epsilonEquals(b, 0.0));
+      assertTrue(a.equals(b), "not equal");
+      assertTrue(a.epsilonEquals(b, 0.0), "not equal");
    }
 
    @Test// timeout = 30000
@@ -56,8 +56,8 @@ public class MessageEqualsTest
       a.getEnumSeqTest().remove();
       a.getEnumSeqTest().add(Color.green);
 
-      assertFalse("is equal", a.equals(b));
-      assertFalse("is equal", a.epsilonEquals(b, 0.0));
+      assertFalse(a.equals(b), "is equal");
+      assertFalse(a.epsilonEquals(b, 0.0), "is equal");
    }
 
    @Test// timeout = 30000
@@ -72,8 +72,8 @@ public class MessageEqualsTest
       a.getNestedArray()[1][2].setLongTest(1);
       b.getNestedArray()[1][2].setLongTest(2);
 
-      assertFalse("is equal", a.equals(b));
-      assertFalse("is equal", a.epsilonEquals(b, 0.5));
+      assertFalse(a.equals(b), "is equal");
+      assertFalse(a.epsilonEquals(b, 0.5), "is equal");
    }
 
    @Test// timeout = 30000
@@ -88,8 +88,8 @@ public class MessageEqualsTest
       a.getNestedArray()[1][2].setLongTest(1);
       b.getNestedArray()[1][2].setLongTest(2);
 
-      assertFalse("not equal", a.equals(b));
-      assertTrue("not equal", a.epsilonEquals(b, 1.0));
+      assertFalse(a.equals(b), "not equal");
+      assertTrue(a.epsilonEquals(b, 1.0), "not equal");
    }
 
    @Test// timeout = 30000
@@ -98,8 +98,8 @@ public class MessageEqualsTest
       IDLElementTest a = new IDLElementTest();
       createFullMessage(a);
       IDLElementTest b = new IDLElementTest(a);
-      assertTrue("not equal", a.equals(b));
-      assertTrue("not equal", a.epsilonEquals(b, 0.0));
+      assertTrue(a.equals(b), "not equal");
+      assertTrue(a.epsilonEquals(b, 0.0), "not equal");
    }
 
    private void createFullMessage(IDLElementTest a)

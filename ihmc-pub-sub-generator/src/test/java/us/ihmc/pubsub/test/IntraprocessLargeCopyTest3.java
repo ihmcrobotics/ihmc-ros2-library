@@ -1,7 +1,5 @@
 package us.ihmc.pubsub.test;
 
-import static us.ihmc.robotics.Assert.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -33,6 +31,8 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This test makes sure intraprocess doesn't have threading issues.
@@ -89,8 +89,9 @@ public class IntraprocessLargeCopyTest3
       
       System.err.println(byteArrayOutputStream.toString());
 
-      assertFalse("Standard error contains java.lang.IndexOutOfBoundsException", byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
-      
+      assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"),
+                                                   "Standard error contains java.lang.IndexOutOfBoundsException");
+
       while (messagesReceived.toInteger() < NUMBER_OF_MESSAGES_TO_SEND - 5)
       {
          Thread.yield();

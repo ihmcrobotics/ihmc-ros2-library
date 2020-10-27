@@ -28,7 +28,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *  Start a subscriber and 5 publisher threads, each sending 20 messages with up to 100,000 longs.
@@ -125,7 +125,8 @@ public class IntraprocessLargeCopyTest
       System.err.println(byteArrayOutputStream.toString());
 
       // this captures the output of the program to make sure bad threading exceptions didn't happen
-      assertFalse("Standard error contains java.lang.IndexOutOfBoundsException", byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"));
+      assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"),
+                                                   "Standard error contains java.lang.IndexOutOfBoundsException");
    }
 
    private Publisher createPublisher(PubSubImplementation impl) throws IOException
