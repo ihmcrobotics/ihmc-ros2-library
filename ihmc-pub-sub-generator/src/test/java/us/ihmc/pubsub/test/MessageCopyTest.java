@@ -1,10 +1,9 @@
 package us.ihmc.pubsub.test;
 
 import org.junit.jupiter.api.Test;
-import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageCopyTest
 {
@@ -20,9 +19,8 @@ public class MessageCopyTest
 
       b.set(a);
 
-
-      assertTrue("not equal", a.equals(b));
-      assertTrue("not equal", a.epsilonEquals(b, 0.0));
+      assertTrue(a.equals(b), "not equal");
+      assertTrue(a.epsilonEquals(b, 0.0), "not equal");
 
       IDLElementTest c = new IDLElementTest();
       IDLElementTest d = new IDLElementTest();
@@ -33,8 +31,7 @@ public class MessageCopyTest
 
       c.set(d);
 
-
-      assertTrue("not equal", c.equals(d));
-      assertTrue("not equal", c.epsilonEquals(d, 0.0));
+      assertTrue(c.equals(d), "not equal");
+      assertTrue(c.epsilonEquals(d, 0.0), "not equal");
    }
 }

@@ -14,7 +14,6 @@
 
 package com.eprosima.idl.parser.exception;
 
-import com.eprosima.log.ColorMessage;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
 

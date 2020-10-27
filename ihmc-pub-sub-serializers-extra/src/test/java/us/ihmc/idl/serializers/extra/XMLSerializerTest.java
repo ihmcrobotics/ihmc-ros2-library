@@ -15,8 +15,6 @@
  */
 package us.ihmc.idl.serializers.extra;
 
-import static us.ihmc.robotics.Assert.*;
-
 import java.io.IOException;
 
 import org.junit.jupiter.api.Assertions;
@@ -55,9 +53,8 @@ public class XMLSerializerTest
       String xml = serializer.serializeToString(msg);
       
       ChatMessage res = serializer.deserialize(xml);
-      
-      assertEquals(msg, res);
-      
+
+      Assertions.assertEquals(msg, res);
    }
 
 }

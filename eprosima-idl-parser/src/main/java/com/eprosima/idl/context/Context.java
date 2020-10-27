@@ -28,8 +28,6 @@ import java.util.Collection;
 
 import com.eprosima.idl.parser.grammar.IDLLexer;
 import com.eprosima.idl.util.Pair;
-import com.eprosima.idl.parser.tree.TreeNode;
-import com.eprosima.idl.parser.tree.Notebook;
 import com.eprosima.idl.parser.tree.Definition;
 import com.eprosima.idl.parser.tree.Module;
 import com.eprosima.idl.parser.tree.Interface;

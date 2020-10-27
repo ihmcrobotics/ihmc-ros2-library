@@ -16,8 +16,6 @@ package com.eprosima.idl.parser.typecode;
 
 import org.antlr.stringtemplate.StringTemplate;
 
-import com.eprosima.idl.util.Pair;
-
 public class SequenceTypeCode extends ContainerTypeCode
 {
     public SequenceTypeCode(String maxsize)

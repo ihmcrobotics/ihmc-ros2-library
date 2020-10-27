@@ -1,9 +1,8 @@
 package us.ihmc.idl;
 
 import org.junit.jupiter.api.Test;
-import us.ihmc.idl.IDLSequence;
 
-import static us.ihmc.robotics.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StringBuilderHolderTest
 {
@@ -30,11 +29,11 @@ public class StringBuilderHolderTest
 
       System.out.println(a);
 
-      assertTrue(a.get(0).toString().equals("b1"));
-      assertTrue(a.get(1).toString().equals("b2"));
-      assertTrue(a.get(2).toString().equals("b3"));
-      assertTrue(a.get(3).toString().equals("b4"));
-      assertTrue(a.get(4).toString().equals("b5"));
-      assertTrue(a.get(5).toString().equals("b6"));
+      assertEquals("b1", a.get(0).toString());
+      assertEquals("b2", a.get(1).toString());
+      assertEquals("b3", a.get(2).toString());
+      assertEquals("b4", a.get(3).toString());
+      assertEquals("b5", a.get(4).toString());
+      assertEquals("b6", a.get(5).toString());
    }
 }

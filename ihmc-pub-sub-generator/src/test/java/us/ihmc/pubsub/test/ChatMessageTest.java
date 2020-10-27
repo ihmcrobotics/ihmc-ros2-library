@@ -5,9 +5,9 @@ import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.common.SerializedPayload;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static us.ihmc.robotics.Assert.*;
+import java.io.IOException;
 
 public class ChatMessageTest
 {
@@ -81,6 +81,5 @@ public class ChatMessageTest
 
       assertEquals(invertedMsg.getSender().toString(), senderIn);
       assertEquals(invertedMsg.getMsg().toString(), msgIn);
-
    }
 }

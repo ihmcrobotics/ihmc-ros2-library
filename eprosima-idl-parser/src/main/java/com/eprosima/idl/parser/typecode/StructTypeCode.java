@@ -14,11 +14,6 @@
 
 package com.eprosima.idl.parser.typecode;
 
-import com.eprosima.idl.util.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.antlr.stringtemplate.StringTemplate;
 
 public class StructTypeCode extends MemberedTypeCode
