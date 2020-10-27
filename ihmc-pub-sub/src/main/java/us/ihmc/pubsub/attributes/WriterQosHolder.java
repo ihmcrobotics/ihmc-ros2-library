@@ -24,8 +24,6 @@ package us.ihmc.pubsub.attributes;
  */
 public interface WriterQosHolder extends QosInterface
 {
-   
-   
    /**
     * Get implementation specific version of the WriterQos parameters
     * 

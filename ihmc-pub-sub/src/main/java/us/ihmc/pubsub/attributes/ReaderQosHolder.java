@@ -24,7 +24,6 @@ package us.ihmc.pubsub.attributes;
  */
 public interface ReaderQosHolder extends QosInterface
 {
-
    /**
     * Function to get an implementation specific version of the reader QoS parameters.
     * 

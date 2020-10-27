@@ -89,10 +89,7 @@ public class Locator
       else
       {
          throw new RuntimeException("Trying to set a non-IPv4 address on a locator of kind LOCATOR_KIND_UDPv4");
-
       }
-      
-      
    }
 
    /**

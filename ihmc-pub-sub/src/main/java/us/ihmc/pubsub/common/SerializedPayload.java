@@ -114,5 +114,4 @@ public class SerializedPayload
    {
       return data;
    }
-
 }

@@ -24,7 +24,6 @@ package us.ihmc.pubsub.attributes;
  */
 public class ResourceLimitsQosPolicy extends QosPolicy
 {
-
    private int maxSamples = 5000;
    private int max_instances = 10;
    private int max_samples_per_instance = 400;
@@ -74,7 +73,4 @@ public class ResourceLimitsQosPolicy extends QosPolicy
    {
       this.allocated_samples = allocated_samples;
    }
-   
-   
-
 }

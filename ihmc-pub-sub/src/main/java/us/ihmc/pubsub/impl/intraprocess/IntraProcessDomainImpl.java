@@ -38,7 +38,6 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 class IntraProcessDomainImpl
 {
-
 //   private final Executor threadPool = Executors.newCachedThreadPool(); // give threads a name
    private final Executor threadPool = Executors.newSingleThreadExecutor(new ThreadFactory()
    {
@@ -177,7 +176,6 @@ class IntraProcessDomainImpl
       {
          domainLock.unlock();
       }
-
    }
 
    Subscriber createSubscriber(IntraProcessParticipant participant, IntraProcessSubscriberAttributes attr, SubscriberListener listener) throws IOException
@@ -221,7 +219,6 @@ class IntraProcessDomainImpl
       {
          domainLock.unlock();
       }
-
    }
 
    boolean removeSubscriber(IntraProcessSubscriber subscriber)
@@ -263,7 +260,6 @@ class IntraProcessDomainImpl
          domainLock.unlock();
 
       }
-
    }
 
    IntraProcessPublisher createPublisher(IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener)
@@ -307,7 +303,6 @@ class IntraProcessDomainImpl
       {
          domainLock.unlock();
       }
-
    }
 
    boolean removePublisher(IntraProcessPublisher publisher)
@@ -388,5 +383,4 @@ class IntraProcessDomainImpl
          domainLock.unlock();
       }
    }
-
 }

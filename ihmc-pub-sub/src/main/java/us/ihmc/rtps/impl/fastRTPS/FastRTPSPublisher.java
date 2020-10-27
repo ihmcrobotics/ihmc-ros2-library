@@ -64,7 +64,6 @@ class FastRTPSPublisher implements Publisher
             e.printStackTrace();
          }
       }
-
    }
 
    @SuppressWarnings("unchecked")
@@ -133,11 +132,9 @@ class FastRTPSPublisher implements Publisher
             throw new IOException("This publisher has been removed from the domain");
          }
          
-        
          serializeMessage(data);
          impl.write(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }
-      
    }
 
    private void serializeMessage(Object data) throws IOException
@@ -161,8 +158,7 @@ class FastRTPSPublisher implements Publisher
          {
             throw new IOException("This publisher has been removed from the domain");
          }
-         
-        
+
          serializeMessage(data);
          impl.dispose(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }
@@ -177,8 +173,7 @@ class FastRTPSPublisher implements Publisher
          {
             throw new IOException("This publisher has been removed from the domain");
          }
-         
-        
+
          serializeMessage(data);
          impl.unregister(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }
@@ -193,13 +188,11 @@ class FastRTPSPublisher implements Publisher
          {
             throw new IOException("This publisher has been removed from the domain");
          }
-         
-        
+
          serializeMessage(data);
          impl.dispose_and_unregister(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }
    }
-
 
    @Override
    public Guid getGuid()
@@ -230,8 +223,6 @@ class FastRTPSPublisher implements Publisher
    {
       delete();
    }
-
-
 
    @Override
    public int removeAllChange() throws IOException

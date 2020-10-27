@@ -34,7 +34,6 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
    {
       super();
    }
-   
 
    /**
     * @return Implementation specific representation of the underlying RTPS layer attributes. 
@@ -63,7 +62,6 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
       this.time.setSeconds(time.getSeconds());
       this.time.setNanosec(time.getNanoseconds());
       discoveryConfig.setLeaseDuration(this.time);
-      
    }
    
    public void bindToAddress(InetAddress... addresses)
@@ -78,7 +76,6 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
             locator.setIPv4Adress(address);
 
             FastRTPSCommonFunctions.convertToCPPLocator(locator, locatorN);           
-            
          }
          else
          {
@@ -88,8 +85,7 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
          rtps.getDefaultUnicastLocatorList().push_back(locatorN);
       }
    }
-   
-   
+
    public void delete()
    {
       rtps().delete();

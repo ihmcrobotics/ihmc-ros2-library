@@ -119,7 +119,6 @@ public interface InterchangeSerializer
    /**
     * Enum
     */
-   
    public Enum<?> read_type_c(String name, Class<? extends Enum<?>> enumType);
    
    public void write_type_c(String name, Enum<?> val);
@@ -161,8 +160,7 @@ public interface InterchangeSerializer
    public void write_type_f(String name, float[] arr);
    public void read_type_f(String name, double[] arr);
    public void write_type_f(String name, double[] arr);
-   
-   
+
    /**
     * Signed long, 64 bit
     */
@@ -209,6 +207,4 @@ public interface InterchangeSerializer
    public void read_type_15(String name, StringBuilder res);
    
    public void write_type_15(String name, StringBuilder str);   
-
-   
 }

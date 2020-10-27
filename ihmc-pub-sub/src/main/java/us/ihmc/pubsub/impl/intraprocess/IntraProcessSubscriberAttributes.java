@@ -21,7 +21,6 @@ import us.ihmc.pubsub.attributes.SubscriberAttributes;
 
 class IntraProcessSubscriberAttributes extends SubscriberAttributes
 {
-
    private final IntraProcessReaderQosHolder qos = new IntraProcessReaderQosHolder();
 
    @Override
@@ -74,5 +73,4 @@ class IntraProcessSubscriberAttributes extends SubscriberAttributes
 
       return false;
    }
-
 }

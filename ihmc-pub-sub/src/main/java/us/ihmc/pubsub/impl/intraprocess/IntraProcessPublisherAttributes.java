@@ -19,7 +19,6 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 
 class IntraProcessPublisherAttributes extends PublisherAttributes
 {
-
    private final IntraProcessWriterQosHolder qos = new IntraProcessWriterQosHolder();
    
    @Override
@@ -34,7 +33,4 @@ class IntraProcessPublisherAttributes extends PublisherAttributes
       // TODO Auto-generated method stub
       return null;
    }
-   
-   
-
 }

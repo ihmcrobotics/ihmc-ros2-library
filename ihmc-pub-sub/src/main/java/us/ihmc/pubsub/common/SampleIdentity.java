@@ -42,5 +42,4 @@ public class SampleIdentity
       this.guid.set(other.guid);
       this.sequenceNumber.set(other.sequenceNumber);
    }
-
 }

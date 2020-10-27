@@ -38,7 +38,6 @@ import us.ihmc.pubsub.TopicDataType;
  */
 public interface IDLSequence
 {
-
    public static class Boolean extends TByteArrayList implements IDLSequence
    {
       public static final byte True = 1;
@@ -113,7 +112,6 @@ public interface IDLSequence
       {
          return maxSize;
       }
-
    }
 
    public static class Byte extends TByteArrayList implements IDLSequence
@@ -769,7 +767,6 @@ public interface IDLSequence
          
          return true;
       }
-
    }
 
    /**
@@ -864,7 +861,6 @@ public interface IDLSequence
       {
          super(maxSize, topicDataType::createData);
          this.topicDataType = topicDataType;
-         
       }
 
       @Override
@@ -956,7 +952,6 @@ public interface IDLSequence
       return capacity() - size();
    }
 
-   
    /**
     * Internal function to deserialize 
     * 
@@ -972,5 +967,4 @@ public interface IDLSequence
     * @param cdr
     */
    public void writeElement(int i, CDR cdr);
-
 }

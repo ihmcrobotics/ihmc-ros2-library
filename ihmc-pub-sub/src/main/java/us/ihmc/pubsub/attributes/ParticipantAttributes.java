@@ -29,13 +29,10 @@ import us.ihmc.pubsub.common.Time;
  */
 public abstract class ParticipantAttributes
 {
-   
-   
    protected ParticipantAttributes()
    {
    }
-   
-   
+
    /**
     * Get implementation specific representation of the underlying RTPS layer attributes.
     * 

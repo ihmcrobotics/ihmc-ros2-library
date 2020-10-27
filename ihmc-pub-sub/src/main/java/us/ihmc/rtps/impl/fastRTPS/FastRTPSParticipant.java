@@ -197,7 +197,6 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("ParticipantAttributes<?> is not of base class FastRTPSParticipantAttributes");
       }
       getGuid(guid);
-
    }
 
    synchronized void delete()
@@ -234,7 +233,6 @@ class FastRTPSParticipant implements Participant
    @Override
    public synchronized int get_no_publisher(String target_topic)
    {
-
       int count = 0;
       for (int i = 0; i < publishers.size(); i++)
       {
@@ -423,7 +421,6 @@ class FastRTPSParticipant implements Participant
          if (subscribers.get(i).getTopicDataType().equals(type))
          {
             throw new IOException("TopicDataType in use by subscriber " + subscribers.get(i).getAttributes().getTopic().getTopicName());
-
          }
       }
 
@@ -444,5 +441,4 @@ class FastRTPSParticipant implements Participant
    {
       return impl != null;
    }
-
 }

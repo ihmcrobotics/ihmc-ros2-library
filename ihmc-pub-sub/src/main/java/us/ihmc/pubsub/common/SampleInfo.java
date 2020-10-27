@@ -96,7 +96,6 @@ public class SampleInfo
       this.dataLength = dataLength;
    }
 
-   
    public void set(SampleInfo other)
    {
       this.dataLength = other.dataLength;

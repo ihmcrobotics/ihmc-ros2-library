@@ -41,8 +41,7 @@ public class ParticipantDiscoveryInfo
       this.guid = guid;
       this.status = status;
    }
-   
-   
+
    /**
     * Associated GUID.
     * 
@@ -78,5 +77,4 @@ public class ParticipantDiscoveryInfo
    {
       return name;
    }
-   
 }

@@ -20,12 +20,10 @@ import us.ihmc.pubsub.attributes.WriterQosHolder;
 
 class IntraProcessWriterQosHolder extends IntraProcessQosInterface implements WriterQosHolder
 {
-   
    IntraProcessWriterQosHolder()
    {
       super();
    }
-   
    
    IntraProcessWriterQosHolder(IntraProcessWriterQosHolder orig)
    {
@@ -49,7 +47,4 @@ class IntraProcessWriterQosHolder extends IntraProcessQosInterface implements Wr
    {
       return PublishModeKind.SYNCHRONOUS_PUBLISH_MODE;
    }
-
-   
-   
 }

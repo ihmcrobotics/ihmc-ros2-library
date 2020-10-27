@@ -23,7 +23,6 @@ package us.ihmc.pubsub.common;
  */
 public class Time
 {
-
    public static final Time Infinite = new Time(0x7fffffff, 0xffffffff);
    public static final Time Zero = new Time(0, 0);
    public static final Time Invalid = new Time(-1, 0xffffffff);

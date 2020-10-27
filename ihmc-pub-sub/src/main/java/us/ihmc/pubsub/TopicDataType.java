@@ -34,7 +34,6 @@ public interface TopicDataType<T>
    /**
     * Serialize method, it should be implemented by the user.
     *
-    * 
     * @param data
     * @param serializedPayload
     * 
@@ -54,7 +53,6 @@ public interface TopicDataType<T>
    /**
     * Interchange Serialize method, it should be implemented by the user.
     *
-    * 
     * @param data
     * @param serializedPayload
     * 

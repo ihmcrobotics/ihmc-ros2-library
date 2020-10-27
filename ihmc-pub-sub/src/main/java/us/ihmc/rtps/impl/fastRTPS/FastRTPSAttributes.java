@@ -15,7 +15,6 @@
  */
 package us.ihmc.rtps.impl.fastRTPS;
 
-
 class FastRTPSAttributes
 {
    static TopicAttributes createAttributes(us.ihmc.pubsub.attributes.TopicAttributes topic)
@@ -36,7 +35,6 @@ class FastRTPSAttributes
       resourceLimitsQosPolicy.setMax_samples_per_instance(topic.getResourceLimitsQosPolicy().getMax_samples_per_instance());
       
       return attributes;
-      
    }
    
    static ThroughputControllerDescriptor createTroughputControllerDescriptor(us.ihmc.pubsub.attributes.ThroughputControllerDescriptor throughputController)

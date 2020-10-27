@@ -70,6 +70,4 @@ public class MatchingInfo
    {
       return guid;
    }
-   
-   
 }

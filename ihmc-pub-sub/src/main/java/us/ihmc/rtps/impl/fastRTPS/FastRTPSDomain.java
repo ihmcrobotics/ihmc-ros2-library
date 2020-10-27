@@ -56,8 +56,7 @@ public class FastRTPSDomain implements Domain
             throw new RuntimeException("Loading FastRTPS using the builtin FastRTPS library, but the system FastRTPS library is already loaded.");
          }
       }
-      
-      
+
       return instance;
    }
 
@@ -65,7 +64,6 @@ public class FastRTPSDomain implements Domain
    {
       try
       {
-         
          if(useSystemFastRTPS)
          {
             System.loadLibrary("FastRTPSWrapper");
@@ -144,7 +142,6 @@ public class FastRTPSDomain implements Domain
          }
       }
       throw new IllegalArgumentException("Participant is not part of this domain.");
-
    }
 
    @Override
@@ -262,5 +259,4 @@ public class FastRTPSDomain implements Domain
    {
       us.ihmc.rtps.impl.fastRTPS.LogLevel.setLogLevel(level.getLevel());
    }
-
 }

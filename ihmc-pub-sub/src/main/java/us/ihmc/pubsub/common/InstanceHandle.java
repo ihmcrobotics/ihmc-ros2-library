@@ -47,5 +47,4 @@ public class InstanceHandle
    {
       this.value = value;
    }
-
 }

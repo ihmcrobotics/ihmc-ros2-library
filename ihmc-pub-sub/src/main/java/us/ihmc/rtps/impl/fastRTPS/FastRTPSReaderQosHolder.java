@@ -34,7 +34,6 @@ class FastRTPSReaderQosHolder implements ReaderQosHolder
    {
       this.readerQos = new ReaderQos();
       ownMemory = true;
-
    }
 
    public FastRTPSReaderQosHolder(ReaderQos readerQos)
@@ -118,5 +117,4 @@ class FastRTPSReaderQosHolder implements ReaderQosHolder
       
       return Collections.unmodifiableList(partitions);
    }
-   
 }

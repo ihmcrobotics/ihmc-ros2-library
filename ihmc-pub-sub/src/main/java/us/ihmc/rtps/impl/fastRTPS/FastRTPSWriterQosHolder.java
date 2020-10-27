@@ -30,7 +30,6 @@ public class FastRTPSWriterQosHolder implements WriterQosHolder
    private final boolean ownMemory;
    private final WriterQos writerQos;
 
-
    @SuppressWarnings("unchecked")
    public WriterQos getWriterQos()
    {
@@ -47,7 +46,6 @@ public class FastRTPSWriterQosHolder implements WriterQosHolder
    {
       this();
       this.writerQos.setQos(writerQos, true);
-
    }
 
    public void delete()
@@ -55,7 +53,6 @@ public class FastRTPSWriterQosHolder implements WriterQosHolder
       if (ownMemory)
       {
          getWriterQos().delete();
-
       }
    }
 
@@ -131,5 +128,4 @@ public class FastRTPSWriterQosHolder implements WriterQosHolder
    {
       return FastRTPSCommonFunctions.toJavaPublishModeKind(getWriterQos().getM_publishMode().getKind());
    }
-   
 }

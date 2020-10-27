@@ -19,7 +19,6 @@ import java.util.List;
 
 public interface QosInterface
 {
-
    /**
     * Sets the reliability kind of the Qos Parameters 
     * 
@@ -32,8 +31,7 @@ public interface QosInterface
     * @return the reliability setting for Qos
     */
    ReliabilityKind getReliabilityKind();
-   
-   
+
    /**
     * 
     * @return the durability settings of the Qos parameters
@@ -46,7 +44,6 @@ public interface QosInterface
     */
    void setDurabilityKind(DurabilityKind durabilityKind);
    
-   
    /**
     * 
     * @return ownership policy of the QoS parameters
@@ -58,7 +55,6 @@ public interface QosInterface
     * @param ownerShipPolicyKind the desired ownership policy
     */
    void setOwnershipPolicyKind(OwnerShipPolicyKind ownerShipPolicyKind);
-   
    
    /**
     * Add partition to the list of partitions this endpoint is connected to
@@ -77,5 +73,4 @@ public interface QosInterface
     * @return true if the endpoint is a writer (publisher), false otherwise 
     */
    boolean isWriter();
-
 }

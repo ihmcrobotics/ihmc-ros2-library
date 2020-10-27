@@ -93,7 +93,6 @@ public class IntraProcessDomain implements Domain
       {
          throw new IllegalArgumentException("Participant attributes have to be an instance of IntraProcessParticipantAttributes. Use domain.createParticipantAttributes()");
       }
-
    }
 
    @Override
@@ -248,5 +247,4 @@ public class IntraProcessDomain implements Domain
    {
       return new IntraProcessParticipantAttributes();
    }
-
 }

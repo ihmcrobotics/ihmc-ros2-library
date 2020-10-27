@@ -45,7 +45,6 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
    private final Guid guid = new Guid();
    private final MatchingInfo matchingInfo = new MatchingInfo();
    
-
    private final ByteBuffer keyBuffer = ByteBuffer.allocateDirect(16);
 
    private final SampleInfoMarshaller sampleInfoMarshaller = new SampleInfoMarshaller();
@@ -80,12 +79,10 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       {
          try
          {
-            
             if (listener != null)
             {
                listener.onNewDataMessage(FastRTPSSubscriber.this);
             }
-
          }
          catch (Throwable e)
          {
@@ -107,7 +104,6 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       
       payload.setLength(dataLength);         
       payload.getData().limit(dataLength);
-
    }
 
    FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, FastRTPSSubscriberAttributes attributes, SubscriberListener<T> listener,
@@ -182,20 +178,18 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public void waitForUnreadMessage(int timeoutInMilliseconds)
    {
-         synchronized(destructorLock)
+      synchronized(destructorLock)
+      {
+         if(impl == null)
          {
-            if(impl == null)
-            {
-               throw new RuntimeException("This subscriber has been removed from the domain");
-            }
-            impl.waitForUnreadMessage();
+            throw new RuntimeException("This subscriber has been removed from the domain");
          }
-      
+         impl.waitForUnreadMessage();
+      }
    }
 
    private void updateSampleInfo(SampleInfoMarshaller marshaller, SampleInfo info, ByteBuffer keyBuffer)
    {
-      
       marshaller.getInstanceHandleValue(keyBuffer);
       keyBuffer.clear();
       
@@ -214,7 +208,6 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       SampleIdentity relatedId = info.getRelatedSampleIdentity();
       relatedId.getGuid().fromPrimitives(marshaller.getRelatedSampleIdentity_GuidHigh(), marshaller.getRelatedSampleIdentity_GuidLow());
       relatedId.getSequenceNumber().set(marshaller.getRelatedSampleIdentity_sequenceNumberHigh(), marshaller.getRelatedSampleIdentity_sequenceNumberLow());
-
    }
 
    @Override
@@ -364,5 +357,4 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          return impl != null;
       }
    }
-
 }

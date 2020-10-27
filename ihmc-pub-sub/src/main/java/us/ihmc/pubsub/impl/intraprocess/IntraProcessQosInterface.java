@@ -53,7 +53,6 @@ abstract class IntraProcessQosInterface implements QosInterface
       this.reliability = orig.reliability;
       this.durability = orig.durability;
       this.partitions.addAll(orig.partitions);
-
    }
 
    @Override
@@ -103,5 +102,4 @@ abstract class IntraProcessQosInterface implements QosInterface
    {
       return partitions;
    }
-
 }

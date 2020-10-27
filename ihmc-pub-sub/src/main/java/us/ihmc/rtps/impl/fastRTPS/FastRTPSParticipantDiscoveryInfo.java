@@ -42,5 +42,4 @@ public class FastRTPSParticipantDiscoveryInfo extends ParticipantDiscoveryInfo
    {
       return participant.getName(infoPtr);
    }
-
 }
