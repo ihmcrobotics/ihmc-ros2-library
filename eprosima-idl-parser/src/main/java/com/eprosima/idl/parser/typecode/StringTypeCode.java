@@ -14,10 +14,6 @@
 
 package com.eprosima.idl.parser.typecode;
 
-import java.util.List;
-
-import org.antlr.stringtemplate.StringTemplate;
-
 import com.eprosima.idl.util.Pair;
 
 public class StringTypeCode extends TypeCode

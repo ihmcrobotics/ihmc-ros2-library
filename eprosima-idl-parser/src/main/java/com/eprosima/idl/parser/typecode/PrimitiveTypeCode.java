@@ -14,10 +14,6 @@
 
 package com.eprosima.idl.parser.typecode;
 
-import org.antlr.stringtemplate.StringTemplate;
-
-import com.eprosima.idl.util.Pair;
-
 public class PrimitiveTypeCode extends TypeCode
 {
     public PrimitiveTypeCode(int kind)

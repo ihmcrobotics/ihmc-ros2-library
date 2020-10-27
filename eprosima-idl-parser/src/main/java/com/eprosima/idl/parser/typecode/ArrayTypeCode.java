@@ -19,8 +19,6 @@ import java.util.ArrayList;
 
 import org.antlr.stringtemplate.StringTemplate;
 
-import com.eprosima.idl.util.Pair;
-
 public class ArrayTypeCode extends ContainerTypeCode
 {
     public ArrayTypeCode()

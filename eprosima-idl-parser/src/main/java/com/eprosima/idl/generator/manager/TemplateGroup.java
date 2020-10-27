@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.StringTemplateGroup;
 
 import com.eprosima.log.Log;
 

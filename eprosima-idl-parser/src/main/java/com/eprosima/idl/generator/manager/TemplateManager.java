@@ -14,7 +14,6 @@
 
 package com.eprosima.idl.generator.manager;
 
-import com.eprosima.idl.generator.manager.TemplateGroup;
 import com.eprosima.log.ColorMessage;
 import com.eprosima.idl.parser.typecode.TypeCode;
 

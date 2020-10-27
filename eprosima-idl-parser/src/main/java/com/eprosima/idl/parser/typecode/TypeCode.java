@@ -16,12 +16,8 @@ package com.eprosima.idl.parser.typecode;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
-import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 
 import java.util.Map;
-
-import com.eprosima.idl.generator.manager.TemplateUtil;
-import com.eprosima.idl.util.Pair;
 
 public abstract class TypeCode
 {

@@ -14,9 +14,6 @@
 
 package com.eprosima.idl.parser.tree;
 
-import com.eprosima.idl.context.Context;
-import com.eprosima.idl.parser.typecode.TypeCode;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;

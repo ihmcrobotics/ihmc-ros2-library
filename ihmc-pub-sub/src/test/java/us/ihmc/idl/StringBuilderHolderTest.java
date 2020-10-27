@@ -1,7 +1,6 @@
 package us.ihmc.idl;
 
 import org.junit.jupiter.api.Test;
-import us.ihmc.idl.IDLSequence;
 
 import static us.ihmc.robotics.Assert.*;
 
