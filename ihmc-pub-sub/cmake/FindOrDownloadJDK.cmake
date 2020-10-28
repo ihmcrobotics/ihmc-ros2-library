@@ -1,5 +1,3 @@
-#
-#
 #   This helper finds or downloads the OpenJDK to include in the project.
 #
 #   A custom target "JDK" is defined that pulls in the JDK dependency if JNI does not found a system installation.
@@ -7,8 +5,6 @@
 #   Variables set:
 #   
 #   JNI_INCLUDE_DIRS
-#
-
 
 find_package(JNI QUIET)
 
@@ -16,9 +12,7 @@ if(JNI_FOUND)
     message(STATUS "Found JNI. Using system installation")
     add_custom_target(JDK)
 else()
-
     include(ExternalProject)
-
 
     # Unset cache variables from FindJNI, not used here.
     unset(JAVA_AWT_LIBRARY CACHE)
@@ -40,7 +34,6 @@ else()
     
     message(STATUS "JNI not found, downloading from ${JDK_URL}")
 
-
     ExternalProject_Add(JDK
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/JDK"
         URL "${JDK_URL}"
@@ -50,8 +43,7 @@ else()
     )
     
     ExternalProject_Get_Property(JDK source_dir)
-    
-    
+
     set(JAVA_INCLUDE_PATH "${source_dir}/include")
     SET(JAVA_INCLUDE_PATH2 
         ${JAVA_INCLUDE_PATH}/darwin
@@ -64,16 +56,12 @@ else()
         ${JAVA_INCLUDE_PATH}/alpha
         ${JAVA_INCLUDE_PATH}/aix
     )
-    
-    
+
     set(JNI_INCLUDE_DIRS
         ${JAVA_INCLUDE_PATH}
         ${JAVA_INCLUDE_PATH2}
         ${JAVA_AWT_INCLUDE_PATH}
     )
-    
-
-    
 endif()
 
 unset(JNI_LIBRARIES)

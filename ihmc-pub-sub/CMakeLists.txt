@@ -7,7 +7,6 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 find_package(ament_cmake QUIET)
 
 if(ament_cmake_FOUND)
@@ -16,16 +15,10 @@ else()
     set(STANDALONE_PLUGIN ON CACHE BOOL "Build as a dynamic library to be installed. Used in combination with ROS2.")
 endif()
 
-
-
-
 include(FindOrDownloadJDK)
 include_directories(${JNI_INCLUDE_DIRS})
 
-
-
 if(STANDALONE_PLUGIN)
-
     include(ExternalProject)
 
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -51,7 +44,6 @@ if(STANDALONE_PLUGIN)
         CMAKE_ARGS  
             "-DCMAKE_INSTALL_PREFIX=${FOONATHAN_INSTALL_PREFIX}"
         )
-
 
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
     message(STATUS "FastRTPS Install Prefix: ${FAST_RTPS_INSTALL_PREFIX}")
@@ -108,12 +100,8 @@ else(STANDALONE_PLUGIN)
     add_custom_target(FastRTPS)
 endif(STANDALONE_PLUGIN)
 
-
-
-
 add_subdirectory(cppsrc/FastRTPS)
 add_subdirectory(swig/FastRTPS)
-
 
 if(NOT STANDALONE_PLUGIN)
     if(ament_cmake_FOUND)
@@ -121,5 +109,4 @@ if(NOT STANDALONE_PLUGIN)
         ament_export_libraries(FastRTPSWrapper)
         ament_package()
     endif()
-
 endif()
