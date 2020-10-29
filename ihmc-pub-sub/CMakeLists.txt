@@ -10,10 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(ament_cmake QUIET)
 
 if(ament_cmake_FOUND)
-    set(STANDALONE_PLUGIN OFF CACHE BOOL "Build as a static library to be included from the classpath.")
+    set(STANDALONE_PLUGIN OFF CACHE BOOL "Build as a dynamic library to be installed. Used in combination with ROS2.")
 else()
-    set(STANDALONE_PLUGIN ON CACHE BOOL "Build as a dynamic library to be installed. Used in combination with ROS2.")
+    set(STANDALONE_PLUGIN ON CACHE BOOL "Build as a static library to be included from the classpath.")
 endif()
+message(STATUS "Standalone plugin mode: ${STANDALONE_PLUGIN}")
 
 include(FindOrDownloadJDK)
 include_directories(${JNI_INCLUDE_DIRS})
