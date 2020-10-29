@@ -19,8 +19,10 @@ swig_link_libraries(FastRTPSWrapper FastRTPSNativeImpl ${SWIG_OPT_LINKER_FLAGS})
 
 if(STANDALONE_PLUGIN)
     # Install in classpath
+    message(STATUS "Classpath mode. 'make install' will install FastRTPSWrapper to ${LIBRARY_RESOURCES_DIRECTORY}")
     install(TARGETS FastRTPSWrapper RUNTIME DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} LIBRARY DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
 else()
     # Install in library
+    message(STATUS "ROS 2 library mode. 'make install' will install FastRTPSWrapper to the bin/ and lib/ folders")
     install(TARGETS FastRTPSWrapper RUNTIME DESTINATION bin LIBRARY DESTINATION lib)
 endif()
