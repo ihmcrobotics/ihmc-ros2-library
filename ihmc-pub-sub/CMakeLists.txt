@@ -10,10 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(ament_cmake QUIET)
 
 if(ament_cmake_FOUND)
-    set(STANDALONE_PLUGIN OFF CACHE BOOL "Build as a static library to be included from the classpath.")
+    set(STANDALONE_PLUGIN OFF CACHE BOOL "Build as a dynamic library to be installed. Used in combination with ROS2.")
 else()
-    set(STANDALONE_PLUGIN ON CACHE BOOL "Build as a dynamic library to be installed. Used in combination with ROS2.")
+    set(STANDALONE_PLUGIN ON CACHE BOOL "Build as a static library to be included from the classpath.")
 endif()
+message(STATUS "Standalone plugin mode: ${STANDALONE_PLUGIN}")
 
 include(FindOrDownloadJDK)
 include_directories(${JNI_INCLUDE_DIRS})
@@ -22,16 +23,16 @@ if(STANDALONE_PLUGIN)
     include(ExternalProject)
 
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX
-        ${CMAKE_SOURCE_DIR} CACHE PATH "IHMC Pub Sub install prefix" FORCE
-        )
-    endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        message(STATUS "Setting initial default cmake install prefix path: ${CMAKE_SOURCE_DIR}")
+        set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR} CACHE PATH "IHMC Pub Sub install prefix" FORCE)
+    endif()
+    message(STATUS "CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
+    message(STATUS "CMake current binary directory: ${CMAKE_CURRENT_BINARY_DIR}")
 
     SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS")
 
     set(FOONATHAN_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-install")
-    message(STATUS "Foonathan memory prefix: ${FOONATHAN_INSTALL_PREFIX}")
-
+    message(STATUS "Foonathan memory install prefix: ${FOONATHAN_INSTALL_PREFIX}")
     ExternalProject_Add(FoonathanMemory
         SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/foonathan_memory_vendor/"
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-build"
@@ -44,16 +45,14 @@ if(STANDALONE_PLUGIN)
         CMAKE_ARGS  
             "-DCMAKE_INSTALL_PREFIX=${FOONATHAN_INSTALL_PREFIX}"
         )
+    if(WIN32)
+        SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/share/foonathan_memory/cmake/")
+    else()
+        SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/lib/foonathan_memory/cmake/")
+    endif()
 
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
-    message(STATUS "FastRTPS Install Prefix: ${FAST_RTPS_INSTALL_PREFIX}")
-
-	if(WIN32)
-		SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/share/foonathan_memory/cmake/")
-	else()
-		SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/lib/foonathan_memory/cmake/")
-	endif()
-
+    message(STATUS "FastRTPS install prefix: ${FAST_RTPS_INSTALL_PREFIX}")
     ExternalProject_Add(FastRTPS
         SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/Fast-RTPS"
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-build"
@@ -80,8 +79,8 @@ if(STANDALONE_PLUGIN)
         "-Dfoonathan_memory_DIR=${foonathan_memory_DIR}"
         "-DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}"
     )
-    ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
 
+    ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
     link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib" "${FOONATHAN_INSTALL_PREFIX}/lib")
     include_directories("${FAST_RTPS_INSTALL_PREFIX}/include")
     if(WIN32)
@@ -89,8 +88,8 @@ if(STANDALONE_PLUGIN)
     else()
         set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.6.2 dl)
     endif()
-
-else(STANDALONE_PLUGIN)
+else()
+    message(STATUS "Including fastrtps from ROS 2 build")
     find_package(fastrtps REQUIRED)
     
     link_directories("${fastrtps_LIB_DIR}")
@@ -98,9 +97,10 @@ else(STANDALONE_PLUGIN)
     
     set(FastRTPS_LIBRARIES fastcdr fastrtps)
     add_custom_target(FastRTPS)
-endif(STANDALONE_PLUGIN)
+endif()
 
 add_subdirectory(cppsrc/FastRTPS)
+add_subdirectory(cppsrc/test)
 add_subdirectory(swig/FastRTPS)
 
 if(NOT STANDALONE_PLUGIN)

@@ -6,10 +6,12 @@
 #   
 #   JNI_INCLUDE_DIRS
 
-find_package(JNI QUIET)
+find_package(Java 1.8)
+include(FindJNI)
 
-if(JNI_FOUND)
-    message(STATUS "Found JNI. Using system installation")
+if(Java_FOUND AND JNI_FOUND)
+    message(STATUS "Found Java version ${Java_VERSION} at ${JAVA_JVM_LIBRARY}")
+    message(STATUS "Found JNI: ${JNI_INCLUDE_DIRS}")
     add_custom_target(JDK)
 else()
     include(ExternalProject)
