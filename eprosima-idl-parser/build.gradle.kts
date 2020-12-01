@@ -17,7 +17,7 @@ ihmc {
 mainDependencies {
    api("org.antlr:antlr4:4.2.2")
    api("org.antlr:stringtemplate:3.2")
-   api("us.ihmc:ihmc-commons:0.30.2")
+   api("us.ihmc:ihmc-commons:0.30.4")
 }
 
 tasks.named("antlr4", me.champeau.gradle.Antlr4Task::class) {
