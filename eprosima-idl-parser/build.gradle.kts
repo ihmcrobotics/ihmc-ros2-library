@@ -1,7 +1,7 @@
 plugins {
    id("us.ihmc.ihmc-build")
    id("us.ihmc.ihmc-ci") version "7.4"
-   id("us.ihmc.ihmc-cd") version "1.14"
+   id("us.ihmc.ihmc-cd") version "1.20"
    id("me.champeau.gradle.antlr4") version "0.1"
 }
 
