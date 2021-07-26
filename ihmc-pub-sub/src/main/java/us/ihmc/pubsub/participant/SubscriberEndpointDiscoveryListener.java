@@ -30,7 +30,6 @@ import us.ihmc.pubsub.common.Guid;
  */
 public interface SubscriberEndpointDiscoveryListener
 {
-
    /**
     * Callback for a new topic change event.
     * 
@@ -49,5 +48,4 @@ public interface SubscriberEndpointDiscoveryListener
    void subscriberTopicChange(boolean isAlive, Guid guid, boolean expectsInlineQos, ArrayList<Locator> unicastLocatorList,
                               ArrayList<Locator> multicastLocatorList, Guid participantGuid, String typeName, String topicName, int userDefinedId,
                               TopicKind javaTopicKind, ReaderQosHolder readerQosHolder);
-
 }

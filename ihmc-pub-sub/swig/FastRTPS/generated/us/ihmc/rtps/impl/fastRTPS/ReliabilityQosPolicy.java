@@ -39,6 +39,10 @@ public class ReliabilityQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_ReliabilityQosPolicy(), true);
   }
 
+  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
+    return FastRTPSJNI.ReliabilityQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  }
+
   public void setKind(ReliabilityQosPolicyKind value) {
     FastRTPSJNI.ReliabilityQosPolicy_kind_set(swigCPtr, this, value.swigValue());
   }
@@ -54,10 +58,6 @@ public class ReliabilityQosPolicy extends QosPolicy {
   public Time_t getMax_blocking_time() {
     long cPtr = FastRTPSJNI.ReliabilityQosPolicy_max_blocking_time_get(swigCPtr, this);
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
-  }
-
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.ReliabilityQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
   }
 
 }

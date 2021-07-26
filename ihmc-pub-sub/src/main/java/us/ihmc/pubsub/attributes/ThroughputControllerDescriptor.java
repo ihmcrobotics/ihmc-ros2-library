@@ -52,5 +52,4 @@ public class ThroughputControllerDescriptor
    {
       this.periodMillisecs = periodMillisecs;
    }
-
 }

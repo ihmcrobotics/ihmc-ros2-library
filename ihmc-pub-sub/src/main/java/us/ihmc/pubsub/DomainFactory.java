@@ -22,7 +22,7 @@ public class DomainFactory
 {
    public enum PubSubImplementation
    {
-      FAST_RTPS, INTRAPROCESS;
+      FAST_RTPS, FAST_RTPS_SYSTEM_LIBRARY, INTRAPROCESS;
    }
    
    public static synchronized Domain getDefaultDomain()
@@ -35,7 +35,9 @@ public class DomainFactory
       switch(impl)
       {
       case FAST_RTPS:
-         return FastRTPSDomain.getInstance();
+         return FastRTPSDomain.getInstance(false);
+      case FAST_RTPS_SYSTEM_LIBRARY:
+         return FastRTPSDomain.getInstance(true);
       case INTRAPROCESS:
          return IntraProcessDomain.getInstance();
       default:

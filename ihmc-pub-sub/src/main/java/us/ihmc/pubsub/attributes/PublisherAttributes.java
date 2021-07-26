@@ -27,7 +27,6 @@ import java.util.List;
  */
 public abstract class PublisherAttributes
 {
-
    private int userDefinedID = -1;
    private int entityID = -1;
    protected final MemoryManagementPolicy historyMemoryPolicy = MemoryManagementPolicy.PREALLOCATED_MEMORY_MODE;
@@ -111,5 +110,4 @@ public abstract class PublisherAttributes
    {
       return throughputController;
    }
-
 }

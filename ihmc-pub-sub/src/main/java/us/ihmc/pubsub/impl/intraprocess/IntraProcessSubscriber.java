@@ -31,7 +31,6 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 class IntraProcessSubscriber<T> implements Subscriber<T>
 {
-
    private class MessageHolder
    {
       @SuppressWarnings("unchecked")
@@ -54,7 +53,6 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    private IntraProcessParticipant participant;
    private SubscriberListener<T> listener;
 
-   
    private final LinkedList<MessageHolder> messageQueue;
 
    private boolean available = true;
@@ -232,5 +230,4 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
          listener.onNewDataMessage(this);
       }
    }
-
 }

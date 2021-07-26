@@ -30,7 +30,6 @@ public class HistoryQosPolicy extends QosPolicy
    {
       KEEP_LAST_HISTORY_QOS, /** Keep only a number of samples, default value. **/
       KEEP_ALL_HISTORY_QOS /** Keep all samples until the ResourceLimitsQosPolicy are exhausted. **/
-
    }
    
    private HistoryQosPolicyKind kind = HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS;
@@ -60,5 +59,4 @@ public class HistoryQosPolicy extends QosPolicy
    {
       this.depth = depth;
    }
-   
 }

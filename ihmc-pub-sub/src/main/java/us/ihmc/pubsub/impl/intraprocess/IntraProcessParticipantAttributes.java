@@ -29,8 +29,7 @@ class IntraProcessParticipantAttributes extends ParticipantAttributes
    IntraProcessParticipantAttributes()
    {
    }
-   
-   
+
    @Override
    public <T> T rtps()
    {
@@ -75,7 +74,4 @@ class IntraProcessParticipantAttributes extends ParticipantAttributes
    {
       return leaseDuration;
    }
-   
-   
-
 }

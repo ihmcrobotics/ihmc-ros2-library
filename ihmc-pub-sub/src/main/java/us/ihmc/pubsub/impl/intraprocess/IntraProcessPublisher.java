@@ -31,7 +31,6 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 
 class IntraProcessPublisher <T> implements Publisher
 {
-
    private boolean available = true;
    private final TopicDataType<T> topicDataType;
    private final Guid guid;
@@ -40,7 +39,6 @@ class IntraProcessPublisher <T> implements Publisher
    private IntraProcessParticipant participant;
    private PublisherListener listener;
 
-   
    private long sequence = 0;
 
    public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr,
@@ -64,14 +62,12 @@ class IntraProcessPublisher <T> implements Publisher
       {
          throw new RuntimeException("Only volatile durability is supported for intraprocess communication");
       }
-
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public void write(Object data) throws IOException
    {
-      
       SampleInfo newInfo = new SampleInfo();
       newInfo.setDataLength(topicDataType.getTypeSize());
       newInfo.setSampleKind(ChangeKind.ALIVE);
@@ -154,5 +150,4 @@ class IntraProcessPublisher <T> implements Publisher
       participant = null;
       listener = null;
    }
-
 }

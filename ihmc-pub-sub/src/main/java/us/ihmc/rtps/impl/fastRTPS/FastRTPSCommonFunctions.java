@@ -267,5 +267,4 @@ class FastRTPSCommonFunctions
          return PublishModeKind.SYNCHRONOUS_PUBLISH_MODE;
       }
    }
-   
 }

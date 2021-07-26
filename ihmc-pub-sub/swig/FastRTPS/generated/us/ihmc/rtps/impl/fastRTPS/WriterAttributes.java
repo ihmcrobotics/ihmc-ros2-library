@@ -57,6 +57,32 @@ public class WriterAttributes {
     return (cPtr == 0) ? null : new WriterTimes(cPtr, false);
   }
 
+  public void setLiveliness_kind(LivelinessQosPolicyKind value) {
+    FastRTPSJNI.WriterAttributes_liveliness_kind_set(swigCPtr, this, value.swigValue());
+  }
+
+  public LivelinessQosPolicyKind getLiveliness_kind() {
+    return LivelinessQosPolicyKind.swigToEnum(FastRTPSJNI.WriterAttributes_liveliness_kind_get(swigCPtr, this));
+  }
+
+  public void setLiveliness_lease_duration(Time_t value) {
+    FastRTPSJNI.WriterAttributes_liveliness_lease_duration_set(swigCPtr, this, Time_t.getCPtr(value), value);
+  }
+
+  public Time_t getLiveliness_lease_duration() {
+    long cPtr = FastRTPSJNI.WriterAttributes_liveliness_lease_duration_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new Time_t(cPtr, false);
+  }
+
+  public void setLiveliness_announcement_period(Time_t value) {
+    FastRTPSJNI.WriterAttributes_liveliness_announcement_period_set(swigCPtr, this, Time_t.getCPtr(value), value);
+  }
+
+  public Time_t getLiveliness_announcement_period() {
+    long cPtr = FastRTPSJNI.WriterAttributes_liveliness_announcement_period_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new Time_t(cPtr, false);
+  }
+
   public void setMode(RTPSWriterPublishMode value) {
     FastRTPSJNI.WriterAttributes_mode_set(swigCPtr, this, value.swigValue());
   }
@@ -74,12 +100,37 @@ public class WriterAttributes {
     return (cPtr == 0) ? null : new ThroughputControllerDescriptor(cPtr, false);
   }
 
-  public void setDisableHeartbeatPiggyback(boolean value) {
-    FastRTPSJNI.WriterAttributes_disableHeartbeatPiggyback_set(swigCPtr, this, value);
+  public void setDisable_heartbeat_piggyback(boolean value) {
+    FastRTPSJNI.WriterAttributes_disable_heartbeat_piggyback_set(swigCPtr, this, value);
   }
 
-  public boolean getDisableHeartbeatPiggyback() {
-    return FastRTPSJNI.WriterAttributes_disableHeartbeatPiggyback_get(swigCPtr, this);
+  public boolean getDisable_heartbeat_piggyback() {
+    return FastRTPSJNI.WriterAttributes_disable_heartbeat_piggyback_get(swigCPtr, this);
+  }
+
+  public void setMatched_readers_allocation(SWIGTYPE_p_ResourceLimitedContainerConfig value) {
+    FastRTPSJNI.WriterAttributes_matched_readers_allocation_set(swigCPtr, this, SWIGTYPE_p_ResourceLimitedContainerConfig.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_ResourceLimitedContainerConfig getMatched_readers_allocation() {
+    return new SWIGTYPE_p_ResourceLimitedContainerConfig(FastRTPSJNI.WriterAttributes_matched_readers_allocation_get(swigCPtr, this), true);
+  }
+
+  public void setDisable_positive_acks(boolean value) {
+    FastRTPSJNI.WriterAttributes_disable_positive_acks_set(swigCPtr, this, value);
+  }
+
+  public boolean getDisable_positive_acks() {
+    return FastRTPSJNI.WriterAttributes_disable_positive_acks_get(swigCPtr, this);
+  }
+
+  public void setKeep_duration(Time_t value) {
+    FastRTPSJNI.WriterAttributes_keep_duration_set(swigCPtr, this, Time_t.getCPtr(value), value);
+  }
+
+  public Time_t getKeep_duration() {
+    long cPtr = FastRTPSJNI.WriterAttributes_keep_duration_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new Time_t(cPtr, false);
   }
 
 }

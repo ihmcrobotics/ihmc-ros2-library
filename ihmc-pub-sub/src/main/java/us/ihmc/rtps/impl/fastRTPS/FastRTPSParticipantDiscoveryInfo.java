@@ -27,7 +27,7 @@ public class FastRTPSParticipantDiscoveryInfo extends ParticipantDiscoveryInfo
    {
    }
    
-   public void updateInfo(DISCOVERY_STATUS status, NativeParticipantListener nativeParticipantListener, long infoPtr, long guidHigh, long guidLow)
+   public void updateInfo(us.ihmc.rtps.impl.fastRTPS.ParticipantDiscoveryInfo.DISCOVERY_STATUS status, NativeParticipantListener nativeParticipantListener, long infoPtr, long guidHigh, long guidLow)
    {
       guid.fromPrimitives(guidHigh, guidLow);
 
@@ -42,5 +42,4 @@ public class FastRTPSParticipantDiscoveryInfo extends ParticipantDiscoveryInfo
    {
       return participant.getName(infoPtr);
    }
-
 }

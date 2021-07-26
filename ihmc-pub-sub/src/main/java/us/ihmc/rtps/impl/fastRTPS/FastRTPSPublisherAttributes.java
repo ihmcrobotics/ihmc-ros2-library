@@ -22,7 +22,6 @@ public class FastRTPSPublisherAttributes extends PublisherAttributes
    private final WriterTimes times = new WriterTimes();
    private final FastRTPSWriterQosHolder qos = new FastRTPSWriterQosHolder();
 
-
    FastRTPSPublisherAttributes()
    {
       super();
@@ -62,5 +61,4 @@ public class FastRTPSPublisherAttributes extends PublisherAttributes
    {
       return times;
    }
-   
 }

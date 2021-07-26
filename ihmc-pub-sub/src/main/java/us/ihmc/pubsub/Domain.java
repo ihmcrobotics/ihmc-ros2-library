@@ -165,8 +165,7 @@ public interface Domain
     * @return true if publisher is found and removed
     */
    public boolean removePublisher(Publisher publisher);
-   
-   
+
    /**
     * Remove a Subscriber.
     * 
@@ -231,8 +230,7 @@ public interface Domain
     * @return Implementation specific version of PublisherAttributes
     */
    public PublisherAttributes createPublisherAttributes();
-   
-   
+
    /**
     * Generate an implementation specific version of ParticipantAttributes
     * 
@@ -303,7 +301,6 @@ public interface Domain
          for(String partition : partitions)
          {
             subscriberAttributes.getQos().addPartition(partition);
-            
          }
       }
       return subscriberAttributes;
@@ -347,7 +344,6 @@ public interface Domain
          for(String partition : partitions)
          {
             publisherAttributes.getQos().addPartition(partition);
-            
          }
       }
       
@@ -357,6 +353,5 @@ public interface Domain
       }
       
       return publisherAttributes;
-
    }
 }

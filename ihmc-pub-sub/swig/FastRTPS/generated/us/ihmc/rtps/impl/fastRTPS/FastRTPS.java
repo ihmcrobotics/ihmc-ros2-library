@@ -72,4 +72,22 @@ public class FastRTPS implements FastRTPSConstants {
     return (cPtr == 0) ? null : new Locator_t(cPtr, false);
   }
 
+  public static Locator_t getRemoteUnicastLocator(RemoteLocatorList list, int index) {
+    long cPtr = FastRTPSJNI.getRemoteUnicastLocator(RemoteLocatorList.getCPtr(list), list, index);
+    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
+  }
+
+  public static Locator_t getRemoteMulticastLocator(RemoteLocatorList list, int index) {
+    long cPtr = FastRTPSJNI.getRemoteMulticastLocator(RemoteLocatorList.getCPtr(list), list, index);
+    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
+  }
+
+  public static int getRemoteMulticastLocatorSize(RemoteLocatorList list) {
+    return FastRTPSJNI.getRemoteMulticastLocatorSize(RemoteLocatorList.getCPtr(list), list);
+  }
+
+  public static int getRemoteUnicastLocatorSize(RemoteLocatorList list) {
+    return FastRTPSJNI.getRemoteUnicastLocatorSize(RemoteLocatorList.getCPtr(list), list);
+  }
+
 }

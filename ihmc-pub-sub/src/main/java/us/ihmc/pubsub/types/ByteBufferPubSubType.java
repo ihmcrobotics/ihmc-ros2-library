@@ -43,9 +43,7 @@ import us.ihmc.pubsub.common.SerializedPayload;
 public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
 {
    private final String name;
-   
    private final int maxSize;
-
    private final String userName;
    private final int userMaxSize;
    
@@ -160,7 +158,5 @@ public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
    public void deserialize(InterchangeSerializer serializer, ByteBuffer data)
    {
       throw new NotImplementedException("Interchange serializer is not implemented for bytebuffer pub/sub type");
-      
    }
-
 }

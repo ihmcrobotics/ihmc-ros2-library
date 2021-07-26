@@ -152,6 +152,4 @@ public class SequenceNumber
       this.low = other.low;
       this.high = other.high;
    }
-
-   
 }

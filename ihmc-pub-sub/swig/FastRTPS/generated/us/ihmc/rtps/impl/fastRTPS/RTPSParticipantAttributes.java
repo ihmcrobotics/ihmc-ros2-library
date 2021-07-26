@@ -57,23 +57,6 @@ public class RTPSParticipantAttributes {
     return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
   }
 
-  public void setDefaultOutLocatorList(LocatorList_t value) {
-    FastRTPSJNI.RTPSParticipantAttributes_defaultOutLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
-  }
-
-  public LocatorList_t getDefaultOutLocatorList() {
-    long cPtr = FastRTPSJNI.RTPSParticipantAttributes_defaultOutLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
-  }
-
-  public void setDefaultSendPort(long value) {
-    FastRTPSJNI.RTPSParticipantAttributes_defaultSendPort_set(swigCPtr, this, value);
-  }
-
-  public long getDefaultSendPort() {
-    return FastRTPSJNI.RTPSParticipantAttributes_defaultSendPort_get(swigCPtr, this);
-  }
-
   public void setSendSocketBufferSize(long value) {
     FastRTPSJNI.RTPSParticipantAttributes_sendSocketBufferSize_set(swigCPtr, this, value);
   }
@@ -90,6 +73,18 @@ public class RTPSParticipantAttributes {
     return FastRTPSJNI.RTPSParticipantAttributes_listenSocketBufferSize_get(swigCPtr, this);
   }
 
+  public void setPrefix(SWIGTYPE_p_GuidPrefix_t value) {
+    FastRTPSJNI.RTPSParticipantAttributes_prefix_set(swigCPtr, this, SWIGTYPE_p_GuidPrefix_t.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_GuidPrefix_t getPrefix() {
+    return new SWIGTYPE_p_GuidPrefix_t(FastRTPSJNI.RTPSParticipantAttributes_prefix_get(swigCPtr, this), true);
+  }
+
+  public boolean ReadguidPrefix(String pfx) {
+    return FastRTPSJNI.RTPSParticipantAttributes_ReadguidPrefix(swigCPtr, this, pfx);
+  }
+
   public void setBuiltin(BuiltinAttributes value) {
     FastRTPSJNI.RTPSParticipantAttributes_builtin_set(swigCPtr, this, BuiltinAttributes.getCPtr(value), value);
   }
@@ -99,13 +94,12 @@ public class RTPSParticipantAttributes {
     return (cPtr == 0) ? null : new BuiltinAttributes(cPtr, false);
   }
 
-  public void setPort(PortParameters value) {
-    FastRTPSJNI.RTPSParticipantAttributes_port_set(swigCPtr, this, PortParameters.getCPtr(value), value);
+  public void setPort(SWIGTYPE_p_PortParameters value) {
+    FastRTPSJNI.RTPSParticipantAttributes_port_set(swigCPtr, this, SWIGTYPE_p_PortParameters.getCPtr(value));
   }
 
-  public PortParameters getPort() {
-    long cPtr = FastRTPSJNI.RTPSParticipantAttributes_port_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new PortParameters(cPtr, false);
+  public SWIGTYPE_p_PortParameters getPort() {
+    return new SWIGTYPE_p_PortParameters(FastRTPSJNI.RTPSParticipantAttributes_port_get(swigCPtr, this), true);
   }
 
   public void setUserData(octetVector value) {
@@ -125,30 +119,6 @@ public class RTPSParticipantAttributes {
     return FastRTPSJNI.RTPSParticipantAttributes_participantID_get(swigCPtr, this);
   }
 
-  public void setUse_IP4_to_send(boolean value) {
-    FastRTPSJNI.RTPSParticipantAttributes_use_IP4_to_send_set(swigCPtr, this, value);
-  }
-
-  public boolean getUse_IP4_to_send() {
-    return FastRTPSJNI.RTPSParticipantAttributes_use_IP4_to_send_get(swigCPtr, this);
-  }
-
-  public void setUse_IP6_to_send(boolean value) {
-    FastRTPSJNI.RTPSParticipantAttributes_use_IP6_to_send_set(swigCPtr, this, value);
-  }
-
-  public boolean getUse_IP6_to_send() {
-    return FastRTPSJNI.RTPSParticipantAttributes_use_IP6_to_send_get(swigCPtr, this);
-  }
-
-  public void setName(String nam) {
-    FastRTPSJNI.RTPSParticipantAttributes_setName(swigCPtr, this, nam);
-  }
-
-  public String getName() {
-    return FastRTPSJNI.RTPSParticipantAttributes_getName(swigCPtr, this);
-  }
-
   public void setUseBuiltinTransports(boolean value) {
     FastRTPSJNI.RTPSParticipantAttributes_useBuiltinTransports_set(swigCPtr, this, value);
   }
@@ -157,12 +127,28 @@ public class RTPSParticipantAttributes {
     return FastRTPSJNI.RTPSParticipantAttributes_useBuiltinTransports_get(swigCPtr, this);
   }
 
+  public void setAllocation(SWIGTYPE_p_RTPSParticipantAllocationAttributes value) {
+    FastRTPSJNI.RTPSParticipantAttributes_allocation_set(swigCPtr, this, SWIGTYPE_p_RTPSParticipantAllocationAttributes.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_RTPSParticipantAllocationAttributes getAllocation() {
+    return new SWIGTYPE_p_RTPSParticipantAllocationAttributes(FastRTPSJNI.RTPSParticipantAttributes_allocation_get(swigCPtr, this), true);
+  }
+
   public void setProperties(SWIGTYPE_p_PropertyPolicy value) {
     FastRTPSJNI.RTPSParticipantAttributes_properties_set(swigCPtr, this, SWIGTYPE_p_PropertyPolicy.getCPtr(value));
   }
 
   public SWIGTYPE_p_PropertyPolicy getProperties() {
     return new SWIGTYPE_p_PropertyPolicy(FastRTPSJNI.RTPSParticipantAttributes_properties_get(swigCPtr, this), true);
+  }
+
+  public void setName(String nam) {
+    FastRTPSJNI.RTPSParticipantAttributes_setName(swigCPtr, this, nam);
+  }
+
+  public String getName() {
+    return FastRTPSJNI.RTPSParticipantAttributes_getName(swigCPtr, this);
   }
 
 }

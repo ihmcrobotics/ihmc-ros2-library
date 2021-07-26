@@ -76,7 +76,6 @@ public class Guid
             return false;
          return true;
       }
-
    }
 
    public class Entity
@@ -203,5 +202,4 @@ public class Guid
       System.arraycopy(guid.guidPrefix.value, 0, guidPrefix.value, 0, guidPrefix.value.length);
       System.arraycopy(guid.entity.value, 0, entity.value, 0, entity.value.length);
    }
-
 }

@@ -37,7 +37,6 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class IntraProcessParticipant implements Participant
 {
-
    private final IntraProcessParticipantAttributes attributes;
    private final Guid guid = new Guid();
 
@@ -67,7 +66,6 @@ public class IntraProcessParticipant implements Participant
       random.nextBytes(guidBytes);
 
       guid.getGuidPrefix().setValue(guidBytes);
-
    }
 
    IntraProcessDomainImpl getDomain()
@@ -91,7 +89,7 @@ public class IntraProcessParticipant implements Participant
    {
       return attributes;
    }
-
+   
    @Override
    public void registerEndpointDiscoveryListeners(PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener,
                                                   SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener)
@@ -143,7 +141,6 @@ public class IntraProcessParticipant implements Participant
       child.getGuidPrefix().setValue(guid.getGuidPrefix().getValue());
       child.getEntity().setValue(ByteBuffer.allocate(4).putInt(entityId).array());
       return child;
-      
    }
    
    IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr, PublisherListener listener) throws IOException

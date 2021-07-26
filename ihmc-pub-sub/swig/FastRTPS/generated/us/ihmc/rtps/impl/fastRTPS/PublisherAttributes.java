@@ -84,12 +84,12 @@ public class PublisherAttributes {
     return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
   }
 
-  public void setOutLocatorList(LocatorList_t value) {
-    FastRTPSJNI.PublisherAttributes_outLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setRemoteLocatorList(LocatorList_t value) {
+    FastRTPSJNI.PublisherAttributes_remoteLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
   }
 
-  public LocatorList_t getOutLocatorList() {
-    long cPtr = FastRTPSJNI.PublisherAttributes_outLocatorList_get(swigCPtr, this);
+  public LocatorList_t getRemoteLocatorList() {
+    long cPtr = FastRTPSJNI.PublisherAttributes_remoteLocatorList_get(swigCPtr, this);
     return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
   }
 
@@ -116,6 +116,14 @@ public class PublisherAttributes {
 
   public SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy getProperties() {
     return new SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy(FastRTPSJNI.PublisherAttributes_properties_get(swigCPtr, this), true);
+  }
+
+  public void setMatched_subscriber_allocation(SWIGTYPE_p_ResourceLimitedContainerConfig value) {
+    FastRTPSJNI.PublisherAttributes_matched_subscriber_allocation_set(swigCPtr, this, SWIGTYPE_p_ResourceLimitedContainerConfig.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_ResourceLimitedContainerConfig getMatched_subscriber_allocation() {
+    return new SWIGTYPE_p_ResourceLimitedContainerConfig(FastRTPSJNI.PublisherAttributes_matched_subscriber_allocation_get(swigCPtr, this), true);
   }
 
   public short getUserDefinedID() {

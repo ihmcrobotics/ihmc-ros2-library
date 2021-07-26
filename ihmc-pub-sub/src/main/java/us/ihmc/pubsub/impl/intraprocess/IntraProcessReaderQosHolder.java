@@ -19,7 +19,6 @@ import us.ihmc.pubsub.attributes.ReaderQosHolder;
 
 class IntraProcessReaderQosHolder extends IntraProcessQosInterface implements ReaderQosHolder
 {
-
    IntraProcessReaderQosHolder()
    {
       super();
@@ -41,5 +40,4 @@ class IntraProcessReaderQosHolder extends IntraProcessQosInterface implements Re
    {
       return null;
    }
-
 }
