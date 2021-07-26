@@ -26,7 +26,9 @@ file:///path/to/ihmc-pub-sub-group/ihmc-pub-sub/src/test/build/reports/tests/tes
 file:///path/to/ihmc-pub-sub-group/ihmc-pub-sub-generator/src/test/build/reports/tests/test/index.html
 ```
 
-Note: Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few times to see if it passes.
+Notes: 
+- Currently execution stops on `IntraprocessLargeCopyTest` and freezes forever. You have to run the tests manually in the IDE. There are a few that require setting up the allocation instrumenter.
+- Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few times to see if it passes.
 
 #### Step 3: Update version
 
@@ -38,7 +40,7 @@ Publish artifacts to Bintray.
 
 `gradle compositePublish -PpublishUrl=ihmcRelease`
 
-Go to [https://bintray.com/ihmcrobotics/maven-release](https://bintray.com/ihmcrobotics/maven-release) and "Publish All".
+Check when they become available at [https://repo.maven.apache.org/maven2/us/ihmc/](https://repo.maven.apache.org/maven2/us/ihmc/).
 
 #### Step 5: Draft and publish release on GitHub
 
