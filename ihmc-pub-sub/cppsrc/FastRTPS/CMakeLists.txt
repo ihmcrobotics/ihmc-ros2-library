@@ -10,7 +10,7 @@ add_library(FastRTPSNativeImpl
             loglevel
             ${HEADER_FILES}
 )
-target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES})
+target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES} rt)
 
 add_executable(PublisherExample publisherexample)
 add_executable(SubscriberExample subscriberexample)

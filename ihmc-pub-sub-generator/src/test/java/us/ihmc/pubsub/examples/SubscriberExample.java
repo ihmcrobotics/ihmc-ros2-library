@@ -83,7 +83,7 @@ public class SubscriberExample
       domain.setLogLevel(LogLevel.INFO);
 
       ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
+      attributes.setDomainId(1);
       attributes.setLeaseDuration(Time.Infinite);
       attributes.setName("SubscriberExample");
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
