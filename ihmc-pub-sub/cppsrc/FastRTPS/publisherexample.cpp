@@ -31,11 +31,10 @@ int main()
 {
     RTPSParticipantAttributes rtps;
     rtps.setName("Participant");
-    rtps.builtin.domainId = 1;
 
     ExampleParticipantListener participantListener;
 
-    NativeParticipantImpl participant(rtps, &participantListener);
+    NativeParticipantImpl participant(1, rtps, &participantListener);
 
     participant.registerType("chat::ChatMessage", 64000, false);
 

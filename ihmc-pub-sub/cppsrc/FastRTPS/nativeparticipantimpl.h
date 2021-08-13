@@ -65,7 +65,7 @@ namespace fastRTPS{
     class NativeParticipantImpl
     {
     public:
-        NativeParticipantImpl(RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException);
+        NativeParticipantImpl(int domainId, RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException);
         int64_t getGuidLow();
         int64_t getGuidHigh();
         Participant* getParticipant();

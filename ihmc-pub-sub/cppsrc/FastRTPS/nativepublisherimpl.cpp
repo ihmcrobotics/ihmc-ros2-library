@@ -99,7 +99,7 @@ void NativePublisherImpl::write(unsigned char *data, int32_t dataLength, int16_t
 void NativePublisherImpl::dispose(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength)
 {
     RawDataWrapper dataWrapper(data, dataLength, (uint16_t)encapsulation, key, keyLength);
-    if(!publisher->dispose(&dataWrapper))
+    if(!publisher->dispose(&dataWrapper, c_InstanceHandle_Unknown))
     {
         std::cerr << "[nativepublisherimpl.cpp] In function dispose(): Cannot dispose data" << std::endl;
     }
@@ -109,7 +109,7 @@ void NativePublisherImpl::dispose(unsigned char *data, int32_t dataLength, int16
 void NativePublisherImpl::unregister(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char *key, int32_t keyLength)
 {
     RawDataWrapper dataWrapper(data, dataLength, (uint16_t)encapsulation, key, keyLength);
-    if(!publisher->unregister(&dataWrapper))
+    if(!publisher->unregister_instance(&dataWrapper, c_InstanceHandle_Unknown))
     {
         std::cerr << "[nativepublisherimpl.cpp] In function unregister(): Cannot unregister data" << std::endl;
 
@@ -119,9 +119,13 @@ void NativePublisherImpl::unregister(unsigned char *data, int32_t dataLength, in
 void NativePublisherImpl::dispose_and_unregister(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char *key, int32_t keyLength)
 {
     RawDataWrapper dataWrapper(data, dataLength, (uint16_t)encapsulation, key, keyLength);
-    if(!publisher->dispose_and_unregister(&dataWrapper))
+    if(!publisher->unregister_instance(&dataWrapper, c_InstanceHandle_Unknown))
     {
-        std::cerr << "[nativepublisherimpl.cpp] In function dispose_and_unregister(): Cannot dispose_and_unregister data" << std::endl;
+        std::cerr << "[nativepublisherimpl.cpp] In function dispose_and_unregister(): Cannot unregister_instace data" << std::endl;
+    }
+    if(!publisher->dispose(&dataWrapper, c_InstanceHandle_Unknown))
+    {
+        std::cerr << "[nativepublisherimpl.cpp] In function dispose_and_unregister(): Cannot dispose data" << std::endl;
     }
 }
 

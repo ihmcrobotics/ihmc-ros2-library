@@ -26,14 +26,14 @@
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
-NativeParticipantImpl::NativeParticipantImpl(RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException) :
+NativeParticipantImpl::NativeParticipantImpl(int domainId, RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException) :
     listener(listener),
     m_rtps_listener(this)
 {
 
     ParticipantAttributes attributes;
     attributes.rtps = rtps;
-
+    attributes.domainId = domainId;
 
 
 	try

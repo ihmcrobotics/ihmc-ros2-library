@@ -15,7 +15,7 @@ set(SWIG_OPT_LINKER_FLAGS "")
 
 swig_add_module(FastRTPSWrapper java FastRTPS.i)
 add_dependencies(FastRTPSWrapper FastRTPSNativeImpl JDK)
-swig_link_libraries(FastRTPSWrapper FastRTPSNativeImpl ${SWIG_OPT_LINKER_FLAGS})
+swig_link_libraries(FastRTPSWrapper FastRTPSNativeImpl ${SWIG_OPT_LINKER_FLAGS} rt)
 
 if(STANDALONE_PLUGIN)
     # Install in classpath
