@@ -48,8 +48,8 @@ public class TransportPriorityQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_TransportPriorityQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.TransportPriorityQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.TransportPriorityQosPolicy_clear(swigCPtr, this);
   }
 
 }

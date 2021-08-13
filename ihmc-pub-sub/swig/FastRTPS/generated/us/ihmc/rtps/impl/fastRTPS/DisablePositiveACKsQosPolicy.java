@@ -40,8 +40,8 @@ public class DisablePositiveACKsQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_DisablePositiveACKsQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DisablePositiveACKsQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.DisablePositiveACKsQosPolicy_clear(swigCPtr, this);
   }
 
   public void setEnabled(boolean value) {

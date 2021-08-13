@@ -40,8 +40,8 @@ public class OwnershipStrengthQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_OwnershipStrengthQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.OwnershipStrengthQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.OwnershipStrengthQosPolicy_clear(swigCPtr, this);
   }
 
   public void setValue(long value) {

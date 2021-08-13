@@ -40,8 +40,8 @@ public class HistoryQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_HistoryQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.HistoryQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.HistoryQosPolicy_clear(swigCPtr, this);
   }
 
   public void setKind(HistoryQosPolicyKind value) {

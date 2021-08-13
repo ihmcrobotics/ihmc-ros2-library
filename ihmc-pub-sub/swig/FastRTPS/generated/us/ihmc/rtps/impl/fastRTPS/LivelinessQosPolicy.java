@@ -40,8 +40,8 @@ public class LivelinessQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_LivelinessQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.LivelinessQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.LivelinessQosPolicy_clear(swigCPtr, this);
   }
 
   public void setKind(LivelinessQosPolicyKind value) {

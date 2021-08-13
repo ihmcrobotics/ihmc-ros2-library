@@ -190,7 +190,7 @@ class FastRTPSParticipant implements Participant
       if (att instanceof FastRTPSParticipantAttributes)
       {
          this.attributes = (FastRTPSParticipantAttributes) att;
-         impl = new NativeParticipantImpl(attributes.rtps(), nativeListener);
+         impl = new NativeParticipantImpl(attributes.getDomainId(), attributes.rtps(), nativeListener);
       }
       else
       {

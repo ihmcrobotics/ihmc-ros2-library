@@ -32,7 +32,7 @@ class FastRTPSCommonFunctions
    public static final int LOCATOR_KIND_UDPv4 = 1;
    public static final int LOCATOR_KIND_UDPv6 = 2;
 
-   public static LocatorList_t convertToCPPLocatorList(List<Locator> in, LocatorList_t out)
+   public static LocatorList convertToCPPLocatorList(List<Locator> in, LocatorList out)
    {
       out.clear();
       for (int i = 0; i < in.size(); i++)
@@ -45,7 +45,7 @@ class FastRTPSCommonFunctions
       return out;
    }
 
-   public static void convertToJavaLocatorList(LocatorList_t in, ArrayList<Locator> out)
+   public static void convertToJavaLocatorList(LocatorList in, ArrayList<Locator> out)
    {
       for (int i = 0; i < in.size(); i++)
       {

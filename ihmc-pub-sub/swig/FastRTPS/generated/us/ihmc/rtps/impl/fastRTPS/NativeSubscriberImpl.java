@@ -36,8 +36,8 @@ public class NativeSubscriberImpl {
     }
   }
 
-  public NativeSubscriberImpl(int entityId, int userDefinedID, int maximumPayloadSize, SWIGTYPE_p_MemoryManagementPolicy_t memoryManagementPolicy, TopicAttributes topic, SWIGTYPE_p_fastdds__dds__ReaderQos qos, SWIGTYPE_p_ReaderTimes times, SWIGTYPE_p_LocatorList_t unicastLocatorList, SWIGTYPE_p_LocatorList_t multicastLocatorList, SWIGTYPE_p_LocatorList_t remoteLocatorList, boolean expectsInlineQos, NativeParticipantImpl participant, NativeSubscriberListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeSubscriberImpl(entityId, userDefinedID, maximumPayloadSize, SWIGTYPE_p_MemoryManagementPolicy_t.getCPtr(memoryManagementPolicy), TopicAttributes.getCPtr(topic), topic, SWIGTYPE_p_fastdds__dds__ReaderQos.getCPtr(qos), SWIGTYPE_p_ReaderTimes.getCPtr(times), SWIGTYPE_p_LocatorList_t.getCPtr(unicastLocatorList), SWIGTYPE_p_LocatorList_t.getCPtr(multicastLocatorList), SWIGTYPE_p_LocatorList_t.getCPtr(remoteLocatorList), expectsInlineQos, NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
+  public NativeSubscriberImpl(int entityId, int userDefinedID, int maximumPayloadSize, MemoryManagementPolicy_t memoryManagementPolicy, TopicAttributes topic, ReaderQos qos, ReaderTimes times, LocatorList unicastLocatorList, LocatorList multicastLocatorList, LocatorList remoteLocatorList, boolean expectsInlineQos, NativeParticipantImpl participant, NativeSubscriberListener listener) throws java.io.IOException {
+    this(FastRTPSJNI.new_NativeSubscriberImpl(entityId, userDefinedID, maximumPayloadSize, memoryManagementPolicy.swigValue(), TopicAttributes.getCPtr(topic), topic, ReaderQos.getCPtr(qos), qos, ReaderTimes.getCPtr(times), times, LocatorList.getCPtr(unicastLocatorList), unicastLocatorList, LocatorList.getCPtr(multicastLocatorList), multicastLocatorList, LocatorList.getCPtr(remoteLocatorList), remoteLocatorList, expectsInlineQos, NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
   }
 
   public boolean createSubscriber() {
@@ -56,17 +56,17 @@ public class NativeSubscriberImpl {
     FastRTPSJNI.NativeSubscriberImpl_waitForUnreadMessage(swigCPtr, this);
   }
 
-  public boolean readnextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller, TopicKind_t topicKind, SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind ownerShipQosKind) {
+  public boolean readnextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind) {
   assert data.isDirect() : "Buffer must be allocated direct.";
     {
-      return FastRTPSJNI.NativeSubscriberImpl_readnextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller, topicKind.swigValue(), SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind.getCPtr(ownerShipQosKind));
+      return FastRTPSJNI.NativeSubscriberImpl_readnextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller, topicKind.swigValue(), ownerShipQosKind.swigValue());
     }
   }
 
-  public boolean takeNextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller, TopicKind_t topicKind, SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind ownerShipQosKind) {
+  public boolean takeNextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind) {
   assert data.isDirect() : "Buffer must be allocated direct.";
     {
-      return FastRTPSJNI.NativeSubscriberImpl_takeNextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller, topicKind.swigValue(), SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind.getCPtr(ownerShipQosKind));
+      return FastRTPSJNI.NativeSubscriberImpl_takeNextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller, topicKind.swigValue(), ownerShipQosKind.swigValue());
     }
   }
 

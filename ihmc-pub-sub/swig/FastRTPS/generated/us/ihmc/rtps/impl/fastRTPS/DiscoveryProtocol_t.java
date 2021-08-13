@@ -15,6 +15,7 @@ public final class DiscoveryProtocol_t {
   public final static DiscoveryProtocol_t CLIENT = new DiscoveryProtocol_t("CLIENT");
   public final static DiscoveryProtocol_t SERVER = new DiscoveryProtocol_t("SERVER");
   public final static DiscoveryProtocol_t BACKUP = new DiscoveryProtocol_t("BACKUP");
+  public final static DiscoveryProtocol_t SUPER_CLIENT = new DiscoveryProtocol_t("SUPER_CLIENT");
 
   public final int swigValue() {
     return swigValue;
@@ -50,7 +51,7 @@ public final class DiscoveryProtocol_t {
     swigNext = this.swigValue+1;
   }
 
-  private static DiscoveryProtocol_t[] swigValues = { NONE, SIMPLE, EXTERNAL, CLIENT, SERVER, BACKUP };
+  private static DiscoveryProtocol_t[] swigValues = { NONE, SIMPLE, EXTERNAL, CLIENT, SERVER, BACKUP, SUPER_CLIENT };
   private static int swigNext = 0;
   private final int swigValue;
   private final String swigName;

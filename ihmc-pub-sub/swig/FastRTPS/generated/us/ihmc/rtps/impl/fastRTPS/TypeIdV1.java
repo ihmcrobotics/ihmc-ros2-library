@@ -36,12 +36,12 @@ public class TypeIdV1 extends QosPolicy {
     super.delete();
   }
 
-  public void setM_type_identifier(SWIGTYPE_p_types__TypeIdentifier value) {
-    FastRTPSJNI.TypeIdV1_m_type_identifier_set(swigCPtr, this, SWIGTYPE_p_types__TypeIdentifier.getCPtr(value));
+  public void setM_type_identifier(SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier value) {
+    FastRTPSJNI.TypeIdV1_m_type_identifier_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier.getCPtr(value));
   }
 
-  public SWIGTYPE_p_types__TypeIdentifier getM_type_identifier() {
-    return new SWIGTYPE_p_types__TypeIdentifier(FastRTPSJNI.TypeIdV1_m_type_identifier_get(swigCPtr, this), true);
+  public SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier getM_type_identifier() {
+    return new SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier(FastRTPSJNI.TypeIdV1_m_type_identifier_get(swigCPtr, this), true);
   }
 
   public TypeIdV1() {
@@ -52,12 +52,16 @@ public class TypeIdV1 extends QosPolicy {
     this(FastRTPSJNI.new_TypeIdV1__SWIG_1(TypeIdV1.getCPtr(type), type), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.TypeIdV1_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public TypeIdV1(SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier identifier) {
+    this(FastRTPSJNI.new_TypeIdV1__SWIG_2(SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier.getCPtr(identifier)), true);
   }
 
-  public boolean readFromCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg, long size) {
-    return FastRTPSJNI.TypeIdV1_readFromCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg), size);
+  public void clear() {
+    FastRTPSJNI.TypeIdV1_clear(swigCPtr, this);
+  }
+
+  public SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier get() {
+    return new SWIGTYPE_p_eprosima__fastrtps__types__TypeIdentifier(FastRTPSJNI.TypeIdV1_get(swigCPtr, this), false);
   }
 
 }

@@ -114,12 +114,12 @@ public class DiscoverySettings {
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
   }
 
-  public void setM_DiscoveryServers(SWIGTYPE_p_RemoteServerList_t value) {
-    FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_set(swigCPtr, this, SWIGTYPE_p_RemoteServerList_t.getCPtr(value));
+  public void setM_DiscoveryServers(SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t value) {
+    FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t.getCPtr(value));
   }
 
-  public SWIGTYPE_p_RemoteServerList_t getM_DiscoveryServers() {
-    return new SWIGTYPE_p_RemoteServerList_t(FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_get(swigCPtr, this), true);
+  public SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t getM_DiscoveryServers() {
+    return new SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t(FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_get(swigCPtr, this), true);
   }
 
   public void setIgnoreParticipantFlags(ParticipantFilteringFlags_t value) {
@@ -140,6 +140,14 @@ public class DiscoverySettings {
 
   public void setStaticEndpointXMLFilename(String str) {
     FastRTPSJNI.DiscoverySettings_setStaticEndpointXMLFilename(swigCPtr, this, str);
+  }
+
+  public void static_edp_xml_config(String str) {
+    FastRTPSJNI.DiscoverySettings_static_edp_xml_config__SWIG_0(swigCPtr, this, str);
+  }
+
+  public String static_edp_xml_config() {
+    return FastRTPSJNI.DiscoverySettings_static_edp_xml_config__SWIG_1(swigCPtr, this);
   }
 
 }

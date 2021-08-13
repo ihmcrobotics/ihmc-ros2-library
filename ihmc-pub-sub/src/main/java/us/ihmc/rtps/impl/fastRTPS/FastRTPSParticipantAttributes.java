@@ -30,6 +30,8 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
    private final DiscoverySettings discoveryConfig = builtin.getDiscovery_config();
    private final Time_t time = new Time_t();
    
+   private int domainId = 0;
+   
    FastRTPSParticipantAttributes()
    {
       super();
@@ -53,7 +55,12 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
    @Override
    public void setDomainId(int domain)
    {
-      builtin.setDomainId(domain);
+      this.domainId = domain;
+   }
+   
+   public int getDomainId()
+   {
+      return domainId;
    }
 
    @Override

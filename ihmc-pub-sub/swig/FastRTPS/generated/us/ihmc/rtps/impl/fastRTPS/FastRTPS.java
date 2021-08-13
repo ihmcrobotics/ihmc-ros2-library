@@ -8,7 +8,7 @@
 
 package us.ihmc.rtps.impl.fastRTPS;
 
-public class FastRTPS {
+public class FastRTPS implements FastRTPSConstants {
   public static SWIGTYPE_p_unsigned_char new_charArray(int nelements) {
     long cPtr = FastRTPSJNI.new_charArray(nelements);
     return (cPtr == 0) ? null : new SWIGTYPE_p_unsigned_char(cPtr, false);
@@ -51,127 +51,139 @@ public class FastRTPS {
     }
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind getVOLATILE_DURABILITY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind(FastRTPSJNI.VOLATILE_DURABILITY_QOS_get(), true);
+  public static boolean IsAddressDefined(Locator_t loc) {
+    return FastRTPSJNI.IsAddressDefined(Locator_t.getCPtr(loc), loc);
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind getTRANSIENT_LOCAL_DURABILITY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind(FastRTPSJNI.TRANSIENT_LOCAL_DURABILITY_QOS_get(), true);
+  public static boolean IsLocatorValid(Locator_t loc) {
+    return FastRTPSJNI.IsLocatorValid(Locator_t.getCPtr(loc), loc);
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind getTRANSIENT_DURABILITY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind(FastRTPSJNI.TRANSIENT_DURABILITY_QOS_get(), true);
+  public static DurabilityQosPolicyKind_t getVOLATILE_DURABILITY_QOS() {
+    return DurabilityQosPolicyKind_t.swigToEnum(FastRTPSJNI.VOLATILE_DURABILITY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind getPERSISTENT_DURABILITY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__DurabilityQosPolicyKind(FastRTPSJNI.PERSISTENT_DURABILITY_QOS_get(), true);
+  public static DurabilityQosPolicyKind_t getTRANSIENT_LOCAL_DURABILITY_QOS() {
+    return DurabilityQosPolicyKind_t.swigToEnum(FastRTPSJNI.TRANSIENT_LOCAL_DURABILITY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__LivelinessQosPolicyKind getAUTOMATIC_LIVELINESS_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__LivelinessQosPolicyKind(FastRTPSJNI.AUTOMATIC_LIVELINESS_QOS_get(), true);
+  public static DurabilityQosPolicyKind_t getTRANSIENT_DURABILITY_QOS() {
+    return DurabilityQosPolicyKind_t.swigToEnum(FastRTPSJNI.TRANSIENT_DURABILITY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__LivelinessQosPolicyKind getMANUAL_BY_PARTICIPANT_LIVELINESS_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__LivelinessQosPolicyKind(FastRTPSJNI.MANUAL_BY_PARTICIPANT_LIVELINESS_QOS_get(), true);
+  public static DurabilityQosPolicyKind_t getPERSISTENT_DURABILITY_QOS() {
+    return DurabilityQosPolicyKind_t.swigToEnum(FastRTPSJNI.PERSISTENT_DURABILITY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__LivelinessQosPolicyKind getMANUAL_BY_TOPIC_LIVELINESS_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__LivelinessQosPolicyKind(FastRTPSJNI.MANUAL_BY_TOPIC_LIVELINESS_QOS_get(), true);
+  public static LivelinessQosPolicyKind getAUTOMATIC_LIVELINESS_QOS() {
+    return LivelinessQosPolicyKind.swigToEnum(FastRTPSJNI.AUTOMATIC_LIVELINESS_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__ReliabilityQosPolicyKind getBEST_EFFORT_RELIABILITY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__ReliabilityQosPolicyKind(FastRTPSJNI.BEST_EFFORT_RELIABILITY_QOS_get(), true);
+  public static LivelinessQosPolicyKind getMANUAL_BY_PARTICIPANT_LIVELINESS_QOS() {
+    return LivelinessQosPolicyKind.swigToEnum(FastRTPSJNI.MANUAL_BY_PARTICIPANT_LIVELINESS_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__ReliabilityQosPolicyKind getRELIABLE_RELIABILITY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__ReliabilityQosPolicyKind(FastRTPSJNI.RELIABLE_RELIABILITY_QOS_get(), true);
+  public static LivelinessQosPolicyKind getMANUAL_BY_TOPIC_LIVELINESS_QOS() {
+    return LivelinessQosPolicyKind.swigToEnum(FastRTPSJNI.MANUAL_BY_TOPIC_LIVELINESS_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind getSHARED_OWNERSHIP_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind(FastRTPSJNI.SHARED_OWNERSHIP_QOS_get(), true);
+  public static ReliabilityQosPolicyKind getBEST_EFFORT_RELIABILITY_QOS() {
+    return ReliabilityQosPolicyKind.swigToEnum(FastRTPSJNI.BEST_EFFORT_RELIABILITY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind getEXCLUSIVE_OWNERSHIP_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__OwnershipQosPolicyKind(FastRTPSJNI.EXCLUSIVE_OWNERSHIP_QOS_get(), true);
+  public static ReliabilityQosPolicyKind getRELIABLE_RELIABILITY_QOS() {
+    return ReliabilityQosPolicyKind.swigToEnum(FastRTPSJNI.RELIABLE_RELIABILITY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DestinationOrderQosPolicyKind getBY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__DestinationOrderQosPolicyKind(FastRTPSJNI.BY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS_get(), true);
+  public static OwnershipQosPolicyKind getSHARED_OWNERSHIP_QOS() {
+    return OwnershipQosPolicyKind.swigToEnum(FastRTPSJNI.SHARED_OWNERSHIP_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DestinationOrderQosPolicyKind getBY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__DestinationOrderQosPolicyKind(FastRTPSJNI.BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS_get(), true);
+  public static OwnershipQosPolicyKind getEXCLUSIVE_OWNERSHIP_QOS() {
+    return OwnershipQosPolicyKind.swigToEnum(FastRTPSJNI.EXCLUSIVE_OWNERSHIP_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__PresentationQosPolicyAccessScopeKind getINSTANCE_PRESENTATION_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__PresentationQosPolicyAccessScopeKind(FastRTPSJNI.INSTANCE_PRESENTATION_QOS_get(), true);
+  public static DestinationOrderQosPolicyKind getBY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS() {
+    return DestinationOrderQosPolicyKind.swigToEnum(FastRTPSJNI.BY_RECEPTION_TIMESTAMP_DESTINATIONORDER_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__PresentationQosPolicyAccessScopeKind getTOPIC_PRESENTATION_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__PresentationQosPolicyAccessScopeKind(FastRTPSJNI.TOPIC_PRESENTATION_QOS_get(), true);
+  public static DestinationOrderQosPolicyKind getBY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS() {
+    return DestinationOrderQosPolicyKind.swigToEnum(FastRTPSJNI.BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__PresentationQosPolicyAccessScopeKind getGROUP_PRESENTATION_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__PresentationQosPolicyAccessScopeKind(FastRTPSJNI.GROUP_PRESENTATION_QOS_get(), true);
+  public static PresentationQosPolicyAccessScopeKind getINSTANCE_PRESENTATION_QOS() {
+    return PresentationQosPolicyAccessScopeKind.swigToEnum(FastRTPSJNI.INSTANCE_PRESENTATION_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__HistoryQosPolicyKind getKEEP_LAST_HISTORY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__HistoryQosPolicyKind(FastRTPSJNI.KEEP_LAST_HISTORY_QOS_get(), true);
+  public static PresentationQosPolicyAccessScopeKind getTOPIC_PRESENTATION_QOS() {
+    return PresentationQosPolicyAccessScopeKind.swigToEnum(FastRTPSJNI.TOPIC_PRESENTATION_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__HistoryQosPolicyKind getKEEP_ALL_HISTORY_QOS() {
-    return new SWIGTYPE_p_fastdds__dds__HistoryQosPolicyKind(FastRTPSJNI.KEEP_ALL_HISTORY_QOS_get(), true);
+  public static PresentationQosPolicyAccessScopeKind getGROUP_PRESENTATION_QOS() {
+    return PresentationQosPolicyAccessScopeKind.swigToEnum(FastRTPSJNI.GROUP_PRESENTATION_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__PublishModeQosPolicyKind getSYNCHRONOUS_PUBLISH_MODE() {
-    return new SWIGTYPE_p_fastdds__dds__PublishModeQosPolicyKind(FastRTPSJNI.SYNCHRONOUS_PUBLISH_MODE_get(), true);
+  public static HistoryQosPolicyKind getKEEP_LAST_HISTORY_QOS() {
+    return HistoryQosPolicyKind.swigToEnum(FastRTPSJNI.KEEP_LAST_HISTORY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__PublishModeQosPolicyKind getASYNCHRONOUS_PUBLISH_MODE() {
-    return new SWIGTYPE_p_fastdds__dds__PublishModeQosPolicyKind(FastRTPSJNI.ASYNCHRONOUS_PUBLISH_MODE_get(), true);
+  public static HistoryQosPolicyKind getKEEP_ALL_HISTORY_QOS() {
+    return HistoryQosPolicyKind.swigToEnum(FastRTPSJNI.KEEP_ALL_HISTORY_QOS_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__TypeConsistencyKind getDISALLOW_TYPE_COERCION() {
-    return new SWIGTYPE_p_fastdds__dds__TypeConsistencyKind(FastRTPSJNI.DISALLOW_TYPE_COERCION_get(), true);
+  public static PublishModeQosPolicyKind_t getSYNCHRONOUS_PUBLISH_MODE() {
+    return PublishModeQosPolicyKind_t.swigToEnum(FastRTPSJNI.SYNCHRONOUS_PUBLISH_MODE_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__TypeConsistencyKind getALLOW_TYPE_COERCION() {
-    return new SWIGTYPE_p_fastdds__dds__TypeConsistencyKind(FastRTPSJNI.ALLOW_TYPE_COERCION_get(), true);
+  public static PublishModeQosPolicyKind_t getASYNCHRONOUS_PUBLISH_MODE() {
+    return PublishModeQosPolicyKind_t.swigToEnum(FastRTPSJNI.ASYNCHRONOUS_PUBLISH_MODE_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DataSharingKind getAUTO() {
-    return new SWIGTYPE_p_fastdds__dds__DataSharingKind(FastRTPSJNI.AUTO_get(), true);
+  public static TypeConsistencyKind getDISALLOW_TYPE_COERCION() {
+    return TypeConsistencyKind.swigToEnum(FastRTPSJNI.DISALLOW_TYPE_COERCION_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DataSharingKind getON() {
-    return new SWIGTYPE_p_fastdds__dds__DataSharingKind(FastRTPSJNI.ON_get(), true);
+  public static TypeConsistencyKind getALLOW_TYPE_COERCION() {
+    return TypeConsistencyKind.swigToEnum(FastRTPSJNI.ALLOW_TYPE_COERCION_get());
   }
 
-  public static SWIGTYPE_p_fastdds__dds__DataSharingKind getOFF() {
-    return new SWIGTYPE_p_fastdds__dds__DataSharingKind(FastRTPSJNI.OFF_get(), true);
+  public static DataSharingKind getAUTO() {
+    return DataSharingKind.swigToEnum(FastRTPSJNI.AUTO_get());
   }
 
-  public static short getLocatorOctet(int octet, SWIGTYPE_p_Locator_t locator) {
-    return FastRTPSJNI.getLocatorOctet(octet, SWIGTYPE_p_Locator_t.getCPtr(locator));
+  public static DataSharingKind getON() {
+    return DataSharingKind.swigToEnum(FastRTPSJNI.ON_get());
   }
 
-  public static void setLocatorOctet(SWIGTYPE_p_Locator_t locator, int oct, short value) {
-    FastRTPSJNI.setLocatorOctet(SWIGTYPE_p_Locator_t.getCPtr(locator), oct, value);
+  public static DataSharingKind getOFF() {
+    return DataSharingKind.swigToEnum(FastRTPSJNI.OFF_get());
   }
 
-  public static SWIGTYPE_p_Locator_t getLocator(SWIGTYPE_p_LocatorList_t list, int index) {
-    long cPtr = FastRTPSJNI.getLocator(SWIGTYPE_p_LocatorList_t.getCPtr(list), index);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_Locator_t(cPtr, false);
+  public static int getLENGTH_UNLIMITED() {
+    return FastRTPSJNI.LENGTH_UNLIMITED_get();
   }
 
-  public static SWIGTYPE_p_Locator_t getRemoteUnicastLocator(RemoteLocatorList list, int index) {
+  public static short getLocatorOctet(int octet, Locator_t locator) {
+    return FastRTPSJNI.getLocatorOctet(octet, Locator_t.getCPtr(locator), locator);
+  }
+
+  public static void setLocatorOctet(Locator_t locator, int oct, short value) {
+    FastRTPSJNI.setLocatorOctet(Locator_t.getCPtr(locator), locator, oct, value);
+  }
+
+  public static Locator_t getLocator(LocatorList list, int index) {
+    long cPtr = FastRTPSJNI.getLocator(LocatorList.getCPtr(list), list, index);
+    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
+  }
+
+  public static Locator_t getRemoteUnicastLocator(RemoteLocatorList list, int index) {
     long cPtr = FastRTPSJNI.getRemoteUnicastLocator(RemoteLocatorList.getCPtr(list), list, index);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_Locator_t(cPtr, false);
+    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
   }
 
-  public static SWIGTYPE_p_Locator_t getRemoteMulticastLocator(RemoteLocatorList list, int index) {
+  public static Locator_t getRemoteMulticastLocator(RemoteLocatorList list, int index) {
     long cPtr = FastRTPSJNI.getRemoteMulticastLocator(RemoteLocatorList.getCPtr(list), list, index);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_Locator_t(cPtr, false);
+    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
   }
 
   public static int getRemoteMulticastLocatorSize(RemoteLocatorList list) {

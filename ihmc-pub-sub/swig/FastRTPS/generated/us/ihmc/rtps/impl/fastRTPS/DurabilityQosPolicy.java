@@ -48,8 +48,8 @@ public class DurabilityQosPolicy extends QosPolicy {
     FastRTPSJNI.DurabilityQosPolicy_durabilityKind__SWIG_1(swigCPtr, this, new_kind.swigValue());
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DurabilityQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.DurabilityQosPolicy_clear(swigCPtr, this);
   }
 
   public void setKind(DurabilityQosPolicyKind_t value) {

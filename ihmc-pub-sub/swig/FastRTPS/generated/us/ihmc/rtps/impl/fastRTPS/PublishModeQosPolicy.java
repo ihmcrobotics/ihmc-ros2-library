@@ -44,6 +44,18 @@ public class PublishModeQosPolicy extends QosPolicy {
     return PublishModeQosPolicyKind_t.swigToEnum(FastRTPSJNI.PublishModeQosPolicy_kind_get(swigCPtr, this));
   }
 
+  public void setFlow_controller_name(String value) {
+    FastRTPSJNI.PublishModeQosPolicy_flow_controller_name_set(swigCPtr, this, value);
+  }
+
+  public String getFlow_controller_name() {
+    return FastRTPSJNI.PublishModeQosPolicy_flow_controller_name_get(swigCPtr, this);
+  }
+
+  public void clear() {
+    FastRTPSJNI.PublishModeQosPolicy_clear(swigCPtr, this);
+  }
+
   public PublishModeQosPolicy() {
     this(FastRTPSJNI.new_PublishModeQosPolicy(), true);
   }

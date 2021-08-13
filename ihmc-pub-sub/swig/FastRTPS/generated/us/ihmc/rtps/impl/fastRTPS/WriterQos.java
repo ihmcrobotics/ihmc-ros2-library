@@ -103,13 +103,13 @@ public class WriterQos {
     return (cPtr == 0) ? null : new LifespanQosPolicy(cPtr, false);
   }
 
-  public void setM_userData(UserDataQosPolicy value) {
-    FastRTPSJNI.WriterQos_m_userData_set(swigCPtr, this, UserDataQosPolicy.getCPtr(value), value);
+  public void setM_userData(SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy value) {
+    FastRTPSJNI.WriterQos_m_userData_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy.getCPtr(value));
   }
 
-  public UserDataQosPolicy getM_userData() {
+  public SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy getM_userData() {
     long cPtr = FastRTPSJNI.WriterQos_m_userData_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new UserDataQosPolicy(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy(cPtr, false);
   }
 
   public void setM_timeBasedFilter(TimeBasedFilterQosPolicy value) {
@@ -166,22 +166,22 @@ public class WriterQos {
     return (cPtr == 0) ? null : new PartitionQosPolicy(cPtr, false);
   }
 
-  public void setM_topicData(TopicDataQosPolicy value) {
-    FastRTPSJNI.WriterQos_m_topicData_set(swigCPtr, this, TopicDataQosPolicy.getCPtr(value), value);
+  public void setM_topicData(SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy value) {
+    FastRTPSJNI.WriterQos_m_topicData_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy.getCPtr(value));
   }
 
-  public TopicDataQosPolicy getM_topicData() {
+  public SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy getM_topicData() {
     long cPtr = FastRTPSJNI.WriterQos_m_topicData_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new TopicDataQosPolicy(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy(cPtr, false);
   }
 
-  public void setM_groupData(GroupDataQosPolicy value) {
-    FastRTPSJNI.WriterQos_m_groupData_set(swigCPtr, this, GroupDataQosPolicy.getCPtr(value), value);
+  public void setM_groupData(SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy value) {
+    FastRTPSJNI.WriterQos_m_groupData_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy.getCPtr(value));
   }
 
-  public GroupDataQosPolicy getM_groupData() {
+  public SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy getM_groupData() {
     long cPtr = FastRTPSJNI.WriterQos_m_groupData_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new GroupDataQosPolicy(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy(cPtr, false);
   }
 
   public void setM_publishMode(PublishModeQosPolicy value) {
@@ -193,6 +193,15 @@ public class WriterQos {
     return (cPtr == 0) ? null : new PublishModeQosPolicy(cPtr, false);
   }
 
+  public void setRepresentation(DataRepresentationQosPolicy value) {
+    FastRTPSJNI.WriterQos_representation_set(swigCPtr, this, DataRepresentationQosPolicy.getCPtr(value), value);
+  }
+
+  public DataRepresentationQosPolicy getRepresentation() {
+    long cPtr = FastRTPSJNI.WriterQos_representation_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new DataRepresentationQosPolicy(cPtr, false);
+  }
+
   public void setM_disablePositiveACKs(DisablePositiveACKsQosPolicy value) {
     FastRTPSJNI.WriterQos_m_disablePositiveACKs_set(swigCPtr, this, DisablePositiveACKsQosPolicy.getCPtr(value), value);
   }
@@ -200,6 +209,15 @@ public class WriterQos {
   public DisablePositiveACKsQosPolicy getM_disablePositiveACKs() {
     long cPtr = FastRTPSJNI.WriterQos_m_disablePositiveACKs_get(swigCPtr, this);
     return (cPtr == 0) ? null : new DisablePositiveACKsQosPolicy(cPtr, false);
+  }
+
+  public void setData_sharing(DataSharingQosPolicy value) {
+    FastRTPSJNI.WriterQos_data_sharing_set(swigCPtr, this, DataSharingQosPolicy.getCPtr(value), value);
+  }
+
+  public DataSharingQosPolicy getData_sharing() {
+    long cPtr = FastRTPSJNI.WriterQos_data_sharing_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new DataSharingQosPolicy(cPtr, false);
   }
 
   public void setQos(WriterQos qos, boolean first_time) {
@@ -212,6 +230,10 @@ public class WriterQos {
 
   public boolean canQosBeUpdated(WriterQos qos) {
     return FastRTPSJNI.WriterQos_canQosBeUpdated(swigCPtr, this, WriterQos.getCPtr(qos), qos);
+  }
+
+  public void clear() {
+    FastRTPSJNI.WriterQos_clear(swigCPtr, this);
   }
 
 }

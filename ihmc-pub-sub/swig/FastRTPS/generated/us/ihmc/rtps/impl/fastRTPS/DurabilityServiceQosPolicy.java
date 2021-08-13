@@ -40,8 +40,8 @@ public class DurabilityServiceQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_DurabilityServiceQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DurabilityServiceQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.DurabilityServiceQosPolicy_clear(swigCPtr, this);
   }
 
   public void setService_cleanup_delay(Time_t value) {

@@ -40,8 +40,8 @@ public class ReliabilityQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_ReliabilityQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.ReliabilityQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.ReliabilityQosPolicy_clear(swigCPtr, this);
   }
 
   public void setKind(ReliabilityQosPolicyKind value) {

@@ -9,6 +9,26 @@
 package us.ihmc.rtps.impl.fastRTPS;
 
 public interface FastRTPSConstants {
+  public final static int FASTRTPS_VERSION_MAJOR = 2;
+  public final static int FASTRTPS_VERSION_MINOR = 3;
+  public final static int FASTRTPS_VERSION_MICRO = 4;
+  public final static String FASTRTPS_VERSION_STR = "2.3.4";
+  public final static int GEN_API_VER = 1;
+  public final static int HAVE_CXX20 = 0;
+  public final static int HAVE_CXX17 = 0;
+  public final static int HAVE_CXX14 = 0;
+  public final static int HAVE_CXX1Y = 0;
+  public final static int HAVE_CXX11 = 1;
+  public final static int HAVE_CXX0X = 1;
+  public final static int HAVE_CXX_CONSTEXPR = 1;
+  public final static int FASTDDS_IS_BIG_ENDIAN_TARGET = 0;
+  public final static int HAVE_SECURITY = 0;
+  public final static int HAVE_SQLITE3 = 1;
+  public final static int TLS_FOUND = 0;
+  public final static int HAVE_STRICT_REALTIME = 0;
+  public final static int HAVE_LOG_NO_INFO = 1;
+  public final static int HAVE_LOG_NO_WARNING = 0;
+  public final static int HAVE_LOG_NO_ERROR = 0;
   public final static int LOCATOR_KIND_INVALID = -1;
   public final static int LOCATOR_PORT_INVALID = 0;
   public final static int LOCATOR_KIND_RESERVED = 0;
@@ -16,6 +36,8 @@ public interface FastRTPSConstants {
   public final static int LOCATOR_KIND_UDPv6 = 2;
   public final static int LOCATOR_KIND_TCPv4 = 4;
   public final static int LOCATOR_KIND_TCPv6 = 8;
+  public final static int LOCATOR_KIND_SHM = 16;
+  public final static int BUILTIN_DATA_MAX_SIZE = 512;
   public final static int PARAMETER_KIND_LENGTH = 4;
   public final static int PARAMETER_BOOL_LENGTH = 4;
   public final static int PARAMETER_PRESENTATION_LENGTH = 8;

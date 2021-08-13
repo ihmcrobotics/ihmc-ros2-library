@@ -36,21 +36,21 @@ public class DataRepresentationQosPolicy extends QosPolicy {
     super.delete();
   }
 
-  public void setM_value(SWIGTYPE_p_std__vectorT_eprosima__fastrtps__DataRepresentationId_t value) {
-    FastRTPSJNI.DataRepresentationQosPolicy_m_value_set(swigCPtr, this, SWIGTYPE_p_std__vectorT_eprosima__fastrtps__DataRepresentationId_t.getCPtr(value));
+  public void setM_value(SWIGTYPE_p_std__vectorT_eprosima__fastdds__dds__DataRepresentationId_t value) {
+    FastRTPSJNI.DataRepresentationQosPolicy_m_value_set(swigCPtr, this, SWIGTYPE_p_std__vectorT_eprosima__fastdds__dds__DataRepresentationId_t.getCPtr(value));
   }
 
-  public SWIGTYPE_p_std__vectorT_eprosima__fastrtps__DataRepresentationId_t getM_value() {
+  public SWIGTYPE_p_std__vectorT_eprosima__fastdds__dds__DataRepresentationId_t getM_value() {
     long cPtr = FastRTPSJNI.DataRepresentationQosPolicy_m_value_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_std__vectorT_eprosima__fastrtps__DataRepresentationId_t(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_std__vectorT_eprosima__fastdds__dds__DataRepresentationId_t(cPtr, false);
   }
 
   public DataRepresentationQosPolicy() {
     this(FastRTPSJNI.new_DataRepresentationQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DataRepresentationQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.DataRepresentationQosPolicy_clear(swigCPtr, this);
   }
 
 }

@@ -40,8 +40,8 @@ public class PresentationQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_PresentationQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.PresentationQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.PresentationQosPolicy_clear(swigCPtr, this);
   }
 
   public void setAccess_scope(PresentationQosPolicyAccessScopeKind value) {

@@ -40,8 +40,8 @@ public class TimeBasedFilterQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_TimeBasedFilterQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.TimeBasedFilterQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.TimeBasedFilterQosPolicy_clear(swigCPtr, this);
   }
 
   public void setMinimum_separation(Time_t value) {

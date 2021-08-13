@@ -76,31 +76,31 @@ public class EndpointAttributes {
     return new SWIGTYPE_p_GUID_t(FastRTPSJNI.EndpointAttributes_persistence_guid_get(swigCPtr, this), true);
   }
 
-  public void setUnicastLocatorList(LocatorList_t value) {
-    FastRTPSJNI.EndpointAttributes_unicastLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setUnicastLocatorList(LocatorList value) {
+    FastRTPSJNI.EndpointAttributes_unicastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getUnicastLocatorList() {
+  public LocatorList getUnicastLocatorList() {
     long cPtr = FastRTPSJNI.EndpointAttributes_unicastLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
-  public void setMulticastLocatorList(LocatorList_t value) {
-    FastRTPSJNI.EndpointAttributes_multicastLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setMulticastLocatorList(LocatorList value) {
+    FastRTPSJNI.EndpointAttributes_multicastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getMulticastLocatorList() {
+  public LocatorList getMulticastLocatorList() {
     long cPtr = FastRTPSJNI.EndpointAttributes_multicastLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
-  public void setRemoteLocatorList(LocatorList_t value) {
-    FastRTPSJNI.EndpointAttributes_remoteLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setRemoteLocatorList(LocatorList value) {
+    FastRTPSJNI.EndpointAttributes_remoteLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getRemoteLocatorList() {
+  public LocatorList getRemoteLocatorList() {
     long cPtr = FastRTPSJNI.EndpointAttributes_remoteLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
   public void setProperties(SWIGTYPE_p_PropertyPolicy value) {
@@ -129,6 +129,14 @@ public class EndpointAttributes {
 
   public void setEntityID(short id) {
     FastRTPSJNI.EndpointAttributes_setEntityID(swigCPtr, this, id);
+  }
+
+  public void set_data_sharing_configuration(DataSharingQosPolicy cfg) {
+    FastRTPSJNI.EndpointAttributes_set_data_sharing_configuration(swigCPtr, this, DataSharingQosPolicy.getCPtr(cfg), cfg);
+  }
+
+  public DataSharingQosPolicy data_sharing_configuration() {
+    return new DataSharingQosPolicy(FastRTPSJNI.EndpointAttributes_data_sharing_configuration(swigCPtr, this), false);
   }
 
 }

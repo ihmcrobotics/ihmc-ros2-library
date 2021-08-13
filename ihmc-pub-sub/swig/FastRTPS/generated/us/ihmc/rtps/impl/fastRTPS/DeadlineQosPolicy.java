@@ -40,8 +40,8 @@ public class DeadlineQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_DeadlineQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.DeadlineQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.DeadlineQosPolicy_clear(swigCPtr, this);
   }
 
   public void setPeriod(Time_t value) {

@@ -36,12 +36,96 @@ public class PartitionQosPolicy extends QosPolicy {
     super.delete();
   }
 
-  public PartitionQosPolicy() {
-    this(FastRTPSJNI.new_PartitionQosPolicy(), true);
+  static public class const_iterator {
+    private transient long swigCPtr;
+    protected transient boolean swigCMemOwn;
+  
+    protected const_iterator(long cPtr, boolean cMemoryOwn) {
+      swigCMemOwn = cMemoryOwn;
+      swigCPtr = cPtr;
+    }
+  
+    protected static long getCPtr(const_iterator obj) {
+      return (obj == null) ? 0 : obj.swigCPtr;
+    }
+  
+    @SuppressWarnings("deprecation")
+    protected void finalize() {
+      delete();
+    }
+  
+    public synchronized void delete() {
+      if (swigCPtr != 0) {
+        if (swigCMemOwn) {
+          swigCMemOwn = false;
+          FastRTPSJNI.delete_PartitionQosPolicy_const_iterator(swigCPtr);
+        }
+        swigCPtr = 0;
+      }
+    }
+  
+    static private long SwigConstructconst_iterator(java.nio.ByteBuffer ptr) {
+    assert ptr.isDirect() : "Buffer must be allocated direct.";
+      return FastRTPSJNI.new_PartitionQosPolicy_const_iterator(ptr);
+    }
+  
+    public const_iterator(java.nio.ByteBuffer ptr) {
+      this(const_iterator.SwigConstructconst_iterator(ptr), true);
+    }
+  
+    public Partition_t __ref__() {
+      return new Partition_t(FastRTPSJNI.PartitionQosPolicy_const_iterator___ref__(swigCPtr, this), true);
+    }
+  
+    public Partition_t __deref__() {
+      long cPtr = FastRTPSJNI.PartitionQosPolicy_const_iterator___deref__(swigCPtr, this);
+      return (cPtr == 0) ? null : new Partition_t(cPtr, false);
+    }
+  
+    public long size() {
+      return FastRTPSJNI.PartitionQosPolicy_const_iterator_size(swigCPtr, this);
+    }
+  
+    public String name() {
+      return FastRTPSJNI.PartitionQosPolicy_const_iterator_name(swigCPtr, this);
+    }
+  
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.PartitionQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public PartitionQosPolicy() {
+    this(FastRTPSJNI.new_PartitionQosPolicy__SWIG_0(), true);
+  }
+
+  public PartitionQosPolicy(int in_length) {
+    this(FastRTPSJNI.new_PartitionQosPolicy__SWIG_1(in_length), true);
+  }
+
+  public PartitionQosPolicy(PartitionQosPolicy b) {
+    this(FastRTPSJNI.new_PartitionQosPolicy__SWIG_2(PartitionQosPolicy.getCPtr(b), b), true);
+  }
+
+  public PartitionQosPolicy.const_iterator begin() {
+    return new PartitionQosPolicy.const_iterator(FastRTPSJNI.PartitionQosPolicy_begin(swigCPtr, this), true);
+  }
+
+  public PartitionQosPolicy.const_iterator end() {
+    return new PartitionQosPolicy.const_iterator(FastRTPSJNI.PartitionQosPolicy_end(swigCPtr, this), true);
+  }
+
+  public long size() {
+    return FastRTPSJNI.PartitionQosPolicy_size(swigCPtr, this);
+  }
+
+  public long empty() {
+    return FastRTPSJNI.PartitionQosPolicy_empty(swigCPtr, this);
+  }
+
+  public void set_max_size(long size) {
+    FastRTPSJNI.PartitionQosPolicy_set_max_size(swigCPtr, this, size);
+  }
+
+  public long max_size() {
+    return FastRTPSJNI.PartitionQosPolicy_max_size(swigCPtr, this);
   }
 
   public void push_back(String name) {
@@ -58,6 +142,14 @@ public class PartitionQosPolicy extends QosPolicy {
 
   public void setNames(stringVector nam) {
     FastRTPSJNI.PartitionQosPolicy_setNames(swigCPtr, this, stringVector.getCPtr(nam), nam);
+  }
+
+  public stringVector names() {
+    return new stringVector(FastRTPSJNI.PartitionQosPolicy_names__SWIG_0(swigCPtr, this), true);
+  }
+
+  public void names(stringVector nam) {
+    FastRTPSJNI.PartitionQosPolicy_names__SWIG_1(swigCPtr, this, stringVector.getCPtr(nam), nam);
   }
 
 }

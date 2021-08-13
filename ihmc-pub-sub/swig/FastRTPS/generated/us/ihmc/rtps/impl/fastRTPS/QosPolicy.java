@@ -36,24 +36,20 @@ public class QosPolicy {
     }
   }
 
-  public QosPolicy() {
-    this(FastRTPSJNI.new_QosPolicy__SWIG_0(), true);
-  }
-
-  public QosPolicy(boolean b_sendAlways) {
-    this(FastRTPSJNI.new_QosPolicy__SWIG_1(b_sendAlways), true);
-  }
-
-  public boolean sendAlways() {
-    return FastRTPSJNI.QosPolicy_sendAlways(swigCPtr, this);
-  }
-
   public void setHasChanged(boolean value) {
     FastRTPSJNI.QosPolicy_hasChanged_set(swigCPtr, this, value);
   }
 
   public boolean getHasChanged() {
     return FastRTPSJNI.QosPolicy_hasChanged_get(swigCPtr, this);
+  }
+
+  public boolean send_always() {
+    return FastRTPSJNI.QosPolicy_send_always(swigCPtr, this);
+  }
+
+  public void clear() {
+    FastRTPSJNI.QosPolicy_clear(swigCPtr, this);
   }
 
 }

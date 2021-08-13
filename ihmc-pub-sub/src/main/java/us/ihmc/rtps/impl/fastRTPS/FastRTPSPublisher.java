@@ -73,11 +73,11 @@ class FastRTPSPublisher implements Publisher
    {
       synchronized (destructorLock)
       {
-         LocatorList_t unicastLocatorList = new LocatorList_t();
+         LocatorList unicastLocatorList = new LocatorList();
          FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getUnicastLocatorList(), unicastLocatorList);
-         LocatorList_t multicastLocatorList = new LocatorList_t();
+         LocatorList multicastLocatorList = new LocatorList();
          FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getMulticastLocatorList(), multicastLocatorList);
-         LocatorList_t outLocatorList = new LocatorList_t();
+         LocatorList outLocatorList = new LocatorList();
          FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getOutLocatorList(), outLocatorList);
 
          if (!unicastLocatorList.isValid())

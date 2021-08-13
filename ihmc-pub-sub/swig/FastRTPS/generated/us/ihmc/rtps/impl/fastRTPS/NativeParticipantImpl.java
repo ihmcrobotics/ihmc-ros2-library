@@ -36,8 +36,8 @@ public class NativeParticipantImpl {
     }
   }
 
-  public NativeParticipantImpl(int domainId, SWIGTYPE_p_RTPSParticipantAttributes rtps, NativeParticipantListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeParticipantImpl(domainId, SWIGTYPE_p_RTPSParticipantAttributes.getCPtr(rtps), NativeParticipantListener.getCPtr(listener), listener), true);
+  public NativeParticipantImpl(int domainId, RTPSParticipantAttributes rtps, NativeParticipantListener listener) throws java.io.IOException {
+    this(FastRTPSJNI.new_NativeParticipantImpl(domainId, RTPSParticipantAttributes.getCPtr(rtps), rtps, NativeParticipantListener.getCPtr(listener), listener), true);
   }
 
   public long getGuidLow() {

@@ -40,22 +40,22 @@ public class RTPSParticipantAttributes {
     this(FastRTPSJNI.new_RTPSParticipantAttributes(), true);
   }
 
-  public void setDefaultUnicastLocatorList(LocatorList_t value) {
-    FastRTPSJNI.RTPSParticipantAttributes_defaultUnicastLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setDefaultUnicastLocatorList(LocatorList value) {
+    FastRTPSJNI.RTPSParticipantAttributes_defaultUnicastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getDefaultUnicastLocatorList() {
+  public LocatorList getDefaultUnicastLocatorList() {
     long cPtr = FastRTPSJNI.RTPSParticipantAttributes_defaultUnicastLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
-  public void setDefaultMulticastLocatorList(LocatorList_t value) {
-    FastRTPSJNI.RTPSParticipantAttributes_defaultMulticastLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setDefaultMulticastLocatorList(LocatorList value) {
+    FastRTPSJNI.RTPSParticipantAttributes_defaultMulticastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getDefaultMulticastLocatorList() {
+  public LocatorList getDefaultMulticastLocatorList() {
     long cPtr = FastRTPSJNI.RTPSParticipantAttributes_defaultMulticastLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
   public void setSendSocketBufferSize(long value) {

@@ -40,8 +40,8 @@ public class LifespanQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_LifespanQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.LifespanQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.LifespanQosPolicy_clear(swigCPtr, this);
   }
 
   public void setDuration(Time_t value) {

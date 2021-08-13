@@ -72,44 +72,49 @@ public class TopicAttributes {
     return new SWIGTYPE_p_string_255(FastRTPSJNI.TopicAttributes_topicDataType_get(swigCPtr, this), true);
   }
 
-  public void setHistoryQos(SWIGTYPE_p_fastdds__dds__HistoryQosPolicy value) {
-    FastRTPSJNI.TopicAttributes_historyQos_set(swigCPtr, this, SWIGTYPE_p_fastdds__dds__HistoryQosPolicy.getCPtr(value));
+  public void setHistoryQos(HistoryQosPolicy value) {
+    FastRTPSJNI.TopicAttributes_historyQos_set(swigCPtr, this, HistoryQosPolicy.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_fastdds__dds__HistoryQosPolicy getHistoryQos() {
-    return new SWIGTYPE_p_fastdds__dds__HistoryQosPolicy(FastRTPSJNI.TopicAttributes_historyQos_get(swigCPtr, this), true);
+  public HistoryQosPolicy getHistoryQos() {
+    long cPtr = FastRTPSJNI.TopicAttributes_historyQos_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new HistoryQosPolicy(cPtr, false);
   }
 
-  public void setResourceLimitsQos(SWIGTYPE_p_fastdds__dds__ResourceLimitsQosPolicy value) {
-    FastRTPSJNI.TopicAttributes_resourceLimitsQos_set(swigCPtr, this, SWIGTYPE_p_fastdds__dds__ResourceLimitsQosPolicy.getCPtr(value));
+  public void setResourceLimitsQos(ResourceLimitsQosPolicy value) {
+    FastRTPSJNI.TopicAttributes_resourceLimitsQos_set(swigCPtr, this, ResourceLimitsQosPolicy.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_fastdds__dds__ResourceLimitsQosPolicy getResourceLimitsQos() {
-    return new SWIGTYPE_p_fastdds__dds__ResourceLimitsQosPolicy(FastRTPSJNI.TopicAttributes_resourceLimitsQos_get(swigCPtr, this), true);
+  public ResourceLimitsQosPolicy getResourceLimitsQos() {
+    long cPtr = FastRTPSJNI.TopicAttributes_resourceLimitsQos_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new ResourceLimitsQosPolicy(cPtr, false);
   }
 
-  public void setType_id(SWIGTYPE_p_fastdds__dds__TypeIdV1 value) {
-    FastRTPSJNI.TopicAttributes_type_id_set(swigCPtr, this, SWIGTYPE_p_fastdds__dds__TypeIdV1.getCPtr(value));
+  public void setType_id(TypeIdV1 value) {
+    FastRTPSJNI.TopicAttributes_type_id_set(swigCPtr, this, TypeIdV1.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_fastdds__dds__TypeIdV1 getType_id() {
-    return new SWIGTYPE_p_fastdds__dds__TypeIdV1(FastRTPSJNI.TopicAttributes_type_id_get(swigCPtr, this), true);
+  public TypeIdV1 getType_id() {
+    long cPtr = FastRTPSJNI.TopicAttributes_type_id_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new TypeIdV1(cPtr, false);
   }
 
-  public void setType(SWIGTYPE_p_fastdds__dds__TypeObjectV1 value) {
-    FastRTPSJNI.TopicAttributes_type_set(swigCPtr, this, SWIGTYPE_p_fastdds__dds__TypeObjectV1.getCPtr(value));
+  public void setType(TypeObjectV1 value) {
+    FastRTPSJNI.TopicAttributes_type_set(swigCPtr, this, TypeObjectV1.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_fastdds__dds__TypeObjectV1 getType() {
-    return new SWIGTYPE_p_fastdds__dds__TypeObjectV1(FastRTPSJNI.TopicAttributes_type_get(swigCPtr, this), true);
+  public TypeObjectV1 getType() {
+    long cPtr = FastRTPSJNI.TopicAttributes_type_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new TypeObjectV1(cPtr, false);
   }
 
-  public void setType_information(SWIGTYPE_p_fastdds__dds__xtypes__TypeInformation value) {
-    FastRTPSJNI.TopicAttributes_type_information_set(swigCPtr, this, SWIGTYPE_p_fastdds__dds__xtypes__TypeInformation.getCPtr(value));
+  public void setType_information(TypeInformation value) {
+    FastRTPSJNI.TopicAttributes_type_information_set(swigCPtr, this, TypeInformation.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_fastdds__dds__xtypes__TypeInformation getType_information() {
-    return new SWIGTYPE_p_fastdds__dds__xtypes__TypeInformation(FastRTPSJNI.TopicAttributes_type_information_get(swigCPtr, this), true);
+  public TypeInformation getType_information() {
+    long cPtr = FastRTPSJNI.TopicAttributes_type_information_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new TypeInformation(cPtr, false);
   }
 
   public void setAuto_fill_type_object(boolean value) {

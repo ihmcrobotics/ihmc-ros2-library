@@ -45,44 +45,49 @@ public class SubscriberAttributes {
     return (cPtr == 0) ? null : new TopicAttributes(cPtr, false);
   }
 
-  public void setQos(SWIGTYPE_p_fastdds__dds__ReaderQos value) {
-    FastRTPSJNI.SubscriberAttributes_qos_set(swigCPtr, this, SWIGTYPE_p_fastdds__dds__ReaderQos.getCPtr(value));
+  public void setQos(ReaderQos value) {
+    FastRTPSJNI.SubscriberAttributes_qos_set(swigCPtr, this, ReaderQos.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_fastdds__dds__ReaderQos getQos() {
-    return new SWIGTYPE_p_fastdds__dds__ReaderQos(FastRTPSJNI.SubscriberAttributes_qos_get(swigCPtr, this), true);
+  public ReaderQos getQos() {
+    long cPtr = FastRTPSJNI.SubscriberAttributes_qos_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new ReaderQos(cPtr, false);
   }
 
-  public void setTimes(SWIGTYPE_p_eprosima__fastrtps__rtps__ReaderTimes value) {
-    FastRTPSJNI.SubscriberAttributes_times_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__ReaderTimes.getCPtr(value));
+  public void setTimes(ReaderTimes value) {
+    FastRTPSJNI.SubscriberAttributes_times_set(swigCPtr, this, ReaderTimes.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_eprosima__fastrtps__rtps__ReaderTimes getTimes() {
-    return new SWIGTYPE_p_eprosima__fastrtps__rtps__ReaderTimes(FastRTPSJNI.SubscriberAttributes_times_get(swigCPtr, this), true);
+  public ReaderTimes getTimes() {
+    long cPtr = FastRTPSJNI.SubscriberAttributes_times_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new ReaderTimes(cPtr, false);
   }
 
-  public void setUnicastLocatorList(SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t value) {
-    FastRTPSJNI.SubscriberAttributes_unicastLocatorList_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t.getCPtr(value));
+  public void setUnicastLocatorList(LocatorList value) {
+    FastRTPSJNI.SubscriberAttributes_unicastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t getUnicastLocatorList() {
-    return new SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t(FastRTPSJNI.SubscriberAttributes_unicastLocatorList_get(swigCPtr, this), true);
+  public LocatorList getUnicastLocatorList() {
+    long cPtr = FastRTPSJNI.SubscriberAttributes_unicastLocatorList_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
-  public void setMulticastLocatorList(SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t value) {
-    FastRTPSJNI.SubscriberAttributes_multicastLocatorList_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t.getCPtr(value));
+  public void setMulticastLocatorList(LocatorList value) {
+    FastRTPSJNI.SubscriberAttributes_multicastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t getMulticastLocatorList() {
-    return new SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t(FastRTPSJNI.SubscriberAttributes_multicastLocatorList_get(swigCPtr, this), true);
+  public LocatorList getMulticastLocatorList() {
+    long cPtr = FastRTPSJNI.SubscriberAttributes_multicastLocatorList_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
-  public void setRemoteLocatorList(SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t value) {
-    FastRTPSJNI.SubscriberAttributes_remoteLocatorList_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t.getCPtr(value));
+  public void setRemoteLocatorList(LocatorList value) {
+    FastRTPSJNI.SubscriberAttributes_remoteLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t getRemoteLocatorList() {
-    return new SWIGTYPE_p_eprosima__fastrtps__rtps__LocatorList_t(FastRTPSJNI.SubscriberAttributes_remoteLocatorList_get(swigCPtr, this), true);
+  public LocatorList getRemoteLocatorList() {
+    long cPtr = FastRTPSJNI.SubscriberAttributes_remoteLocatorList_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
   public void setExpectsInlineQos(boolean value) {
@@ -93,12 +98,12 @@ public class SubscriberAttributes {
     return FastRTPSJNI.SubscriberAttributes_expectsInlineQos_get(swigCPtr, this);
   }
 
-  public void setHistoryMemoryPolicy(SWIGTYPE_p_eprosima__fastrtps__rtps__MemoryManagementPolicy_t value) {
-    FastRTPSJNI.SubscriberAttributes_historyMemoryPolicy_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__MemoryManagementPolicy_t.getCPtr(value));
+  public void setHistoryMemoryPolicy(MemoryManagementPolicy_t value) {
+    FastRTPSJNI.SubscriberAttributes_historyMemoryPolicy_set(swigCPtr, this, value.swigValue());
   }
 
-  public SWIGTYPE_p_eprosima__fastrtps__rtps__MemoryManagementPolicy_t getHistoryMemoryPolicy() {
-    return new SWIGTYPE_p_eprosima__fastrtps__rtps__MemoryManagementPolicy_t(FastRTPSJNI.SubscriberAttributes_historyMemoryPolicy_get(swigCPtr, this), true);
+  public MemoryManagementPolicy_t getHistoryMemoryPolicy() {
+    return MemoryManagementPolicy_t.swigToEnum(FastRTPSJNI.SubscriberAttributes_historyMemoryPolicy_get(swigCPtr, this));
   }
 
   public void setProperties(SWIGTYPE_p_eprosima__fastrtps__rtps__PropertyPolicy value) {

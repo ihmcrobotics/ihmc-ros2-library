@@ -9,9 +9,9 @@
 package us.ihmc.rtps.impl.fastRTPS;
 
 public final class DataRepresentationId_t {
-  public final static DataRepresentationId_t XCDR_DATA_REPRESENTATION = new DataRepresentationId_t("XCDR_DATA_REPRESENTATION");
-  public final static DataRepresentationId_t XML_DATA_REPRESENTATION = new DataRepresentationId_t("XML_DATA_REPRESENTATION");
-  public final static DataRepresentationId_t XCDR2_DATA_REPRESENTATION = new DataRepresentationId_t("XCDR2_DATA_REPRESENTATION");
+  public final static DataRepresentationId_t XCDR_DATA_REPRESENTATION = new DataRepresentationId_t("XCDR_DATA_REPRESENTATION", 0);
+  public final static DataRepresentationId_t XML_DATA_REPRESENTATION = new DataRepresentationId_t("XML_DATA_REPRESENTATION", 1);
+  public final static DataRepresentationId_t XCDR2_DATA_REPRESENTATION = new DataRepresentationId_t("XCDR2_DATA_REPRESENTATION", 2);
 
   public final int swigValue() {
     return swigValue;

@@ -40,8 +40,8 @@ public class LatencyBudgetQosPolicy extends QosPolicy {
     this(FastRTPSJNI.new_LatencyBudgetQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.LatencyBudgetQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.LatencyBudgetQosPolicy_clear(swigCPtr, this);
   }
 
   public void setDuration(Time_t value) {

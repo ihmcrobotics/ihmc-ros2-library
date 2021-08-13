@@ -68,12 +68,20 @@ public class ResourceLimitsQosPolicy extends QosPolicy {
     return FastRTPSJNI.ResourceLimitsQosPolicy_allocated_samples_get(swigCPtr, this);
   }
 
+  public void setExtra_samples(int value) {
+    FastRTPSJNI.ResourceLimitsQosPolicy_extra_samples_set(swigCPtr, this, value);
+  }
+
+  public int getExtra_samples() {
+    return FastRTPSJNI.ResourceLimitsQosPolicy_extra_samples_get(swigCPtr, this);
+  }
+
   public ResourceLimitsQosPolicy() {
     this(FastRTPSJNI.new_ResourceLimitsQosPolicy(), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.ResourceLimitsQosPolicy_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public void clear() {
+    FastRTPSJNI.ResourceLimitsQosPolicy_clear(swigCPtr, this);
   }
 
 }

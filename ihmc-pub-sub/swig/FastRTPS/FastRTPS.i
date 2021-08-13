@@ -25,6 +25,7 @@
 
 %array_functions(unsigned char, charArray);
 
+%include <fastrtps/config.h>
 
 // Disable detachedment of threads in the director. This avoids a memory leak due to spinning up a lot of Java threads
 %insert("runtime") %{
@@ -45,6 +46,20 @@ namespace std {
 
 %array_functions(unsigned char, octetArray)
 
+
+namespace eprosima{
+namespace fastdds{
+namespace dds{
+ %ignore GenericDataQosPolicy;
+ %ignore UserDataQosPolicy;
+ %ignore GroupDataQosPolicy;
+ %ignore TopicDataQosPolicy;
+}
+namespace rtps{
+ %ignore ParticipantType;
+}
+
+}}
 
 
 // Support for RTPSParticipantAttributes
@@ -92,10 +107,13 @@ namespace fastrtps{
 
 
 %{
-#include <fastrtps/rtps/common/Locator.h>
+#include <fastdds/rtps/common/Locator.h>
+#include <fastdds/dds/core/policy/QosPolicies.hpp>
+
 #include <fastrtps/rtps/common/Time_t.h>
 #include <fastrtps/rtps/flowcontrol/ThroughputControllerDescriptor.h>
 #include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
+
 
 
 
@@ -140,8 +158,9 @@ namespace rtps{
 
 }}
 
-%include <fastrtps/rtps/common/Locator.h>
+%include <fastdds/rtps/common/Locator.h>
 %include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
+%include <fastdds/rtps/attributes/RTPSParticipantAttributes.h>
 
 // Support for PublisherAttributes and SubscriberAttributes
 %{
@@ -249,15 +268,27 @@ namespace rtps{
 }}}
 
 %include <fastrtps/rtps/flowcontrol/ThroughputControllerDescriptor.h>
+%include <fastdds/rtps/flowcontrol/ThroughputControllerDescriptor.h>
 %include <fastrtps/qos/QosPolicies.h>
+%include <fastdds/dds/core/policy/QosPolicies.hpp>
+%include <fastdds/rtps/common/LocatorList.hpp>
+
+
 %include <fastrtps/qos/WriterQos.h>
+%include <fastdds/dds/publisher/qos/WriterQos.hpp>
 %include <fastrtps/qos/ReaderQos.h>
+%include <fastdds/dds/subscriber/qos/ReaderQos.hpp>
+
 %include <fastrtps/rtps/resources/ResourceManagement.h>
+%include <fastdds/rtps/resources/ResourceManagement.h>
 %include <fastrtps/attributes/TopicAttributes.h>
 %include <fastrtps/rtps/attributes/EndpointAttributes.h>
+%include <fastdds/rtps/attributes/EndpointAttributes.h>
 %include <fastrtps/rtps/attributes/WriterAttributes.h>
+%include <fastdds/rtps/attributes/WriterAttributes.h>
 %include <fastrtps/attributes/PublisherAttributes.h>
 %include <fastrtps/rtps/attributes/ReaderAttributes.h>
+%include <fastdds/rtps/attributes/ReaderAttributes.h>
 %include <fastrtps/attributes/SubscriberAttributes.h>
 
 

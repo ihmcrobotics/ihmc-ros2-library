@@ -103,13 +103,13 @@ public class ReaderQos {
     return (cPtr == 0) ? null : new DestinationOrderQosPolicy(cPtr, false);
   }
 
-  public void setM_userData(UserDataQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_userData_set(swigCPtr, this, UserDataQosPolicy.getCPtr(value), value);
+  public void setM_userData(SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy value) {
+    FastRTPSJNI.ReaderQos_m_userData_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy.getCPtr(value));
   }
 
-  public UserDataQosPolicy getM_userData() {
+  public SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy getM_userData() {
     long cPtr = FastRTPSJNI.ReaderQos_m_userData_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new UserDataQosPolicy(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_eprosima__fastdds__dds__UserDataQosPolicy(cPtr, false);
   }
 
   public void setM_timeBasedFilter(TimeBasedFilterQosPolicy value) {
@@ -139,22 +139,22 @@ public class ReaderQos {
     return (cPtr == 0) ? null : new PartitionQosPolicy(cPtr, false);
   }
 
-  public void setM_topicData(TopicDataQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_topicData_set(swigCPtr, this, TopicDataQosPolicy.getCPtr(value), value);
+  public void setM_topicData(SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy value) {
+    FastRTPSJNI.ReaderQos_m_topicData_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy.getCPtr(value));
   }
 
-  public TopicDataQosPolicy getM_topicData() {
+  public SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy getM_topicData() {
     long cPtr = FastRTPSJNI.ReaderQos_m_topicData_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new TopicDataQosPolicy(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_eprosima__fastdds__dds__TopicDataQosPolicy(cPtr, false);
   }
 
-  public void setM_groupData(GroupDataQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_groupData_set(swigCPtr, this, GroupDataQosPolicy.getCPtr(value), value);
+  public void setM_groupData(SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy value) {
+    FastRTPSJNI.ReaderQos_m_groupData_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy.getCPtr(value));
   }
 
-  public GroupDataQosPolicy getM_groupData() {
+  public SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy getM_groupData() {
     long cPtr = FastRTPSJNI.ReaderQos_m_groupData_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new GroupDataQosPolicy(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_eprosima__fastdds__dds__GroupDataQosPolicy(cPtr, false);
   }
 
   public void setM_durabilityService(DurabilityServiceQosPolicy value) {
@@ -175,21 +175,21 @@ public class ReaderQos {
     return (cPtr == 0) ? null : new LifespanQosPolicy(cPtr, false);
   }
 
-  public void setM_dataRepresentation(DataRepresentationQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_dataRepresentation_set(swigCPtr, this, DataRepresentationQosPolicy.getCPtr(value), value);
+  public void setRepresentation(DataRepresentationQosPolicy value) {
+    FastRTPSJNI.ReaderQos_representation_set(swigCPtr, this, DataRepresentationQosPolicy.getCPtr(value), value);
   }
 
-  public DataRepresentationQosPolicy getM_dataRepresentation() {
-    long cPtr = FastRTPSJNI.ReaderQos_m_dataRepresentation_get(swigCPtr, this);
+  public DataRepresentationQosPolicy getRepresentation() {
+    long cPtr = FastRTPSJNI.ReaderQos_representation_get(swigCPtr, this);
     return (cPtr == 0) ? null : new DataRepresentationQosPolicy(cPtr, false);
   }
 
-  public void setM_typeConsistency(TypeConsistencyEnforcementQosPolicy value) {
-    FastRTPSJNI.ReaderQos_m_typeConsistency_set(swigCPtr, this, TypeConsistencyEnforcementQosPolicy.getCPtr(value), value);
+  public void setType_consistency(TypeConsistencyEnforcementQosPolicy value) {
+    FastRTPSJNI.ReaderQos_type_consistency_set(swigCPtr, this, TypeConsistencyEnforcementQosPolicy.getCPtr(value), value);
   }
 
-  public TypeConsistencyEnforcementQosPolicy getM_typeConsistency() {
-    long cPtr = FastRTPSJNI.ReaderQos_m_typeConsistency_get(swigCPtr, this);
+  public TypeConsistencyEnforcementQosPolicy getType_consistency() {
+    long cPtr = FastRTPSJNI.ReaderQos_type_consistency_get(swigCPtr, this);
     return (cPtr == 0) ? null : new TypeConsistencyEnforcementQosPolicy(cPtr, false);
   }
 
@@ -202,6 +202,15 @@ public class ReaderQos {
     return (cPtr == 0) ? null : new DisablePositiveACKsQosPolicy(cPtr, false);
   }
 
+  public void setData_sharing(DataSharingQosPolicy value) {
+    FastRTPSJNI.ReaderQos_data_sharing_set(swigCPtr, this, DataSharingQosPolicy.getCPtr(value), value);
+  }
+
+  public DataSharingQosPolicy getData_sharing() {
+    long cPtr = FastRTPSJNI.ReaderQos_data_sharing_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new DataSharingQosPolicy(cPtr, false);
+  }
+
   public void setQos(ReaderQos readerqos, boolean first_time) {
     FastRTPSJNI.ReaderQos_setQos(swigCPtr, this, ReaderQos.getCPtr(readerqos), readerqos, first_time);
   }
@@ -212,6 +221,10 @@ public class ReaderQos {
 
   public boolean canQosBeUpdated(ReaderQos qos) {
     return FastRTPSJNI.ReaderQos_canQosBeUpdated(swigCPtr, this, ReaderQos.getCPtr(qos), qos);
+  }
+
+  public void clear() {
+    FastRTPSJNI.ReaderQos_clear(swigCPtr, this);
   }
 
 }

@@ -53,39 +53,40 @@ public class BuiltinAttributes {
     return FastRTPSJNI.BuiltinAttributes_use_WriterLivelinessProtocol_get(swigCPtr, this);
   }
 
-  public void setDomainId(long value) {
-    FastRTPSJNI.BuiltinAttributes_domainId_set(swigCPtr, this, value);
+  public void setTypelookup_config(TypeLookupSettings value) {
+    FastRTPSJNI.BuiltinAttributes_typelookup_config_set(swigCPtr, this, TypeLookupSettings.getCPtr(value), value);
   }
 
-  public long getDomainId() {
-    return FastRTPSJNI.BuiltinAttributes_domainId_get(swigCPtr, this);
+  public TypeLookupSettings getTypelookup_config() {
+    long cPtr = FastRTPSJNI.BuiltinAttributes_typelookup_config_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new TypeLookupSettings(cPtr, false);
   }
 
-  public void setMetatrafficUnicastLocatorList(LocatorList_t value) {
-    FastRTPSJNI.BuiltinAttributes_metatrafficUnicastLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setMetatrafficUnicastLocatorList(LocatorList value) {
+    FastRTPSJNI.BuiltinAttributes_metatrafficUnicastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getMetatrafficUnicastLocatorList() {
+  public LocatorList getMetatrafficUnicastLocatorList() {
     long cPtr = FastRTPSJNI.BuiltinAttributes_metatrafficUnicastLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
-  public void setMetatrafficMulticastLocatorList(LocatorList_t value) {
-    FastRTPSJNI.BuiltinAttributes_metatrafficMulticastLocatorList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setMetatrafficMulticastLocatorList(LocatorList value) {
+    FastRTPSJNI.BuiltinAttributes_metatrafficMulticastLocatorList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getMetatrafficMulticastLocatorList() {
+  public LocatorList getMetatrafficMulticastLocatorList() {
     long cPtr = FastRTPSJNI.BuiltinAttributes_metatrafficMulticastLocatorList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
-  public void setInitialPeersList(LocatorList_t value) {
-    FastRTPSJNI.BuiltinAttributes_initialPeersList_set(swigCPtr, this, LocatorList_t.getCPtr(value), value);
+  public void setInitialPeersList(LocatorList value) {
+    FastRTPSJNI.BuiltinAttributes_initialPeersList_set(swigCPtr, this, LocatorList.getCPtr(value), value);
   }
 
-  public LocatorList_t getInitialPeersList() {
+  public LocatorList getInitialPeersList() {
     long cPtr = FastRTPSJNI.BuiltinAttributes_initialPeersList_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new LocatorList_t(cPtr, false);
+    return (cPtr == 0) ? null : new LocatorList(cPtr, false);
   }
 
   public void setReaderHistoryMemoryPolicy(MemoryManagementPolicy_t value) {
@@ -96,12 +97,28 @@ public class BuiltinAttributes {
     return MemoryManagementPolicy_t.swigToEnum(FastRTPSJNI.BuiltinAttributes_readerHistoryMemoryPolicy_get(swigCPtr, this));
   }
 
+  public void setReaderPayloadSize(long value) {
+    FastRTPSJNI.BuiltinAttributes_readerPayloadSize_set(swigCPtr, this, value);
+  }
+
+  public long getReaderPayloadSize() {
+    return FastRTPSJNI.BuiltinAttributes_readerPayloadSize_get(swigCPtr, this);
+  }
+
   public void setWriterHistoryMemoryPolicy(MemoryManagementPolicy_t value) {
     FastRTPSJNI.BuiltinAttributes_writerHistoryMemoryPolicy_set(swigCPtr, this, value.swigValue());
   }
 
   public MemoryManagementPolicy_t getWriterHistoryMemoryPolicy() {
     return MemoryManagementPolicy_t.swigToEnum(FastRTPSJNI.BuiltinAttributes_writerHistoryMemoryPolicy_get(swigCPtr, this));
+  }
+
+  public void setWriterPayloadSize(long value) {
+    FastRTPSJNI.BuiltinAttributes_writerPayloadSize_set(swigCPtr, this, value);
+  }
+
+  public long getWriterPayloadSize() {
+    return FastRTPSJNI.BuiltinAttributes_writerPayloadSize_get(swigCPtr, this);
   }
 
   public void setMutation_tries(long value) {

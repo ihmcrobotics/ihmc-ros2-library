@@ -36,12 +36,12 @@ public class TypeObjectV1 extends QosPolicy {
     super.delete();
   }
 
-  public void setM_type_object(SWIGTYPE_p_types__TypeObject value) {
-    FastRTPSJNI.TypeObjectV1_m_type_object_set(swigCPtr, this, SWIGTYPE_p_types__TypeObject.getCPtr(value));
+  public void setM_type_object(SWIGTYPE_p_eprosima__fastrtps__types__TypeObject value) {
+    FastRTPSJNI.TypeObjectV1_m_type_object_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__types__TypeObject.getCPtr(value));
   }
 
-  public SWIGTYPE_p_types__TypeObject getM_type_object() {
-    return new SWIGTYPE_p_types__TypeObject(FastRTPSJNI.TypeObjectV1_m_type_object_get(swigCPtr, this), true);
+  public SWIGTYPE_p_eprosima__fastrtps__types__TypeObject getM_type_object() {
+    return new SWIGTYPE_p_eprosima__fastrtps__types__TypeObject(FastRTPSJNI.TypeObjectV1_m_type_object_get(swigCPtr, this), true);
   }
 
   public TypeObjectV1() {
@@ -52,12 +52,16 @@ public class TypeObjectV1 extends QosPolicy {
     this(FastRTPSJNI.new_TypeObjectV1__SWIG_1(TypeObjectV1.getCPtr(type), type), true);
   }
 
-  public boolean addToCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg) {
-    return FastRTPSJNI.TypeObjectV1_addToCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg));
+  public TypeObjectV1(SWIGTYPE_p_eprosima__fastrtps__types__TypeObject type) {
+    this(FastRTPSJNI.new_TypeObjectV1__SWIG_2(SWIGTYPE_p_eprosima__fastrtps__types__TypeObject.getCPtr(type)), true);
   }
 
-  public boolean readFromCDRMessage(SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t msg, long size) {
-    return FastRTPSJNI.TypeObjectV1_readFromCDRMessage(swigCPtr, this, SWIGTYPE_p_eprosima__fastrtps__rtps__CDRMessage_t.getCPtr(msg), size);
+  public void clear() {
+    FastRTPSJNI.TypeObjectV1_clear(swigCPtr, this);
+  }
+
+  public SWIGTYPE_p_eprosima__fastrtps__types__TypeObject get() {
+    return new SWIGTYPE_p_eprosima__fastrtps__types__TypeObject(FastRTPSJNI.TypeObjectV1_get(swigCPtr, this), false);
   }
 
 }
