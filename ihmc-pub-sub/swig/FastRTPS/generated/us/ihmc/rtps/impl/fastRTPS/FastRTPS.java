@@ -59,6 +59,34 @@ public class FastRTPS implements FastRTPSConstants {
     return FastRTPSJNI.IsLocatorValid(Locator_t.getCPtr(loc), loc);
   }
 
+  public static int getDEFAULT_ROS2_SERVER_PORT() {
+    return FastRTPSJNI.DEFAULT_ROS2_SERVER_PORT_get();
+  }
+
+  public static String getDEFAULT_ROS2_SERVER_GUIDPREFIX() {
+    return FastRTPSJNI.DEFAULT_ROS2_SERVER_GUIDPREFIX_get();
+  }
+
+  public static String getDEFAULT_ROS2_MASTER_URI() {
+    return FastRTPSJNI.DEFAULT_ROS2_MASTER_URI_get();
+  }
+
+  public static boolean load_environment_server_info(String list, SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t attributes) {
+    return FastRTPSJNI.load_environment_server_info__SWIG_0(list, SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t.getCPtr(attributes));
+  }
+
+  public static boolean load_environment_server_info(SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t attributes) {
+    return FastRTPSJNI.load_environment_server_info__SWIG_1(SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t.getCPtr(attributes));
+  }
+
+  public static String ros_discovery_server_env() {
+    return FastRTPSJNI.ros_discovery_server_env();
+  }
+
+  public static boolean get_server_client_default_guidPrefix(int id, SWIGTYPE_p_eprosima__fastrtps__rtps__GuidPrefix_t guid) {
+    return FastRTPSJNI.get_server_client_default_guidPrefix(id, SWIGTYPE_p_eprosima__fastrtps__rtps__GuidPrefix_t.getCPtr(guid));
+  }
+
   public static DurabilityQosPolicyKind_t getVOLATILE_DURABILITY_QOS() {
     return DurabilityQosPolicyKind_t.swigToEnum(FastRTPSJNI.VOLATILE_DURABILITY_QOS_get());
   }

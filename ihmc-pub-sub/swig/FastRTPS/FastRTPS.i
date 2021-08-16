@@ -108,17 +108,17 @@ namespace fastrtps{
 
 %{
 #include <fastdds/rtps/common/Locator.h>
+#include <fastdds/rtps/common/LocatorList.hpp>
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 
 #include <fastrtps/rtps/common/Time_t.h>
 #include <fastrtps/rtps/flowcontrol/ThroughputControllerDescriptor.h>
 #include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
-
-
+#include <fastdds/rtps/attributes/ServerAttributes.h>
 
 
 %}
-#define DOXYGEN_SHOULD_SKIP_THIS_PUBLIC Y
+
 #define RTPS_DllAPI
 namespace eprosima{
 namespace fastrtps{
@@ -159,8 +159,10 @@ namespace rtps{
 }}
 
 %include <fastdds/rtps/common/Locator.h>
+%include <fastdds/rtps/common/LocatorList.hpp>
 %include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
 %include <fastdds/rtps/attributes/RTPSParticipantAttributes.h>
+%include <fastdds/rtps/attributes/ServerAttributes.h>
 
 // Support for PublisherAttributes and SubscriberAttributes
 %{
@@ -271,7 +273,6 @@ namespace rtps{
 %include <fastdds/rtps/flowcontrol/ThroughputControllerDescriptor.h>
 %include <fastrtps/qos/QosPolicies.h>
 %include <fastdds/dds/core/policy/QosPolicies.hpp>
-%include <fastdds/rtps/common/LocatorList.hpp>
 
 
 %include <fastrtps/qos/WriterQos.h>

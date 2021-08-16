@@ -8,18 +8,18 @@
 
 package us.ihmc.rtps.impl.fastRTPS;
 
-public class SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t {
+public class SWIGTYPE_p_LocatorList {
   private transient long swigCPtr;
 
-  protected SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t(long cPtr, @SuppressWarnings("unused") boolean futureUse) {
+  protected SWIGTYPE_p_LocatorList(long cPtr, @SuppressWarnings("unused") boolean futureUse) {
     swigCPtr = cPtr;
   }
 
-  protected SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t() {
+  protected SWIGTYPE_p_LocatorList() {
     swigCPtr = 0;
   }
 
-  protected static long getCPtr(SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t obj) {
+  protected static long getCPtr(SWIGTYPE_p_LocatorList obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 }

@@ -114,12 +114,13 @@ public class DiscoverySettings {
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
   }
 
-  public void setM_DiscoveryServers(SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t value) {
-    FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_set(swigCPtr, this, SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t.getCPtr(value));
+  public void setM_DiscoveryServers(SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t value) {
+    FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_set(swigCPtr, this, SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t.getCPtr(value));
   }
 
-  public SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t getM_DiscoveryServers() {
-    return new SWIGTYPE_p_eprosima__fastdds__rtps__RemoteServerList_t(FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_get(swigCPtr, this), true);
+  public SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t getM_DiscoveryServers() {
+    long cPtr = FastRTPSJNI.DiscoverySettings_m_DiscoveryServers_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t(cPtr, false);
   }
 
   public void setIgnoreParticipantFlags(ParticipantFilteringFlags_t value) {
