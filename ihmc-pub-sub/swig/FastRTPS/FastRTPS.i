@@ -378,6 +378,11 @@ int getRemoteUnicastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* lis
     return list->unicast.size();
 }
 
+void pushRemoteServerAttributes(eprosima::fastdds::rtps::RemoteServerList_t& list, eprosima::fastdds::rtps::RemoteServerAttributes& attributes)
+{
+    list.push_back(attributes);
+}
+
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 %}
@@ -395,3 +400,7 @@ Locator_t* getRemoteUnicastLocator(eprosima::fastrtps::rtps::RemoteLocatorList* 
 Locator_t* getRemoteMulticastLocator(eprosima::fastrtps::rtps::RemoteLocatorList* list, int index);
 int getRemoteMulticastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list);
 int getRemoteUnicastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list);
+
+void pushRemoteServerAttributes(eprosima::fastdds::rtps::RemoteServerList_t& list, eprosima::fastdds::rtps::RemoteServerAttributes& attributes);
+
+
