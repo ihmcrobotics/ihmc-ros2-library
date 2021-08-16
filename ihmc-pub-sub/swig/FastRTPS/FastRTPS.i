@@ -378,8 +378,15 @@ int getRemoteUnicastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* lis
     return list->unicast.size();
 }
 
+void setRemoteServerAttributesDefaultGUIDPrefix(eprosima::fastdds::rtps::RemoteServerAttributes& attributes, int serverId)
+{
+    get_server_client_default_guidPrefix(serverId, attributes.guidPrefix);
+}
+
 void pushRemoteServerAttributes(eprosima::fastdds::rtps::RemoteServerList_t& list, eprosima::fastdds::rtps::RemoteServerAttributes& attributes)
 {
+
+    std::cout << attributes.guidPrefix << std::endl;
     list.push_back(attributes);
 }
 
@@ -401,6 +408,7 @@ Locator_t* getRemoteMulticastLocator(eprosima::fastrtps::rtps::RemoteLocatorList
 int getRemoteMulticastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list);
 int getRemoteUnicastLocatorSize(eprosima::fastrtps::rtps::RemoteLocatorList* list);
 
+void setRemoteServerAttributesDefaultGUIDPrefix(eprosima::fastdds::rtps::RemoteServerAttributes& attributes, int serverId);
 void pushRemoteServerAttributes(eprosima::fastdds::rtps::RemoteServerList_t& list, eprosima::fastdds::rtps::RemoteServerAttributes& attributes);
 
 

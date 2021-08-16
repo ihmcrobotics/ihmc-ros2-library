@@ -222,6 +222,10 @@ public class FastRTPS implements FastRTPSConstants {
     return FastRTPSJNI.getRemoteUnicastLocatorSize(RemoteLocatorList.getCPtr(list), list);
   }
 
+  public static void setRemoteServerAttributesDefaultGUIDPrefix(RemoteServerAttributes attributes, int serverId) {
+    FastRTPSJNI.setRemoteServerAttributesDefaultGUIDPrefix(RemoteServerAttributes.getCPtr(attributes), attributes, serverId);
+  }
+
   public static void pushRemoteServerAttributes(SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t list, RemoteServerAttributes attributes) {
     FastRTPSJNI.pushRemoteServerAttributes(SWIGTYPE_p_std__listT_eprosima__fastdds__rtps__RemoteServerAttributes_t.getCPtr(list), RemoteServerAttributes.getCPtr(attributes), attributes);
   }

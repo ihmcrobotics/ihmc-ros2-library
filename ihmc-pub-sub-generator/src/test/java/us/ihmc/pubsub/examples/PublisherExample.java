@@ -17,8 +17,6 @@ package us.ihmc.pubsub.examples;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
@@ -27,7 +25,7 @@ import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.DurabilityKind;
 import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
-import us.ihmc.pubsub.attributes.Locator;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.PublishModeKind;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
@@ -39,14 +37,7 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
-import us.ihmc.rtps.impl.fastRTPS.DiscoveryProtocol_t;
-import us.ihmc.rtps.impl.fastRTPS.DiscoverySettings;
-import us.ihmc.rtps.impl.fastRTPS.FastRTPS;
-import us.ihmc.rtps.impl.fastRTPS.FastRTPSCommonFunctions;
-import us.ihmc.rtps.impl.fastRTPS.FastRTPSParticipantAttributes;
 import us.ihmc.rtps.impl.fastRTPS.FastRTPSPublisherAttributes;
-import us.ihmc.rtps.impl.fastRTPS.Locator_t;
-import us.ihmc.rtps.impl.fastRTPS.RemoteServerAttributes;
 import us.ihmc.rtps.impl.fastRTPS.Time_t;
 
 public class PublisherExample
@@ -84,29 +75,14 @@ public class PublisherExample
       
       domain.setLogLevel(LogLevel.INFO);
 
-      FastRTPSParticipantAttributes attributes = (FastRTPSParticipantAttributes) domain.createParticipantAttributes();
+      ParticipantAttributes attributes = domain.createParticipantAttributes();
       attributes.setDomainId(1);
       attributes.setLeaseDuration(Time.Infinite);
       attributes.setName("PublisherExample");
+      attributes.enableDiscoveryServer(0, InetAddress.getByName("127.0.0.1"));
+    
       
-      DiscoverySettings discovery_config = attributes.rtps().getBuiltin().getDiscovery_config();
-      discovery_config.setDiscoveryProtocol(DiscoveryProtocol_t.CLIENT);
-      
-      
-      RemoteServerAttributes attr = new RemoteServerAttributes();
-      
-      Locator locator = new Locator();
-      locator.setPort(11811);
-      locator.setIPv4Adress(InetAddress.getByName("127.0.0.1"));
-      List<Locator> locatorList = new ArrayList<>();
-      
-      FastRTPSCommonFunctions.convertToCPPLocatorList(locatorList, attr.getMetatrafficUnicastLocatorList());
-      
-      FastRTPS.get_server_client_default_guidPrefix(0, attr.getGuidPrefix());
-      FastRTPS.pushRemoteServerAttributes(discovery_config.getM_DiscoveryServers(), attr);
-      
-      
-      
+     
       
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());

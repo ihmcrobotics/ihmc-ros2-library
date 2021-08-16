@@ -874,6 +874,7 @@ public class FastRTPSJNI {
   public final static native long getRemoteMulticastLocator(long jarg1, RemoteLocatorList jarg1_, int jarg2);
   public final static native int getRemoteMulticastLocatorSize(long jarg1, RemoteLocatorList jarg1_);
   public final static native int getRemoteUnicastLocatorSize(long jarg1, RemoteLocatorList jarg1_);
+  public final static native void setRemoteServerAttributesDefaultGUIDPrefix(long jarg1, RemoteServerAttributes jarg1_, int jarg2);
   public final static native void pushRemoteServerAttributes(long jarg1, long jarg2, RemoteServerAttributes jarg2_);
   public final static native long DurabilityQosPolicy_SWIGUpcast(long jarg1);
   public final static native long DeadlineQosPolicy_SWIGUpcast(long jarg1);

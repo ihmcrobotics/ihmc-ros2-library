@@ -17,6 +17,9 @@ package us.ihmc.rtps.impl.fastRTPS;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import us.ihmc.pubsub.attributes.Locator;
 import us.ihmc.pubsub.attributes.Locator.Kind;
@@ -102,5 +105,38 @@ public class FastRTPSParticipantAttributes extends ParticipantAttributes
    public void finalize()
    {
       delete();
+   }
+
+   @Override
+   public void enableDiscoveryServer(int serverId, List<Locator> unicastLocators)
+   {
+
+      DiscoverySettings discovery_config = rtps().getBuiltin().getDiscovery_config();
+      discovery_config.setDiscoveryProtocol(DiscoveryProtocol_t.CLIENT);
+      
+      
+      RemoteServerAttributes attr = new RemoteServerAttributes();
+      FastRTPSCommonFunctions.convertToCPPLocatorList(unicastLocators, attr.getMetatrafficUnicastLocatorList());
+      
+      FastRTPS.setRemoteServerAttributesDefaultGUIDPrefix(attr, serverId);
+      
+      FastRTPS.pushRemoteServerAttributes(discovery_config.getM_DiscoveryServers(), attr);
+      
+   }
+
+   @Override
+   public void enableDiscoveryServer(int serverId, InetAddress serverAddress)
+   {
+      Locator locator = new Locator();
+      locator.setPort(FastRTPS.getDEFAULT_ROS2_SERVER_PORT());
+      locator.setIPv4Adress(serverAddress);
+      
+      System.out.println(Arrays.toString(serverAddress.getAddress()));
+      
+      List<Locator> locatorList = new ArrayList<>();
+      locatorList.add(locator);
+      
+      enableDiscoveryServer(serverId, locatorList);
+
    }
 }

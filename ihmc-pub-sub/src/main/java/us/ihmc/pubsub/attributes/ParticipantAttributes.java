@@ -17,6 +17,7 @@ package us.ihmc.pubsub.attributes;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.util.List;
 
 import us.ihmc.pubsub.common.Time;
 
@@ -78,4 +79,20 @@ public abstract class ParticipantAttributes
    {
       bindToAddress(Inet4Address.getLoopbackAddress());
    }
+   
+   /**
+    * Setup to use with a discovery server
+    * 
+    * @param serverId Server ID to calculate the GUID
+    * @param unicastLocators List of unicast locators to find the server at 
+    */
+   public abstract void enableDiscoveryServer(int serverId, List<Locator> unicastLocators);
+
+   /**
+    * Setup to use with a discovery server
+    * 
+    * @param serverId Server ID to calculate the GUID
+    * @param serverAddress IP address of the server
+    */
+   public abstract void enableDiscoveryServer(int serverId, InetAddress serverAddress);
 }

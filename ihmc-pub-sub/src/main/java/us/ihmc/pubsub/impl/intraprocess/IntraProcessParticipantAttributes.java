@@ -16,7 +16,9 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
 import java.net.InetAddress;
+import java.util.List;
 
+import us.ihmc.pubsub.attributes.Locator;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.common.Time;
 
@@ -73,5 +75,17 @@ class IntraProcessParticipantAttributes extends ParticipantAttributes
    Time getLeaseDuration()
    {
       return leaseDuration;
+   }
+
+   @Override
+   public void enableDiscoveryServer(int serverId, List<Locator> unicastLocators)
+   {
+      
+   }
+
+   @Override
+   public void enableDiscoveryServer(int serverId, InetAddress serverAddress)
+   {
+      
    }
 }
