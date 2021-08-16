@@ -385,8 +385,6 @@ void setRemoteServerAttributesDefaultGUIDPrefix(eprosima::fastdds::rtps::RemoteS
 
 void pushRemoteServerAttributes(eprosima::fastdds::rtps::RemoteServerList_t& list, eprosima::fastdds::rtps::RemoteServerAttributes& attributes)
 {
-
-    std::cout << attributes.guidPrefix << std::endl;
     list.push_back(attributes);
 }
 
