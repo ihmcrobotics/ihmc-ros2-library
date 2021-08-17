@@ -175,8 +175,7 @@ domain.createSubscriber(participant, subscriberAttributes, new SubscriberListene
 
 ### Java code compilation
 ```
-gradle build
-gradle publishToMavenLocal
+ihmc-pub-sub-group $ gradle compositeTask -PtaskName=compileJava
 ```
 
 ### Native code Compilation
