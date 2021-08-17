@@ -5,6 +5,7 @@ bin
 out
 build
 build-java
+buildDocker
 classes
 .gradle
 CMakeLists.txt.user

@@ -184,7 +184,7 @@ This section is for rebuilding the native side of the project.
 Compiled binaries have already been included in the source code repository.
 Therefore, this section is mainly for maintainers.
 
-FastRTPS is included as a Git submodule. Update the submodules to make sure FastRTPS is included:
+Fast-DDS and foonathan_memory_vendor are included as Git submodules. Update the submodules to make sure they are included:
 
 ```
 git submodule update --init --recursive
@@ -192,7 +192,25 @@ git submodule update --init --recursive
 
 #### Linux
 
-##### Requirements:
+##### With Docker
+
+Run `ihmc-pub-sub-group/ihmc-pub-sub $ ./buildWithDocker.sh`
+
+The Docker image is hosted at [https://hub.docker.com/r/ihmcrobotics/pub-sub]().
+
+If changes to the Dockerfile are needed, build it with the following command, incrementing the version.
+Then, increment the version in the buildWithDocker.sh file before running.
+
+```
+# docker build --tag ihmcrobotics/pub-sub:0.X .
+# docker rm pub-sub
+```
+
+For more about IHMC Robotics's usage of Docker, see [https://github.com/ihmcrobotics/ihmc-open-robotics-software/tree/develop/docker]().
+
+##### Manually
+
+###### Requirements:
 
 - CMake 3.1 or later
 - GNU C++
@@ -295,6 +313,10 @@ cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug -D CMAKE_ECLIP
 # Import "existing projects into Eclipse"
 ```
 See more: https://gitlab.kitware.com/cmake/community/wikis/doc/editors/Eclipse-CDT4-Generator
+
+## Developing native code with CLion
+
+Run `ihmc-pub-sub-group/ihmc-pub-sub $ ./codeWithDocker.sh`
 
 ## License
 
