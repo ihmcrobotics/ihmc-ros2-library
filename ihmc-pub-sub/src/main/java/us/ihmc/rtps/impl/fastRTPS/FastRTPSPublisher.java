@@ -122,6 +122,30 @@ class FastRTPSPublisher implements Publisher
       }
    }
 
+   FastRTPSPublisher(String profile,
+                     TopicDataType<?> topicDataTypeIn,
+                     PublisherListener listener,
+                     NativeParticipantImpl participant)
+         throws IOException, IllegalArgumentException
+   {
+      synchronized (destructorLock)
+      {
+
+         this.topicDataType = (TopicDataType<Object>) topicDataTypeIn.newInstance();
+         this.listener = listener;
+         this.payload = new SerializedPayload(topicDataType.getTypeSize());
+
+
+         impl = new NativePublisherImpl(participant, nativeListenerImpl);
+         if (!impl.createPublisher(profile)) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+         {
+            throw new IOException("Cannot create publisher");
+         }
+         guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
+      }
+      attributes = new FastRTPSPublisherAttributes();
+   }
+
    @Override
    public void write(Object data) throws IOException
    {

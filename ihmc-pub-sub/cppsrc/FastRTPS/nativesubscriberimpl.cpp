@@ -57,6 +57,13 @@ NativeSubscriberImpl::NativeSubscriberImpl(int32_t entityId,
     attr.times = *times;
 }
 
+NativeSubscriberImpl::NativeSubscriberImpl(NativeParticipantImpl *participant,
+                                           NativeSubscriberListener *listener) throw(FastRTPSException) :
+        fastrtpsParticipant(participant->getParticipant()),
+        readerListener(this),
+        listener(listener)
+{}
+
 bool NativeSubscriberImpl::createSubscriber()
 {
     try
@@ -79,9 +86,39 @@ bool NativeSubscriberImpl::createSubscriber()
     return true;
 }
 
+bool NativeSubscriberImpl::createSubscriber(std::string profile)
+{
+    try
+    {
+        subscriber = Domain::createSubscriber(fastrtpsParticipant, profile, &readerListener);
+
+    }
+    catch(const std::exception &e)
+    {
+        return false;
+    }
+
+    if(subscriber == nullptr)
+    {
+        return false;
+    }
+
+    CommonFunctions::guidcpy(subscriber->getGuid(), &guidUnion);
+    logInfo(SUBSCRIBER, "Guid: " << mp_writer->getGuid());
+    return true;
+}
+
 bool NativeSubscriberImpl::isInCleanState()
 {
     return subscriber->isInCleanState();
+}
+
+TopicKind_t NativeSubscriberImpl::getTopicKind(){
+    return subscriber->getAttributes().topic.topicKind;
+}
+
+OwnershipQosPolicyKind NativeSubscriberImpl::getOwnershipQosKind() {
+    return subscriber->getAttributes().qos.m_ownership.kind;
 }
 
 int64_t NativeSubscriberImpl::getUnreadCount()

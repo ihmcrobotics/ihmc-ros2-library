@@ -60,8 +60,13 @@ namespace fastRTPS{
                 NativeParticipantImpl* participant,
                 NativeSubscriberListener* listener) throw(FastRTPSException);
 
+        NativeSubscriberImpl(
+                NativeParticipantImpl* participant,
+                NativeSubscriberListener* listener) throw(FastRTPSException);
+
 
         bool createSubscriber();
+        bool createSubscriber(std::string profile);
 
         int64_t getGuidLow()
         {
@@ -81,6 +86,8 @@ namespace fastRTPS{
 
         bool isInCleanState();
         int64_t getUnreadCount();
+        TopicKind_t getTopicKind();
+        OwnershipQosPolicyKind getOwnershipQosKind();
 
 
         virtual ~NativeSubscriberImpl();

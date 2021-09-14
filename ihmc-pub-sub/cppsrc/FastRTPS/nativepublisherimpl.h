@@ -62,10 +62,16 @@ namespace fastRTPS{
                 ThroughputControllerDescriptor* throughputController,
                 NativeParticipantImpl* participant,
                 NativePublisherListener* listener) throw(FastRTPSException);
+
+        NativePublisherImpl(
+                NativeParticipantImpl* participant,
+                NativePublisherListener* listener) throw(FastRTPSException);
+
         virtual ~NativePublisherImpl();
 
 
         bool createPublisher();
+        bool createPublisher(std::string profile);
         void write(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void dispose(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
@@ -91,6 +97,7 @@ namespace fastRTPS{
         }publisherListener;
 
 
+        bool isXMLPofile;
         NativePublisherListener* listener;
         PublisherAttributes attr;
         GuidUnion guid;

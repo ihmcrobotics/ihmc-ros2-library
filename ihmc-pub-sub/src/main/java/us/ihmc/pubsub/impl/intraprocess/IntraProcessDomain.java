@@ -95,6 +95,11 @@ public class IntraProcessDomain implements Domain
       }
    }
 
+   @Override public Participant createParticipant(String xmlProfileData, ParticipantListener participantListener) throws IOException
+   {
+      throw new IllegalArgumentException();
+   }
+
    @Override
    public synchronized Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
          throws IOException, IllegalArgumentException
@@ -116,6 +121,12 @@ public class IntraProcessDomain implements Domain
       }
    }
 
+   @Override public Publisher createPublisher(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, PublisherListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      throw new IllegalArgumentException();
+   }
+
    @Override
    public synchronized Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
          throws IOException, IllegalArgumentException
@@ -134,6 +145,12 @@ public class IntraProcessDomain implements Domain
       {
          throw new IllegalArgumentException("Publisher attributes have to be an instance of IntraProcessPublisherAttributes. Use domain.createPublisherAttributes()");
       }
+   }
+
+   @Override public Subscriber createSubscriber(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, SubscriberListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      throw new IllegalArgumentException();
    }
 
    @Override

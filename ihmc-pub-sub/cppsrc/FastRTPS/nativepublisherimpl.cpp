@@ -56,6 +56,14 @@ NativePublisherImpl::NativePublisherImpl(
 
 }
 
+NativePublisherImpl::NativePublisherImpl(
+        NativeParticipantImpl *participant,
+        NativePublisherListener *listener) throw(FastRTPSException) :
+        fastrtpsParticipant(participant->getParticipant()),
+        publisherListener(this),
+        listener(listener)
+{}
+
 
 
 NativePublisherImpl::~NativePublisherImpl()
@@ -65,16 +73,16 @@ NativePublisherImpl::~NativePublisherImpl()
 
 bool NativePublisherImpl::createPublisher()
 {
-    try
-    {
-        publisher = Domain::createPublisher(fastrtpsParticipant, attr, &publisherListener);
+    if(!isXMLPofile){
+        try
+        {
+            publisher = Domain::createPublisher(fastrtpsParticipant, attr, &publisherListener);
+        }
+        catch(const std::exception &e)
+        {
+            return false;
+        }
     }
-    catch(const std::exception &e)
-    {
-        return false;
-    }
-
-
     if(publisher == nullptr)
     {
         return false;
@@ -84,7 +92,27 @@ bool NativePublisherImpl::createPublisher()
 
     logInfo(PUBLISHER, "Guid: " << publisher->getGuid());
     return true;
+}
 
+bool NativePublisherImpl::createPublisher(std::string profile)
+{
+    try
+    {
+        publisher = Domain::createPublisher(fastrtpsParticipant, profile, &publisherListener);
+    }
+    catch(const std::exception &e)
+    {
+        return false;
+    }
+    if(publisher == nullptr)
+    {
+        return false;
+    }
+
+    CommonFunctions::guidcpy(publisher->getGuid(), &guid);
+
+    logInfo(PUBLISHER, "Guid: " << publisher->getGuid());
+    return true;
 }
 
 void NativePublisherImpl::write(unsigned char *data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength)

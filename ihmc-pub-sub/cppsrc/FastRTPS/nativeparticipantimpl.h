@@ -66,8 +66,10 @@ namespace fastRTPS{
     {
     public:
         NativeParticipantImpl(int domainId, RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException);
+        NativeParticipantImpl(std::string participantProfile, const char* XMLConfigData, size_t XMLdataLength, NativeParticipantListener* listener) throw(FastRTPSException);
         int64_t getGuidLow();
         int64_t getGuidHigh();
+        RTPSParticipantAttributes getRTPSParticipantAttributes();
         Participant* getParticipant();
         void registerType(std::string name, int32_t maximumDataSize, bool hasKey);
         virtual ~NativeParticipantImpl();

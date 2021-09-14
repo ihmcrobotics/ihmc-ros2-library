@@ -169,6 +169,31 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       }
    }
 
+   FastRTPSSubscriber(String profile,
+                      TopicDataType<?> topicDataTypeIn,
+                      SubscriberListener listener,
+                      NativeParticipantImpl participant)
+         throws IOException
+   {
+      synchronized (destructorLock)
+      {
+
+         this.topicDataType = (TopicDataType<T>) topicDataTypeIn.newInstance();
+         this.listener = listener;
+         this.payload = new SerializedPayload(topicDataType.getTypeSize());
+
+         impl = new NativeSubscriberImpl(participant, nativeListenerImpl);
+         if (!impl.createSubscriber(profile)) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+         {
+            throw new IOException("Cannot create publisher");
+         }
+         this.topicKind = TopicKind_t.swigToEnum(impl.getTopicKind().swigValue());
+         this.ownershipQosPolicyKind = impl.getOwnershipQosKind();
+         guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
+      }
+      attributes = new FastRTPSSubscriberAttributes();
+   }
+
    @Override
    public Guid getGuid()
    {

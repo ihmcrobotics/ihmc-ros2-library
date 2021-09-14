@@ -105,6 +105,13 @@ public class FastRTPSDomain implements Domain
       return participant;
    }
 
+   @Override public Participant createParticipant(String xmlProfileData, ParticipantListener participantListener) throws IOException
+   {
+      FastRTPSParticipant participant = new FastRTPSParticipant(xmlProfileData, participantListener);
+      participants.add(participant);
+      return participant;
+   }
+
    @Override
    public synchronized Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
          throws IOException, IllegalArgumentException
@@ -130,6 +137,30 @@ public class FastRTPSDomain implements Domain
       return publisher;
    }
 
+   @Override public Publisher createPublisher(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, PublisherListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      Publisher publisher = null;
+
+      for (int i = 0; i < participants.size(); i++)
+      {
+         if (participants.get(i) == participant)
+         {
+            publisher = participants.get(i).createPublisher(profile, topicDataTypeIn, listener);
+            break;
+         }
+      }
+
+      if (publisher == null)
+      {
+         throw new IllegalArgumentException("Participant is not part of this domain.");
+      }
+
+      ThreadTools.sleep(1);
+
+      return publisher;
+   }
+
    @Override
    public synchronized Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
          throws IOException, IllegalArgumentException
@@ -139,6 +170,19 @@ public class FastRTPSDomain implements Domain
          if (participants.get(i) == participant)
          {
             return participants.get(i).createSubscriber(subscriberAttributes, listener);
+         }
+      }
+      throw new IllegalArgumentException("Participant is not part of this domain.");
+   }
+
+   @Override public Subscriber createSubscriber(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, SubscriberListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      for (int i = 0; i < participants.size(); i++)
+      {
+         if (participants.get(i) == participant)
+         {
+            return participants.get(i).createSubscriber(profile, topicDataTypeIn, listener);
          }
       }
       throw new IllegalArgumentException("Participant is not part of this domain.");

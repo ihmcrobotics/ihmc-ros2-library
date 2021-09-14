@@ -65,7 +65,9 @@ public interface Domain
     * 
     */
    public Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException;
-   
+
+   public Participant createParticipant(String xmlProfileData, ParticipantListener participantListener) throws IOException;
+
    /**
     * Create a Participant without a listener.
     * 
@@ -99,6 +101,7 @@ public interface Domain
     * @throws IllegalArgumentException If the attributes are invalid for this publisher
     */
    public Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener) throws IOException, IllegalArgumentException;
+   public Publisher createPublisher(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, PublisherListener listener) throws IOException, IllegalArgumentException;
 
    /**
     * Create a Publisher in a Participant without a listener.
@@ -129,7 +132,8 @@ public interface Domain
     * @throws IllegalArgumentException If the attributes are invalid for this subscriber
     */
    public Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener) throws IOException, IllegalArgumentException;
-   
+   public Subscriber createSubscriber(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, SubscriberListener listener) throws IOException, IllegalArgumentException;
+
    /**
     * Create a Subscriber in a Participant without a listener.
     * 

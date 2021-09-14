@@ -35,7 +35,6 @@ NativeParticipantImpl::NativeParticipantImpl(int domainId, RTPSParticipantAttrib
     attributes.rtps = rtps;
     attributes.domainId = domainId;
 
-
 	try
 	{
         part = Domain::createParticipant(attributes, &m_rtps_listener);
@@ -58,6 +57,38 @@ NativeParticipantImpl::NativeParticipantImpl(int domainId, RTPSParticipantAttrib
     CommonFunctions::guidcpy(part->getGuid(), &guid);
 
 
+}
+
+NativeParticipantImpl::NativeParticipantImpl(std::string participantProfile, const char *XMLConfigData, size_t XMLdataLength, NativeParticipantListener *listener) throw(FastRTPSException) :
+    listener(listener),
+    m_rtps_listener(this)
+{
+
+
+    ParticipantAttributes attributes;
+
+    try
+    {
+        Domain::loadXMLProfilesString(XMLConfigData, XMLdataLength);
+        part = Domain::createParticipant(participantProfile, &m_rtps_listener);
+        attributes = part->getAttributes();
+
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << "[ERROR]" << e.what() << std::endl;
+        throw FastRTPSException("Problem creating RTPSParticipant");
+        return;
+    }
+
+    if(part == nullptr)
+    {
+        throw FastRTPSException("Problem creating RTPSParticipant");
+        return;
+    }
+
+    logInfo(PARTICIPANT,"Guid: " << part->getGuid());
+    CommonFunctions::guidcpy(part->getGuid(), &guid);
 }
 
 NativeParticipantImpl::~NativeParticipantImpl()
@@ -85,6 +116,7 @@ void NativeParticipantImpl::registerType(std::string name, int32_t maximumDataSi
 {
     // This functions adds registered types to a vector of shared ptrs, so they get destroyed when this class gets destructed
     std::shared_ptr<RawTopicDataType> topicDataType = std::make_shared<RawTopicDataType>(name, maximumDataSize, hasKey);
+    std::cout << "REGISTERED " + std::string(topicDataType->getName()) + " in " + part->getAttributes().rtps.getName() << std::endl;
     Domain::registerType(part, topicDataType.get());
     registeredTypes.push_back(topicDataType);
 }
@@ -156,4 +188,9 @@ void NativeParticipantImpl::MyParticipantListener::onPublisherDiscovery(Particip
 std::string NativeParticipantListener::getName(int64_t infoPtr)
 {
     return ((ParticipantProxyData*) infoPtr)->m_participantName.to_string();
+}
+
+
+RTPSParticipantAttributes NativeParticipantImpl::getRTPSParticipantAttributes() {
+    return part->getAttributes().rtps;
 }

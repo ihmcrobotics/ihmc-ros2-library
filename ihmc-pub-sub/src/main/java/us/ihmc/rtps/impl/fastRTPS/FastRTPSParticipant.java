@@ -38,6 +38,7 @@ class FastRTPSParticipant implements Participant
    private final ArrayList<FastRTPSSubscriber> subscribers = new ArrayList<>();
 
    private final FastRTPSParticipantAttributes attributes;
+   private RTPSParticipantAttributes rtpsParticipantAttributes;
    private final ParticipantListener participantListener;
 
    private final Guid guid = new Guid();
@@ -58,6 +59,7 @@ class FastRTPSParticipant implements Participant
          {
             if (participantListener != null)
             {
+               System.out.println("infoPtr = " + infoPtr + ", guidHigh = " + guidHigh + ", guidLow = " + guidLow + ", status = " + status);
                discoveryInfo.updateInfo(status, this, infoPtr, guidHigh, guidLow);
                participantListener.onParticipantDiscovery(FastRTPSParticipant.this, discoveryInfo);
             }
@@ -191,11 +193,22 @@ class FastRTPSParticipant implements Participant
       {
          this.attributes = (FastRTPSParticipantAttributes) att;
          impl = new NativeParticipantImpl(attributes.getDomainId(), attributes.rtps(), nativeListener);
+         this.rtpsParticipantAttributes = impl.getRTPSParticipantAttributes();
       }
       else
       {
          throw new IllegalArgumentException("ParticipantAttributes<?> is not of base class FastRTPSParticipantAttributes");
       }
+      getGuid(guid);
+   }
+
+   FastRTPSParticipant(String XMLConfigData, ParticipantListener participantListener) throws IOException, IllegalArgumentException
+   {
+      //Set listener first, can be called before the constructor returns
+      this.participantListener = participantListener;
+      impl = new NativeParticipantImpl("INMEM_PARTICIPANT", XMLConfigData, XMLConfigData.length(), nativeListener);
+      this.attributes = new FastRTPSParticipantAttributes();
+      this.rtpsParticipantAttributes = impl.getRTPSParticipantAttributes();
       getGuid(guid);
    }
 
@@ -311,7 +324,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (attributes.rtps().getBuiltin().getDiscovery_config().getUse_STATIC_EndpointDiscoveryProtocol())
+      if (this.rtpsParticipantAttributes.getBuiltin().getDiscovery_config().getUse_STATIC_EndpointDiscoveryProtocol())
       {
          if (publisherAttributes.getUserDefinedID() <= 0)
          {
@@ -329,6 +342,16 @@ class FastRTPSParticipant implements Participant
       {
          throw new IllegalArgumentException("publisherAttributes are not an instance of FastRTPSPublisherAttributes");
       }
+   }
+
+   synchronized FastRTPSPublisher createPublisher(String profile,
+                                                  TopicDataType<?> topicDataTypeIn,
+                                                  PublisherListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      FastRTPSPublisher publisher = new FastRTPSPublisher(profile, topicDataTypeIn, listener, impl);
+      publishers.add(publisher);
+      return publisher;
    }
 
    synchronized Subscriber createSubscriber(SubscriberAttributes subscriberAttributes, SubscriberListener listener) throws IOException
@@ -362,6 +385,16 @@ class FastRTPSParticipant implements Participant
       {
          throw new IllegalArgumentException("subscriberAttributes are not an instance of FastRTPSSubscriberAttributes");
       }
+   }
+
+   synchronized Subscriber createSubscriber(String profile,
+                                                  TopicDataType<?> topicDataTypeIn,
+                                                  SubscriberListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      FastRTPSSubscriber subscriber = new FastRTPSSubscriber(profile, topicDataTypeIn, listener, impl);
+      subscribers.add(subscriber);
+      return subscriber;
    }
 
    synchronized boolean removePublisher(Publisher publisher)
