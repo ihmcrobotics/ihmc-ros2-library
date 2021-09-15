@@ -345,11 +345,12 @@ class FastRTPSParticipant implements Participant
    }
 
    synchronized FastRTPSPublisher createPublisher(String profile,
+                                                  String XMLConfigData,
                                                   TopicDataType<?> topicDataTypeIn,
                                                   PublisherListener listener)
          throws IOException, IllegalArgumentException
    {
-      FastRTPSPublisher publisher = new FastRTPSPublisher(profile, topicDataTypeIn, listener, impl);
+      FastRTPSPublisher publisher = new FastRTPSPublisher(profile, XMLConfigData, topicDataTypeIn, listener, impl);
       publishers.add(publisher);
       return publisher;
    }
@@ -388,11 +389,12 @@ class FastRTPSParticipant implements Participant
    }
 
    synchronized Subscriber createSubscriber(String profile,
-                                                  TopicDataType<?> topicDataTypeIn,
-                                                  SubscriberListener listener)
+                                            String XMLConfigData,
+                                            TopicDataType<?> topicDataTypeIn,
+                                            SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
-      FastRTPSSubscriber subscriber = new FastRTPSSubscriber(profile, topicDataTypeIn, listener, impl);
+      FastRTPSSubscriber subscriber = new FastRTPSSubscriber(profile, XMLConfigData, topicDataTypeIn, listener, impl);
       subscribers.add(subscriber);
       return subscriber;
    }

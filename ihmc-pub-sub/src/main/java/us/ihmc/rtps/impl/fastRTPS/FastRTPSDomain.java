@@ -137,7 +137,7 @@ public class FastRTPSDomain implements Domain
       return publisher;
    }
 
-   @Override public Publisher createPublisher(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, PublisherListener listener)
+   @Override public Publisher createPublisher(Participant participant, String profile, String XMLConfigData, TopicDataType<?> topicDataTypeIn, PublisherListener listener)
          throws IOException, IllegalArgumentException
    {
       Publisher publisher = null;
@@ -146,7 +146,7 @@ public class FastRTPSDomain implements Domain
       {
          if (participants.get(i) == participant)
          {
-            publisher = participants.get(i).createPublisher(profile, topicDataTypeIn, listener);
+            publisher = participants.get(i).createPublisher(profile, XMLConfigData, topicDataTypeIn, listener);
             break;
          }
       }
@@ -175,14 +175,14 @@ public class FastRTPSDomain implements Domain
       throw new IllegalArgumentException("Participant is not part of this domain.");
    }
 
-   @Override public Subscriber createSubscriber(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, SubscriberListener listener)
+   @Override public Subscriber createSubscriber(Participant participant, String profile, String XMLConfigData, TopicDataType<?> topicDataTypeIn, SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
       for (int i = 0; i < participants.size(); i++)
       {
          if (participants.get(i) == participant)
          {
-            return participants.get(i).createSubscriber(profile, topicDataTypeIn, listener);
+            return participants.get(i).createSubscriber(profile, XMLConfigData, topicDataTypeIn, listener);
          }
       }
       throw new IllegalArgumentException("Participant is not part of this domain.");

@@ -123,6 +123,7 @@ class FastRTPSPublisher implements Publisher
    }
 
    FastRTPSPublisher(String profile,
+                     String XMLConfigData,
                      TopicDataType<?> topicDataTypeIn,
                      PublisherListener listener,
                      NativeParticipantImpl participant)
@@ -137,7 +138,7 @@ class FastRTPSPublisher implements Publisher
 
 
          impl = new NativePublisherImpl(participant, nativeListenerImpl);
-         if (!impl.createPublisher(profile)) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+         if (!impl.createPublisher(profile, XMLConfigData, XMLConfigData.length())) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
          {
             throw new IOException("Cannot create publisher");
          }

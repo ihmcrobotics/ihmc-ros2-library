@@ -94,11 +94,14 @@ bool NativePublisherImpl::createPublisher()
     return true;
 }
 
-bool NativePublisherImpl::createPublisher(std::string profile)
+bool NativePublisherImpl::createPublisher(std::string publisherProfile,
+                                          const char *XMLConfigData,
+                                          size_t XMLdataLength)
 {
     try
     {
-        publisher = Domain::createPublisher(fastrtpsParticipant, profile, &publisherListener);
+        Domain::loadXMLProfilesString(XMLConfigData, XMLdataLength);
+        publisher = Domain::createPublisher(fastrtpsParticipant, publisherProfile, &publisherListener);
     }
     catch(const std::exception &e)
     {

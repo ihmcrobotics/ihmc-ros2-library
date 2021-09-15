@@ -121,8 +121,11 @@ public class IntraProcessDomain implements Domain
       }
    }
 
-   @Override public Publisher createPublisher(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, PublisherListener listener)
-         throws IOException, IllegalArgumentException
+   @Override public Publisher createPublisher(Participant participant,
+                                              String profile,
+                                              String XMLConfigData,
+                                              TopicDataType<?> topicDataTypeIn,
+                                              PublisherListener listener) throws IOException, IllegalArgumentException
    {
       throw new IllegalArgumentException();
    }
@@ -147,8 +150,11 @@ public class IntraProcessDomain implements Domain
       }
    }
 
-   @Override public Subscriber createSubscriber(Participant participant, String profile, TopicDataType<?> topicDataTypeIn, SubscriberListener listener)
-         throws IOException, IllegalArgumentException
+   @Override public Subscriber createSubscriber(Participant participant,
+                                                String profile,
+                                                String XMLConfigData,
+                                                TopicDataType<?> topicDataTypeIn,
+                                                SubscriberListener listener) throws IOException, IllegalArgumentException
    {
       throw new IllegalArgumentException();
    }

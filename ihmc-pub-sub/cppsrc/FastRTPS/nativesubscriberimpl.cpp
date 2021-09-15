@@ -86,12 +86,14 @@ bool NativeSubscriberImpl::createSubscriber()
     return true;
 }
 
-bool NativeSubscriberImpl::createSubscriber(std::string profile)
+bool NativeSubscriberImpl::createSubscriber(std::string subscriberProfile,
+                                            const char *XMLConfigData,
+                                            size_t XMLdataLength)
 {
     try
     {
-        subscriber = Domain::createSubscriber(fastrtpsParticipant, profile, &readerListener);
-
+        Domain::loadXMLProfilesString(XMLConfigData, XMLdataLength);
+        subscriber = Domain::createSubscriber(fastrtpsParticipant, subscriberProfile, &readerListener);
     }
     catch(const std::exception &e)
     {

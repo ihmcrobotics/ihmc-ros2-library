@@ -71,7 +71,7 @@ namespace fastRTPS{
 
 
         bool createPublisher();
-        bool createPublisher(std::string profile);
+        bool createPublisher(std::string publisherProfile,const char *XMLConfigData, size_t XMLdataLength);
         void write(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void dispose(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);

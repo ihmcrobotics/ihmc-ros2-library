@@ -66,7 +66,7 @@ namespace fastRTPS{
 
 
         bool createSubscriber();
-        bool createSubscriber(std::string profile);
+        bool createSubscriber(std::string subscriberProfile, const char *XMLConfigData, size_t XMLdataLength);
 
         int64_t getGuidLow()
         {

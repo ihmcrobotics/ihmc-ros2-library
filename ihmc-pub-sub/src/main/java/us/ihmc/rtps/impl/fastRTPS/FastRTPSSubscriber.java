@@ -170,6 +170,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
    }
 
    FastRTPSSubscriber(String profile,
+                      String XMLConfigData,
                       TopicDataType<?> topicDataTypeIn,
                       SubscriberListener listener,
                       NativeParticipantImpl participant)
@@ -183,7 +184,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          this.payload = new SerializedPayload(topicDataType.getTypeSize());
 
          impl = new NativeSubscriberImpl(participant, nativeListenerImpl);
-         if (!impl.createSubscriber(profile)) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+         if (!impl.createSubscriber(profile, XMLConfigData, XMLConfigData.length())) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
          {
             throw new IOException("Cannot create publisher");
          }
