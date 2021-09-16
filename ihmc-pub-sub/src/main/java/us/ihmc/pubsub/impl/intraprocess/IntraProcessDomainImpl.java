@@ -48,8 +48,8 @@ class IntraProcessDomainImpl
       {
          Thread t = new Thread(r, "IntraProcessDomainImpl-thread-" + threadNumber.getAndIncrement());
 
-         if (t.isDaemon())
-            t.setDaemon(false);
+         if (!t.isDaemon())
+            t.setDaemon(true);
          if (t.getPriority() != Thread.NORM_PRIORITY)
             t.setPriority(Thread.NORM_PRIORITY);
 
