@@ -23,11 +23,8 @@ import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.DurabilityKind;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -83,14 +80,17 @@ public class SubscriberExample
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(1);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("SubscriberExample");
-      attributes.enableDiscoveryServer(0, InetAddress.getByName("127.0.0.1"));
+      ParticipantAttributes2 attributes2 = ParticipantAttributes2.builder()
+                                                                 .domainId(1)
+                                                                 .name("ParticipantExample")
+                                                                 .discoveryLeaseDuration(Time.Infinite)
+                                                                 .discoveryServerEnabled(true)
+                                                                 .discoveryServerId(0)
+                                                                 .discoveryServerAddress("127.0.0.1")
+                                                                 .build();
 
       
-      Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
+      Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());
 
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);

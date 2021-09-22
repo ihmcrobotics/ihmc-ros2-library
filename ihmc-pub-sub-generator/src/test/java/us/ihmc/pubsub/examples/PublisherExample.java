@@ -17,18 +17,15 @@ package us.ihmc.pubsub.examples;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Collections;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.DurabilityKind;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublishModeKind;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
@@ -75,38 +72,36 @@ public class PublisherExample
       
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(1);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("PublisherExample");
-      attributes.enableDiscoveryServer(0, InetAddress.getByName("127.0.0.1"));
-    
-      
-     
-      
+      ParticipantAttributes2 attributes2 = ParticipantAttributes2.builder()
+                                                                 .domainId(1)
+                                                                 .name("PublisherExample2")
+                                                                 .discoveryLeaseDuration(Time.Infinite)
+                                                                 .discoveryServerEnabled(true)
+                                                                 .discoveryServerId(0)
+                                                                 .discoveryServerAddress("127.0.0.1")
+                                                                 .build();
 
-      Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
-      
+
+      Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());
+
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
-      
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "ChatBox1", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(50);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
-      // example of how to set the heartbeat
-      if (publisherAttributes instanceof FastRTPSPublisherAttributes)
-      {
-         FastRTPSPublisherAttributes fastRTPSPublisherAttributes = (FastRTPSPublisherAttributes) publisherAttributes;
-         Time_t heartbeatPeriod = new Time_t();
-         heartbeatPeriod.setSeconds(0);
-         long nsec = (long) (0.1 * 1e9); // 100 ms
-         heartbeatPeriod.setNanosec(nsec);
-         fastRTPSPublisherAttributes.getTimes().setHeartbeatPeriod(heartbeatPeriod);
-      }
-      
-      Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
+
+      PublisherAttributes2 attrs = PublisherAttributes2.builder()
+         .namespace("hello")
+         .topicName("chatter")
+         .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+         .reliabilityKind(ReliabilityKind.RELIABLE)
+         .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
+         .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+         .historyDepth(50)
+         .partitions(Collections.singletonList("us/ihmc"))
+         .lifespan(new Time(5, 0))
+         .heartBeatPeriodNsec((long) (0.1 * 1e9)) //100ms
+         .build();
+
+      System.out.println("creating publisher");
+      Publisher publisher = domain.createPublisher(participant, attrs, dataType, new PublisherListenerImpl());
       
       
       ChatMessage msg = new ChatMessage();

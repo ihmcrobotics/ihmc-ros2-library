@@ -17,11 +17,7 @@ package us.ihmc.pubsub;
 
 import java.io.IOException;
 
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublishModeKind;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.Time;
@@ -68,6 +64,8 @@ public interface Domain
 
    public Participant createParticipant(String xmlProfileData, ParticipantListener participantListener) throws IOException;
 
+   public Participant createParticipant(ParticipantAttributes2 att, ParticipantListener participantListener) throws IOException;
+
    /**
     * Create a Participant without a listener.
     * 
@@ -101,6 +99,7 @@ public interface Domain
     * @throws IllegalArgumentException If the attributes are invalid for this publisher
     */
    public Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener) throws IOException, IllegalArgumentException;
+   public Publisher createPublisher(Participant participant, PublisherAttributes2 publisherAttributes, TopicDataType<?> topicDataTypeIn, PublisherListener listener) throws IOException, IllegalArgumentException;
    public Publisher createPublisher(Participant participant, String profile, String XMLConfigData, TopicDataType<?> topicDataTypeIn, PublisherListener listener) throws IOException, IllegalArgumentException;
 
    /**
@@ -132,6 +131,7 @@ public interface Domain
     * @throws IllegalArgumentException If the attributes are invalid for this subscriber
     */
    public Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener) throws IOException, IllegalArgumentException;
+   public Subscriber createSubscriber(Participant participant, SubscriberAttributes2 subscriberAttributes, TopicDataType<?> topicDataTypeIn, SubscriberListener listener) throws IOException, IllegalArgumentException;
    public Subscriber createSubscriber(Participant participant, String profile, String XMLConfigData, TopicDataType<?> topicDataTypeIn, SubscriberListener listener) throws IOException, IllegalArgumentException;
 
    /**

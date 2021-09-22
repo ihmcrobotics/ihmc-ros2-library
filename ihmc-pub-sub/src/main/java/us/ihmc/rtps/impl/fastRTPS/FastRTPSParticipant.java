@@ -202,11 +202,11 @@ class FastRTPSParticipant implements Participant
       getGuid(guid);
    }
 
-   FastRTPSParticipant(String XMLConfigData, ParticipantListener participantListener) throws IOException, IllegalArgumentException
+   FastRTPSParticipant(String XMLConfigData, String profileName, ParticipantListener participantListener) throws IOException, IllegalArgumentException
    {
       //Set listener first, can be called before the constructor returns
       this.participantListener = participantListener;
-      impl = new NativeParticipantImpl("INMEM_PARTICIPANT", XMLConfigData, XMLConfigData.length(), nativeListener);
+      impl = new NativeParticipantImpl(profileName, XMLConfigData, XMLConfigData.length(), nativeListener);
       this.attributes = new FastRTPSParticipantAttributes();
       this.rtpsParticipantAttributes = impl.getRTPSParticipantAttributes();
       getGuid(guid);

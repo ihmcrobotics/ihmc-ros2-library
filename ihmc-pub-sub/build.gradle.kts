@@ -1,8 +1,11 @@
 plugins {
+   idea
    id("us.ihmc.ihmc-build")
    id("us.ihmc.ihmc-ci") version "7.4"
    id("us.ihmc.ihmc-cd") version "1.20"
    id("com.github.hierynomus.license") version "0.14.0"
+   id("org.unbroken-dome.xjc") version "2.0.0"
+   id("io.freefair.lombok") version "6.2.0"
 }
 
 ihmc {
@@ -21,8 +24,31 @@ mainDependencies {
    api("net.sf.trove4j:trove4j:3.0.3")
    api("us.ihmc:euclid:0.16.2")
    api("us.ihmc:ihmc-commons:0.30.4")
+   api("us.ihmc:log-tools:0.6.1@jar")
+   api("javax.xml.bind:jaxb-api:2.3.0")
 }
 
 testDependencies {
    api("us.ihmc:ihmc-commons-testing:0.30.4")
+}
+
+val generatedXSDSourcesPath = file("build/generated/sources/xjc/java/main")
+
+sourceSets {
+   main {
+      xjcSchema {
+         srcDir("thirdparty/Fast-RTPS/resources/xsd")
+         include("fastRTPS_profiles.xsd")
+         exclude("governance.xsd", "permissions.xsd")
+      }
+      java {
+         srcDir(generatedXSDSourcesPath)
+      }
+   }
+}
+
+idea {
+   module {
+      generatedSourceDirs.add(generatedXSDSourcesPath)
+   }
 }

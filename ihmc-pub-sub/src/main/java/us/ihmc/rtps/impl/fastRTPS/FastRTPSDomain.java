@@ -10,7 +10,12 @@
 package us.ihmc.rtps.impl.fastRTPS;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.UUID;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.*;
+import com.eprosima.xmlschemas.fastrtps_profiles.RemoteServerAttributes;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -18,7 +23,7 @@ import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
@@ -30,8 +35,19 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.tools.nativelibraries.NativeLibraryLoader;
 
+import javax.xml.bind.*;
+import javax.xml.namespace.QName;
+
 public class FastRTPSDomain implements Domain
 {
+   public static final String FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX = "44.53.%02X.5f.45.50.52.4f.53.49.4d.41";
+   public static final String FAST_DDS_XML_NAMESPACE = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles";
+   public static final String FAST_DDS_METATRAFFIC_UNICAST_LOCATOR_LIST = "metatrafficUnicastLocatorList";
+   public static final String FAST_DDS_PARTICIPANT = "participant";
+   public static final String FAST_DDS_PUBLISHER = "publisher";
+   public static final String FAST_DDS_NANOSEC = "nanosec";
+   public static final String FAST_DDS_SEC = "sec";
+
    private final ArrayList<FastRTPSParticipant> participants = new ArrayList<>();
 
    private static boolean useSystemFastRTPS = false;
@@ -44,7 +60,7 @@ public class FastRTPSDomain implements Domain
          FastRTPSDomain.useSystemFastRTPS = useSystemFastRTPS;
          instance = new FastRTPSDomain(useSystemFastRTPS);
       }
-      
+
       if(FastRTPSDomain.useSystemFastRTPS != useSystemFastRTPS)
       {
          if(useSystemFastRTPS)
@@ -71,7 +87,7 @@ public class FastRTPSDomain implements Domain
          else
          {
             NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
-   
+
             // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
             FastRTPSJNI.LogLevel_setLogLevel(0);
          }
@@ -107,7 +123,81 @@ public class FastRTPSDomain implements Domain
 
    @Override public Participant createParticipant(String xmlProfileData, ParticipantListener participantListener) throws IOException
    {
-      FastRTPSParticipant participant = new FastRTPSParticipant(xmlProfileData, participantListener);
+      FastRTPSParticipant participant = new FastRTPSParticipant(xmlProfileData, "INMEM_PARTICIPANT", participantListener);
+      participants.add(participant);
+      return participant;
+   }
+
+   @Override public Participant createParticipant(ParticipantAttributes2 att, ParticipantListener participantListener) throws IOException
+   {
+      String profileName = UUID.randomUUID().toString();
+
+      Dds dds = new Dds();
+
+      ProfilesType profilesType = new ProfilesType();
+      ParticipantProfileType participantProfile = new ParticipantProfileType();
+      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE,FAST_DDS_PARTICIPANT), ParticipantProfileType.class, participantProfile));
+      participantProfile.setProfileName(profileName);
+      dds.getProfiles().add(profilesType);
+
+      participantProfile.setDomainId(att.getDomainId());
+
+      RtpsParticipantAttributesType rtps = new RtpsParticipantAttributesType();
+      rtps.setName(att.getName());
+      participantProfile.setRtps(rtps);
+
+
+      BuiltinAttributesType builtin = new BuiltinAttributesType();
+
+      DurationType dt = new DurationType();
+      dt.getContent().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE,FAST_DDS_NANOSEC),
+                                            Long.class,
+                                            att.getDiscoveryLeaseDuration().getNanoseconds()));
+      dt.getContent().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE, FAST_DDS_SEC),
+                                            Integer.class,
+                                            att.getDiscoveryLeaseDuration().getSeconds()));
+
+      DiscoverySettingsType discoverySettingsType = new DiscoverySettingsType();
+      discoverySettingsType.setLeaseDuration(dt);
+      if (att.isDiscoveryServerEnabled())
+      {
+         DiscoveryServerList discoveryServerList = new DiscoveryServerList();
+         discoverySettingsType.setDiscoveryProtocol(DiscoveryProtocol.CLIENT);
+
+         RemoteServerAttributes remoteServerAttributes = new RemoteServerAttributes();
+         LocatorListType locatorListType = new LocatorListType();
+         LocatorType locatorType = new LocatorType();
+         Udpv4LocatorType udpv4LocatorType = new Udpv4LocatorType();
+         udpv4LocatorType.setAddress(att.getDiscoveryServerAddress());
+         udpv4LocatorType.setPort(att.getDiscoveryServerPort());
+         locatorType.setUdpv4(udpv4LocatorType);
+         locatorListType.getLocator().add(locatorType);
+
+         remoteServerAttributes.getContent().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE,FAST_DDS_METATRAFFIC_UNICAST_LOCATOR_LIST),
+                                                                   LocatorListType.class,
+                                                                   locatorListType));
+
+         remoteServerAttributes.setPrefix(String.format(FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX, att.getDiscoveryServerId()));
+         discoveryServerList.getRemoteServer().add(remoteServerAttributes);
+         discoverySettingsType.setDiscoveryServersList(discoveryServerList);
+      }
+      builtin.setDiscoveryConfig(discoverySettingsType);
+      rtps.setBuiltin(builtin);
+      StringWriter writer = new StringWriter();
+
+      try
+      {
+         JAXBContext context = JAXBContext.newInstance(Dds.class);
+         Marshaller m = context.createMarshaller();
+         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+         m.marshal(dds, writer);
+         System.out.println(writer.toString());
+      } catch (JAXBException e )
+      {
+         throw new IOException("Colud not marshal XML", e);
+      }
+
+      FastRTPSParticipant participant = new FastRTPSParticipant(writer.toString(), profileName, participantListener);
       participants.add(participant);
       return participant;
    }
@@ -123,6 +213,147 @@ public class FastRTPSDomain implements Domain
          if (participants.get(i) == participant)
          {
             publisher = participants.get(i).createPublisher(publisherAttributes, listener);
+            break;
+         }
+      }
+
+      if (publisher == null)
+      {
+         throw new IllegalArgumentException("Participant is not part of this domain.");
+      }
+
+      ThreadTools.sleep(1);
+
+      return publisher;
+   }
+
+   @Override public Publisher createPublisher(Participant participant, PublisherAttributes2 att, TopicDataType<?> topicDataTypeIn, PublisherListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      String profileName = UUID.randomUUID().toString();
+
+      Dds dds = new Dds();
+
+      ProfilesType profilesType = new ProfilesType();
+      PublisherProfileType publisherProfile = new PublisherProfileType();
+      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE,FAST_DDS_PUBLISHER), PublisherProfileType.class, publisherProfile));
+      publisherProfile.setProfileName(profileName);
+      dds.getProfiles().add(profilesType);
+
+
+      //TOPIC
+      TopicAttributesType topicAttributesType = new TopicAttributesType();
+      topicAttributesType.setDataType(topicDataTypeIn.getName());
+      topicAttributesType.setName(att.getTopicName());
+
+      HistoryQosPolicyType historyQosPolicyType = new HistoryQosPolicyType();
+      historyQosPolicyType.setDepth(att.getHistoryDepth());
+      switch(att.getHistoryQosPolicyKind())
+      {
+         case KEEP_ALL_HISTORY_QOS:
+            historyQosPolicyType.setKind(HistoryQosKindType.KEEP_ALL);
+            break;
+         case KEEP_LAST_HISTORY_QOS:
+            historyQosPolicyType.setKind(HistoryQosKindType.KEEP_LAST);
+            break;
+      }
+      topicAttributesType.setHistoryQos(historyQosPolicyType);
+      //TOPIC END
+      publisherProfile.setTopic(topicAttributesType);
+
+      //QOS
+      WriterQosPoliciesType writerQosPoliciesType = new WriterQosPoliciesType();
+
+      DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
+      switch(att.getDurabilityKind())
+      {
+         case PERSISTENT_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.PERSISTENT);
+            break;
+         case TRANSIENT_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT);
+            break;
+         case TRANSIENT_LOCAL_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT_LOCAL);
+            break;
+         case VOLATILE_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.VOLATILE);
+            break;
+      }
+      writerQosPoliciesType.setDurability(durabilityQosPolicyType);
+
+      ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
+      switch(att.getReliabilityKind())
+      {
+         case RELIABLE:
+            reliabilityQosPolicyType.setKind(ReliabilityQosKindType.RELIABLE);
+            break;
+         case BEST_EFFORT:
+            reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
+            break;
+      }
+      writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
+
+      if(att.getLifespan() != null)
+      {
+         LifespanQosPolicyType lifespanQosPolicyType = new LifespanQosPolicyType();
+         DurationType dt = new DurationType();
+         dt.getContent().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE,FAST_DDS_NANOSEC),
+                                               Long.class,
+                                               att.getLifespan().getNanoseconds()));
+         dt.getContent().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE, FAST_DDS_SEC),
+                                               Integer.class,
+                                               att.getLifespan().getSeconds()));
+         lifespanQosPolicyType.setDuration(dt);
+         writerQosPoliciesType.setLifespan(lifespanQosPolicyType);
+      }
+
+
+      if(att.getPartitions() != null)
+      {
+         PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
+         NameVectorType nameVectorType = new NameVectorType();
+         System.out.println(nameVectorType.getName());
+         att.getPartitions().forEach(s -> nameVectorType.getName().add(s));
+         partitionQosPolicyType.setNames(nameVectorType);
+         writerQosPoliciesType.setPartition(partitionQosPolicyType);
+      }
+
+      PublishModeQosPolicyType publishModeQosPolicyType = new PublishModeQosPolicyType();
+      switch(att.getPublishModeKind())
+      {
+         case SYNCHRONOUS_PUBLISH_MODE:
+            publishModeQosPolicyType.setKind(PublishModeQosKindType.SYNCHRONOUS);
+            break;
+         case ASYNCHRONOUS_PUBLISH_MODE:
+            publishModeQosPolicyType.setKind(PublishModeQosKindType.ASYNCHRONOUS);
+            break;
+      }
+      writerQosPoliciesType.setPublishMode(publishModeQosPolicyType);
+      //QOS END
+      publisherProfile.setQos(writerQosPoliciesType);
+
+      StringWriter writer = new StringWriter();
+
+      try
+      {
+         JAXBContext context = JAXBContext.newInstance(Dds.class);
+         Marshaller m = context.createMarshaller();
+         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+         m.marshal(dds, writer);
+         System.out.println(writer.toString());
+      } catch (JAXBException e )
+      {
+         throw new IOException("Colud not marshal XML", e);
+      }
+
+      Publisher publisher = null;
+
+      for (int i = 0; i < participants.size(); i++)
+      {
+         if (participants.get(i) == participant)
+         {
+            publisher = participants.get(i).createPublisher(profileName, writer.toString(), topicDataTypeIn, listener);
             break;
          }
       }
@@ -173,6 +404,122 @@ public class FastRTPSDomain implements Domain
          }
       }
       throw new IllegalArgumentException("Participant is not part of this domain.");
+   }
+
+   @Override public Subscriber createSubscriber(Participant participant, SubscriberAttributes2 att, TopicDataType<?> topicDataTypeIn, SubscriberListener listener)
+         throws IOException, IllegalArgumentException
+   {
+      String profileName = UUID.randomUUID().toString();
+
+      Dds dds = new Dds();
+
+      ProfilesType profilesType = new ProfilesType();
+      PublisherProfileType publisherProfile = new PublisherProfileType();
+      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FAST_DDS_XML_NAMESPACE,FAST_DDS_PUBLISHER), PublisherProfileType.class, publisherProfile));
+      publisherProfile.setProfileName(profileName);
+      dds.getProfiles().add(profilesType);
+
+
+      //TOPIC
+      TopicAttributesType topicAttributesType = new TopicAttributesType();
+      topicAttributesType.setDataType(topicDataTypeIn.getName());
+      topicAttributesType.setName(att.getTopicName());
+
+      HistoryQosPolicyType historyQosPolicyType = new HistoryQosPolicyType();
+      historyQosPolicyType.setDepth(att.getHistoryDepth());
+      switch(att.getHistoryQosPolicyKind())
+      {
+         case KEEP_ALL_HISTORY_QOS:
+            historyQosPolicyType.setKind(HistoryQosKindType.KEEP_ALL);
+            break;
+         case KEEP_LAST_HISTORY_QOS:
+            historyQosPolicyType.setKind(HistoryQosKindType.KEEP_LAST);
+            break;
+      }
+      topicAttributesType.setHistoryQos(historyQosPolicyType);
+      //TOPIC END
+      publisherProfile.setTopic(topicAttributesType);
+
+      //QOS
+      WriterQosPoliciesType writerQosPoliciesType = new WriterQosPoliciesType();
+
+      DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
+      switch(att.getDurabilityKind())
+      {
+         case PERSISTENT_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.PERSISTENT);
+            break;
+         case TRANSIENT_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT);
+            break;
+         case TRANSIENT_LOCAL_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT_LOCAL);
+            break;
+         case VOLATILE_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.VOLATILE);
+            break;
+      }
+      writerQosPoliciesType.setDurability(durabilityQosPolicyType);
+
+      ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
+      switch(att.getReliabilityKind())
+      {
+         case RELIABLE:
+            reliabilityQosPolicyType.setKind(ReliabilityQosKindType.RELIABLE);
+            break;
+         case BEST_EFFORT:
+            reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
+            break;
+      }
+      writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
+
+
+      if(att.getPartitions() != null)
+      {
+         PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
+         NameVectorType nameVectorType = new NameVectorType();
+         System.out.println(nameVectorType.getName());
+         att.getPartitions().forEach(s -> nameVectorType.getName().add(s));
+         partitionQosPolicyType.setNames(nameVectorType);
+         writerQosPoliciesType.setPartition(partitionQosPolicyType);
+      }
+
+      //QOS END
+      publisherProfile.setQos(writerQosPoliciesType);
+
+      StringWriter writer = new StringWriter();
+
+      try
+      {
+         JAXBContext context = JAXBContext.newInstance(Dds.class);
+         Marshaller m = context.createMarshaller();
+         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+         m.marshal(dds, writer);
+         System.out.println(writer.toString());
+      } catch (JAXBException e )
+      {
+         throw new IOException("Colud not marshal XML", e);
+      }
+
+      Subscriber subscriber = null;
+
+      for (int i = 0; i < participants.size(); i++)
+      {
+         if (participants.get(i) == participant)
+         {
+            subscriber = participants.get(i).createSubscriber(profileName, writer.toString(), topicDataTypeIn, listener);
+            break;
+         }
+      }
+
+      if (subscriber == null)
+      {
+         throw new IllegalArgumentException("Participant is not part of this domain.");
+      }
+
+      ThreadTools.sleep(1);
+
+      return subscriber;
    }
 
    @Override public Subscriber createSubscriber(Participant participant, String profile, String XMLConfigData, TopicDataType<?> topicDataTypeIn, SubscriberListener listener)

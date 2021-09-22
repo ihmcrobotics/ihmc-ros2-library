@@ -22,9 +22,7 @@ import java.util.List;
 
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
@@ -100,6 +98,11 @@ public class IntraProcessDomain implements Domain
       throw new IllegalArgumentException();
    }
 
+   @Override public Participant createParticipant(ParticipantAttributes2 att, ParticipantListener participantListener) throws IOException
+   {
+      throw new IllegalArgumentException();
+   }
+
    @Override
    public synchronized Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
          throws IOException, IllegalArgumentException
@@ -119,6 +122,14 @@ public class IntraProcessDomain implements Domain
       {
          throw new IllegalArgumentException("Publisher attributes have to be an instance of IntraProcessPublisherAttributes. Use domain.createPublisherAttributes()");
       }
+   }
+
+   @Override public Publisher createPublisher(Participant participant,
+                                              PublisherAttributes2 publisherAttributes,
+                                              TopicDataType<?> topicDataTypeIn,
+                                              PublisherListener listener) throws IOException, IllegalArgumentException
+   {
+      throw new IllegalArgumentException();
    }
 
    @Override public Publisher createPublisher(Participant participant,
@@ -148,6 +159,14 @@ public class IntraProcessDomain implements Domain
       {
          throw new IllegalArgumentException("Publisher attributes have to be an instance of IntraProcessPublisherAttributes. Use domain.createPublisherAttributes()");
       }
+   }
+
+   @Override public Subscriber createSubscriber(Participant participant,
+                                                SubscriberAttributes2 subscriberAttributes,
+                                                TopicDataType<?> topicDataTypeIn,
+                                                SubscriberListener listener) throws IOException, IllegalArgumentException
+   {
+      throw new IllegalArgumentException();
    }
 
    @Override public Subscriber createSubscriber(Participant participant,
