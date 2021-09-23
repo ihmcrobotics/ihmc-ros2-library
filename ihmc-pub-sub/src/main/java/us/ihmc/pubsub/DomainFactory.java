@@ -16,7 +16,7 @@
 package us.ihmc.pubsub;
 
 import us.ihmc.pubsub.impl.intraprocess.IntraProcessDomain;
-import us.ihmc.rtps.impl.fastRTPS.FastRTPSDomain;
+import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class DomainFactory
 {

@@ -16,6 +16,7 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
@@ -39,29 +40,37 @@ public class PubSubTester<P extends Packet>
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(systemDomain());
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("PubSubTester");
+      ParticipantAttributes attributes = ParticipantAttributes.builder()
+                                                              .domainId(systemDomain())
+                                                              .discoveryLeaseDuration(Time.Infinite)
+                                                              .name("PubSubTester")
+                                                              .build();
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       IDLElementTestPubSubType dataType = new IDLElementTestPubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "pubsubtest", ReliabilityKind.RELIABLE);
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(1);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+                                                                   .topicDataType(dataType)
+                                                                   .topicName("pubsubtest")
+                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                   .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                                   .historyDepth(1)
+                                                                   .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                                   .build();
 
       P data = msgTypeSupplier.get();
       TopicDataType<P> topicDataType = (TopicDataType<P>) data.getPubSubTypePacket().get();
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, topicDataType, "pubsubtest", ReliabilityKind.RELIABLE);
-      subscriberAttributes.getTopic().getHistoryQos().setDepth(1);
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+                                                                      .topicDataType(topicDataType)
+                                                                      .topicName("pubsubtest")
+                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                      .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                      .build();
 
       subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(data,callbacks));
 

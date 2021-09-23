@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.ihmc.rtps.impl.fastRTPS;
+package us.ihmc.pubsub.impl.fastRTPS;
+
+import us.ihmc.rtps.impl.fastRTPS.*;
 
 class FastRTPSAttributes
 {
    static TopicAttributes createAttributes(us.ihmc.pubsub.attributes.TopicAttributes topic)
    {
-      TopicAttributes attributes = new TopicAttributes(topic.getTopicName(), topic.getTopicDataType(),TopicKind_t.swigToEnum(topic.getTopicKind().ordinal()));
+      TopicAttributes attributes = new TopicAttributes(topic.getTopicName(), topic.getTopicDataType(), TopicKind_t.swigToEnum(topic.getTopicKind().ordinal()));
       
       HistoryQosPolicy historyQos = attributes.getHistoryQos();
       historyQos.setDepth(topic.getHistoryQos().getDepth());

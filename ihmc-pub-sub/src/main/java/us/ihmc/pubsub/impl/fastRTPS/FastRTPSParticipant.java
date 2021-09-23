@@ -7,17 +7,21 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package us.ihmc.rtps.impl.fastRTPS;
+package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.UUID;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.*;
+import com.eprosima.xmlschemas.fastrtps_profiles.RemoteServerAttributes;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.Locator;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReaderQosHolder;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.participant.Participant;
@@ -28,6 +32,13 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
+import us.ihmc.rtps.impl.fastRTPS.*;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
 class FastRTPSParticipant implements Participant
 {
@@ -37,8 +48,7 @@ class FastRTPSParticipant implements Participant
    private final ArrayList<FastRTPSPublisher> publishers = new ArrayList<>();
    private final ArrayList<FastRTPSSubscriber> subscribers = new ArrayList<>();
 
-   private final FastRTPSParticipantAttributes attributes;
-   private RTPSParticipantAttributes rtpsParticipantAttributes;
+   private final ParticipantAttributes attributes;
    private final ParticipantListener participantListener;
 
    private final Guid guid = new Guid();
@@ -185,30 +195,81 @@ class FastRTPSParticipant implements Participant
       }
    }
 
-   FastRTPSParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException, IllegalArgumentException
+   FastRTPSParticipant(ParticipantAttributes attrs, ParticipantListener participantListener) throws IOException, IllegalArgumentException
    {
       //Set listener first, can be called before the constructor returns
-      this.participantListener = participantListener;
-      if (att instanceof FastRTPSParticipantAttributes)
-      {
-         this.attributes = (FastRTPSParticipantAttributes) att;
-         impl = new NativeParticipantImpl(attributes.getDomainId(), attributes.rtps(), nativeListener);
-         this.rtpsParticipantAttributes = impl.getRTPSParticipantAttributes();
-      }
-      else
-      {
-         throw new IllegalArgumentException("ParticipantAttributes<?> is not of base class FastRTPSParticipantAttributes");
-      }
-      getGuid(guid);
-   }
 
-   FastRTPSParticipant(String XMLConfigData, String profileName, ParticipantListener participantListener) throws IOException, IllegalArgumentException
-   {
-      //Set listener first, can be called before the constructor returns
+      String profileName = UUID.randomUUID().toString();
+
+      Dds dds = new Dds();
+
+      ProfilesType profilesType = new ProfilesType();
+      ParticipantProfileType participantProfile = new ParticipantProfileType();
+      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_PARTICIPANT), ParticipantProfileType.class, participantProfile));
+      participantProfile.setProfileName(profileName);
+      dds.getProfiles().add(profilesType);
+
+      participantProfile.setDomainId((long) attrs.getDomainId());
+
+      RtpsParticipantAttributesType rtps = new RtpsParticipantAttributesType();
+      rtps.setName(attrs.getName());
+      participantProfile.setRtps(rtps);
+
+
+      BuiltinAttributesType builtin = new BuiltinAttributesType();
+
+      DurationType dt = new DurationType();
+      dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
+                                            Long.class,
+                                            attrs.getDiscoveryLeaseDuration().getNanoseconds()));
+      dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
+                                            Integer.class,
+                                            attrs.getDiscoveryLeaseDuration().getSeconds()));
+
+      DiscoverySettingsType discoverySettingsType = new DiscoverySettingsType();
+      discoverySettingsType.setLeaseDuration(dt);
+      if (attrs.isDiscoveryServerEnabled())
+      {
+         DiscoveryServerList discoveryServerList = new DiscoveryServerList();
+         discoverySettingsType.setDiscoveryProtocol(DiscoveryProtocol.CLIENT);
+
+         RemoteServerAttributes remoteServerAttributes = new RemoteServerAttributes();
+         LocatorListType locatorListType = new LocatorListType();
+         LocatorType locatorType = new LocatorType();
+         Udpv4LocatorType udpv4LocatorType = new Udpv4LocatorType();
+         udpv4LocatorType.setAddress(attrs.getDiscoveryServerAddress());
+         udpv4LocatorType.setPort(attrs.getDiscoveryServerPort());
+         locatorType.setUdpv4(udpv4LocatorType);
+         locatorListType.getLocator().add(locatorType);
+
+         remoteServerAttributes.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE,FastRTPSDomain.FAST_DDS_METATRAFFIC_UNICAST_LOCATOR_LIST),
+                                                                   LocatorListType.class,
+                                                                   locatorListType));
+
+         remoteServerAttributes.setPrefix(String.format(FastRTPSDomain.FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX, attrs.getDiscoveryServerId()));
+         discoveryServerList.getRemoteServer().add(remoteServerAttributes);
+         discoverySettingsType.setDiscoveryServersList(discoveryServerList);
+      }
+      builtin.setDiscoveryConfig(discoverySettingsType);
+      rtps.setBuiltin(builtin);
+      StringWriter writer = new StringWriter();
+
+      try
+      {
+         JAXBContext context = JAXBContext.newInstance(Dds.class);
+         Marshaller m = context.createMarshaller();
+         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+         m.marshal(dds, writer);
+      } catch (JAXBException e )
+      {
+         throw new IOException("Colud not marshal XML", e);
+      }
+
+      String data = writer.toString();
+
       this.participantListener = participantListener;
-      impl = new NativeParticipantImpl(profileName, XMLConfigData, XMLConfigData.length(), nativeListener);
-      this.attributes = new FastRTPSParticipantAttributes();
-      this.rtpsParticipantAttributes = impl.getRTPSParticipantAttributes();
+      impl = new NativeParticipantImpl(profileName, data, data.length(), nativeListener);
+      this.attributes = attrs;
       getGuid(guid);
    }
 
@@ -238,7 +299,7 @@ class FastRTPSParticipant implements Participant
    }
 
    @Override
-   public FastRTPSParticipantAttributes getAttributes()
+   public ParticipantAttributes getAttributes()
    {
       return attributes;
    }
@@ -249,7 +310,7 @@ class FastRTPSParticipant implements Participant
       int count = 0;
       for (int i = 0; i < publishers.size(); i++)
       {
-         if (publishers.get(i).getAttributes().getTopic().getTopicName().equals(target_topic))
+         if (publishers.get(i).getAttributes().getTopicName().equals(target_topic))
          {
             count++;
          }
@@ -264,7 +325,7 @@ class FastRTPSParticipant implements Participant
       int count = 0;
       for (int i = 0; i < subscribers.size(); i++)
       {
-         if (subscribers.get(i).getAttributes().getTopic().getTopicName().equals(target_topic))
+         if (subscribers.get(i).getAttributes().getTopicName().equals(target_topic))
          {
             count++;
          }
@@ -310,91 +371,56 @@ class FastRTPSParticipant implements Participant
       return null;
    }
 
-   synchronized FastRTPSPublisher createPublisher(PublisherAttributes publisherAttributes, PublisherListener listener)
+   synchronized FastRTPSPublisher createPublisher(PublisherAttributes attrs, PublisherListener listener)
          throws IOException, IllegalArgumentException
    {
-      TopicDataType<?> topicDataType = getRegisteredType(publisherAttributes.getTopic().getTopicDataType());
+      TopicDataType<?> topicDataType = getRegisteredType(attrs.getTopicDataType().getName());
       if (topicDataType == null)
       {
-         throw new IllegalArgumentException("Type: " + publisherAttributes.getTopic().getTopicDataType() + " is not registered");
+         throw new IllegalArgumentException("Type: " + attrs.getTopicDataType() + " is not registered");
       }
 
-      if (publisherAttributes.getTopic().getTopicKind() == TopicKind.WITH_KEY && !topicDataType.isGetKeyDefined())
+      if (attrs.getTopicKind() == TopicKind.WITH_KEY && !topicDataType.isGetKeyDefined())
       {
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (this.rtpsParticipantAttributes.getBuiltin().getDiscovery_config().getUse_STATIC_EndpointDiscoveryProtocol())
+      if (this.attributes.isUseStaticDiscovery())
       {
-         if (publisherAttributes.getUserDefinedID() <= 0)
+         if (attrs.getUserDefinedId() <= 0)
          {
             throw new IllegalArgumentException("Static EDP requires user defined EDP");
          }
       }
 
-      if (publisherAttributes instanceof FastRTPSPublisherAttributes)
-      {
-         FastRTPSPublisher publisher = new FastRTPSPublisher(topicDataType, (FastRTPSPublisherAttributes) publisherAttributes, listener, impl);
-         publishers.add(publisher);
-         return publisher;
-      }
-      else
-      {
-         throw new IllegalArgumentException("publisherAttributes are not an instance of FastRTPSPublisherAttributes");
-      }
-   }
 
-   synchronized FastRTPSPublisher createPublisher(String profile,
-                                                  String XMLConfigData,
-                                                  TopicDataType<?> topicDataTypeIn,
-                                                  PublisherListener listener)
-         throws IOException, IllegalArgumentException
-   {
-      FastRTPSPublisher publisher = new FastRTPSPublisher(profile, XMLConfigData, topicDataTypeIn, listener, impl);
+      FastRTPSPublisher publisher = new FastRTPSPublisher(topicDataType, attrs, listener, impl);
       publishers.add(publisher);
       return publisher;
    }
 
-   synchronized Subscriber createSubscriber(SubscriberAttributes subscriberAttributes, SubscriberListener listener) throws IOException
+   synchronized Subscriber createSubscriber(SubscriberAttributes attrs, SubscriberListener listener) throws IOException
    {
-      TopicDataType<?> topicDataType = getRegisteredType(subscriberAttributes.getTopic().getTopicDataType());
+      TopicDataType<?> topicDataType = getRegisteredType(attrs.getTopicDataType().getName());
       if (topicDataType == null)
       {
-         throw new IllegalArgumentException("Type: " + subscriberAttributes.getTopic().getTopicDataType() + " is not registered");
+         throw new IllegalArgumentException("Type: " + attrs.getTopicDataType() + " is not registered");
       }
 
-      if (subscriberAttributes.getTopic().getTopicKind() == TopicKind.WITH_KEY && !topicDataType.isGetKeyDefined())
+      if (attrs.getTopicKind() == TopicKind.WITH_KEY && !topicDataType.isGetKeyDefined())
       {
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (attributes.rtps().getBuiltin().getDiscovery_config().getUse_STATIC_EndpointDiscoveryProtocol())
+      if (this.attributes.isUseStaticDiscovery())
       {
-         if (subscriberAttributes.getUserDefinedID() <= 0)
+         if (attrs.getUserDefinedId() <= 0)
          {
             throw new IllegalArgumentException("Static EDP requires user defined EDP");
          }
       }
 
-      if (subscriberAttributes instanceof FastRTPSSubscriberAttributes)
-      {
-         FastRTPSSubscriber subscriber = new FastRTPSSubscriber(topicDataType, (FastRTPSSubscriberAttributes) subscriberAttributes, listener, impl);
-         subscribers.add(subscriber);
-         return subscriber;
-      }
-      else
-      {
-         throw new IllegalArgumentException("subscriberAttributes are not an instance of FastRTPSSubscriberAttributes");
-      }
-   }
-
-   synchronized Subscriber createSubscriber(String profile,
-                                            String XMLConfigData,
-                                            TopicDataType<?> topicDataTypeIn,
-                                            SubscriberListener listener)
-         throws IOException, IllegalArgumentException
-   {
-      FastRTPSSubscriber subscriber = new FastRTPSSubscriber(profile, XMLConfigData, topicDataTypeIn, listener, impl);
+      FastRTPSSubscriber subscriber = new FastRTPSSubscriber(topicDataType, attrs, listener, impl);
       subscribers.add(subscriber);
       return subscriber;
    }
@@ -447,7 +473,7 @@ class FastRTPSParticipant implements Participant
       {
          if (publishers.get(i).getTopicDataType().equals(type))
          {
-            throw new IOException("TopicDataType in use by publisher " + publishers.get(i).getAttributes().getTopic().getTopicName());
+            throw new IOException("TopicDataType in use by publisher " + publishers.get(i).getAttributes().getTopicName());
          }
       }
 
@@ -455,7 +481,7 @@ class FastRTPSParticipant implements Participant
       {
          if (subscribers.get(i).getTopicDataType().equals(type))
          {
-            throw new IOException("TopicDataType in use by subscriber " + subscribers.get(i).getAttributes().getTopic().getTopicName());
+            throw new IOException("TopicDataType in use by subscriber " + subscribers.get(i).getAttributes().getTopicName());
          }
       }
 

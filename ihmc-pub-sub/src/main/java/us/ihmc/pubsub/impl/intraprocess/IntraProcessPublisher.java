@@ -21,6 +21,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.DurabilityKind;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.ChangeKind;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -34,22 +35,22 @@ class IntraProcessPublisher <T> implements Publisher
    private boolean available = true;
    private final TopicDataType<T> topicDataType;
    private final Guid guid;
-   private final IntraProcessPublisherAttributes attr;
+   private final PublisherAttributes attr;
    private IntraProcessDomainImpl domain;
    private IntraProcessParticipant participant;
    private PublisherListener listener;
 
    private long sequence = 0;
 
-   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, IntraProcessPublisherAttributes attr,
+   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, PublisherAttributes attr,
                                 PublisherListener listener)
          throws IOException
    {
       @SuppressWarnings("unchecked")
-      TopicDataType<T> topicDataType = (TopicDataType<T>) participant.getTopicDataType(attr.getTopic().getTopicDataType());
+      TopicDataType<T> topicDataType = (TopicDataType<T>) participant.getTopicDataType(attr.getTopicDataType().getName());
       if (topicDataType == null)
       {
-         throw new IOException("Cannot registered publisher with topic " + attr.getTopic().getTopicDataType() + ". Topic data type is not registered.");
+         throw new IOException("Cannot registered publisher with topic " + attr.getTopicDataType() + ". Topic data type is not registered.");
       }
       this.topicDataType = topicDataType.newInstance();
       this.guid = guid;
@@ -58,7 +59,7 @@ class IntraProcessPublisher <T> implements Publisher
       this.attr = attr;
       this.listener = listener;
       
-      if(attr.getQos().getDurabilityKind() != DurabilityKind.VOLATILE_DURABILITY_QOS)
+      if(attr.getDurabilityKind() != DurabilityKind.VOLATILE_DURABILITY_QOS)
       {
          throw new RuntimeException("Only volatile durability is supported for intraprocess communication");
       }
@@ -111,7 +112,7 @@ class IntraProcessPublisher <T> implements Publisher
    }
 
    @Override
-   public IntraProcessPublisherAttributes getAttributes()
+   public PublisherAttributes getAttributes()
    {
       return attr;
    }

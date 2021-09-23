@@ -79,70 +79,27 @@ public class IntraProcessDomain implements Domain
    @Override
    public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
    {
-      if (att instanceof IntraProcessParticipantAttributes)
-      {
-         IntraProcessDomainImpl domain = getOrCreateDomain(((IntraProcessParticipantAttributes) att).getDomain());
-         IntraProcessParticipant participant = domain.createParticipant((IntraProcessParticipantAttributes) att, participantListener);
-         participants.put(participant, participant);
-         return participant;
-
-      }
-      else
-      {
-         throw new IllegalArgumentException("Participant attributes have to be an instance of IntraProcessParticipantAttributes. Use domain.createParticipantAttributes()");
-      }
-   }
-
-   @Override public Participant createParticipant(String xmlProfileData, ParticipantListener participantListener) throws IOException
-   {
-      throw new IllegalArgumentException();
-   }
-
-   @Override public Participant createParticipant(ParticipantAttributes2 att, ParticipantListener participantListener) throws IOException
-   {
-      throw new IllegalArgumentException();
+      IntraProcessDomainImpl domain = getOrCreateDomain(att.getDomainId());
+      IntraProcessParticipant participant = domain.createParticipant(att, participantListener);
+      participants.put(participant, participant);
+      return participant;
    }
 
    @Override
-   public synchronized Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
+   public synchronized Publisher createPublisherImpl(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
          throws IOException, IllegalArgumentException
    {
-      
+
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
-      if(intraProcessParticipant == null)
+      if (intraProcessParticipant == null)
       {
          throw new IllegalArgumentException("This participant is not registered with this domain.");
       }
-      
-      if(publisherAttributes instanceof IntraProcessPublisherAttributes)
-      {
-         return intraProcessParticipant.getDomain().createPublisher(intraProcessParticipant, (IntraProcessPublisherAttributes) publisherAttributes, listener);
-      }
-      else
-      {
-         throw new IllegalArgumentException("Publisher attributes have to be an instance of IntraProcessPublisherAttributes. Use domain.createPublisherAttributes()");
-      }
-   }
-
-   @Override public Publisher createPublisher(Participant participant,
-                                              PublisherAttributes2 publisherAttributes,
-                                              TopicDataType<?> topicDataTypeIn,
-                                              PublisherListener listener) throws IOException, IllegalArgumentException
-   {
-      throw new IllegalArgumentException();
-   }
-
-   @Override public Publisher createPublisher(Participant participant,
-                                              String profile,
-                                              String XMLConfigData,
-                                              TopicDataType<?> topicDataTypeIn,
-                                              PublisherListener listener) throws IOException, IllegalArgumentException
-   {
-      throw new IllegalArgumentException();
+      return intraProcessParticipant.getDomain().createPublisher(intraProcessParticipant, publisherAttributes, listener);
    }
 
    @Override
-   public synchronized Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
+   public synchronized Subscriber createSubscriberImpl(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
@@ -150,32 +107,9 @@ public class IntraProcessDomain implements Domain
       {
          throw new IllegalArgumentException("This participant is not registered with this domain.");
       }
-      
-      if(subscriberAttributes instanceof IntraProcessSubscriberAttributes)
-      {
-         return intraProcessParticipant.getDomain().createSubscriber(intraProcessParticipant, (IntraProcessSubscriberAttributes) subscriberAttributes, listener);
-      }
-      else
-      {
-         throw new IllegalArgumentException("Publisher attributes have to be an instance of IntraProcessPublisherAttributes. Use domain.createPublisherAttributes()");
-      }
-   }
 
-   @Override public Subscriber createSubscriber(Participant participant,
-                                                SubscriberAttributes2 subscriberAttributes,
-                                                TopicDataType<?> topicDataTypeIn,
-                                                SubscriberListener listener) throws IOException, IllegalArgumentException
-   {
-      throw new IllegalArgumentException();
-   }
+      return intraProcessParticipant.getDomain().createSubscriber(intraProcessParticipant, subscriberAttributes, listener);
 
-   @Override public Subscriber createSubscriber(Participant participant,
-                                                String profile,
-                                                String XMLConfigData,
-                                                TopicDataType<?> topicDataTypeIn,
-                                                SubscriberListener listener) throws IOException, IllegalArgumentException
-   {
-      throw new IllegalArgumentException();
    }
 
    @Override
@@ -270,23 +204,5 @@ public class IntraProcessDomain implements Domain
       {
          removeParticipant(participantToRemove);
       }
-   }
-
-   @Override
-   public SubscriberAttributes createSubscriberAttributes()
-   {
-      return new IntraProcessSubscriberAttributes();
-   }
-
-   @Override
-   public PublisherAttributes createPublisherAttributes()
-   {
-      return new IntraProcessPublisherAttributes();
-   }
-
-   @Override
-   public ParticipantAttributes createParticipantAttributes()
-   {
-      return new IntraProcessParticipantAttributes();
    }
 }

@@ -16,7 +16,7 @@
 package us.ihmc.pubsub.examples;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.util.Collections;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
@@ -80,14 +80,14 @@ public class SubscriberExample
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes2 attributes2 = ParticipantAttributes2.builder()
-                                                                 .domainId(1)
-                                                                 .name("ParticipantExample")
-                                                                 .discoveryLeaseDuration(Time.Infinite)
-                                                                 .discoveryServerEnabled(true)
-                                                                 .discoveryServerId(0)
-                                                                 .discoveryServerAddress("127.0.0.1")
-                                                                 .build();
+      ParticipantAttributes attributes2 = ParticipantAttributes.builder()
+                                                               .domainId(1)
+                                                               .name("ParticipantExample")
+                                                               .discoveryLeaseDuration(Time.Infinite)
+                                                               .discoveryServerEnabled(true)
+                                                               .discoveryServerId(0)
+                                                               .discoveryServerAddress("127.0.0.1")
+                                                               .build();
 
       
       Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());
@@ -95,9 +95,13 @@ public class SubscriberExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType, "ChatBox1", ReliabilityKind.BEST_EFFORT, "us/ihmc");
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+            .topicDataType(dataType)
+            .topicName("ChatBox1")
+            .reliabilityKind(ReliabilityKind.BEST_EFFORT)
+            .partitions(Collections.singletonList("us/ihmc"))
+            .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
+            .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS).build();
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 

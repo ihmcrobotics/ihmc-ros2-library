@@ -1,6 +1,7 @@
 package us.ihmc.pubsub.test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
@@ -32,19 +33,23 @@ public class CreateSubscriptionUnderLoad
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("CreateSubscriptionProcessDuringAggressivePublishTest");
+      ParticipantAttributes attributes = ParticipantAttributes.builder()
+            .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest").build();
+
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType, "segfault_trigger", ReliabilityKind.RELIABLE, "us/ihmc");
-      subscriberAttributes.getTopic().getHistoryQos().setDepth(1);
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+                                                                      .topicDataType(dataType)
+                                                                      .namespace("segfault_trigger")
+                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .partitions(Collections.singletonList("us/ihmc"))
+                                                                      .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                      .historyDepth(1)
+                                                                      .build();
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
    }

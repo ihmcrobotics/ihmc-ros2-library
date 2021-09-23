@@ -28,6 +28,7 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -54,31 +55,34 @@ public class HandshakeTest
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("StatusTest");
+      ParticipantAttributes attributes = ParticipantAttributes.builder()
+            .domainId(215)
+            .discoveryLeaseDuration(Time.Infinite).name("StatusTest").build();
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       FooHandshakePubSubType dataType = new FooHandshakePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
-                                                           DurabilityKind.VOLATILE_DURABILITY_QOS
-                                                           : DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(50);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+
+      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+                                                                   .topicDataType(dataType)
+                                                                   .topicName("Status")
+                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .partitions(Collections.singletonList("us/ihmc"))
+                                                                   .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                   .historyQosPolicyKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS).build();
 
       FooHandshakePubSubType dataType2 = new FooHandshakePubSubType();
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType2, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      subscriberAttributes.getQos().setDurabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
-                                                            DurabilityKind.VOLATILE_DURABILITY_QOS
-                                                            : DurabilityKind.VOLATILE_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+                                                                      .topicDataType(dataType2)
+                                                                      .topicName("Status")
+                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .partitions(Collections.singletonList("us/ihmc"))
+                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                      .historyQosPolicyKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                      .build();
 
       SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);

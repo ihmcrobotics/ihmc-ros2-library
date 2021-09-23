@@ -16,7 +16,6 @@
 package us.ihmc.pubsub.examples;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.Collections;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
@@ -34,8 +33,6 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
-import us.ihmc.rtps.impl.fastRTPS.FastRTPSPublisherAttributes;
-import us.ihmc.rtps.impl.fastRTPS.Time_t;
 
 public class PublisherExample
 {
@@ -72,14 +69,14 @@ public class PublisherExample
       
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes2 attributes2 = ParticipantAttributes2.builder()
-                                                                 .domainId(1)
-                                                                 .name("PublisherExample2")
-                                                                 .discoveryLeaseDuration(Time.Infinite)
-                                                                 .discoveryServerEnabled(true)
-                                                                 .discoveryServerId(0)
-                                                                 .discoveryServerAddress("127.0.0.1")
-                                                                 .build();
+      ParticipantAttributes attributes2 = ParticipantAttributes.builder()
+                                                               .domainId(1)
+                                                               .name("PublisherExample2")
+                                                               .discoveryLeaseDuration(Time.Infinite)
+                                                               .discoveryServerEnabled(true)
+                                                               .discoveryServerId(0)
+                                                               .discoveryServerAddress("127.0.0.1")
+                                                               .build();
 
 
       Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());
@@ -87,21 +84,22 @@ public class PublisherExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes2 attrs = PublisherAttributes2.builder()
-         .namespace("hello")
-         .topicName("chatter")
-         .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
-         .reliabilityKind(ReliabilityKind.RELIABLE)
-         .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-         .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
-         .historyDepth(50)
-         .partitions(Collections.singletonList("us/ihmc"))
-         .lifespan(new Time(5, 0))
-         .heartBeatPeriodNsec((long) (0.1 * 1e9)) //100ms
-         .build();
+      PublisherAttributes attrs = PublisherAttributes.builder()
+                                                     .namespace("hello")
+                                                     .topicName("chatter")
+            .topicDataType(dataType)
+                                                     .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                     .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                     .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
+                                                     .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                     .historyDepth(50)
+                                                     .partitions(Collections.singletonList("us/ihmc"))
+                                                     .lifespan(new Time(5, 0))
+                                                     .heartBeatPeriodNsec((long) (0.1 * 1e9)) //100ms
+                                                     .build();
 
       System.out.println("creating publisher");
-      Publisher publisher = domain.createPublisher(participant, attrs, dataType, new PublisherListenerImpl());
+      Publisher publisher = domain.createPublisher(participant, attrs, new PublisherListenerImpl());
       
       
       ChatMessage msg = new ChatMessage();

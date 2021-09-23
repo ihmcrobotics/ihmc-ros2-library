@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.ihmc.rtps.impl.fastRTPS;
+package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ import us.ihmc.pubsub.attributes.OwnerShipPolicyKind;
 import us.ihmc.pubsub.attributes.PublishModeKind;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
+import us.ihmc.rtps.impl.fastRTPS.*;
 
 class FastRTPSCommonFunctions
 {

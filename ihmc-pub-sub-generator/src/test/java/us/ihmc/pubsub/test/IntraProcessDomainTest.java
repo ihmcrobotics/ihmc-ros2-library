@@ -35,6 +35,7 @@ import us.ihmc.pubsub.types.ByteBufferPubSubType;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -66,7 +67,10 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes participantAttributes = domain.createParticipantAttributes(1, "participant");
+      ParticipantAttributes participantAttributes = ParticipantAttributes.builder()
+                                                                         .domainId(1)
+                                                                         .name("participant")
+                                                                         .build();
       Participant participant = domain.createParticipant(participantAttributes);
 
       try
@@ -94,17 +98,28 @@ public class IntraProcessDomainTest
             }
          };
 
-         PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
+
+         PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+                                                                      .topicDataType(typeOfTheDay)
+                                                                      .topicName(topic)
+                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .partitions(Collections.singletonList(partition))
+                                                                      .build();
+
+         SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+                                                                         .topicDataType(typeOfTheDay)
+                                                                         .topicName(topic)
+                                                                         .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                         .partitions(Collections.singletonList(partition))
+                                                                         .build();
+
          Publisher publisher1 = domain.createPublisher(participant, publisherAttributes);
 
-         SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
          Subscriber subscriber1 = domain.createSubscriber(participant, subscriberAttributes);
 
-         SubscriberAttributes subscriberAttributes2 = domain.createSubscriberAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
-         Subscriber subscriber2 = domain.createSubscriber(participant, subscriberAttributes2, listener);
+         Subscriber subscriber2 = domain.createSubscriber(participant, subscriberAttributes, listener);
 
-         SubscriberAttributes subscriberAttributes3 = domain.createSubscriberAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE);
-         Subscriber subscriber3 = domain.createSubscriber(participant, subscriberAttributes3);
+         Subscriber subscriber3 = domain.createSubscriber(participant, subscriberAttributes);
 
          ChatMessage msg = new ChatMessage();
          msg.setMsg("Test");
@@ -190,7 +205,11 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
       
-      ParticipantAttributes participantAttributes = domain.createParticipantAttributes(1, "participant");
+      ParticipantAttributes participantAttributes = ParticipantAttributes.builder()
+                                                                         .domainId(1)
+                                                                         .name("participant")
+                                                                         .build();
+
       Participant participant = domain.createParticipant(participantAttributes, participantListener);
       
       try
@@ -225,8 +244,21 @@ public class IntraProcessDomainTest
          PublisherListener publisherListener = (Publisher publisher, MatchingInfo info) -> {
             publisherMatched.add(info);
          };
-         PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
-         Publisher publisher1 = domain.createPublisher(participant, publisherAttributes, publisherListener);
+         PublisherAttributes pubAtt = PublisherAttributes.builder()
+                                                                      .topicDataType(typeOfTheDay)
+                                                                      .topicName(topic)
+                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .partitions(Collections.singletonList(partition))
+                                                                      .build();
+
+         PublisherAttributes invalidPubAtt = PublisherAttributes.builder()
+                                                         .topicDataType(typeOfTheDay)
+                                                         .topicName(topic+"Invalid")
+                                                         .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                         .partitions(Collections.singletonList(partition))
+                                                         .build();
+
+         Publisher publisher1 = domain.createPublisher(participant, pubAtt, publisherListener);
 
          ArrayBlockingQueue<MatchingInfo> subscriberMatched = new ArrayBlockingQueue<>(2);
          SubscriberListener subscriberListener = new SubscriberListener()
@@ -244,7 +276,13 @@ public class IntraProcessDomainTest
             }
          };
 
-         SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
+         SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+                                                                      .topicDataType(typeOfTheDay)
+                                                                      .topicName(topic)
+                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .partitions(Collections.singletonList(partition))
+                                                                      .build();
+
          Subscriber subscriber1 = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
 
          // Check if all listeners have been called in the correct order
@@ -265,7 +303,11 @@ public class IntraProcessDomainTest
          assertEquals(2, (long) participant.get_no_subscribers(topic));
 
          // Create a new participant, see if original participant listeners get triggered
-         Participant participant2 = domain.createParticipant(domain.createParticipantAttributes(1, "participant2"));
+         ParticipantAttributes participantAttributes2 = ParticipantAttributes.builder()
+                                                                              .domainId(1)
+                                                                              .name("participant2")
+                                                                              .build();
+         Participant participant2 = domain.createParticipant(participantAttributes2);
 
          ParticipantDiscoveryInfo participant2info = participantListenerFuture.poll(1, TimeUnit.SECONDS);
          assertNotEquals(null, participant2info);
@@ -275,15 +317,20 @@ public class IntraProcessDomainTest
 
          // Create publishers and subscribers on the second participant and make sure they get registered
          Guid guid;
-         PublisherAttributes pubAtt2 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.RELIABLE, partition);
-         guid = domain.createPublisher(participant2, pubAtt2).getGuid();
+
+         guid = domain.createPublisher(participant2, pubAtt).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, subscriberMatched.poll(1, TimeUnit.SECONDS));
-         guid = domain.createPublisher(participant2, pubAtt2).getGuid();
+         guid = domain.createPublisher(participant2, pubAtt).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, subscriberMatched.poll(1, TimeUnit.SECONDS));
 
-         SubscriberAttributes subAtt2 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT, partition);
+         SubscriberAttributes subAtt2 = SubscriberAttributes.builder()
+                                                            .topicDataType(typeOfTheDay)
+                                                            .topicName(topic)
+                                                            .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                            .partitions(Collections.singletonList(partition))
+                                                            .build();
          guid = domain.createSubscriber(participant2, subAtt2).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, publisherMatched.poll(1, TimeUnit.SECONDS));
@@ -295,21 +342,25 @@ public class IntraProcessDomainTest
          assertEquals(2, (long) participant2.get_no_subscribers(topic));
 
          // Create a bunch of non-matching subscribers and publishers and make sure they only trigger the subscriber/publisher listeners
-         PublisherAttributes pubAtt3 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT, partition);
-         guid = domain.createPublisher(participant2, pubAtt3).getGuid();
+         guid = domain.createPublisher(participant2, pubAtt).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         PublisherAttributes pubAtt4 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.RELIABLE);
-         guid = domain.createPublisher(participant2, pubAtt4).getGuid();
+         guid = domain.createPublisher(participant2, pubAtt).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         PublisherAttributes pubAtt5 = domain.createPublisherAttributes(participant2, typeOfTheDay, topic + "Invalid", ReliabilityKind.RELIABLE, partition);
-         guid = domain.createPublisher(participant2, pubAtt5).getGuid();
+         guid = domain.createPublisher(participant2, invalidPubAtt).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
          TopicDataType<?> newDataType = new ByteBufferPubSubType("Test", 10);
-         PublisherAttributes pubAtt6 = domain.createPublisherAttributes(participant2, newDataType, topic, ReliabilityKind.RELIABLE, partition);
-         guid = domain.createPublisher(participant2, pubAtt6).getGuid();
+
+         PublisherAttributes newDataPubAtt = PublisherAttributes.builder()
+                                                         .topicDataType(newDataType)
+                                                         .topicName(topic)
+                                                         .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                         .partitions(Collections.singletonList(partition))
+                                                         .build();
+
+         guid = domain.createPublisher(participant2, newDataPubAtt).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
          // Make sure no subscribers matched
          assertEquals(null, subscriberMatched.poll(1, TimeUnit.SECONDS));
@@ -317,16 +368,31 @@ public class IntraProcessDomainTest
          assertEquals(5, (long) participant2.get_no_publisher(topic));
          assertEquals(1, (long) participant2.get_no_publisher(topic + "Invalid"));
 
-         SubscriberAttributes subAtt3 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic, ReliabilityKind.BEST_EFFORT);
+         SubscriberAttributes subAtt3 = SubscriberAttributes.builder()
+                                                            .topicDataType(typeOfTheDay)
+                                                            .topicName(topic)
+                                                            .reliabilityKind(ReliabilityKind.BEST_EFFORT)
+                                                            .build();
+
          guid = domain.createSubscriber(participant2, subAtt3).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         SubscriberAttributes subAtt4 = domain.createSubscriberAttributes(participant2, typeOfTheDay, topic + "Invalid", ReliabilityKind.BEST_EFFORT,
-                                                                          partition);
+         SubscriberAttributes subAtt4 = SubscriberAttributes.builder()
+                                                            .topicDataType(typeOfTheDay)
+                                                            .topicName(topic+"Invalid")
+                                                            .reliabilityKind(ReliabilityKind.BEST_EFFORT)
+                                                            .build();
+
          guid = domain.createSubscriber(participant2, subAtt4).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         SubscriberAttributes subAtt5 = domain.createSubscriberAttributes(participant2, newDataType, topic, ReliabilityKind.BEST_EFFORT, partition);
+         SubscriberAttributes subAtt5 = SubscriberAttributes.builder()
+                                                            .topicDataType(newDataType)
+                                                            .topicName(topic)
+                                                            .reliabilityKind(ReliabilityKind.BEST_EFFORT)
+                                                            .partitions(Collections.singletonList(partition))
+                                                            .build();
+
          guid = domain.createSubscriber(participant2, subAtt5).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
 

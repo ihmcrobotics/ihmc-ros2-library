@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.ihmc.rtps.impl.fastRTPS;
+package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +23,8 @@ import us.ihmc.pubsub.attributes.DurabilityKind;
 import us.ihmc.pubsub.attributes.OwnerShipPolicyKind;
 import us.ihmc.pubsub.attributes.ReaderQosHolder;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
+import us.ihmc.rtps.impl.fastRTPS.ReaderQos;
+import us.ihmc.rtps.impl.fastRTPS.stringVector;
 
 class FastRTPSReaderQosHolder implements ReaderQosHolder
 {

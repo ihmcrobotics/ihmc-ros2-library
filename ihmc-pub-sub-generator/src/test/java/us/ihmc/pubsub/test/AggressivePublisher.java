@@ -1,18 +1,15 @@
 package us.ihmc.pubsub.test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.DurabilityKind;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublishModeKind;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
@@ -30,10 +27,11 @@ public class AggressivePublisher
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("AggressivePublisher");
+      ParticipantAttributes attributes = ParticipantAttributes.builder()
+                                                              .domainId(215)
+                                                              .discoveryLeaseDuration(Time.Infinite)
+                                                              .name("AggressivePublisher")
+                                                              .build();
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -41,11 +39,17 @@ public class AggressivePublisher
       domain.registerType(participant, dataType);
 
       // Mimic ROS 2 default settings
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "segfault_trigger", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(1);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+
+      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+                                                                   .topicDataType(dataType)
+                                                                   .topicName("segfault_trigger")
+                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .partitions(Collections.singletonList("us/ihmc"))
+                                                                   .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                   .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                                   .historyDepth(1)
+                                                                   .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                                   .build();
 
       Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
 

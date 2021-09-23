@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.ihmc.rtps.impl.fastRTPS;
+package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
+import java.util.UUID;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.*;
 import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.OwnerShipPolicyKind;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.ChangeKind;
 import us.ihmc.pubsub.common.Guid;
@@ -30,6 +34,13 @@ import us.ihmc.pubsub.common.SerializedPayload;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
+import us.ihmc.rtps.impl.fastRTPS.*;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
 class FastRTPSSubscriber<T> implements Subscriber<T>
 {
@@ -37,11 +48,10 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
   
    private NativeSubscriberImpl impl;
 
-   private final FastRTPSSubscriberAttributes attributes;
+   private final SubscriberAttributes attributes;
    private final TopicDataType<T> topicDataType;
    private final SubscriberListener<T> listener;
    private final SerializedPayload payload;
-   private TopicAttributes fastRTPSAttributes;
    private final Guid guid = new Guid();
    private final MatchingInfo matchingInfo = new MatchingInfo();
    
@@ -106,34 +116,14 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       payload.getData().limit(dataLength);
    }
 
-   FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, FastRTPSSubscriberAttributes attributes, SubscriberListener<T> listener,
+   FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, SubscriberAttributes attrs, SubscriberListener<T> listener,
                       NativeParticipantImpl participantImpl)
          throws IOException
    {
       synchronized (destructorLock)
       {
-         LocatorList unicastLocatorList = new LocatorList();
-         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getUnicastLocatorList(), unicastLocatorList);
-         LocatorList multicastLocatorList = new LocatorList();
-         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getMulticastLocatorList(), multicastLocatorList);
-         LocatorList outLocatorList = new LocatorList();
-         FastRTPSCommonFunctions.convertToCPPLocatorList(attributes.getOutLocatorList(), outLocatorList);
 
-         if (!unicastLocatorList.isValid())
-         {
-            throw new IllegalArgumentException("Unicast Locator List for Subscriber contains invalid Locator");
-         }
-         if (!multicastLocatorList.isValid())
-         {
-            throw new IllegalArgumentException(" Multicast Locator List for Subscriber contains invalid Locator");
-         }
-         if (!outLocatorList.isValid())
-         {
-            throw new IllegalArgumentException("Output Locator List for Subscriber contains invalid Locator");
-         }
-
-         ReaderQos qos = attributes.getQos().getReaderQos();
-         this.attributes = attributes;
+         this.attributes = attrs;
          this.topicDataType = topicDataTypeIn.newInstance();
          this.listener = listener;
          /*
@@ -143,56 +133,128 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
           * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
           */
          this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
-         this.topicKind = TopicKind_t.swigToEnum(attributes.getTopic().getTopicKind().ordinal());
-         this.ownershipQosPolicyKind = qos.getM_ownership().getKind();
+         this.topicKind = TopicKind_t.swigToEnum(attributes.getTopicKind().ordinal());
 
-         fastRTPSAttributes = attributes.createFastRTPSTopicAttributes();
+         String profileName = UUID.randomUUID().toString();
 
-         if (!qos.checkQos() || !fastRTPSAttributes.checkQos())
+         Dds dds = new Dds();
+
+         ProfilesType profilesType = new ProfilesType();
+         PublisherProfileType publisherProfile = new PublisherProfileType();
+         profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_PUBLISHER), PublisherProfileType.class, publisherProfile));
+         publisherProfile.setProfileName(profileName);
+         dds.getProfiles().add(profilesType);
+
+
+         //TOPIC
+         TopicAttributesType topicAttributesType = new TopicAttributesType();
+         topicAttributesType.setDataType(attrs.getTopicDataType().getName());
+         topicAttributesType.setName(attrs.getTopicName());
+
+         HistoryQosPolicyType historyQosPolicyType = new HistoryQosPolicyType();
+         historyQosPolicyType.setDepth(attrs.getHistoryDepth());
+         switch(attrs.getHistoryQosPolicyKind())
          {
-            throw new IllegalArgumentException("Invalid QoS settings");
+            case KEEP_ALL_HISTORY_QOS:
+               historyQosPolicyType.setKind(HistoryQosKindType.KEEP_ALL);
+               break;
+            case KEEP_LAST_HISTORY_QOS:
+               historyQosPolicyType.setKind(HistoryQosKindType.KEEP_LAST);
+               break;
+         }
+         topicAttributesType.setHistoryQos(historyQosPolicyType);
+         //TOPIC END
+         publisherProfile.setTopic(topicAttributesType);
+
+         //QOS
+         WriterQosPoliciesType writerQosPoliciesType = new WriterQosPoliciesType();
+
+         OwnershipQosPolicyType ownershipQosPolicyType = new OwnershipQosPolicyType();
+
+
+         switch(attrs.getOwnerShipPolicyKind())
+         {
+            case SHARED_OWNERSHIP_QOS:
+               ownershipQosPolicyType.setKind(OwnershipQosKindType.SHARED);
+               ownershipQosPolicyKind = OwnershipQosPolicyKind.SHARED_OWNERSHIP_QOS;
+               break;
+            case EXCLUSIVE_OWNERSHIP_QOS:
+               ownershipQosPolicyType.setKind(OwnershipQosKindType.EXCLUSIVE);
+               ownershipQosPolicyKind = OwnershipQosPolicyKind.EXCLUSIVE_OWNERSHIP_QOS;
+               break;
+            default:
+               ownershipQosPolicyKind = OwnershipQosPolicyKind.SHARED_OWNERSHIP_QOS;
+               break;
+
+         }
+         writerQosPoliciesType.setOwnership(ownershipQosPolicyType);
+
+         DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
+         switch(attrs.getDurabilityKind())
+         {
+            case PERSISTENT_DURABILITY_QOS:
+               durabilityQosPolicyType.setKind(DurabilityQosKindType.PERSISTENT);
+               break;
+            case TRANSIENT_DURABILITY_QOS:
+               durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT);
+               break;
+            case TRANSIENT_LOCAL_DURABILITY_QOS:
+               durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT_LOCAL);
+               break;
+            case VOLATILE_DURABILITY_QOS:
+               durabilityQosPolicyType.setKind(DurabilityQosKindType.VOLATILE);
+               break;
+         }
+         writerQosPoliciesType.setDurability(durabilityQosPolicyType);
+
+         ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
+         switch(attrs.getReliabilityKind())
+         {
+            case RELIABLE:
+               reliabilityQosPolicyType.setKind(ReliabilityQosKindType.RELIABLE);
+               break;
+            case BEST_EFFORT:
+               reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
+               break;
+         }
+         writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
+
+
+         if(attrs.getPartitions() != null)
+         {
+            PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
+            NameVectorType nameVectorType = new NameVectorType();
+            System.out.println(nameVectorType.getName());
+            attrs.getPartitions().forEach(s -> nameVectorType.getName().add(s));
+            partitionQosPolicyType.setNames(nameVectorType);
+            writerQosPoliciesType.setPartition(partitionQosPolicyType);
          }
 
-         impl = new NativeSubscriberImpl(attributes.getEntityID(), attributes.getUserDefinedID(), topicDataType.getTypeSize(),
-                                         MemoryManagementPolicy_t.swigToEnum(attributes.getHistoryMemoryPolicy().ordinal()), fastRTPSAttributes, qos, attributes.getTimes(), unicastLocatorList, multicastLocatorList, outLocatorList, attributes.isExpectsInlineQos(),
-                                         participantImpl, nativeListenerImpl);
+         //QOS END
+         publisherProfile.setQos(writerQosPoliciesType);
+
+         StringWriter writer = new StringWriter();
+
+         try
+         {
+            JAXBContext context = JAXBContext.newInstance(Dds.class);
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            m.marshal(dds, writer);
+            System.out.println(writer.toString());
+         } catch (JAXBException e )
+         {
+            throw new IOException("Colud not marshal XML", e);
+         }
+
+         impl = new NativeSubscriberImpl(participantImpl, nativeListenerImpl);
 
          if (!impl.createSubscriber()) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
          {
             throw new IOException("Cannot create subscriber");
          }
          guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
-
-         unicastLocatorList.delete();
-         multicastLocatorList.delete();
-         outLocatorList.delete();
       }
-   }
-
-   FastRTPSSubscriber(String profile,
-                      String XMLConfigData,
-                      TopicDataType<?> topicDataTypeIn,
-                      SubscriberListener listener,
-                      NativeParticipantImpl participant)
-         throws IOException
-   {
-      synchronized (destructorLock)
-      {
-
-         this.topicDataType = (TopicDataType<T>) topicDataTypeIn.newInstance();
-         this.listener = listener;
-         this.payload = new SerializedPayload(topicDataType.getTypeSize());
-
-         impl = new NativeSubscriberImpl(participant, nativeListenerImpl);
-         if (!impl.createSubscriber(profile, XMLConfigData, XMLConfigData.length())) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
-         {
-            throw new IOException("Cannot create publisher");
-         }
-         this.topicKind = TopicKind_t.swigToEnum(impl.getTopicKind().swigValue());
-         this.ownershipQosPolicyKind = impl.getOwnershipQosKind();
-         guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
-      }
-      attributes = new FastRTPSSubscriberAttributes();
    }
 
    @Override
@@ -364,7 +426,6 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       synchronized(destructorLock)
       {
          impl.delete();
-         fastRTPSAttributes.delete();
          nativeListenerImpl.delete();
          impl = null;
       }

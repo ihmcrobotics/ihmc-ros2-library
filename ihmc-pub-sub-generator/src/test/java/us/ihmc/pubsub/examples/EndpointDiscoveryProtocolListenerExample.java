@@ -91,10 +91,11 @@ public class EndpointDiscoveryProtocolListenerExample
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
       
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("EndpointDiscoveryProtocolListenerExample");
+      ParticipantAttributes attributes = ParticipantAttributes.builder()
+         .domainId(215)
+         .discoveryLeaseDuration(Time.Infinite)
+         .name("EndpointDiscoveryProtocolListenerExample")
+         .build();
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
       
       

@@ -24,6 +24,8 @@ import java.util.Random;
 
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.Guid;
@@ -37,7 +39,7 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class IntraProcessParticipant implements Participant
 {
-   private final IntraProcessParticipantAttributes attributes;
+   private final ParticipantAttributes attributes;
    private final Guid guid = new Guid();
 
    private boolean isAvailable = true;
@@ -55,7 +57,7 @@ public class IntraProcessParticipant implements Participant
    
    private final HashMap<String, TopicDataType<?>> registeredTopicDataTypes = new HashMap<>();
 
-   IntraProcessParticipant(IntraProcessDomainImpl domain, IntraProcessParticipantAttributes att, ParticipantListener participantListener)
+   IntraProcessParticipant(IntraProcessDomainImpl domain, ParticipantAttributes att, ParticipantListener participantListener)
    {
       this.attributes = att;
       this.participantListener = participantListener;
@@ -105,7 +107,7 @@ public class IntraProcessParticipant implements Participant
       int size = 0;
       for (IntraProcessPublisher publisher : publishers)
       {
-         if (publisher.getAttributes().getTopic().getTopicName().equals(target_topic))
+         if (publisher.getAttributes().getTopicName().equals(target_topic))
          {
             size++;
          }
@@ -119,7 +121,7 @@ public class IntraProcessParticipant implements Participant
       int size = 0;
       for (IntraProcessSubscriber subscriber : subscribers)
       {
-         if (subscriber.getAttributes().getTopic().getTopicName().equals(target_topic))
+         if (subscriber.getAttributes().getTopicName().equals(target_topic))
          {
             size++;
          }
@@ -143,7 +145,7 @@ public class IntraProcessParticipant implements Participant
       return child;
    }
    
-   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, IntraProcessPublisherAttributes attr, PublisherListener listener) throws IOException
+   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, PublisherAttributes attr, PublisherListener listener) throws IOException
    {
       
       IntraProcessPublisher publisher = new IntraProcessPublisher(createNextGuid(), domain, this, attr, listener);
@@ -151,7 +153,7 @@ public class IntraProcessParticipant implements Participant
       return publisher;
    }
    
-   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, IntraProcessSubscriberAttributes attr, SubscriberListener listener) throws IOException
+   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, SubscriberAttributes attr, SubscriberListener listener) throws IOException
    {
       IntraProcessSubscriber subscriber = new IntraProcessSubscriber(createNextGuid(), domain, this, attr, listener);
       subscribers.add(subscriber);
@@ -172,9 +174,9 @@ public class IntraProcessParticipant implements Participant
       if (subscriberEndpointDiscoveryListener != null)
       {
          subscriberEndpointDiscoveryListener.subscriberTopicChange(true, subscriber.getGuid(), false, new ArrayList<>(), new ArrayList<>(),
-                                                                   subscriber.getParticipant().getGuid(), subscriber.getAttributes().getTopic().getTopicName(),
-                                                                   subscriber.getAttributes().getTopic().getTopicDataType(), -1, TopicKind.NO_KEY,
-                                                                   new IntraProcessReaderQosHolder(subscriber.getAttributes().getQos()));
+                                                                   subscriber.getParticipant().getGuid(), subscriber.getAttributes().getTopicDataType().getName(),
+                                                                   subscriber.getAttributes().getTopicName(), -1, TopicKind.NO_KEY,
+                                                                   new IntraProcessReaderQosHolder());
       }
    }
 
@@ -183,10 +185,10 @@ public class IntraProcessParticipant implements Participant
       if (publisherEndpointDiscoveryListener != null)
       {
          publisherEndpointDiscoveryListener.publisherTopicChange(true, publisher.getGuid(), new ArrayList<>(), new ArrayList<>(),
-                                                                 publisher.getParticipant().getGuid(), publisher.getAttributes().getTopic().getTopicName(),
-                                                                 publisher.getAttributes().getTopic().getTopicDataType(), -1,
+                                                                 publisher.getParticipant().getGuid(), publisher.getAttributes().getTopicDataType().getName(),
+                                                                 publisher.getAttributes().getTopicName(), -1,
                                                                  publisher.getTopicDataType().getTypeSize(), TopicKind.NO_KEY,
-                                                                 new IntraProcessWriterQosHolder(publisher.getAttributes().getQos()));
+                                                                 new IntraProcessWriterQosHolder());
       }
    }
 

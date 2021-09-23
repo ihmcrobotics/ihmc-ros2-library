@@ -1,120 +1,64 @@
-/**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package us.ihmc.pubsub.attributes;
 
-import java.util.ArrayList;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import us.ihmc.pubsub.TopicDataType;
+
 import java.util.List;
 
-/**
- * Class SubscriberAttributes, used by the user to define the attributes of a Subscriber.
- * 
- * @author Jesper Smith
- *
- * @param <ReaderQos_t>
- * @param <ReaderTimes_t>
- * @param <LocatorList_t>
- */
-public abstract class SubscriberAttributes
+@Data
+@Builder
+public class SubscriberAttributes
 {
-   protected final TopicAttributes topic = new TopicAttributes();
-   protected final ArrayList<Locator> unicastLocatorList = new ArrayList<>();
-   protected final ArrayList<Locator> multicastLocatorList = new ArrayList<>();
-   protected final ArrayList<Locator> outLocatorList = new ArrayList<>();
+   String topicName;
+   TopicDataType topicDataType;
+   OwnerShipPolicyKind ownerShipPolicyKind;
+   TopicAttributes.TopicKind topicKind;
+   int userDefinedId;
+   String namespace;
+   HistoryQosPolicy.HistoryQosPolicyKind historyQosPolicyKind;
+   int historyDepth;
+   DurabilityKind durabilityKind;
+   ReliabilityKind reliabilityKind;
+   List<String> partitions;
 
-   private int userDefinedID = -1;
-   private int entityID = -1;
-   private boolean expectsInlineQos;
-   private MemoryManagementPolicy historyMemoryPolicy = MemoryManagementPolicy.PREALLOCATED_MEMORY_MODE;
-
-   public SubscriberAttributes()
+   public boolean publisherMatches(PublisherAttributes publisher)
    {
-   }
+      if (getTopicName().equals(publisher.getTopicName()))
+         return false;
 
-   public int getUserDefinedID()
-   {
-      return userDefinedID;
-   }
+      if (!getTopicDataType().equals(publisher.getTopicDataType()))
+         return false;
 
-   public void setUserDefinedID(int userDefinedID)
-   {
-      this.userDefinedID = userDefinedID;
-   }
+      if (getOwnerShipPolicyKind() != publisher.getOwnerShipPolicyKind())
+         return false;
 
-   public int getEntityID()
-   {
-      return entityID;
-   }
+      if (publisher.getReliabilityKind() == ReliabilityKind.BEST_EFFORT && getReliabilityKind() == ReliabilityKind.RELIABLE)
+         return false;
 
-   public void setEntityID(int entityID)
-   {
-      this.entityID = entityID;
-   }
+      if (publisher.getDurabilityKind() == DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS
+            && getDurabilityKind() == DurabilityKind.VOLATILE_DURABILITY_QOS)
+         return false;
 
-   public boolean isExpectsInlineQos()
-   {
-      return expectsInlineQos;
-   }
+      if (this.getPartitions().isEmpty() && publisher.getPartitions().isEmpty())
+      {
+         return true;
+      }
+      else
+      {
+         for (String partition : getPartitions())
+         {
+            for (String subPartition : publisher.getPartitions())
+            {
+               if (partition.equals(subPartition))
+               {
+                  return true;
+               }
+            }
+         }
+      }
 
-   public void setExpectsInlineQos(boolean expectsInlineQos)
-   {
-      this.expectsInlineQos = expectsInlineQos;
-   }
-
-   public MemoryManagementPolicy getHistoryMemoryPolicy()
-   {
-      return historyMemoryPolicy;
-   }
-
-   public void setHistoryMemoryPolicy(MemoryManagementPolicy historyMemoryPolicy)
-   {
-      this.historyMemoryPolicy = historyMemoryPolicy;
-   }
-
-   public TopicAttributes getTopic()
-   {
-      return topic;
-   }
-
-   /** 
-    * @return holder for Qos settings
-    */
-   public abstract ReaderQosHolder getQos();
-
-   /** 
-    * Get implementation specific version of reader times.
-    * 
-    * Implementations: 
-    *    FastRTPS: us.ihmc.rtps.impl.fastRTPS.ReaderTimes
-    * 
-    * @return implementation specific version of reader times.
-    */
-   public abstract <T> T getTimes();
-
-   public List<Locator> getUnicastLocatorList()
-   {
-      return unicastLocatorList;
-   }
-
-   public List<Locator> getMulticastLocatorList()
-   {
-      return multicastLocatorList;
-   }
-
-   public List<Locator> getOutLocatorList()
-   {
-      return outLocatorList;
+      return false;
    }
 }

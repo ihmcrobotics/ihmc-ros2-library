@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -135,21 +136,27 @@ public class IntraprocessLargeCopyTest
 
       domain.setLogLevel(LogLevel.ERROR);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("StatusTest");
+      ParticipantAttributes attributes = ParticipantAttributes.builder()
+                                                              .domainId(215)
+                                                              .discoveryLeaseDuration(Time.Infinite)
+                                                              .name("StatusTest")
+                                                              .build();
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(10);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+                                                                   .topicDataType(dataType)
+                                                                   .topicName("Status")
+                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .partitions(Collections.singletonList("us/ihmc"))
+                                                                   .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                   .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                                   .historyDepth(10)
+                                                                   .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                                   .build();
 
       return domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
    }
@@ -160,27 +167,27 @@ public class IntraprocessLargeCopyTest
 
       domain.setLogLevel(LogLevel.ERROR);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("StatusTest");
+      ParticipantAttributes attributes = ParticipantAttributes.builder()
+                                                              .domainId(215)
+                                                              .discoveryLeaseDuration(Time.Infinite)
+                                                              .name("StatusTest")
+                                                              .build();
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(10);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
-
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType2, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+                                                                      .topicDataType(dataType2)
+                                                                      .topicName("Status")
+                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .partitions(Collections.singletonList("us/ihmc"))
+                                                                      .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
+                                                                      .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                      .build();
 
       return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
    }
