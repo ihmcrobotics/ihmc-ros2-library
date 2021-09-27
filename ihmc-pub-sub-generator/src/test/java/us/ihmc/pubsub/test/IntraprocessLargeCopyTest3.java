@@ -150,7 +150,9 @@ public class IntraprocessLargeCopyTest3
                                                                       .topicName("Status")
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
                                                                       .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                      .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
+                                                                                            DurabilityKind.VOLATILE_DURABILITY_QOS
+                                                                                            : DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
                                                                       .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
                                                                       .build();
 

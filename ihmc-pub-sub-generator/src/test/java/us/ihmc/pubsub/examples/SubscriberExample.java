@@ -97,7 +97,7 @@ public class SubscriberExample
 
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
             .topicDataType(dataType)
-            .topicName("ChatBox1")
+            .topicName("chatter")
             .reliabilityKind(ReliabilityKind.BEST_EFFORT)
             .partitions(Collections.singletonList("us/ihmc"))
             .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)

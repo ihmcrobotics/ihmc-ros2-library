@@ -103,6 +103,7 @@ public class IntraProcessDomainTest
                                                                       .topicDataType(typeOfTheDay)
                                                                       .topicName(topic)
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                                       .partitions(Collections.singletonList(partition))
                                                                       .build();
 
@@ -110,7 +111,15 @@ public class IntraProcessDomainTest
                                                                          .topicDataType(typeOfTheDay)
                                                                          .topicName(topic)
                                                                          .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                         .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                                          .partitions(Collections.singletonList(partition))
+                                                                         .build();
+
+         SubscriberAttributes subscriberAttributes2 = SubscriberAttributes.builder()
+                                                                         .topicDataType(typeOfTheDay)
+                                                                         .topicName(topic)
+                                                                         .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                         .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                                          .build();
 
          Publisher publisher1 = domain.createPublisher(participant, publisherAttributes);
@@ -119,7 +128,7 @@ public class IntraProcessDomainTest
 
          Subscriber subscriber2 = domain.createSubscriber(participant, subscriberAttributes, listener);
 
-         Subscriber subscriber3 = domain.createSubscriber(participant, subscriberAttributes);
+         Subscriber subscriber3 = domain.createSubscriber(participant, subscriberAttributes2);
 
          ChatMessage msg = new ChatMessage();
          msg.setMsg("Test");
@@ -245,18 +254,20 @@ public class IntraProcessDomainTest
             publisherMatched.add(info);
          };
          PublisherAttributes pubAtt = PublisherAttributes.builder()
-                                                                      .topicDataType(typeOfTheDay)
-                                                                      .topicName(topic)
-                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
-                                                                      .partitions(Collections.singletonList(partition))
-                                                                      .build();
-
-         PublisherAttributes invalidPubAtt = PublisherAttributes.builder()
                                                          .topicDataType(typeOfTheDay)
-                                                         .topicName(topic+"Invalid")
+                                                         .topicName(topic)
                                                          .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                         .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                          .partitions(Collections.singletonList(partition))
                                                          .build();
+
+         PublisherAttributes invalidPubAtt = PublisherAttributes.builder()
+                                                                .topicDataType(typeOfTheDay)
+                                                                .topicName(topic+"Invalid")
+                                                                .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                .partitions(Collections.singletonList(partition))
+                                                                .build();
 
          Publisher publisher1 = domain.createPublisher(participant, pubAtt, publisherListener);
 
@@ -342,10 +353,25 @@ public class IntraProcessDomainTest
          assertEquals(2, (long) participant2.get_no_subscribers(topic));
 
          // Create a bunch of non-matching subscribers and publishers and make sure they only trigger the subscriber/publisher listeners
-         guid = domain.createPublisher(participant2, pubAtt).getGuid();
+         PublisherAttributes pubAtt2 = PublisherAttributes.builder()
+                                                         .topicDataType(typeOfTheDay)
+                                                         .topicName(topic)
+                                                         .reliabilityKind(ReliabilityKind.BEST_EFFORT)
+                                                         .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                         .partitions(Collections.singletonList(partition))
+                                                         .build();
+
+         PublisherAttributes pubAtt3 = PublisherAttributes.builder()
+                                                          .topicDataType(typeOfTheDay)
+                                                          .topicName(topic)
+                                                          .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                          .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                          .build();
+
+         guid = domain.createPublisher(participant2, pubAtt2).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         guid = domain.createPublisher(participant2, pubAtt).getGuid();
+         guid = domain.createPublisher(participant2, pubAtt3).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
          guid = domain.createPublisher(participant2, invalidPubAtt).getGuid();
@@ -354,11 +380,12 @@ public class IntraProcessDomainTest
          TopicDataType<?> newDataType = new ByteBufferPubSubType("Test", 10);
 
          PublisherAttributes newDataPubAtt = PublisherAttributes.builder()
-                                                         .topicDataType(newDataType)
-                                                         .topicName(topic)
-                                                         .reliabilityKind(ReliabilityKind.RELIABLE)
-                                                         .partitions(Collections.singletonList(partition))
-                                                         .build();
+                                                                .topicDataType(newDataType)
+                                                                .topicName(topic)
+                                                                .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                .partitions(Collections.singletonList(partition))
+                                                                .build();
 
          guid = domain.createPublisher(participant2, newDataPubAtt).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));

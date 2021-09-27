@@ -40,6 +40,7 @@ public class FastRTPSDomain implements Domain
    public static final String FAST_DDS_METATRAFFIC_UNICAST_LOCATOR_LIST = "metatrafficUnicastLocatorList";
    public static final String FAST_DDS_PARTICIPANT = "participant";
    public static final String FAST_DDS_PUBLISHER = "publisher";
+   public static final String FAST_DDS_SUBSCRIBER = "subscriber";
    public static final String FAST_DDS_NANOSEC = "nanosec";
    public static final String FAST_DDS_SEC = "sec";
 
@@ -109,7 +110,8 @@ public class FastRTPSDomain implements Domain
    }
 
 
-   @Override public Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
+   @Override
+   public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
    {
       FastRTPSParticipant participant = new FastRTPSParticipant(att, participantListener);
       participants.add(participant);
@@ -117,7 +119,8 @@ public class FastRTPSDomain implements Domain
    }
 
 
-   @Override public Publisher createPublisherImpl(Participant participant, PublisherAttributes att, PublisherListener listener)
+   @Override
+   public synchronized Publisher createPublisherImpl(Participant participant, PublisherAttributes att, PublisherListener listener)
          throws IOException, IllegalArgumentException
    {
       Publisher publisher = null;
@@ -141,7 +144,8 @@ public class FastRTPSDomain implements Domain
       return publisher;
    }
 
-   @Override public Subscriber createSubscriberImpl(Participant participant, SubscriberAttributes attrs, SubscriberListener listener)
+   @Override
+   public synchronized Subscriber createSubscriberImpl(Participant participant, SubscriberAttributes attrs, SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
 

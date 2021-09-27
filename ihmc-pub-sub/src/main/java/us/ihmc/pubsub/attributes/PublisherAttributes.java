@@ -8,6 +8,7 @@ import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -17,14 +18,18 @@ public class PublisherAttributes
    String topicName;
    TopicDataType topicDataType;
    TopicAttributes.TopicKind topicKind;
-   OwnerShipPolicyKind ownerShipPolicyKind;
+   @Builder.Default
+   OwnerShipPolicyKind ownerShipPolicyKind = OwnerShipPolicyKind.SHARED_OWNERSHIP_QOS;
    String namespace;
    ReliabilityKind reliabilityKind;
    DurabilityKind durabilityKind;
    HistoryQosPolicy.HistoryQosPolicyKind historyQosPolicyKind;
    int historyDepth;
    PublishModeKind publishModeKind;
-   List<String> partitions;
+
+   @Builder.Default
+   List<String> partitions = Collections.emptyList();
+
    long heartBeatPeriodNsec;
    Time lifespan;
    int userDefinedId;

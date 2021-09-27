@@ -286,10 +286,9 @@ class IntraProcessDomainImpl
 
          if (logLevel == LogLevel.INFO)
          {
-            IntraProcessLog.info(this, "Adding publisher " + publisher);
+            IntraProcessLog.info(this, "Adding publisher in topic: " + publisher.getAttributes().getTopicName() + " : " + publisher);
          }
          topicPublishers.add(publisher);
-
          if (logLevel == LogLevel.INFO)
             IntraProcessLog.info(this, "Notifying publisher discovery listeners");
          matchParticipants((participantToNotify) -> participantToNotify.notifyPublisherDiscoveryListener(publisher));

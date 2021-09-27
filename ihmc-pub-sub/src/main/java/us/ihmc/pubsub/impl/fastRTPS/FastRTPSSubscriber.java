@@ -140,9 +140,9 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          Dds dds = new Dds();
 
          ProfilesType profilesType = new ProfilesType();
-         PublisherProfileType publisherProfile = new PublisherProfileType();
-         profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_PUBLISHER), PublisherProfileType.class, publisherProfile));
-         publisherProfile.setProfileName(profileName);
+         SubscriberProfileType subscriberProfile = new SubscriberProfileType();
+         profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SUBSCRIBER), SubscriberProfileType.class, subscriberProfile));
+         subscriberProfile.setProfileName(profileName);
          dds.getProfiles().add(profilesType);
 
 
@@ -164,10 +164,10 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          }
          topicAttributesType.setHistoryQos(historyQosPolicyType);
          //TOPIC END
-         publisherProfile.setTopic(topicAttributesType);
+         subscriberProfile.setTopic(topicAttributesType);
 
          //QOS
-         WriterQosPoliciesType writerQosPoliciesType = new WriterQosPoliciesType();
+         ReaderQosPoliciesType readerQosPoliciesType = new ReaderQosPoliciesType();
 
          OwnershipQosPolicyType ownershipQosPolicyType = new OwnershipQosPolicyType();
 
@@ -187,7 +187,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                break;
 
          }
-         writerQosPoliciesType.setOwnership(ownershipQosPolicyType);
+         //readerQosPoliciesType.setOwnership(ownershipQosPolicyType);
 
          DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
          switch(attrs.getDurabilityKind())
@@ -205,7 +205,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                durabilityQosPolicyType.setKind(DurabilityQosKindType.VOLATILE);
                break;
          }
-         writerQosPoliciesType.setDurability(durabilityQosPolicyType);
+         readerQosPoliciesType.setDurability(durabilityQosPolicyType);
 
          ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
          switch(attrs.getReliabilityKind())
@@ -217,21 +217,20 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
                break;
          }
-         writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
+         readerQosPoliciesType.setReliability(reliabilityQosPolicyType);
 
 
-         if(attrs.getPartitions() != null)
+         if(attrs.getPartitions() != null && !attrs.getPartitions().isEmpty())
          {
             PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
             NameVectorType nameVectorType = new NameVectorType();
-            System.out.println(nameVectorType.getName());
             attrs.getPartitions().forEach(s -> nameVectorType.getName().add(s));
             partitionQosPolicyType.setNames(nameVectorType);
-            writerQosPoliciesType.setPartition(partitionQosPolicyType);
+            readerQosPoliciesType.setPartition(partitionQosPolicyType);
          }
 
          //QOS END
-         publisherProfile.setQos(writerQosPoliciesType);
+         subscriberProfile.setQos(readerQosPoliciesType);
 
          StringWriter writer = new StringWriter();
 
@@ -241,7 +240,6 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             m.marshal(dds, writer);
-            System.out.println(writer.toString());
          } catch (JAXBException e )
          {
             throw new IOException("Colud not marshal XML", e);
@@ -249,9 +247,11 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
 
          impl = new NativeSubscriberImpl(participantImpl, nativeListenerImpl);
 
-         if (!impl.createSubscriber()) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
+         String data = writer.toString();
+
+         if (!impl.createSubscriber(profileName, data, data.length())) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
          {
-            throw new IOException("Cannot create subscriber");
+            throw new IOException("Cannot create subscriber with data: \n" + data);
          }
          guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
       }

@@ -87,7 +87,7 @@ public class PublisherExample
       PublisherAttributes attrs = PublisherAttributes.builder()
                                                      .namespace("hello")
                                                      .topicName("chatter")
-            .topicDataType(dataType)
+                                                     .topicDataType(dataType)
                                                      .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
                                                      .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)

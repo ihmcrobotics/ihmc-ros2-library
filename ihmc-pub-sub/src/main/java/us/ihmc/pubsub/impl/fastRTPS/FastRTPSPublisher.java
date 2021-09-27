@@ -175,7 +175,7 @@ class FastRTPSPublisher implements Publisher
          }
 
 
-         if(attributes.getPartitions() != null)
+         if(attributes.getPartitions() != null && !attributes.getPartitions().isEmpty())
          {
             PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
             NameVectorType nameVectorType = new NameVectorType();
@@ -207,15 +207,15 @@ class FastRTPSPublisher implements Publisher
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             m.marshal(dds, writer);
-            System.out.println(writer.toString());
          } catch (JAXBException e )
          {
             throw new IOException("Colud not marshal XML", e);
          }
 
+         String data = writer.toString();
 
          impl = new NativePublisherImpl(participant, nativeListenerImpl);
-         if (!impl.createPublisher()) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+         if (!impl.createPublisher(profileName, data, data.length())) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
          {
             throw new IOException("Cannot create publisher");
          }

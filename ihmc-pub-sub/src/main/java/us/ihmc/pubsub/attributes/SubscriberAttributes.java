@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import us.ihmc.pubsub.TopicDataType;
 
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -13,22 +14,29 @@ public class SubscriberAttributes
 {
    String topicName;
    TopicDataType topicDataType;
-   OwnerShipPolicyKind ownerShipPolicyKind;
-   TopicAttributes.TopicKind topicKind;
+
+   @Builder.Default
+   OwnerShipPolicyKind ownerShipPolicyKind = OwnerShipPolicyKind.SHARED_OWNERSHIP_QOS;
+
+   @Builder.Default
+   TopicAttributes.TopicKind topicKind = TopicAttributes.TopicKind.NO_KEY;
+
    int userDefinedId;
    String namespace;
    HistoryQosPolicy.HistoryQosPolicyKind historyQosPolicyKind;
    int historyDepth;
    DurabilityKind durabilityKind;
    ReliabilityKind reliabilityKind;
-   List<String> partitions;
+
+   @Builder.Default
+   List<String> partitions = Collections.emptyList();
 
    public boolean publisherMatches(PublisherAttributes publisher)
    {
-      if (getTopicName().equals(publisher.getTopicName()))
+      if (!getTopicName().equals(publisher.getTopicName()))
          return false;
 
-      if (!getTopicDataType().equals(publisher.getTopicDataType()))
+      if (!getTopicDataType().getClass().equals(publisher.getTopicDataType().getClass()))
          return false;
 
       if (getOwnerShipPolicyKind() != publisher.getOwnerShipPolicyKind())
