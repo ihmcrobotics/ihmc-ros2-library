@@ -134,4 +134,12 @@ public class WriterAttributes {
     return (cPtr == 0) ? null : new Time_t(cPtr, false);
   }
 
+  public void setFlow_controller_name(String value) {
+    FastRTPSJNI.WriterAttributes_flow_controller_name_set(swigCPtr, this, value);
+  }
+
+  public String getFlow_controller_name() {
+    return FastRTPSJNI.WriterAttributes_flow_controller_name_get(swigCPtr, this);
+  }
+
 }

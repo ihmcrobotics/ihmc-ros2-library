@@ -152,4 +152,13 @@ public class RTPSParticipantAttributes {
     return FastRTPSJNI.RTPSParticipantAttributes_getName(swigCPtr, this);
   }
 
+  public void setFlow_controllers(SWIGTYPE_p_std__vectorT_std__shared_ptrT_eprosima__fastdds__rtps__FlowControllerDescriptor_t_t value) {
+    FastRTPSJNI.RTPSParticipantAttributes_flow_controllers_set(swigCPtr, this, SWIGTYPE_p_std__vectorT_std__shared_ptrT_eprosima__fastdds__rtps__FlowControllerDescriptor_t_t.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_std__vectorT_std__shared_ptrT_eprosima__fastdds__rtps__FlowControllerDescriptor_t_t getFlow_controllers() {
+    long cPtr = FastRTPSJNI.RTPSParticipantAttributes_flow_controllers_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_std__vectorT_std__shared_ptrT_eprosima__fastdds__rtps__FlowControllerDescriptor_t_t(cPtr, false);
+  }
+
 }

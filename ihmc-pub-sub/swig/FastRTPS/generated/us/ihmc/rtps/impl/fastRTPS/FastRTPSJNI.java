@@ -202,6 +202,8 @@ public class FastRTPSJNI {
   public final static native long RTPSParticipantAttributes_properties_get(long jarg1, RTPSParticipantAttributes jarg1_);
   public final static native void RTPSParticipantAttributes_setName(long jarg1, RTPSParticipantAttributes jarg1_, String jarg2);
   public final static native String RTPSParticipantAttributes_getName(long jarg1, RTPSParticipantAttributes jarg1_);
+  public final static native void RTPSParticipantAttributes_flow_controllers_set(long jarg1, RTPSParticipantAttributes jarg1_, long jarg2);
+  public final static native long RTPSParticipantAttributes_flow_controllers_get(long jarg1, RTPSParticipantAttributes jarg1_);
   public final static native void RemoteServerAttributes_clear(long jarg1, RemoteServerAttributes jarg1_);
   public final static native long RemoteServerAttributes_GetParticipant(long jarg1, RemoteServerAttributes jarg1_);
   public final static native long RemoteServerAttributes_GetPDPReader(long jarg1, RemoteServerAttributes jarg1_);
@@ -706,6 +708,8 @@ public class FastRTPSJNI {
   public final static native boolean WriterAttributes_disable_positive_acks_get(long jarg1, WriterAttributes jarg1_);
   public final static native void WriterAttributes_keep_duration_set(long jarg1, WriterAttributes jarg1_, long jarg2, Time_t jarg2_);
   public final static native long WriterAttributes_keep_duration_get(long jarg1, WriterAttributes jarg1_);
+  public final static native void WriterAttributes_flow_controller_name_set(long jarg1, WriterAttributes jarg1_, String jarg2);
+  public final static native String WriterAttributes_flow_controller_name_get(long jarg1, WriterAttributes jarg1_);
   public final static native long new_PublisherAttributes();
   public final static native void delete_PublisherAttributes(long jarg1);
   public final static native void PublisherAttributes_topic_set(long jarg1, PublisherAttributes jarg1_, long jarg2, TopicAttributes jarg2_);

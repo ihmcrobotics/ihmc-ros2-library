@@ -10,9 +10,9 @@ package us.ihmc.rtps.impl.fastRTPS;
 
 public interface FastRTPSConstants {
   public final static int FASTRTPS_VERSION_MAJOR = 2;
-  public final static int FASTRTPS_VERSION_MINOR = 3;
-  public final static int FASTRTPS_VERSION_MICRO = 4;
-  public final static String FASTRTPS_VERSION_STR = "2.3.4";
+  public final static int FASTRTPS_VERSION_MINOR = 4;
+  public final static int FASTRTPS_VERSION_MICRO = 0;
+  public final static String FASTRTPS_VERSION_STR = "2.4.0";
   public final static int GEN_API_VER = 1;
   public final static int HAVE_CXX20 = 0;
   public final static int HAVE_CXX17 = 0;
@@ -26,7 +26,7 @@ public interface FastRTPSConstants {
   public final static int HAVE_SQLITE3 = 1;
   public final static int TLS_FOUND = 0;
   public final static int HAVE_STRICT_REALTIME = 1;
-  public final static int HAVE_LOG_NO_INFO = 1;
+  public final static int HAVE_LOG_NO_INFO = 0;
   public final static int HAVE_LOG_NO_WARNING = 0;
   public final static int HAVE_LOG_NO_ERROR = 0;
   public final static int LOCATOR_KIND_INVALID = -1;
