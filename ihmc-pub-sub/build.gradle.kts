@@ -47,6 +47,10 @@ sourceSets {
    }
 }
 
+tasks {
+   compileJava.configure { dependsOn.add(xjcGenerate) }
+}
+
 idea {
    module {
       generatedSourceDirs.add(generatedXSDSourcesPath)
