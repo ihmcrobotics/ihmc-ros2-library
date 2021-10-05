@@ -9,6 +9,7 @@ import java.util.Random;
 import org.gradle.internal.impldep.org.apache.commons.lang.mutable.MutableInt;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.Timeout;
 import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
 import us.ihmc.pubsub.Domain;
@@ -37,7 +38,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class IntraprocessLargeCopyTest2
 {
-   @Test// timeout = 10000
+   @Test
+   @Timeout(10)// timeout = 10000
    public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
@@ -48,6 +50,7 @@ public class IntraprocessLargeCopyTest2
    }
    
    @Test// timeout = 10000
+   @Timeout(10)
    public void testRepeatedLargeCopiesInIntraprocessCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
@@ -71,7 +74,18 @@ public class IntraprocessLargeCopyTest2
 
       // create one publisher
       Publisher publisher = createPublisher(impl);
-      publishABunch(publisher, random);
+
+      new Thread(() -> {
+         try
+         {
+            Thread.sleep(100L);
+            publishABunch(publisher, random);
+         }
+         catch (IOException | InterruptedException e)
+         {
+            e.printStackTrace();
+         }
+      }).start();
 
       System.err.flush();
 
@@ -171,8 +185,6 @@ public class IntraprocessLargeCopyTest2
          
          publisher.write(bigMessage);
          System.out.println("write " + i);
-         
-         Thread.yield(); // does nothing?
       }
    }
 
