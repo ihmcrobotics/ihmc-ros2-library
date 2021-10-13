@@ -178,7 +178,6 @@ class FastRTPSPublisher implements Publisher
          {
             PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
             NameVectorType nameVectorType = new NameVectorType();
-            System.out.println(nameVectorType.getName());
             attributes.getPartitions().forEach(s -> nameVectorType.getName().add(s));
             partitionQosPolicyType.setNames(nameVectorType);
             writerQosPoliciesType.setPartition(partitionQosPolicyType);

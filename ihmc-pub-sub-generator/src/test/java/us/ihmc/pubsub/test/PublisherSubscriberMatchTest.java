@@ -7,6 +7,7 @@ import us.ihmc.pubsub.attributes.DurabilityKind;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.pubsub.impl.intraprocess.IntraProcessUtil;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,7 +33,7 @@ public class PublisherSubscriberMatchTest
                                                                    .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                                    .build();
 
-      assertTrue(subscriberAttributes.publisherMatches(publisherAttributes));
+      assertTrue(IntraProcessUtil.subscriberPublisherMatches(subscriberAttributes, publisherAttributes));
 
    }
 }

@@ -92,7 +92,7 @@ class IntraProcessDomainImpl
       {
          for (IntraProcessSubscriber subscriber : topicSubscribers)
          {
-            if (subscriber.getAttributes().publisherMatches(publisherToMatch))
+            if (IntraProcessUtil.subscriberPublisherMatches(subscriber.getAttributes(), publisherToMatch))
             {
                if (logLevel == LogLevel.INFO)
                {
@@ -111,7 +111,7 @@ class IntraProcessDomainImpl
       {
          for (IntraProcessPublisher publisher : topicPublishers)
          {
-            if (subscriberToMatch.publisherMatches(publisher.getAttributes()))
+            if (IntraProcessUtil.subscriberPublisherMatches(subscriberToMatch, publisher.getAttributes()))
             {
                if (logLevel == LogLevel.INFO)
                {
@@ -359,7 +359,7 @@ class IntraProcessDomainImpl
          {
             for (IntraProcessSubscriber subscriber : topicSubscribers)
             {
-               if (subscriber.getAttributes().publisherMatches(attr))
+               if (IntraProcessUtil.subscriberPublisherMatches(subscriber.getAttributes(), attr))
                {
                   if (logLevel == LogLevel.INFO)
                   {
