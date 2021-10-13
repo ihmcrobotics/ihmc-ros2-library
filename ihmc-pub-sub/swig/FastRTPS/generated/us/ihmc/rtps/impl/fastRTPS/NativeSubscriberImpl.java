@@ -36,12 +36,8 @@ public class NativeSubscriberImpl {
     }
   }
 
-  public NativeSubscriberImpl(int entityId, int userDefinedID, int maximumPayloadSize, MemoryManagementPolicy_t memoryManagementPolicy, TopicAttributes topic, ReaderQos qos, ReaderTimes times, LocatorList unicastLocatorList, LocatorList multicastLocatorList, LocatorList remoteLocatorList, boolean expectsInlineQos, NativeParticipantImpl participant, NativeSubscriberListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeSubscriberImpl__SWIG_0(entityId, userDefinedID, maximumPayloadSize, memoryManagementPolicy.swigValue(), TopicAttributes.getCPtr(topic), topic, ReaderQos.getCPtr(qos), qos, ReaderTimes.getCPtr(times), times, LocatorList.getCPtr(unicastLocatorList), unicastLocatorList, LocatorList.getCPtr(multicastLocatorList), multicastLocatorList, LocatorList.getCPtr(remoteLocatorList), remoteLocatorList, expectsInlineQos, NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
-  }
-
   public NativeSubscriberImpl(NativeParticipantImpl participant, NativeSubscriberListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeSubscriberImpl__SWIG_1(NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
+    this(FastRTPSJNI.new_NativeSubscriberImpl(NativeParticipantImpl.getCPtr(participant), participant, NativeSubscriberListener.getCPtr(listener), listener), true);
   }
 
   public boolean createSubscriber() {
@@ -64,17 +60,17 @@ public class NativeSubscriberImpl {
     FastRTPSJNI.NativeSubscriberImpl_waitForUnreadMessage(swigCPtr, this);
   }
 
-  public boolean readnextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind) {
+  public boolean readnextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller) {
   assert data.isDirect() : "Buffer must be allocated direct.";
     {
-      return FastRTPSJNI.NativeSubscriberImpl_readnextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller, topicKind.swigValue(), ownerShipQosKind.swigValue());
+      return FastRTPSJNI.NativeSubscriberImpl_readnextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller);
     }
   }
 
-  public boolean takeNextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind) {
+  public boolean takeNextData(int maxDataLength, java.nio.ByteBuffer data, SampleInfoMarshaller marshaller) {
   assert data.isDirect() : "Buffer must be allocated direct.";
     {
-      return FastRTPSJNI.NativeSubscriberImpl_takeNextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller, topicKind.swigValue(), ownerShipQosKind.swigValue());
+      return FastRTPSJNI.NativeSubscriberImpl_takeNextData(swigCPtr, this, maxDataLength, data, SampleInfoMarshaller.getCPtr(marshaller), marshaller);
     }
   }
 
@@ -84,14 +80,6 @@ public class NativeSubscriberImpl {
 
   public long getUnreadCount() {
     return FastRTPSJNI.NativeSubscriberImpl_getUnreadCount(swigCPtr, this);
-  }
-
-  public TopicKind_t getTopicKind() {
-    return TopicKind_t.swigToEnum(FastRTPSJNI.NativeSubscriberImpl_getTopicKind(swigCPtr, this));
-  }
-
-  public OwnershipQosPolicyKind getOwnershipQosKind() {
-    return OwnershipQosPolicyKind.swigToEnum(FastRTPSJNI.NativeSubscriberImpl_getOwnershipQosKind(swigCPtr, this));
   }
 
 }

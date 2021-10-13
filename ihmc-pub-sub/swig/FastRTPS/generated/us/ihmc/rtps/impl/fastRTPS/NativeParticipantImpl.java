@@ -36,12 +36,8 @@ public class NativeParticipantImpl {
     }
   }
 
-  public NativeParticipantImpl(int domainId, RTPSParticipantAttributes rtps, NativeParticipantListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeParticipantImpl__SWIG_0(domainId, RTPSParticipantAttributes.getCPtr(rtps), rtps, NativeParticipantListener.getCPtr(listener), listener), true);
-  }
-
   public NativeParticipantImpl(String participantProfile, String XMLConfigData, long XMLdataLength, NativeParticipantListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeParticipantImpl__SWIG_1(participantProfile, XMLConfigData, XMLdataLength, NativeParticipantListener.getCPtr(listener), listener), true);
+    this(FastRTPSJNI.new_NativeParticipantImpl(participantProfile, XMLConfigData, XMLdataLength, NativeParticipantListener.getCPtr(listener), listener), true);
   }
 
   public long getGuidLow() {
@@ -50,10 +46,6 @@ public class NativeParticipantImpl {
 
   public long getGuidHigh() {
     return FastRTPSJNI.NativeParticipantImpl_getGuidHigh(swigCPtr, this);
-  }
-
-  public RTPSParticipantAttributes getRTPSParticipantAttributes() {
-    return new RTPSParticipantAttributes(FastRTPSJNI.NativeParticipantImpl_getRTPSParticipantAttributes(swigCPtr, this), true);
   }
 
   public void registerType(String name, int maximumDataSize, boolean hasKey) {

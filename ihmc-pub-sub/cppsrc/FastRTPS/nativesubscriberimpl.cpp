@@ -23,40 +23,6 @@ using namespace eprosima::fastrtps::rtps;
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
-
-NativeSubscriberImpl::NativeSubscriberImpl(int32_t entityId,
-                                           int32_t userDefinedID,
-                                           int32_t maximumPayloadSize,
-                                           MemoryManagementPolicy_t memoryManagementPolicy,
-                                           TopicAttributes* topic,
-                                           ReaderQos* qos,
-                                           ReaderTimes* times,
-                                           LocatorList_t* unicastLocatorList,
-                                           LocatorList_t* multicastLocatorList,
-                                           LocatorList_t* remoteLocatorList,
-                                           bool expectsInlineQos,
-                                           NativeParticipantImpl* participant,
-                                           NativeSubscriberListener* listener) throw(FastRTPSException) :
-    readerListener(this),
-    fastrtpsParticipant(participant->getParticipant()),
-    listener(listener),
-    topicName(topic->getTopicName())
-{
-
-    attr.historyMemoryPolicy = memoryManagementPolicy;
-    attr.qos = *qos;
-    attr.multicastLocatorList = *multicastLocatorList;
-    attr.topic = *topic;
-    attr.unicastLocatorList = *unicastLocatorList;
-    attr.remoteLocatorList = *remoteLocatorList;
-    attr.expectsInlineQos = expectsInlineQos;
-    if(entityId>0)
-        attr.setEntityID((uint8_t)entityId);
-    if(userDefinedID>0)
-        attr.setUserDefinedID((uint8_t)userDefinedID);
-    attr.times = *times;
-}
-
 NativeSubscriberImpl::NativeSubscriberImpl(NativeParticipantImpl *participant,
                                            NativeSubscriberListener *listener) throw(FastRTPSException) :
         fastrtpsParticipant(participant->getParticipant()),
@@ -105,6 +71,7 @@ bool NativeSubscriberImpl::createSubscriber(std::string subscriberProfile,
         return false;
     }
 
+
     CommonFunctions::guidcpy(subscriber->getGuid(), &guidUnion);
     logInfo(SUBSCRIBER, "Guid: " << mp_writer->getGuid());
     return true;
@@ -113,14 +80,6 @@ bool NativeSubscriberImpl::createSubscriber(std::string subscriberProfile,
 bool NativeSubscriberImpl::isInCleanState()
 {
     return subscriber->isInCleanState();
-}
-
-TopicKind_t NativeSubscriberImpl::getTopicKind(){
-    return subscriber->getAttributes().topic.topicKind;
-}
-
-OwnershipQosPolicyKind NativeSubscriberImpl::getOwnershipQosKind() {
-    return subscriber->getAttributes().qos.m_ownership.kind;
 }
 
 int64_t NativeSubscriberImpl::getUnreadCount()
@@ -134,7 +93,7 @@ void NativeSubscriberImpl::waitForUnreadMessage()
 }
 
 
-void NativeSubscriberImpl::updateMarshaller(SampleInfoMarshaller* marshaller, SampleInfo_t& sampleInfo, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind)
+void NativeSubscriberImpl::updateMarshaller(SampleInfoMarshaller* marshaller, SampleInfo_t& sampleInfo)
 {
     GuidUnion guid;
     CommonFunctions::guidcpy(sampleInfo.sample_identity.writer_guid(), &guid);
@@ -146,7 +105,7 @@ void NativeSubscriberImpl::updateMarshaller(SampleInfoMarshaller* marshaller, Sa
     marshaller->time_nsec = sampleInfo.sourceTimestamp.nanosec();
 
 
-    if(ownerShipQosKind == EXCLUSIVE_OWNERSHIP_QOS)
+    if(subscriber->getAttributes().qos.m_ownership.kind == EXCLUSIVE_OWNERSHIP_QOS)
     {
         marshaller->ownershipStrength = sampleInfo.ownershipStrength;
     }
@@ -167,7 +126,7 @@ void NativeSubscriberImpl::updateMarshaller(SampleInfoMarshaller* marshaller, Sa
     marshaller->relatedSampleIdentity_sequenceNumberLow = relatedSequenceNumber.low;
 }
 
-bool NativeSubscriberImpl::readnextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind)
+bool NativeSubscriberImpl::readnextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller)
 {
 
     RawDataWrapper dataWrapper(data, maxDataLength);
@@ -180,7 +139,7 @@ bool NativeSubscriberImpl::readnextData(int32_t maxDataLength, unsigned char* da
         marshaller->dataLength = dataWrapper.length;
 
 
-        updateMarshaller(marshaller, sampleInfo, topicKind, ownerShipQosKind);
+        updateMarshaller(marshaller, sampleInfo);
         return true;
 
     }
@@ -188,7 +147,7 @@ bool NativeSubscriberImpl::readnextData(int32_t maxDataLength, unsigned char* da
     return false;
 }
 
-bool NativeSubscriberImpl::takeNextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind)
+bool NativeSubscriberImpl::takeNextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller)
 {
     RawDataWrapper dataWrapper(data, maxDataLength);
     SampleInfo_t sampleInfo;
@@ -200,7 +159,7 @@ bool NativeSubscriberImpl::takeNextData(int32_t maxDataLength, unsigned char* da
         marshaller->dataLength = dataWrapper.length;
 
 
-        updateMarshaller(marshaller, sampleInfo, topicKind, ownerShipQosKind);
+        updateMarshaller(marshaller, sampleInfo);
         return true;
 
     }

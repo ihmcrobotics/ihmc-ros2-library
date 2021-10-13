@@ -26,39 +26,6 @@
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
-NativeParticipantImpl::NativeParticipantImpl(int domainId, RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException) :
-    listener(listener),
-    m_rtps_listener(this)
-{
-
-    ParticipantAttributes attributes;
-    attributes.rtps = rtps;
-    attributes.domainId = domainId;
-
-	try
-	{
-        part = Domain::createParticipant(attributes, &m_rtps_listener);
-	}
-	catch(const std::exception &e)
-	{
-		std::cerr << "[ERROR]" << e.what() << std::endl;
-		throw FastRTPSException("Problem creating RTPSParticipant");
-		return;
-	}
-	
-
-    if(part == nullptr)
-    {
-        throw FastRTPSException("Problem creating RTPSParticipant");
-        return;
-    }
-
-    logInfo(PARTICIPANT,"Guid: " << part->getGuid());
-    CommonFunctions::guidcpy(part->getGuid(), &guid);
-
-
-}
-
 NativeParticipantImpl::NativeParticipantImpl(std::string participantProfile, const char *XMLConfigData, size_t XMLdataLength, NativeParticipantListener *listener) throw(FastRTPSException) :
     listener(listener),
     m_rtps_listener(this)
@@ -135,62 +102,8 @@ void NativeParticipantImpl::MyParticipantListener::onParticipantDiscovery(Partic
     }
 }
 
-void NativeParticipantImpl::MyParticipantListener::onSubscriberDiscovery(Participant *participant, ReaderDiscoveryInfo &&info)
-{
-    const ReaderProxyData&  proxyData = info.info;
-
-    GuidUnion guid;
-    CommonFunctions::guidcpy(proxyData.guid(), &guid);
-    GuidUnion participantGuid;
-    CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
-
-    this->mp_participantimpl->listener->onSubscriberDiscovery(info.status, guid.primitive.high, guid.primitive.low, proxyData.m_expectsInlineQos,
-                                                              &proxyData.remote_locators(),
-                                                              participantGuid.primitive.high,
-                                                              participantGuid.primitive.low,
-                                                              proxyData.typeName().to_string(),
-                                                              proxyData.topicName().to_string(),
-                                                              proxyData.userDefinedId(),
-                                                              proxyData.topicKind(),
-                                                              &proxyData.m_qos);
-}
-
-void NativeParticipantImpl::MyParticipantListener::onPublisherDiscovery(Participant *participant, WriterDiscoveryInfo &&info)
-{
-
-    if(this->mp_participantimpl->listener!=nullptr)
-    {
-
-        const WriterProxyData& proxyData = info.info;
-        GuidUnion guid;
-        CommonFunctions::guidcpy(proxyData.guid(), &guid);
-        GuidUnion participantGuid;
-        CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
-
-
-        this->mp_participantimpl->listener->onPublisherDiscovery(info.status,
-                                                                 guid.primitive.high,
-                                                                 guid.primitive.low,
-                                                                 &proxyData.remote_locators(),
-                                                                 participantGuid.primitive.high,
-                                                                 participantGuid.primitive.low,
-                                                                 proxyData.typeName().to_string(),
-                                                                 proxyData.topicName().to_string(),
-                                                                 proxyData.userDefinedId(),
-                                                                 proxyData.typeMaxSerialized(),
-                                                                 proxyData.topicKind(),
-                                                                 &proxyData.m_qos);
-    }
-
-}
-
 
 std::string NativeParticipantListener::getName(int64_t infoPtr)
 {
     return ((ParticipantProxyData*) infoPtr)->m_participantName.to_string();
-}
-
-
-RTPSParticipantAttributes NativeParticipantImpl::getRTPSParticipantAttributes() {
-    return part->getAttributes().rtps;
 }

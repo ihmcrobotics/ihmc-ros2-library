@@ -31,7 +31,6 @@ import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SerializedPayload;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
-import us.ihmc.rtps.impl.fastRTPS.MatchingStatus;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
 import us.ihmc.rtps.impl.fastRTPS.NativePublisherImpl;
 import us.ihmc.rtps.impl.fastRTPS.NativePublisherListener;
@@ -61,14 +60,14 @@ class FastRTPSPublisher implements Publisher
       private final MatchingInfo matchingInfo = new MatchingInfo();
 
       @Override
-      public void onWriterMatched(MatchingStatus status, long guidHigh, long guidLow)
+      public void onWriterMatched(int matchingStatus, long guidHigh, long guidLow)
       {
          try
          {
             if (listener != null)
             {
                matchingInfo.getGuid().fromPrimitives(guidHigh, guidLow);
-               matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[status.swigValue()]);
+               matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[matchingStatus]);
                listener.onPublicationMatched(FastRTPSPublisher.this, matchingInfo);
             }
          }

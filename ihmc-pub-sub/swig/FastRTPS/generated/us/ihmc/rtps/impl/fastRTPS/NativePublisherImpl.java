@@ -36,12 +36,8 @@ public class NativePublisherImpl {
     }
   }
 
-  public NativePublisherImpl(int entityId, int userDefinedID, int maximumPayloadSize, MemoryManagementPolicy_t memoryManagementPolicy, TopicAttributes topic, WriterQos qos, WriterTimes times, LocatorList unicastLocatorList, LocatorList multicastLocatorList, LocatorList remoteLocatorList, ThroughputControllerDescriptor throughputController, NativeParticipantImpl participant, NativePublisherListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativePublisherImpl__SWIG_0(entityId, userDefinedID, maximumPayloadSize, memoryManagementPolicy.swigValue(), TopicAttributes.getCPtr(topic), topic, WriterQos.getCPtr(qos), qos, WriterTimes.getCPtr(times), times, LocatorList.getCPtr(unicastLocatorList), unicastLocatorList, LocatorList.getCPtr(multicastLocatorList), multicastLocatorList, LocatorList.getCPtr(remoteLocatorList), remoteLocatorList, ThroughputControllerDescriptor.getCPtr(throughputController), throughputController, NativeParticipantImpl.getCPtr(participant), participant, NativePublisherListener.getCPtr(listener), listener), true);
-  }
-
   public NativePublisherImpl(NativeParticipantImpl participant, NativePublisherListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativePublisherImpl__SWIG_1(NativeParticipantImpl.getCPtr(participant), participant, NativePublisherListener.getCPtr(listener), listener), true);
+    this(FastRTPSJNI.new_NativePublisherImpl(NativeParticipantImpl.getCPtr(participant), participant, NativePublisherListener.getCPtr(listener), listener), true);
   }
 
   public boolean createPublisher() {

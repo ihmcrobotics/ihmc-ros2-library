@@ -20,43 +20,6 @@ using namespace eprosima::fastrtps::rtps;
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
 NativePublisherImpl::NativePublisherImpl(
-        int32_t entityId,
-        int32_t userDefinedID,
-        int32_t maximumPayloadSize,
-        MemoryManagementPolicy_t memoryManagementPolicy,
-        TopicAttributes* topic,
-        WriterQos* qos,
-        WriterTimes* times,
-        LocatorList_t* unicastLocatorList,
-        LocatorList_t* multicastLocatorList,
-        LocatorList_t* remoteLocatorList,
-        ThroughputControllerDescriptor* throughputController,
-        NativeParticipantImpl* participant,
-        NativePublisherListener* listener) throw(FastRTPSException) :
-        fastrtpsParticipant(participant->getParticipant()),
-        publisherListener(this),
-        listener(listener)
-{
-
-
-
-    attr.throughputController = *throughputController;
-    attr.qos = *qos;
-    attr.multicastLocatorList = *multicastLocatorList;
-    attr.unicastLocatorList = *unicastLocatorList;
-    attr.remoteLocatorList = *remoteLocatorList;
-    attr.topic = *topic;
-    attr.historyMemoryPolicy = memoryManagementPolicy;
-    if(entityId>0)
-        attr.setEntityID((uint8_t)entityId);
-    if(userDefinedID>0)
-        attr.setUserDefinedID((uint8_t)userDefinedID);
-
-    attr.times = *times;
-
-}
-
-NativePublisherImpl::NativePublisherImpl(
         NativeParticipantImpl *participant,
         NativePublisherListener *listener) throw(FastRTPSException) :
         fastrtpsParticipant(participant->getParticipant()),

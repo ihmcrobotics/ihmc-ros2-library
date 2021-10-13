@@ -28,11 +28,11 @@ public class FastRTPSParticipantDiscoveryInfo extends ParticipantDiscoveryInfo
    {
    }
    
-   public void updateInfo(us.ihmc.rtps.impl.fastRTPS.ParticipantDiscoveryInfo.DISCOVERY_STATUS status, NativeParticipantListener nativeParticipantListener, long infoPtr, long guidHigh, long guidLow)
+   public void updateInfo(int status, NativeParticipantListener nativeParticipantListener, long infoPtr, long guidHigh, long guidLow)
    {
       guid.fromPrimitives(guidHigh, guidLow);
 
-      this.status = DiscoveryStatus.values[status.swigValue()];
+      this.status = DiscoveryStatus.values[status];
 
       this.participant = nativeParticipantListener;
       this.infoPtr = infoPtr;

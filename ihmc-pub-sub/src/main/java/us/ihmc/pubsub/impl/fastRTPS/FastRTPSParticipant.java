@@ -63,134 +63,20 @@ class FastRTPSParticipant implements Participant
       private final FastRTPSParticipantDiscoveryInfo discoveryInfo = new FastRTPSParticipantDiscoveryInfo();
 
       @Override
-      public void onParticipantDiscovery(long infoPtr, long guidHigh, long guidLow, ParticipantDiscoveryInfo.DISCOVERY_STATUS status)
+      public void onParticipantDiscovery(long infoPtr, long guidHigh, long guidLow, int discoveryStatus)
       {
          try
          {
             if (participantListener != null)
             {
-               System.out.println("infoPtr = " + infoPtr + ", guidHigh = " + guidHigh + ", guidLow = " + guidLow + ", status = " + status);
-               discoveryInfo.updateInfo(status, this, infoPtr, guidHigh, guidLow);
+               System.out.println("infoPtr = " + infoPtr + ", guidHigh = " + guidHigh + ", guidLow = " + guidLow + ", status = " + discoveryStatus);
+               discoveryInfo.updateInfo(discoveryStatus, this, infoPtr, guidHigh, guidLow);
                participantListener.onParticipantDiscovery(FastRTPSParticipant.this, discoveryInfo);
             }
          }
          catch (Throwable e)
          {
             e.printStackTrace();
-         }
-      }
-
-      @Override
-      public void onPublisherDiscovery(WriterDiscoveryInfo.DISCOVERY_STATUS discovery_status, long guidHigh, long guidLow, RemoteLocatorList remoteLocatorList,
-                                       long participantGuidHigh, long participantGuidLow, String typeName, String topicName, int userDefinedId,
-                                       long typeMaxSerialized, TopicKind_t topicKind, WriterQos writerQoS)
-      {
-         {
-            if (publisherDiscoveryListener != null)
-            {
-               try
-               {
-                  Guid guid = new Guid();
-                  guid.fromPrimitives(guidHigh, guidLow);
-
-                  Guid participantGuid = new Guid();
-                  participantGuid.fromPrimitives(participantGuidHigh, participantGuidLow);
-
-                  ArrayList<Locator> unicastLocatorListOut = new ArrayList<>();
-                  ArrayList<Locator> multicastLocatorListOut = new ArrayList<>();
-
-                  for (int i = 0; i < FastRTPS.getRemoteUnicastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteUnicastLocator(remoteLocatorList, i), out);
-                     unicastLocatorListOut.add(out);
-                  }
-
-                  for (int i = 0; i < FastRTPS.getRemoteMulticastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteMulticastLocator(remoteLocatorList, i), out);
-                     multicastLocatorListOut.add(out);
-                  }
-
-                  FastRTPSWriterQosHolder writerQosOut = new FastRTPSWriterQosHolder(writerQoS);
-
-                  boolean isAlive = discovery_status != WriterDiscoveryInfo.DISCOVERY_STATUS.REMOVED_WRITER;
-
-                  publisherDiscoveryListener.publisherTopicChange(isAlive,
-                                                                  guid,
-                                                                  unicastLocatorListOut,
-                                                                  multicastLocatorListOut,
-                                                                  participantGuid,
-                                                                  typeName,
-                                                                  topicName,
-                                                                  userDefinedId,
-                                                                  typeMaxSerialized,
-                                                                  FastRTPSCommonFunctions.toJavaTopicKind(topicKind),
-                                                                  writerQosOut);
-               }
-               catch (Throwable e)
-               {
-                  e.printStackTrace();
-               }
-            }
-         }
-      }
-
-      @Override
-      public void onSubscriberDiscovery(ReaderDiscoveryInfo.DISCOVERY_STATUS discovery_status, long guidHigh, long guidLow, boolean expectsInlineQos,
-                                        RemoteLocatorList remoteLocatorList, long participantGuidHigh, long participantGuidLow, String typeName,
-                                        String topicName, int userDefinedId, TopicKind_t topicKind, ReaderQos readerQoS)
-      {
-         {
-            if (subscriberDiscoveryListener != null)
-            {
-               try
-               {
-                  Guid guid = new Guid();
-                  guid.fromPrimitives(guidHigh, guidLow);
-
-                  Guid participantGuid = new Guid();
-                  participantGuid.fromPrimitives(participantGuidHigh, participantGuidLow);
-
-                  ArrayList<Locator> unicastLocatorListOut = new ArrayList<>();
-                  ArrayList<Locator> multicastLocatorListOut = new ArrayList<>();
-
-                  for (int i = 0; i < FastRTPS.getRemoteUnicastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteUnicastLocator(remoteLocatorList, i), out);
-                     unicastLocatorListOut.add(out);
-                  }
-
-                  for (int i = 0; i < FastRTPS.getRemoteMulticastLocatorSize(remoteLocatorList); i++)
-                  {
-                     Locator out = new Locator();
-                     FastRTPSCommonFunctions.convertToJavaLocator(FastRTPS.getRemoteMulticastLocator(remoteLocatorList, i), out);
-                     multicastLocatorListOut.add(out);
-                  }
-
-                  ReaderQosHolder readerQosOut = new FastRTPSReaderQosHolder(readerQoS);
-
-                  boolean isAlive = discovery_status != ReaderDiscoveryInfo.DISCOVERY_STATUS.REMOVED_READER;
-
-                  subscriberDiscoveryListener.subscriberTopicChange(isAlive,
-                                                                    guid,
-                                                                    expectsInlineQos,
-                                                                    unicastLocatorListOut,
-                                                                    multicastLocatorListOut,
-                                                                    participantGuid,
-                                                                    typeName,
-                                                                    topicName,
-                                                                    userDefinedId,
-                                                                    FastRTPSCommonFunctions.toJavaTopicKind(topicKind),
-                                                                    readerQosOut);
-               }
-               catch (Throwable e)
-               {
-                  e.printStackTrace();
-               }
-            }
          }
       }
    }

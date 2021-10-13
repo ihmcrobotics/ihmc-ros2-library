@@ -59,22 +59,19 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
 
    private final SampleInfoMarshaller sampleInfoMarshaller = new SampleInfoMarshaller();
 
-   private final TopicKind_t topicKind;
-   private final OwnershipQosPolicyKind ownershipQosPolicyKind;
-
    private final NativeSubscriberListenerImpl nativeListenerImpl = new NativeSubscriberListenerImpl();
 
    private class NativeSubscriberListenerImpl extends NativeSubscriberListener
    {
       @Override
-      public void onSubscriptionMatched(MatchingStatus status, long guidHigh, long guidLow)
+      public void onSubscriptionMatched(int matchingStatus, long guidHigh, long guidLow)
       {
          try
          {
             if (listener != null)
             {
                matchingInfo.getGuid().fromPrimitives(guidHigh, guidLow);
-               matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[status.swigValue()]);
+               matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[matchingStatus]);
                listener.onSubscriptionMatched(FastRTPSSubscriber.this, matchingInfo);
             }
          }
@@ -133,7 +130,6 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
           * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
           */
          this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
-         this.topicKind = TopicKind_t.swigToEnum(attributes.getTopicKind().ordinal());
 
          String profileName = UUID.randomUUID().toString();
 
@@ -176,14 +172,11 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          {
             case SHARED_OWNERSHIP_QOS:
                ownershipQosPolicyType.setKind(OwnershipQosKindType.SHARED);
-               ownershipQosPolicyKind = OwnershipQosPolicyKind.SHARED_OWNERSHIP_QOS;
                break;
             case EXCLUSIVE_OWNERSHIP_QOS:
                ownershipQosPolicyType.setKind(OwnershipQosKindType.EXCLUSIVE);
-               ownershipQosPolicyKind = OwnershipQosPolicyKind.EXCLUSIVE_OWNERSHIP_QOS;
                break;
             default:
-               ownershipQosPolicyKind = OwnershipQosPolicyKind.SHARED_OWNERSHIP_QOS;
                break;
 
          }
@@ -309,7 +302,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             return false;
          }         
          
-         if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
+         if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
          {
             if (info != null)
             {
@@ -361,7 +354,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             return false;
          }         
          
-         if(impl.takeNextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller, topicKind, ownershipQosPolicyKind))
+         if(impl.takeNextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
          {
             if (info != null)
             {

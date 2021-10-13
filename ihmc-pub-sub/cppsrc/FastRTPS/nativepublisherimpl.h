@@ -41,27 +41,13 @@ namespace fastRTPS{
     class NativePublisherListener
     {
     public:
-        virtual void onWriterMatched(MatchingStatus status, int64_t guidHigh, int64_t guidLow) {}
+        virtual void onWriterMatched(int matchingStatus, int64_t guidHigh, int64_t guidLow) {}
         virtual ~NativePublisherListener() {}
     };
 
     class NativePublisherImpl
     {
     public:
-        NativePublisherImpl(
-                int32_t entityId,
-                int32_t userDefinedID,
-                int32_t maximumPayloadSize,
-                MemoryManagementPolicy_t memoryManagementPolicy,
-                TopicAttributes* topic,
-                WriterQos* qos,
-                WriterTimes* times,
-                LocatorList_t* unicastLocatorList,
-                LocatorList_t* multicastLocatorList,
-                LocatorList_t* remoteLocatorList,
-                ThroughputControllerDescriptor* throughputController,
-                NativeParticipantImpl* participant,
-                NativePublisherListener* listener) throw(FastRTPSException);
 
         NativePublisherImpl(
                 NativeParticipantImpl* participant,

@@ -51,8 +51,8 @@ public class NativeSubscriberListener {
     FastRTPSJNI.NativeSubscriberListener_change_ownership(this, swigCPtr, true);
   }
 
-  public void onSubscriptionMatched(MatchingStatus status, long guidHigh, long guidLow) {
-    if (getClass() == NativeSubscriberListener.class) FastRTPSJNI.NativeSubscriberListener_onSubscriptionMatched(swigCPtr, this, status.swigValue(), guidHigh, guidLow); else FastRTPSJNI.NativeSubscriberListener_onSubscriptionMatchedSwigExplicitNativeSubscriberListener(swigCPtr, this, status.swigValue(), guidHigh, guidLow);
+  public void onSubscriptionMatched(int matchingStatus, long guidHigh, long guidLow) {
+    if (getClass() == NativeSubscriberListener.class) FastRTPSJNI.NativeSubscriberListener_onSubscriptionMatched(swigCPtr, this, matchingStatus, guidHigh, guidLow); else FastRTPSJNI.NativeSubscriberListener_onSubscriptionMatchedSwigExplicitNativeSubscriberListener(swigCPtr, this, matchingStatus, guidHigh, guidLow);
   }
 
   public void onNewDataMessage() {
