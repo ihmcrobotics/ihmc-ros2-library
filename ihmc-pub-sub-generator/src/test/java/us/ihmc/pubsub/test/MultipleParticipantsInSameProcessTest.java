@@ -125,5 +125,7 @@ public class MultipleParticipantsInSameProcessTest {
         t.join();
 
         assertEquals(100, counter.get());
+
+        participants.forEach(domain::removeParticipant);
     }
 }
