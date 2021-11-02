@@ -1,38 +1,38 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
+import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.DurabilityKind;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
 
 public class IntraProcessUtil {
-    public static boolean subscriberPublisherMatches(SubscriberAttributes subscriberAttributes, PublisherAttributes publisherAttributes)
+    public static boolean subscriberPublisherMatches(GenericSubscriberAttributes genericSubscriberAttributes, GenericPublisherAttributes genericPublisherAttributes)
     {
-        if (!subscriberAttributes.getTopicName().equals(publisherAttributes.getTopicName()))
+        if (!genericSubscriberAttributes.getTopicName().equals(genericPublisherAttributes.getTopicName()))
             return false;
 
-        if (!subscriberAttributes.getTopicDataType().getClass().equals(publisherAttributes.getTopicDataType().getClass()))
+        if (!genericSubscriberAttributes.getTopicDataType().getClass().equals(genericPublisherAttributes.getTopicDataType().getClass()))
             return false;
 
-        if (subscriberAttributes.getOwnerShipPolicyKind() != publisherAttributes.getOwnerShipPolicyKind())
+        if (genericSubscriberAttributes.getOwnerShipPolicyKind() != genericPublisherAttributes.getOwnerShipPolicyKind())
             return false;
 
-        if (publisherAttributes.getReliabilityKind() == ReliabilityKind.BEST_EFFORT && subscriberAttributes.getReliabilityKind() == ReliabilityKind.RELIABLE)
+        if (genericPublisherAttributes.getReliabilityKind() == ReliabilityKind.BEST_EFFORT && genericSubscriberAttributes.getReliabilityKind() == ReliabilityKind.RELIABLE)
             return false;
 
-        if (publisherAttributes.getDurabilityKind() == DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS
-                && subscriberAttributes.getDurabilityKind() == DurabilityKind.VOLATILE_DURABILITY_QOS)
+        if (genericPublisherAttributes.getDurabilityKind() == DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS
+                && genericSubscriberAttributes.getDurabilityKind() == DurabilityKind.VOLATILE_DURABILITY_QOS)
             return false;
 
-        if (subscriberAttributes.getPartitions().isEmpty() && publisherAttributes.getPartitions().isEmpty())
+        if (genericSubscriberAttributes.getPartitions().isEmpty() && genericPublisherAttributes.getPartitions().isEmpty())
         {
             return true;
         }
         else
         {
-            for (String partition : subscriberAttributes.getPartitions())
+            for (String partition : genericSubscriberAttributes.getPartitions())
             {
-                for (String subPartition : publisherAttributes.getPartitions())
+                for (String subPartition : genericPublisherAttributes.getPartitions())
                 {
                     if (partition.equals(subPartition))
                     {

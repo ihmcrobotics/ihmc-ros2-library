@@ -67,11 +67,11 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes participantAttributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes genericParticipantAttributes = GenericParticipantAttributes.builder()
                                                                          .domainId(1)
                                                                          .name("participant")
                                                                          .build();
-      Participant participant = domain.createParticipant(participantAttributes);
+      Participant participant = domain.createParticipant(genericParticipantAttributes);
 
       try
       {
@@ -99,7 +99,7 @@ public class IntraProcessDomainTest
          };
 
 
-         PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+         GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                                                                       .topicDataType(typeOfTheDay)
                                                                       .topicName(topic)
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -107,7 +107,7 @@ public class IntraProcessDomainTest
                                                                       .partitions(Collections.singletonList(partition))
                                                                       .build();
 
-         SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+         GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                          .topicDataType(typeOfTheDay)
                                                                          .topicName(topic)
                                                                          .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -115,20 +115,20 @@ public class IntraProcessDomainTest
                                                                          .partitions(Collections.singletonList(partition))
                                                                          .build();
 
-         SubscriberAttributes subscriberAttributes2 = SubscriberAttributes.builder()
+         GenericSubscriberAttributes genericSubscriberAttributes2 = GenericSubscriberAttributes.builder()
                                                                          .topicDataType(typeOfTheDay)
                                                                          .topicName(topic)
                                                                          .reliabilityKind(ReliabilityKind.RELIABLE)
                                                                          .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                                          .build();
 
-         Publisher publisher1 = domain.createPublisher(participant, publisherAttributes);
+         Publisher publisher1 = domain.createPublisher(participant, genericPublisherAttributes);
 
-         Subscriber subscriber1 = domain.createSubscriber(participant, subscriberAttributes);
+         Subscriber subscriber1 = domain.createSubscriber(participant, genericSubscriberAttributes);
 
-         Subscriber subscriber2 = domain.createSubscriber(participant, subscriberAttributes, listener);
+         Subscriber subscriber2 = domain.createSubscriber(participant, genericSubscriberAttributes, listener);
 
-         Subscriber subscriber3 = domain.createSubscriber(participant, subscriberAttributes2);
+         Subscriber subscriber3 = domain.createSubscriber(participant, genericSubscriberAttributes2);
 
          ChatMessage msg = new ChatMessage();
          msg.setMsg("Test");
@@ -214,12 +214,12 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
       
-      ParticipantAttributes participantAttributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes genericParticipantAttributes = GenericParticipantAttributes.builder()
                                                                          .domainId(1)
                                                                          .name("participant")
                                                                          .build();
 
-      Participant participant = domain.createParticipant(participantAttributes, participantListener);
+      Participant participant = domain.createParticipant(genericParticipantAttributes, participantListener);
       
       try
       {
@@ -253,7 +253,7 @@ public class IntraProcessDomainTest
          PublisherListener publisherListener = (Publisher publisher, MatchingInfo info) -> {
             publisherMatched.add(info);
          };
-         PublisherAttributes pubAtt = PublisherAttributes.builder()
+         GenericPublisherAttributes pubAtt = GenericPublisherAttributes.builder()
                                                          .topicDataType(typeOfTheDay)
                                                          .topicName(topic)
                                                          .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -261,7 +261,7 @@ public class IntraProcessDomainTest
                                                          .partitions(Collections.singletonList(partition))
                                                          .build();
 
-         PublisherAttributes invalidPubAtt = PublisherAttributes.builder()
+         GenericPublisherAttributes invalidPubAtt = GenericPublisherAttributes.builder()
                                                                 .topicDataType(typeOfTheDay)
                                                                 .topicName(topic+"Invalid")
                                                                 .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -287,14 +287,14 @@ public class IntraProcessDomainTest
             }
          };
 
-         SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+         GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                       .topicDataType(typeOfTheDay)
                                                                       .topicName(topic)
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
                                                                       .partitions(Collections.singletonList(partition))
                                                                       .build();
 
-         Subscriber subscriber1 = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
+         Subscriber subscriber1 = domain.createSubscriber(participant, genericSubscriberAttributes, subscriberListener);
 
          // Check if all listeners have been called in the correct order
          assertEquals(publisher1.getGuid(), publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
@@ -304,7 +304,7 @@ public class IntraProcessDomainTest
 
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, publisher1.getGuid(), subscriberMatched.poll(1, TimeUnit.SECONDS));
          // Create new subscriber, check if all listeners get triggered
-         Subscriber subscriber2 = domain.createSubscriber(participant, subscriberAttributes);
+         Subscriber subscriber2 = domain.createSubscriber(participant, genericSubscriberAttributes);
 
          assertEquals(subscriber2.getGuid(), subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
@@ -314,11 +314,11 @@ public class IntraProcessDomainTest
          assertEquals(2, (long) participant.get_no_subscribers(topic));
 
          // Create a new participant, see if original participant listeners get triggered
-         ParticipantAttributes participantAttributes2 = ParticipantAttributes.builder()
+         GenericParticipantAttributes genericParticipantAttributes2 = GenericParticipantAttributes.builder()
                                                                               .domainId(1)
                                                                               .name("participant2")
                                                                               .build();
-         Participant participant2 = domain.createParticipant(participantAttributes2);
+         Participant participant2 = domain.createParticipant(genericParticipantAttributes2);
 
          ParticipantDiscoveryInfo participant2info = participantListenerFuture.poll(1, TimeUnit.SECONDS);
          assertNotEquals(null, participant2info);
@@ -336,7 +336,7 @@ public class IntraProcessDomainTest
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
          checkMatchingInfo(MatchingStatus.MATCHED_MATCHING, guid, subscriberMatched.poll(1, TimeUnit.SECONDS));
 
-         SubscriberAttributes subAtt2 = SubscriberAttributes.builder()
+         GenericSubscriberAttributes subAtt2 = GenericSubscriberAttributes.builder()
                                                             .topicDataType(typeOfTheDay)
                                                             .topicName(topic)
                                                             .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -353,7 +353,7 @@ public class IntraProcessDomainTest
          assertEquals(2, (long) participant2.get_no_subscribers(topic));
 
          // Create a bunch of non-matching subscribers and publishers and make sure they only trigger the subscriber/publisher listeners
-         PublisherAttributes pubAtt2 = PublisherAttributes.builder()
+         GenericPublisherAttributes pubAtt2 = GenericPublisherAttributes.builder()
                                                          .topicDataType(typeOfTheDay)
                                                          .topicName(topic)
                                                          .reliabilityKind(ReliabilityKind.BEST_EFFORT)
@@ -361,7 +361,7 @@ public class IntraProcessDomainTest
                                                          .partitions(Collections.singletonList(partition))
                                                          .build();
 
-         PublisherAttributes pubAtt3 = PublisherAttributes.builder()
+         GenericPublisherAttributes pubAtt3 = GenericPublisherAttributes.builder()
                                                           .topicDataType(typeOfTheDay)
                                                           .topicName(topic)
                                                           .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -379,7 +379,7 @@ public class IntraProcessDomainTest
 
          TopicDataType<?> newDataType = new ByteBufferPubSubType("Test", 10);
 
-         PublisherAttributes newDataPubAtt = PublisherAttributes.builder()
+         GenericPublisherAttributes newDataPubAtt = GenericPublisherAttributes.builder()
                                                                 .topicDataType(newDataType)
                                                                 .topicName(topic)
                                                                 .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -395,7 +395,7 @@ public class IntraProcessDomainTest
          assertEquals(5, (long) participant2.get_no_publisher(topic));
          assertEquals(1, (long) participant2.get_no_publisher(topic + "Invalid"));
 
-         SubscriberAttributes subAtt3 = SubscriberAttributes.builder()
+         GenericSubscriberAttributes subAtt3 = GenericSubscriberAttributes.builder()
                                                             .topicDataType(typeOfTheDay)
                                                             .topicName(topic)
                                                             .reliabilityKind(ReliabilityKind.BEST_EFFORT)
@@ -404,7 +404,7 @@ public class IntraProcessDomainTest
          guid = domain.createSubscriber(participant2, subAtt3).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         SubscriberAttributes subAtt4 = SubscriberAttributes.builder()
+         GenericSubscriberAttributes subAtt4 = GenericSubscriberAttributes.builder()
                                                             .topicDataType(typeOfTheDay)
                                                             .topicName(topic+"Invalid")
                                                             .reliabilityKind(ReliabilityKind.BEST_EFFORT)
@@ -413,7 +413,7 @@ public class IntraProcessDomainTest
          guid = domain.createSubscriber(participant2, subAtt4).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
 
-         SubscriberAttributes subAtt5 = SubscriberAttributes.builder()
+         GenericSubscriberAttributes subAtt5 = GenericSubscriberAttributes.builder()
                                                             .topicDataType(newDataType)
                                                             .topicName(topic)
                                                             .reliabilityKind(ReliabilityKind.BEST_EFFORT)

@@ -10,9 +10,7 @@
 package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -20,9 +18,7 @@ import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
@@ -260,6 +256,21 @@ public class FastRTPSDomain implements Domain
       {
          removeParticipant(participants.get(i));
       }
+   }
+
+   @Override
+   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes) {
+      return FastRTPSSubscriber.CommonToFastRTPSAttrs(genericSubscriberAttributes);
+   }
+
+   @Override
+   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes) {
+      return FastRTPSPublisher.CommonToFastRTPSAttrs(genericPublisherAttributes);
+   }
+
+   @Override
+   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes) {
+      return FastRTPSParticipant.CommonToFastRTPSAttrs(genericParticipantAttributes);
    }
 
    @Override

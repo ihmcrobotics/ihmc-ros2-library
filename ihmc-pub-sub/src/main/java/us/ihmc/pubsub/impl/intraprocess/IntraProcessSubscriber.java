@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
@@ -50,7 +50,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    
    private final TopicDataType<T> topicDataType;
    private final Guid guid;
-   private final SubscriberAttributes attr;
+   private final GenericSubscriberAttributes attr;
    private IntraProcessParticipant participant;
    private SubscriberListener<T> listener;
 
@@ -58,7 +58,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
 
    private boolean available = true;
 
-   IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, SubscriberAttributes attr,
+   IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, GenericSubscriberAttributes attr,
                           SubscriberListener<T> listener)
          throws IOException
    {
@@ -179,7 +179,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    }
 
    @Override
-   public SubscriberAttributes getAttributes()
+   public GenericSubscriberAttributes getAttributes()
    {
       return attr;
    }

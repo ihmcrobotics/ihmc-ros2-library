@@ -33,8 +33,7 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
  * @author Jesper Smith
  *
  */
-public interface Domain
-{
+public interface Domain {
    /**
     * Set the log level of the underlying implementation.
     * The log is implementation specific.
@@ -62,8 +61,7 @@ public interface Domain
     * @return Participant handle
     * @throws IOException If no participant can be made
     */
-   default Participant createParticipant(ParticipantAttributes att) throws IOException
-   {
+   default Participant createParticipant(ParticipantAttributes att) throws IOException {
       return createParticipant(att, null);
    }
 
@@ -84,21 +82,19 @@ public interface Domain
     * Create a Publisher in a Participant.
     * This method may allocate memory and is thread-safe
     *
-    * @param participant         where you want to create the publisher
+    * @param participant               where you want to create the publisher
     * @param publisherAttributes Publisher attributes.
-    * @param listener            Listener for publisher status. Can be null
+    * @param listener                  Listener for publisher status. Can be null
     * @return Publisher handle
     * @throws IOException              If the publisher cannot be made
     * @throws IllegalArgumentException If the attributes are invalid for this publisher
-    *
-    * Furthermore, if topicDataType has not been registered with the participant then it will be registered.
+    *                                  <p>
+    *                                  Furthermore, if topicDataType has not been registered with the participant then it will be registered.
     */
    default Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes, PublisherListener listener)
-         throws IOException, IllegalArgumentException
-   {
+           throws IOException, IllegalArgumentException {
       TopicDataType<?> registeredType = getRegisteredType(participant, publisherAttributes.getTopicDataType().getName());
-      if(registeredType == null)
-      {
+      if (registeredType == null) {
          registerType(participant, publisherAttributes.getTopicDataType());
       }
       return createPublisherImpl(participant, publisherAttributes, listener);
@@ -108,38 +104,35 @@ public interface Domain
     * Create a Publisher in a Participant without a listener.
     * This method may allocate memory and is thread-safe
     *
-    * @param participant         where you want to create the publisher
+    * @param participant               where you want to create the publisher
     * @param publisherAttributes Publisher attributes
     * @return Publisher handle
     * @throws IOException              If the publisher cannot be made
     * @throws IllegalArgumentException If the attributes are invalid for this publisher
     */
-   default Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes) throws IOException, IllegalArgumentException
-   {
+   default Publisher createPublisher(Participant participant, PublisherAttributes publisherAttributes) throws IOException, IllegalArgumentException {
       return createPublisher(participant, publisherAttributes, null);
    }
 
    public Subscriber createSubscriberImpl(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
-         throws IOException, IllegalArgumentException;
+           throws IOException, IllegalArgumentException;
 
    /**
     * Create a Subscriber in a Participant.
     *
-    * @param participant          the participant where you want to create the Publisher.
+    * @param participant                the participant where you want to create the Publisher.
     * @param subscriberAttributes Subscriber attributes
-    * @param listener             Listener for subscriber status and messages. Can be null
+    * @param listener                   Listener for subscriber status and messages. Can be null
     * @return Subscriber handle
     * @throws IOException              If the subscriber cannot be made
     * @throws IllegalArgumentException If the attributes are invalid for this subscriber
-    *
-    * Furthermore, if topicDataType has not been registered with the participant then it will be registered.
+    *                                  <p>
+    *                                  Furthermore, if topicDataType has not been registered with the participant then it will be registered.
     */
    default Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
-         throws IOException, IllegalArgumentException
-   {
+           throws IOException, IllegalArgumentException {
       TopicDataType<?> registeredType = getRegisteredType(participant, subscriberAttributes.getTopicDataType().getName());
-      if(registeredType == null)
-      {
+      if (registeredType == null) {
          registerType(participant, subscriberAttributes.getTopicDataType());
       }
       return createSubscriberImpl(participant, subscriberAttributes, listener);
@@ -148,14 +141,13 @@ public interface Domain
    /**
     * Create a Subscriber in a Participant without a listener.
     *
-    * @param participant          the participant where you want to create the Publisher.
+    * @param participant                the participant where you want to create the Publisher.
     * @param subscriberAttributes Subscriber attributes
     * @return Subscriber handle
     * @throws IOException              If the subscriber cannot be made
     * @throws IllegalArgumentException If the attributes are invalid for this subscriber
     */
-   default Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes) throws IOException, IllegalArgumentException
-   {
+   default Subscriber createSubscriber(Participant participant, SubscriberAttributes subscriberAttributes) throws IOException, IllegalArgumentException {
       return createSubscriberImpl(participant, subscriberAttributes, null);
    }
 
@@ -217,37 +209,37 @@ public interface Domain
    public void unregisterType(Participant participant, String typeName) throws IOException;
 
    public void stopAll();
-}
 
-//   /**
-//    * Generate an implementation specific version of SubscriberAttributes
-//    *
-//    * This method allocates memory
-//    *
-//    * @return Implementation specific version of SubscriberAttributes
-//    */
-//   public SubscriberAttributes createSubscriberAttributes();
-//
-//   /**
-//    * Generate an implementation specific version of PublisherAttributes
-//    *
-//    * This method allocates memory
-//    *
-//    * @return Implementation specific version of PublisherAttributes
-//    */
-//   public PublisherAttributes createPublisherAttributes();
-//
-//   /**
-//    * Generate an implementation specific version of ParticipantAttributes
-//    *
-//    * To access implementation specific features, cast the ParticipantAttributes to their implementation specific version.
-//    *
-//    * This method allocates memory
-//    *
-//    * @return Implementation specific version of ParticipantAttributes
-//    */
-//   public ParticipantAttributes createParticipantAttributes();
-   
+   /**
+    * Generate an implementation specific version of SubscriberAttributes
+    * <p>
+    * This method allocates memory
+    *
+    * @return Implementation specific version of SubscriberAttributes
+    */
+   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes);
+
+   /**
+    * Generate an implementation specific version of PublisherAttributes
+    * <p>
+    * This method allocates memory
+    *
+    * @return Implementation specific version of PublisherAttributes
+    */
+   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes);
+
+   /**
+    * Generate an implementation specific version of ParticipantAttributes
+    * <p>
+    * To access implementation specific features, cast the ParticipantAttributes to their implementation specific version.
+    * <p>
+    * This method allocates memory
+    *
+    * @return Implementation specific version of ParticipantAttributes
+    */
+   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes);
+
+}
 //   /**
 //    * Create an implementation specific version of ParticipantAttributes with the following options set
 //    *

@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Random;
 
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.pubsub.attributes.GenericParticipantAttributes;
+import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.Guid;
@@ -39,7 +39,7 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class IntraProcessParticipant implements Participant
 {
-   private final ParticipantAttributes attributes;
+   private final GenericParticipantAttributes attributes;
    private final Guid guid = new Guid();
 
    private boolean isAvailable = true;
@@ -57,7 +57,7 @@ public class IntraProcessParticipant implements Participant
    
    private final HashMap<String, TopicDataType<?>> registeredTopicDataTypes = new HashMap<>();
 
-   IntraProcessParticipant(IntraProcessDomainImpl domain, ParticipantAttributes att, ParticipantListener participantListener)
+   IntraProcessParticipant(IntraProcessDomainImpl domain, GenericParticipantAttributes att, ParticipantListener participantListener)
    {
       this.attributes = att;
       this.participantListener = participantListener;
@@ -87,7 +87,7 @@ public class IntraProcessParticipant implements Participant
    }
 
    @Override
-   public ParticipantAttributes getAttributes()
+   public GenericParticipantAttributes getAttributes()
    {
       return attributes;
    }
@@ -145,7 +145,7 @@ public class IntraProcessParticipant implements Participant
       return child;
    }
    
-   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, PublisherAttributes attr, PublisherListener listener) throws IOException
+   IntraProcessPublisher createPublisher(IntraProcessDomainImpl domain, GenericPublisherAttributes attr, PublisherListener listener) throws IOException
    {
       
       IntraProcessPublisher publisher = new IntraProcessPublisher(createNextGuid(), domain, this, attr, listener);
@@ -153,7 +153,7 @@ public class IntraProcessParticipant implements Participant
       return publisher;
    }
    
-   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, SubscriberAttributes attr, SubscriberListener listener) throws IOException
+   IntraProcessSubscriber createSubscriber(IntraProcessDomainImpl domain, GenericSubscriberAttributes attr, SubscriberListener listener) throws IOException
    {
       IntraProcessSubscriber subscriber = new IntraProcessSubscriber(createNextGuid(), domain, this, attr, listener);
       subscribers.add(subscriber);

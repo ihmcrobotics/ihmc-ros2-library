@@ -20,8 +20,8 @@ import java.io.IOException;
 import org.apache.commons.lang3.NotImplementedException;
 
 import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
 import us.ihmc.pubsub.attributes.DurabilityKind;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.ChangeKind;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -35,14 +35,14 @@ class IntraProcessPublisher <T> implements Publisher
    private boolean available = true;
    private final TopicDataType<T> topicDataType;
    private final Guid guid;
-   private final PublisherAttributes attr;
+   private final GenericPublisherAttributes attr;
    private IntraProcessDomainImpl domain;
    private IntraProcessParticipant participant;
    private PublisherListener listener;
 
    private long sequence = 0;
 
-   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, PublisherAttributes attr,
+   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, GenericPublisherAttributes attr,
                                 PublisherListener listener)
          throws IOException
    {
@@ -112,7 +112,7 @@ class IntraProcessPublisher <T> implements Publisher
    }
 
    @Override
-   public PublisherAttributes getAttributes()
+   public GenericPublisherAttributes getAttributes()
    {
       return attr;
    }

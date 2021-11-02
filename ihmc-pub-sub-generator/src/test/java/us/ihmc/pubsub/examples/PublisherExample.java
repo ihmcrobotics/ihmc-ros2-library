@@ -69,7 +69,7 @@ public class PublisherExample
       
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes2 = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes2 = GenericParticipantAttributes.builder()
                                                                .domainId(1)
                                                                .name("PublisherExample2")
                                                                .discoveryLeaseDuration(Time.Infinite)
@@ -84,7 +84,7 @@ public class PublisherExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes attrs = PublisherAttributes.builder()
+      GenericPublisherAttributes attrs = GenericPublisherAttributes.builder()
                                                      .namespace("hello")
                                                      .topicName("chatter")
                                                      .topicDataType(dataType)

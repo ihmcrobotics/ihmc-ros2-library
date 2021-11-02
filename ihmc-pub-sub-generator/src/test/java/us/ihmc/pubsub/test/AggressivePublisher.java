@@ -27,7 +27,7 @@ public class AggressivePublisher
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
                                                               .domainId(215)
                                                               .discoveryLeaseDuration(Time.Infinite)
                                                               .name("AggressivePublisher")
@@ -40,7 +40,7 @@ public class AggressivePublisher
 
       // Mimic ROS 2 default settings
 
-      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("segfault_trigger")
                                                                    .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -51,7 +51,7 @@ public class AggressivePublisher
                                                                    .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
                                                                    .build();
 
-      Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
+      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 
       ChatMessage msg = new ChatMessage();
       msg.setSender("Java");

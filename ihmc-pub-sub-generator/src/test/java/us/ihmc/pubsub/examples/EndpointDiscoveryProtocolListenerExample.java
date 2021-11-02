@@ -22,7 +22,7 @@ import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.Locator;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.GenericParticipantAttributes;
 import us.ihmc.pubsub.attributes.ReaderQosHolder;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.attributes.WriterQosHolder;
@@ -91,7 +91,7 @@ public class EndpointDiscoveryProtocolListenerExample
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
       
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
          .domainId(215)
          .discoveryLeaseDuration(Time.Infinite)
          .name("EndpointDiscoveryProtocolListenerExample")

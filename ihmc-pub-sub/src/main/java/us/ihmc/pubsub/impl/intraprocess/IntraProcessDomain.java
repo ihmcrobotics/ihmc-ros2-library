@@ -79,8 +79,12 @@ public class IntraProcessDomain implements Domain
    @Override
    public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
    {
+      if(!(att instanceof GenericParticipantAttributes))
+         throw new IllegalArgumentException("Attributes not instance of CommonParticipantAttributes");
+
+      GenericParticipantAttributes typedAttrs = (GenericParticipantAttributes) att;
       IntraProcessDomainImpl domain = getOrCreateDomain(att.getDomainId());
-      IntraProcessParticipant participant = domain.createParticipant(att, participantListener);
+      IntraProcessParticipant participant = domain.createParticipant(typedAttrs, participantListener);
       participants.put(participant, participant);
       return participant;
    }
@@ -90,25 +94,35 @@ public class IntraProcessDomain implements Domain
          throws IOException, IllegalArgumentException
    {
 
+      if(!(publisherAttributes instanceof GenericPublisherAttributes))
+         throw new IllegalArgumentException("Attributes not instance of CommonPublisherAttributes");
+
+      GenericPublisherAttributes typedAttrs = (GenericPublisherAttributes) publisherAttributes;
+
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
       if (intraProcessParticipant == null)
       {
          throw new IllegalArgumentException("This participant is not registered with this domain.");
       }
-      return intraProcessParticipant.getDomain().createPublisher(intraProcessParticipant, publisherAttributes, listener);
+      return intraProcessParticipant.getDomain().createPublisher(intraProcessParticipant, typedAttrs, listener);
    }
 
    @Override
    public synchronized Subscriber createSubscriberImpl(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
+      if(!(subscriberAttributes instanceof GenericSubscriberAttributes))
+         throw new IllegalArgumentException("Attributes not instance of CommonSubscriberAttribute");
+
+      GenericSubscriberAttributes typedAttrs = (GenericSubscriberAttributes) subscriberAttributes;
+
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
       if(intraProcessParticipant == null)
       {
          throw new IllegalArgumentException("This participant is not registered with this domain.");
       }
 
-      return intraProcessParticipant.getDomain().createSubscriber(intraProcessParticipant, subscriberAttributes, listener);
+      return intraProcessParticipant.getDomain().createSubscriber(intraProcessParticipant, typedAttrs, listener);
 
    }
 
@@ -204,5 +218,20 @@ public class IntraProcessDomain implements Domain
       {
          removeParticipant(participantToRemove);
       }
+   }
+
+   @Override
+   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes) {
+      return genericSubscriberAttributes;
+   }
+
+   @Override
+   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes) {
+      return genericPublisherAttributes;
+   }
+
+   @Override
+   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes) {
+      return genericParticipantAttributes;
    }
 }

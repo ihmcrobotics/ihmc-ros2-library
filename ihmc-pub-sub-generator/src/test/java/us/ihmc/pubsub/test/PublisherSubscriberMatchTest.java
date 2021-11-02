@@ -3,10 +3,10 @@ package us.ihmc.pubsub.test;
 import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
 import us.ihmc.pubsub.attributes.DurabilityKind;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.impl.intraprocess.IntraProcessUtil;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,21 +19,21 @@ public class PublisherSubscriberMatchTest
    {
       TopicDataType topicDataType = new ChatMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                       .topicName("TOPIC")
                                                                       .topicDataType(topicDataType)
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
                                                                       .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                                       .build();
 
-      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                                                                    .topicName("TOPIC")
                                                                    .topicDataType(topicDataType)
                                                                    .reliabilityKind(ReliabilityKind.RELIABLE)
                                                                    .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
                                                                    .build();
 
-      assertTrue(IntraProcessUtil.subscriberPublisherMatches(subscriberAttributes, publisherAttributes));
+      assertTrue(IntraProcessUtil.subscriberPublisherMatches(genericSubscriberAttributes, genericPublisherAttributes));
 
    }
 }

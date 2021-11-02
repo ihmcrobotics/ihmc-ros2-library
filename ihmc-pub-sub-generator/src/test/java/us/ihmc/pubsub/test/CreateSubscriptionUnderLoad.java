@@ -8,11 +8,11 @@ import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.DurabilityKind;
 import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.GenericParticipantAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -33,7 +33,7 @@ public class CreateSubscriptionUnderLoad
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
             .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest").build();
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
@@ -41,7 +41,7 @@ public class CreateSubscriptionUnderLoad
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                       .topicDataType(dataType)
                                                                       .namespace("segfault_trigger")
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -51,7 +51,7 @@ public class CreateSubscriptionUnderLoad
                                                                       .historyDepth(1)
                                                                       .build();
 
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl());
    }
 
    private class ParticipantListenerImpl implements ParticipantListener

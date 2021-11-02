@@ -22,9 +22,8 @@ import java.util.UUID;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.*;
 import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.ThroughputControllerDescriptor;
-import us.ihmc.pubsub.attributes.TopicAttributes;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -46,7 +45,7 @@ class FastRTPSPublisher implements Publisher
    private final Object destructorLock = new Object(); 
 
    private NativePublisherImpl impl;
-   private final PublisherAttributes attributes;
+   private final FastRTPSPublisherAttributes attributes;
    private final TopicDataType<Object> topicDataType;
    private final PublisherListener listener;
    private final SerializedPayload payload;
@@ -78,124 +77,133 @@ class FastRTPSPublisher implements Publisher
       }
    }
 
+   public static FastRTPSPublisherAttributes CommonToFastRTPSAttrs(GenericPublisherAttributes attributes){
+      String profileName = UUID.randomUUID().toString();
+
+      Dds dds = new Dds();
+
+      ProfilesType profilesType = new ProfilesType();
+      PublisherProfileType publisherProfile = new PublisherProfileType();
+      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant()
+              .add(new JAXBElement<>(
+                      new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE,
+                              FastRTPSDomain.FAST_DDS_PUBLISHER),
+                      PublisherProfileType.class,
+                      publisherProfile));
+      publisherProfile.setProfileName(profileName);
+      dds.getProfiles().add(profilesType);
+
+
+      //TOPIC
+      TopicAttributesType topicAttributesType = new TopicAttributesType();
+      topicAttributesType.setDataType(attributes.getTopicDataType().getName());
+      topicAttributesType.setName(attributes.getTopicName());
+
+      HistoryQosPolicyType historyQosPolicyType = new HistoryQosPolicyType();
+      historyQosPolicyType.setDepth(attributes.getHistoryDepth());
+      switch(attributes.getHistoryQosPolicyKind())
+      {
+         case KEEP_ALL_HISTORY_QOS:
+            historyQosPolicyType.setKind(HistoryQosKindType.KEEP_ALL);
+            break;
+         case KEEP_LAST_HISTORY_QOS:
+            historyQosPolicyType.setKind(HistoryQosKindType.KEEP_LAST);
+            break;
+      }
+      topicAttributesType.setHistoryQos(historyQosPolicyType);
+      //TOPIC END
+      publisherProfile.setTopic(topicAttributesType);
+
+      //QOS
+      WriterQosPoliciesType writerQosPoliciesType = new WriterQosPoliciesType();
+
+      DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
+      switch(attributes.getDurabilityKind())
+      {
+         case PERSISTENT_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.PERSISTENT);
+            break;
+         case TRANSIENT_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT);
+            break;
+         case TRANSIENT_LOCAL_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT_LOCAL);
+            break;
+         case VOLATILE_DURABILITY_QOS:
+            durabilityQosPolicyType.setKind(DurabilityQosKindType.VOLATILE);
+            break;
+      }
+      writerQosPoliciesType.setDurability(durabilityQosPolicyType);
+
+      ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
+      switch(attributes.getReliabilityKind())
+      {
+         case RELIABLE:
+            reliabilityQosPolicyType.setKind(ReliabilityQosKindType.RELIABLE);
+            break;
+         case BEST_EFFORT:
+            reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
+            break;
+      }
+      writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
+
+      if(attributes.getLifespan() != null)
+      {
+         LifespanQosPolicyType lifespanQosPolicyType = new LifespanQosPolicyType();
+         DurationType dt = new DurationType();
+         dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
+                 Long.class,
+                 attributes.getLifespan().getNanoseconds()));
+         dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
+                 Integer.class,
+                 attributes.getLifespan().getSeconds()));
+         lifespanQosPolicyType.setDuration(dt);
+         writerQosPoliciesType.setLifespan(lifespanQosPolicyType);
+      }
+
+
+      if(attributes.getPartitions() != null && !attributes.getPartitions().isEmpty())
+      {
+         PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
+         NameVectorType nameVectorType = new NameVectorType();
+         attributes.getPartitions().forEach(s -> nameVectorType.getName().add(s));
+         partitionQosPolicyType.setNames(nameVectorType);
+         writerQosPoliciesType.setPartition(partitionQosPolicyType);
+      }
+
+      PublishModeQosPolicyType publishModeQosPolicyType = new PublishModeQosPolicyType();
+      switch(attributes.getPublishModeKind())
+      {
+         case SYNCHRONOUS_PUBLISH_MODE:
+            publishModeQosPolicyType.setKind(PublishModeQosKindType.SYNCHRONOUS);
+            break;
+         case ASYNCHRONOUS_PUBLISH_MODE:
+            publishModeQosPolicyType.setKind(PublishModeQosKindType.ASYNCHRONOUS);
+            break;
+      }
+      writerQosPoliciesType.setPublishMode(publishModeQosPolicyType);
+      //QOS END
+      publisherProfile.setQos(writerQosPoliciesType);
+
+      return new FastRTPSPublisherAttributes(attributes, dds, profileName);
+   }
+
    @SuppressWarnings("unchecked")
    FastRTPSPublisher(TopicDataType<?> topicDataTypeIn, PublisherAttributes attributes, PublisherListener listener,
-                            NativeParticipantImpl participant)
+                     NativeParticipantImpl participant)
          throws IOException, IllegalArgumentException
    {
       synchronized (destructorLock)
       {
-         this.attributes = attributes;
+         FastRTPSPublisherAttributes typedAttrs;
+         if(attributes instanceof FastRTPSPublisherAttributes) typedAttrs = (FastRTPSPublisherAttributes) attributes;
+         else if(attributes instanceof GenericPublisherAttributes) typedAttrs = CommonToFastRTPSAttrs((GenericPublisherAttributes) attributes);
+         else throw new IllegalArgumentException("Attributes not instance of supported class");
+
+         this.attributes = typedAttrs;
          this.topicDataType = (TopicDataType<Object>) topicDataTypeIn.newInstance();
          this.listener = listener;
          this.payload = new SerializedPayload(topicDataType.getTypeSize());
-
-         String profileName = UUID.randomUUID().toString();
-
-         Dds dds = new Dds();
-
-         ProfilesType profilesType = new ProfilesType();
-         PublisherProfileType publisherProfile = new PublisherProfileType();
-         profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant()
-                     .add(new JAXBElement<>(
-                           new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE,
-                                     FastRTPSDomain.FAST_DDS_PUBLISHER),
-                           PublisherProfileType.class,
-                           publisherProfile));
-         publisherProfile.setProfileName(profileName);
-         dds.getProfiles().add(profilesType);
-
-
-         //TOPIC
-         TopicAttributesType topicAttributesType = new TopicAttributesType();
-         topicAttributesType.setDataType(attributes.getTopicDataType().getName());
-         topicAttributesType.setName(attributes.getTopicName());
-
-         HistoryQosPolicyType historyQosPolicyType = new HistoryQosPolicyType();
-         historyQosPolicyType.setDepth(attributes.getHistoryDepth());
-         switch(attributes.getHistoryQosPolicyKind())
-         {
-            case KEEP_ALL_HISTORY_QOS:
-               historyQosPolicyType.setKind(HistoryQosKindType.KEEP_ALL);
-               break;
-            case KEEP_LAST_HISTORY_QOS:
-               historyQosPolicyType.setKind(HistoryQosKindType.KEEP_LAST);
-               break;
-         }
-         topicAttributesType.setHistoryQos(historyQosPolicyType);
-         //TOPIC END
-         publisherProfile.setTopic(topicAttributesType);
-
-         //QOS
-         WriterQosPoliciesType writerQosPoliciesType = new WriterQosPoliciesType();
-
-         DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
-         switch(attributes.getDurabilityKind())
-         {
-            case PERSISTENT_DURABILITY_QOS:
-               durabilityQosPolicyType.setKind(DurabilityQosKindType.PERSISTENT);
-               break;
-            case TRANSIENT_DURABILITY_QOS:
-               durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT);
-               break;
-            case TRANSIENT_LOCAL_DURABILITY_QOS:
-               durabilityQosPolicyType.setKind(DurabilityQosKindType.TRANSIENT_LOCAL);
-               break;
-            case VOLATILE_DURABILITY_QOS:
-               durabilityQosPolicyType.setKind(DurabilityQosKindType.VOLATILE);
-               break;
-         }
-         writerQosPoliciesType.setDurability(durabilityQosPolicyType);
-
-         ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
-         switch(attributes.getReliabilityKind())
-         {
-            case RELIABLE:
-               reliabilityQosPolicyType.setKind(ReliabilityQosKindType.RELIABLE);
-               break;
-            case BEST_EFFORT:
-               reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
-               break;
-         }
-         writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
-
-         if(attributes.getLifespan() != null)
-         {
-            LifespanQosPolicyType lifespanQosPolicyType = new LifespanQosPolicyType();
-            DurationType dt = new DurationType();
-            dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
-                                                  Long.class,
-                                                  attributes.getLifespan().getNanoseconds()));
-            dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
-                                                  Integer.class,
-                                                  attributes.getLifespan().getSeconds()));
-            lifespanQosPolicyType.setDuration(dt);
-            writerQosPoliciesType.setLifespan(lifespanQosPolicyType);
-         }
-
-
-         if(attributes.getPartitions() != null && !attributes.getPartitions().isEmpty())
-         {
-            PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
-            NameVectorType nameVectorType = new NameVectorType();
-            attributes.getPartitions().forEach(s -> nameVectorType.getName().add(s));
-            partitionQosPolicyType.setNames(nameVectorType);
-            writerQosPoliciesType.setPartition(partitionQosPolicyType);
-         }
-
-         PublishModeQosPolicyType publishModeQosPolicyType = new PublishModeQosPolicyType();
-         switch(attributes.getPublishModeKind())
-         {
-            case SYNCHRONOUS_PUBLISH_MODE:
-               publishModeQosPolicyType.setKind(PublishModeQosKindType.SYNCHRONOUS);
-               break;
-            case ASYNCHRONOUS_PUBLISH_MODE:
-               publishModeQosPolicyType.setKind(PublishModeQosKindType.ASYNCHRONOUS);
-               break;
-         }
-         writerQosPoliciesType.setPublishMode(publishModeQosPolicyType);
-         //QOS END
-         publisherProfile.setQos(writerQosPoliciesType);
 
          StringWriter writer = new StringWriter();
 
@@ -204,7 +212,7 @@ class FastRTPSPublisher implements Publisher
             JAXBContext context = JAXBContext.newInstance(Dds.class);
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            m.marshal(dds, writer);
+            m.marshal(typedAttrs.dds, writer);
          } catch (JAXBException e )
          {
             throw new IOException("Colud not marshal XML", e);
@@ -213,7 +221,7 @@ class FastRTPSPublisher implements Publisher
          String data = writer.toString();
 
          impl = new NativePublisherImpl(participant, nativeListenerImpl);
-         if (!impl.createPublisher(profileName, data, data.length())) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
+         if (!impl.createPublisher(typedAttrs.profileName, data, data.length())) // Create publisher after assigning impl to avoid callbacks with impl being unassigned
          {
             throw new IOException("Cannot create publisher");
          }
@@ -238,7 +246,7 @@ class FastRTPSPublisher implements Publisher
 
    private void serializeMessage(Object data) throws IOException
    {
-      if (attributes.getTopicKind() == TopicKind.WITH_KEY)
+      if (attributes.genericPublisherAttributes.getTopicKind() == TopicKind.WITH_KEY)
       {
          keyBuffer.clear();
          topicDataType.getKey(data, keyBuffer);

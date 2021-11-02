@@ -32,7 +32,7 @@ public class PublishSubscribeUInt64Test
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
                                                               .domainId(215)
                                                               .discoveryLeaseDuration(Time.Infinite)
                                                               .name("StatusTest")
@@ -43,7 +43,7 @@ public class PublishSubscribeUInt64Test
       StatusMessagePubSubType dataType = new StatusMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("Status")
                                                                    .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -56,7 +56,7 @@ public class PublishSubscribeUInt64Test
 
       StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                       .topicDataType(dataType2)
                                                                       .topicName("Status")
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -65,9 +65,9 @@ public class PublishSubscribeUInt64Test
                                                                       .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
                                                                       .build();
 
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl());
 
-      Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
+      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 
       StatusMessage msg = new StatusMessage();
       msg.setPause(false);

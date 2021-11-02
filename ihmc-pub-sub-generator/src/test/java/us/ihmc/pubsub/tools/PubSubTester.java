@@ -16,7 +16,6 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.function.Supplier;
 
 import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
@@ -40,7 +39,7 @@ public class PubSubTester<P extends Packet>
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
                                                               .domainId(systemDomain())
                                                               .discoveryLeaseDuration(Time.Infinite)
                                                               .name("PubSubTester")
@@ -51,7 +50,7 @@ public class PubSubTester<P extends Packet>
       IDLElementTestPubSubType dataType = new IDLElementTestPubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("pubsubtest")
                                                                    .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -64,7 +63,7 @@ public class PubSubTester<P extends Packet>
       P data = msgTypeSupplier.get();
       TopicDataType<P> topicDataType = (TopicDataType<P>) data.getPubSubTypePacket().get();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                       .topicDataType(topicDataType)
                                                                       .topicName("pubsubtest")
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -72,8 +71,8 @@ public class PubSubTester<P extends Packet>
                                                                       .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
                                                                       .build();
 
-      subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(data,callbacks));
+      subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl(data,callbacks));
 
-      publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
+      publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
 }

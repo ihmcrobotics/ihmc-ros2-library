@@ -110,7 +110,7 @@ public class IntraprocessLargeCopyTest2
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
                                                               .domainId(215)
                                                               .discoveryLeaseDuration(Time.Infinite)
                                                               .name("StatusTest")
@@ -121,7 +121,7 @@ public class IntraprocessLargeCopyTest2
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("Status")
                                                                    .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -134,7 +134,7 @@ public class IntraprocessLargeCopyTest2
                                                                    .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
                                                                    .build();
 
-      return domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
+      return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
 
    private Subscriber createSubscriber(PubSubImplementation impl, MutableInt messagesReceived) throws IOException
@@ -143,7 +143,7 @@ public class IntraprocessLargeCopyTest2
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
                                                               .domainId(215)
                                                               .discoveryLeaseDuration(Time.Infinite)
                                                               .name("StatusTest")
@@ -156,7 +156,7 @@ public class IntraprocessLargeCopyTest2
 
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                       .topicDataType(dataType2)
                                                                       .topicName("Status")
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -167,7 +167,7 @@ public class IntraprocessLargeCopyTest2
                                                                       .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
                                                                       .build();
 
-      return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
+      return domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl(messagesReceived));
    }
 
    private void publishABunch(Publisher publisher, Random random) throws IOException

@@ -17,11 +17,7 @@ import java.util.UUID;
 import com.eprosima.xmlschemas.fastrtps_profiles.*;
 import com.eprosima.xmlschemas.fastrtps_profiles.RemoteServerAttributes;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.Locator;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.SubscriberAttributes;
-import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.ReaderQosHolder;
+import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.participant.Participant;
@@ -48,7 +44,7 @@ class FastRTPSParticipant implements Participant
    private final ArrayList<FastRTPSPublisher> publishers = new ArrayList<>();
    private final ArrayList<FastRTPSSubscriber> subscribers = new ArrayList<>();
 
-   private final ParticipantAttributes attributes;
+   private final FastRTPSParticipantAttributes attributes;
    private final ParticipantListener participantListener;
 
    private final Guid guid = new Guid();
@@ -81,10 +77,7 @@ class FastRTPSParticipant implements Participant
       }
    }
 
-   FastRTPSParticipant(ParticipantAttributes attrs, ParticipantListener participantListener) throws IOException, IllegalArgumentException
-   {
-      //Set listener first, can be called before the constructor returns
-
+   public static FastRTPSParticipantAttributes CommonToFastRTPSAttrs(GenericParticipantAttributes attrs){
       String profileName = UUID.randomUUID().toString();
 
       Dds dds = new Dds();
@@ -106,11 +99,11 @@ class FastRTPSParticipant implements Participant
 
       DurationType dt = new DurationType();
       dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
-                                            Long.class,
-                                            attrs.getDiscoveryLeaseDuration().getNanoseconds()));
+              Long.class,
+              attrs.getDiscoveryLeaseDuration().getNanoseconds()));
       dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
-                                            Integer.class,
-                                            attrs.getDiscoveryLeaseDuration().getSeconds()));
+              Integer.class,
+              attrs.getDiscoveryLeaseDuration().getSeconds()));
 
       DiscoverySettingsType discoverySettingsType = new DiscoverySettingsType();
       discoverySettingsType.setLeaseDuration(dt);
@@ -129,8 +122,8 @@ class FastRTPSParticipant implements Participant
          locatorListType.getLocator().add(locatorType);
 
          remoteServerAttributes.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE,FastRTPSDomain.FAST_DDS_METATRAFFIC_UNICAST_LOCATOR_LIST),
-                                                                   LocatorListType.class,
-                                                                   locatorListType));
+                 LocatorListType.class,
+                 locatorListType));
 
          remoteServerAttributes.setPrefix(String.format(FastRTPSDomain.FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX, attrs.getDiscoveryServerId()));
          discoveryServerList.getRemoteServer().add(remoteServerAttributes);
@@ -138,6 +131,17 @@ class FastRTPSParticipant implements Participant
       }
       builtin.setDiscoveryConfig(discoverySettingsType);
       rtps.setBuiltin(builtin);
+
+      return new FastRTPSParticipantAttributes(attrs, dds, profileName);
+   }
+
+   FastRTPSParticipant(ParticipantAttributes attrs, ParticipantListener participantListener) throws IOException, IllegalArgumentException
+   {
+      FastRTPSParticipantAttributes typedAttrs;
+      if(attrs instanceof FastRTPSParticipantAttributes) typedAttrs = (FastRTPSParticipantAttributes) attrs;
+      else if(attrs instanceof GenericParticipantAttributes) typedAttrs = CommonToFastRTPSAttrs((GenericParticipantAttributes) attrs);
+      else throw new IllegalArgumentException("Attributes not instance of supported class");
+
       StringWriter writer = new StringWriter();
 
       try
@@ -145,7 +149,7 @@ class FastRTPSParticipant implements Participant
          JAXBContext context = JAXBContext.newInstance(Dds.class);
          Marshaller m = context.createMarshaller();
          m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-         m.marshal(dds, writer);
+         m.marshal(typedAttrs.dds, writer);
       } catch (JAXBException e )
       {
          throw new IOException("Colud not marshal XML", e);
@@ -153,9 +157,10 @@ class FastRTPSParticipant implements Participant
 
       String data = writer.toString();
 
+      //Set listener first, can be called before the constructor returns
       this.participantListener = participantListener;
-      impl = new NativeParticipantImpl(profileName, data, data.length(), nativeListener);
-      this.attributes = attrs;
+      impl = new NativeParticipantImpl(typedAttrs.profileName, data, data.length(), nativeListener);
+      this.attributes = typedAttrs;
       getGuid(guid);
    }
 
@@ -271,7 +276,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (this.attributes.isUseStaticDiscovery())
+      if (this.attributes.genericParticipantAttributes.isUseStaticDiscovery())
       {
          if (attrs.getUserDefinedId() <= 0)
          {
@@ -298,7 +303,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (this.attributes.isUseStaticDiscovery())
+      if (this.attributes.genericParticipantAttributes.isUseStaticDiscovery())
       {
          if (attrs.getUserDefinedId() <= 0)
          {

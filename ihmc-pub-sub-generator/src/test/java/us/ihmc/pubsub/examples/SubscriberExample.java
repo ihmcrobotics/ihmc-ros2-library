@@ -80,7 +80,7 @@ public class SubscriberExample
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes2 = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes2 = GenericParticipantAttributes.builder()
                                                                .domainId(1)
                                                                .name("ParticipantExample")
                                                                .discoveryLeaseDuration(Time.Infinite)
@@ -95,7 +95,7 @@ public class SubscriberExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
             .topicDataType(dataType)
             .topicName("chatter")
             .reliabilityKind(ReliabilityKind.BEST_EFFORT)
@@ -103,7 +103,7 @@ public class SubscriberExample
             .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
             .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS).build();
 
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl());
 
    }
 

@@ -3,13 +3,11 @@ package us.ihmc.pubsub.test;
 import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
-import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.common.MatchingInfo;
-import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
@@ -58,7 +56,7 @@ public class MultipleParticipantsInSameProcessTest {
 
         TopicDataType topicDataType = new ChatMessagePubSubType();
 
-        PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+        GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                 .topicDataType(topicDataType)
                 .topicName("Status")
                 .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -69,7 +67,7 @@ public class MultipleParticipantsInSameProcessTest {
                 .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
                 .build();
 
-        SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+        GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                 .topicDataType(topicDataType)
                 .topicName("Status")
                 .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -79,7 +77,7 @@ public class MultipleParticipantsInSameProcessTest {
                 .build();
 
         List<Participant> participants = IntStream.rangeClosed(1,100)
-                .mapToObj(i -> ParticipantAttributes.builder()
+                .mapToObj(i -> GenericParticipantAttributes.builder()
                         .domainId(215)
                         .discoveryLeaseDuration(Time.Infinite)
                         .name("StatusTest"+i)
@@ -95,7 +93,7 @@ public class MultipleParticipantsInSameProcessTest {
 
         List<Publisher> publishers = participants.stream().map(p -> {
             try {
-                return domain.createPublisher(p, publisherAttributes, null);
+                return domain.createPublisher(p, genericPublisherAttributes, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -103,7 +101,7 @@ public class MultipleParticipantsInSameProcessTest {
         }).filter(Objects::nonNull).collect(Collectors.toList());
 
 
-        Subscriber subscriber = domain.createSubscriber(participants.get(0), subscriberAttributes, new SubscriberListenerImpl(counter));
+        Subscriber subscriber = domain.createSubscriber(participants.get(0), genericSubscriberAttributes, new SubscriberListenerImpl(counter));
 
 
         //publish one message from each publisher in each participant

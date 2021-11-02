@@ -55,7 +55,7 @@ public class HandshakeTest
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.builder()
+      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
             .domainId(215)
             .discoveryLeaseDuration(Time.Infinite).name("StatusTest").build();
 
@@ -65,7 +65,7 @@ public class HandshakeTest
       domain.registerType(participant, dataType);
 
 
-      PublisherAttributes publisherAttributes = PublisherAttributes.builder()
+      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("Status")
                                                                    .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -75,7 +75,7 @@ public class HandshakeTest
 
       FooHandshakePubSubType dataType2 = new FooHandshakePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
                                                                       .topicDataType(dataType2)
                                                                       .topicName("Status")
                                                                       .reliabilityKind(ReliabilityKind.RELIABLE)
@@ -85,9 +85,9 @@ public class HandshakeTest
                                                                       .build();
 
       SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
+      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, subscriberListener);
 
-      Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
+      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 
       List<FooHandshake> preallocatedHandshakes = new ArrayList<>();
       for (int n = 0; n < NUMBER_OF_MESSAGES_TO_SEND; n++)
