@@ -20,4 +20,8 @@ public class FastRTPSParticipantAttributes implements ParticipantAttributes {
     public int getDomainId() {
         return genericParticipantAttributes.getDomainId();
     }
+
+    public Dds getDds(){
+        return dds;
+    }
 }

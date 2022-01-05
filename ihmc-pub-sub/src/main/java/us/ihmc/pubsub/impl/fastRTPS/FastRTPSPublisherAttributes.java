@@ -37,4 +37,8 @@ public class FastRTPSPublisherAttributes implements PublisherAttributes {
     public TopicAttributes.TopicKind getTopicKind() {
         return genericPublisherAttributes.getTopicKind();
     }
+
+    public Dds getDds(){
+        return dds;
+    }
 }

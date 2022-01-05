@@ -37,4 +37,8 @@ public class FastRTPSSubscriberAttributes implements SubscriberAttributes {
     public TopicAttributes.TopicKind getTopicKind() {
         return genericSubscriberAttributes.getTopicKind();
     }
+
+    public Dds getDds(){
+        return dds;
+    }
 }
