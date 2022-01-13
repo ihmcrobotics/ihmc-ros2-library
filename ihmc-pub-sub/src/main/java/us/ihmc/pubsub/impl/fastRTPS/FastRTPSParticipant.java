@@ -11,6 +11,7 @@ package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -94,6 +95,17 @@ class FastRTPSParticipant implements Participant
       rtps.setName(attrs.getName());
       participantProfile.setRtps(rtps);
 
+      if(attrs.getBindToAddressRestrictions() != null && !attrs.getBindToAddressRestrictions().isEmpty()){
+         LocatorListType locatorList = new LocatorListType();
+         for (InetAddress addr : attrs.getBindToAddressRestrictions()) {
+            LocatorType locator = new LocatorType();
+            Udpv4LocatorType udpv4locator = new Udpv4LocatorType();
+            udpv4locator.setAddress(addr.getHostAddress());
+            locator.setUdpv4(udpv4locator);
+            locatorList.getLocator().add(locator);
+         }
+         rtps.setDefaultUnicastLocatorList(locatorList);
+      }
 
       BuiltinAttributesType builtin = new BuiltinAttributesType();
 
