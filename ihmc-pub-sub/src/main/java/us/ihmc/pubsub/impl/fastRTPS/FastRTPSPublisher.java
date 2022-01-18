@@ -171,17 +171,20 @@ class FastRTPSPublisher implements Publisher
          writerQosPoliciesType.setPartition(partitionQosPolicyType);
       }
 
-      PublishModeQosPolicyType publishModeQosPolicyType = new PublishModeQosPolicyType();
-      switch(attributes.getPublishModeKind())
-      {
-         case SYNCHRONOUS_PUBLISH_MODE:
-            publishModeQosPolicyType.setKind(PublishModeQosKindType.SYNCHRONOUS);
-            break;
-         case ASYNCHRONOUS_PUBLISH_MODE:
-            publishModeQosPolicyType.setKind(PublishModeQosKindType.ASYNCHRONOUS);
-            break;
+      if( attributes.getPublishModeKind() != null){
+         PublishModeQosPolicyType publishModeQosPolicyType = new PublishModeQosPolicyType();
+         switch(attributes.getPublishModeKind())
+         {
+            case SYNCHRONOUS_PUBLISH_MODE:
+               publishModeQosPolicyType.setKind(PublishModeQosKindType.SYNCHRONOUS);
+               break;
+            case ASYNCHRONOUS_PUBLISH_MODE:
+               publishModeQosPolicyType.setKind(PublishModeQosKindType.ASYNCHRONOUS);
+               break;
+         }
+         writerQosPoliciesType.setPublishMode(publishModeQosPolicyType);
       }
-      writerQosPoliciesType.setPublishMode(publishModeQosPolicyType);
+
       //QOS END
       publisherProfile.setQos(writerQosPoliciesType);
 
