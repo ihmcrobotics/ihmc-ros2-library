@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.common.Time;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ public class GenericSubscriberAttributes implements SubscriberAttributes
    int historyDepth;
    DurabilityKind durabilityKind;
    ReliabilityKind reliabilityKind;
+   Time maxBlockingTime;
 
    @Builder.Default
    List<String> partitions = Collections.emptyList();

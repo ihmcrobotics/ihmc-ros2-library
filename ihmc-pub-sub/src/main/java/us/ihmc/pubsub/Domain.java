@@ -16,9 +16,12 @@
 package us.ihmc.pubsub;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 import us.ihmc.pubsub.attributes.*;
 import us.ihmc.pubsub.common.LogLevel;
+import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
@@ -239,117 +242,115 @@ public interface Domain {
     */
    public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes);
 
+   /**
+    * Create an implementation specific version of ParticipantAttributes with the following options set
+    *
+    * - DomainId: domainId
+    * - LeaseDuration: Time.Infinite
+    * - Name: name
+    *
+    * To access implementation specific features, cast the ParticipantAttributes to their implementation specific version.
+    *
+    * @param domainId desired domainId for these attributes
+    * @param name desired name for these attributes
+    * @return Implementation specific version of ParticipantAttributes with reasonable defaults
+    */
+   default ParticipantAttributes createParticipantAttributes(int domainId, String name)
+   {
+      GenericParticipantAttributes attrs = GenericParticipantAttributes.builder()
+              .domainId(domainId)
+              .discoveryLeaseDuration(Time.Infinite)
+              .name(name)
+              .build();
+      return createParticipantAttributes(attrs);
+   }
+
+   /**
+    * Create an implementation specific version of SubscriberAttributes with the following options set
+    *
+    * Topic.TopicKind: WITH_KEY if topicDataType.isGetKeyDefined() is true, NO_KEY otherwise
+    * Topic.TopicDataType: topicDataType.getName();
+    * Topic.TopicName: topicName
+    * Topic.QoS.ReliabilityKind: reliablityKind
+    * Topic.QoS.partitions: partitions
+    *
+    * Furthermore, if topicDataType has not been registered with the participant then it will be registered.
+    *
+    * @param participant Participant to register the topicDataType with.
+    * @param topicDataType Topic data type.
+    * @param topicName Topic name.
+    * @param reliabilityKind the default for subscribers is BEST_EFFORT
+    * @param partitions [Optional] partitions this topic subscribes on. If none are given, no partitions will be set.
+    *
+    * @return Implementation specific version of SubscriberAttributes with reasonable defaults.
+    */
+   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
+   {
+      TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
+      if(registeredType == null)
+      {
+         registerType(participant, topicDataType);
+      }
+
+      GenericSubscriberAttributes.GenericSubscriberAttributesBuilder subscriberAttributesBuilder = GenericSubscriberAttributes.builder()
+              .topicKind(topicDataType.isGetKeyDefined() ? TopicAttributes.TopicKind.WITH_KEY : TopicAttributes.TopicKind.NO_KEY)
+              .topicDataType(topicDataType)
+              .topicName(topicName)
+              .reliabilityKind(reliabilityKind);
+
+      if(partitions != null)
+      {
+         subscriberAttributesBuilder.partitions(Arrays.asList(partitions));
+      }
+
+      return createSubscriberAttributes(subscriberAttributesBuilder.build());
+   }
+
+   /**
+    * Create an implementation specific version of PublisherAttributes with the following options set
+    *
+    * Topic.TopicKind: WITH_KEY if topicDataType.isGetKeyDefined() is true, NO_KEY otherwise
+    * Topic.TopicDataType: topicDataType.getName();
+    * Topic.TopicName: topicName
+    * Topic.QoS.partitions: partitions
+    * Topic.QoS.ReliabilityKind: reliablityKind
+    * if topicDataType.getTypeSize() > 65kB QoS.publishMode will be set to ASYNCHRONOUS_PUBLISH_MODE
+    *
+    * Furthermore, if topicDataType has not been registered with the participant then it will be registered.
+    *
+    * @param participant Participant to register the topicDataType with.
+    * @param topicDataType Topic data type.
+    * @param topicName Topic name.
+    * @param reliabilityKind the default for publishers is RELIABLE
+    * @param partitions [Optional] partitions this topic publishes on. If none are given, no partitions will be set.
+    *
+    * @return Implementation specific version of PublisherAttributes with reasonable defaults.
+    */
+   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
+   {
+      TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
+      if(registeredType == null)
+      {
+         registerType(participant, topicDataType);
+      }
+
+      GenericPublisherAttributes.GenericPublisherAttributesBuilder publisherAttributesBuilder =
+              GenericPublisherAttributes.builder()
+                      .topicKind(topicDataType.isGetKeyDefined() ? TopicAttributes.TopicKind.WITH_KEY : TopicAttributes.TopicKind.NO_KEY)
+                      .topicDataType(topicDataType)
+                      .topicName(topicName)
+                      .reliabilityKind(reliabilityKind);
+
+      if(partitions != null)
+      {
+         publisherAttributesBuilder.partitions(Arrays.asList(partitions));
+      }
+
+      if(topicDataType.getTypeSize() > 65000)
+      {
+         publisherAttributesBuilder.publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+      }
+
+      return createPublisherAttributes(publisherAttributesBuilder.build());
+   }
 }
-//   /**
-//    * Create an implementation specific version of ParticipantAttributes with the following options set
-//    *
-//    * - DomainId: domainId
-//    * - LeaseDuration: Time.Infinite
-//    * - Name: name
-//    *
-//    * To access implementation specific features, cast the ParticipantAttributes to their implementation specific version.
-//    *
-//    * @param domainId desired domainId for these attributes
-//    * @param name desired name for these attributes
-//    * @return Implementation specific version of ParticipantAttributes with reasonable defaults
-//    */
-//   default ParticipantAttributes createParticipantAttributes(int domainId, String name)
-//   {
-//      ParticipantAttributes participantAttributes = createParticipantAttributes();
-//      participantAttributes.setDomainId(domainId);
-//      participantAttributes.setLeaseDuration(Time.Infinite);
-//      participantAttributes.setName(name);
-//      return participantAttributes;
-//   }
-//
-//   /**
-//    * Create an implementation specific version of SubscriberAttributes with the following options set
-//    *
-//    * Topic.TopicKind: WITH_KEY if topicDataType.isGetKeyDefined() is true, NO_KEY otherwise
-//    * Topic.TopicDataType: topicDataType.getName();
-//    * Topic.TopicName: topicName
-//    * Topic.QoS.ReliabilityKind: reliablityKind
-//    * Topic.QoS.partitions: partitions
-//    *
-//    * Furthermore, if topicDataType has not been registered with the participant then it will be registered.
-//    *
-//    * @param participant Participant to register the topicDataType with.
-//    * @param topicDataType Topic data type.
-//    * @param topicName Topic name.
-//    * @param ReliabilityKind the default for subscribers is BEST_EFFORT
-//    * @param partitions [Optional] partitions this topic subscribes on. If none are given, no partitions will be set.
-//    *
-//    * @return Implementation specific version of SubscriberAttributes with reasonable defaults.
-//    */
-//   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
-//   {
-//      TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
-//      if(registeredType == null)
-//      {
-//         registerType(participant, topicDataType);
-//      }
-//
-//      SubscriberAttributes subscriberAttributes = createSubscriberAttributes();
-//      subscriberAttributes.getTopic().setTopicKind(topicDataType.isGetKeyDefined() ? TopicKind.WITH_KEY : TopicKind.NO_KEY);
-//      subscriberAttributes.getTopic().setTopicDataType(topicDataType.getName());
-//      subscriberAttributes.getTopic().setTopicName(topicName);
-//      subscriberAttributes.getQos().setReliabilityKind(reliabilityKind);
-//      if(partitions != null)
-//      {
-//         for(String partition : partitions)
-//         {
-//            subscriberAttributes.getQos().addPartition(partition);
-//         }
-//      }
-//      return subscriberAttributes;
-//   }
-//
-//   /**
-//    * Create an implementation specific version of PublisherAttributes with the following options set
-//    *
-//    * Topic.TopicKind: WITH_KEY if topicDataType.isGetKeyDefined() is true, NO_KEY otherwise
-//    * Topic.TopicDataType: topicDataType.getName();
-//    * Topic.TopicName: topicName
-//    * Topic.QoS.partitions: partitions
-//    * Topic.QoS.ReliabilityKind: reliablityKind
-//    * if topicDataType.getTypeSize() > 65kB QoS.publishMode will be set to ASYNCHRONOUS_PUBLISH_MODE
-//    *
-//    * Furthermore, if topicDataType has not been registered with the participant then it will be registered.
-//    *
-//    * @param participant Participant to register the topicDataType with.
-//    * @param topicDataType Topic data type.
-//    * @param topicName Topic name.
-//    * @param ReliabilityKind the default for publishers is RELIABLE
-//    * @param partitions [Optional] partitions this topic publishes on. If none are given, no partitions will be set.
-//    *
-//    * @return Implementation specific version of PublisherAttributes with reasonable defaults.
-//    */
-//   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliablity, String... partitions)
-//   {
-//      TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
-//      if(registeredType == null)
-//      {
-//         registerType(participant, topicDataType);
-//      }
-//
-//      PublisherAttributes publisherAttributes = createPublisherAttributes();
-//      publisherAttributes.getTopic().setTopicKind(topicDataType.isGetKeyDefined() ? TopicKind.WITH_KEY : TopicKind.NO_KEY);
-//      publisherAttributes.getTopic().setTopicDataType(topicDataType.getName());
-//      publisherAttributes.getTopic().setTopicName(topicName);
-//      publisherAttributes.getQos().setReliabilityKind(reliablity);
-//      if(partitions != null)
-//      {
-//         for(String partition : partitions)
-//         {
-//            publisherAttributes.getQos().addPartition(partition);
-//         }
-//      }
-//
-//      if(topicDataType.getTypeSize() > 65000)
-//      {
-//         publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
-//      }
-//
-//      return publisherAttributes;
-//   }
-//}

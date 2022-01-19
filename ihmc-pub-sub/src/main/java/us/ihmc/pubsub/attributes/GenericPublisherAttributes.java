@@ -26,6 +26,7 @@ public class GenericPublisherAttributes implements PublisherAttributes
    HistoryQosPolicy.HistoryQosPolicyKind historyQosPolicyKind;
    int historyDepth;
    PublishModeKind publishModeKind;
+   Time maxBlockingTime;
 
    @Builder.Default
    List<String> partitions = Collections.emptyList();

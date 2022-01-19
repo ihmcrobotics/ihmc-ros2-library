@@ -193,6 +193,18 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
             break;
       }
+
+      if(attrs.getMaxBlockingTime() != null) {
+         DurationType dt = new DurationType();
+         dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
+                 Long.class,
+                 attrs.getMaxBlockingTime().getNanoseconds()));
+         dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
+                 Integer.class,
+                 attrs.getMaxBlockingTime().getSeconds()));
+         reliabilityQosPolicyType.setMaxBlockingTime(dt);
+      }
+
       readerQosPoliciesType.setReliability(reliabilityQosPolicyType);
 
 

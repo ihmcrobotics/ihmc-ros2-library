@@ -145,6 +145,17 @@ class FastRTPSPublisher implements Publisher
             reliabilityQosPolicyType.setKind(ReliabilityQosKindType.BEST_EFFORT);
             break;
       }
+      if(attributes.getMaxBlockingTime() != null) {
+         DurationType dt = new DurationType();
+         dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
+                 Long.class,
+                 attributes.getMaxBlockingTime().getNanoseconds()));
+         dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
+                 Integer.class,
+                 attributes.getMaxBlockingTime().getSeconds()));
+         reliabilityQosPolicyType.setMaxBlockingTime(dt);
+      }
+
       writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
 
       if(attributes.getLifespan() != null)
