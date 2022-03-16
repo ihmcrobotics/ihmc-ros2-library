@@ -23,11 +23,10 @@ public interface FastRTPSConstants {
   public final static int HAVE_CXX_CONSTEXPR = 1;
   public final static int FASTDDS_IS_BIG_ENDIAN_TARGET = 0;
   public final static int HAVE_SECURITY = 0;
-  public final static int HAVE_LIBP11 = 0;
   public final static int HAVE_SQLITE3 = 1;
-  public final static int TLS_FOUND = 0;
-  public final static int HAVE_STRICT_REALTIME = 1;
-  public final static int HAVE_LOG_NO_INFO = 0;
+  public final static int TLS_FOUND = 1;
+  public final static int HAVE_STRICT_REALTIME = 0;
+  public final static int HAVE_LOG_NO_INFO = 1;
   public final static int HAVE_LOG_NO_WARNING = 0;
   public final static int HAVE_LOG_NO_ERROR = 0;
 }

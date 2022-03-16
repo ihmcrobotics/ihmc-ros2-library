@@ -78,6 +78,7 @@ public class FastRTPSDomain implements Domain
          }
          else
          {
+            NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "fastrtps");
             NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
 
             // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
