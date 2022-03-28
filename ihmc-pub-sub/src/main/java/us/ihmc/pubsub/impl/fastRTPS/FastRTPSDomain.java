@@ -27,7 +27,9 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.FastRTPSJNI;
+import us.ihmc.tools.nativelibraries.NativeLibraryDescription;
 import us.ihmc.tools.nativelibraries.NativeLibraryLoader;
+import us.ihmc.tools.nativelibraries.NativeLibraryWithDependencies;
 
 public class FastRTPSDomain implements Domain
 {
@@ -68,6 +70,28 @@ public class FastRTPSDomain implements Domain
       return instance;
    }
 
+   class FastRtpsNativeLibrary implements NativeLibraryDescription {
+
+
+      @Override
+      public String getPackage() {
+         return "us.ihmc.rtps.impl.fastRTPS";
+      }
+
+      @Override
+      public NativeLibraryWithDependencies[] getLibrariesWithDependencies(Platform platform) {
+         return new NativeLibraryWithDependencies[]{
+                 NativeLibraryWithDependencies.fromFilename(
+                         "FastRTPSWrapper.dll",
+                         "libcrypto-1_1-x64.dll",
+                         "libssl-1_1-x64.dll",
+                         "foonathan_memory-0.7.1.dll",
+                         "fastcdr-1.0.dll",
+                         "fastrtps-2.5.dll"),
+         };
+      }
+   }
+
    private FastRTPSDomain(boolean useSystemFastRTPS)
    {
       try
@@ -78,8 +102,17 @@ public class FastRTPSDomain implements Domain
          }
          else
          {
-            NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "fastrtps");
-            NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
+            if(SystemUtils.IS_OS_WINDOWS){
+               NativeLibraryLoader.loadLibrary(new FastRtpsNativeLibrary());
+//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "libcrypto-1_1-x64");
+//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "libssl-1_1-x64");
+//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "foonathan_memory-0.7.1");
+//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "fastcdr-1.0");
+            }
+            else {
+               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPS");
+               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
+            }
 
             // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
             FastRTPSJNI.LogLevel_setLogLevel(0);
