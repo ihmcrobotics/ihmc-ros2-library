@@ -80,15 +80,26 @@ public class FastRTPSDomain implements Domain
 
       @Override
       public NativeLibraryWithDependencies[] getLibrariesWithDependencies(Platform platform) {
-         return new NativeLibraryWithDependencies[]{
-                 NativeLibraryWithDependencies.fromFilename(
-                         "FastRTPSWrapper.dll",
-                         "libcrypto-1_1-x64.dll",
-                         "libssl-1_1-x64.dll",
-                         "foonathan_memory-0.7.1.dll",
-                         "fastcdr-1.0.dll",
-                         "fastrtps-2.5.dll"),
-         };
+         if(SystemUtils.IS_OS_WINDOWS){
+            return new NativeLibraryWithDependencies[]{
+                    NativeLibraryWithDependencies.fromFilename("libcrypto-1_1-x64.dll"),
+                    NativeLibraryWithDependencies.fromFilename( "libssl-1_1-x64.dll"),
+                    NativeLibraryWithDependencies.fromFilename("foonathan_memory-0.7.1.dll"),
+                    NativeLibraryWithDependencies.fromFilename("fastcdr-1.0.dll"),
+                    NativeLibraryWithDependencies.fromFilename("fastrtps-2.5.dll"),
+                    NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll")
+            };
+         }
+         if(SystemUtils.IS_OS_LINUX){
+            return new NativeLibraryWithDependencies[]{
+                    NativeLibraryWithDependencies.fromFilename("libfastcdr.so.1"),
+                    NativeLibraryWithDependencies.fromFilename("libfastrtps.so.2.5"),
+                    NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so")
+
+            };
+         }
+         //explicitly no mac support!
+         return null;
       }
    }
 
@@ -102,17 +113,7 @@ public class FastRTPSDomain implements Domain
          }
          else
          {
-            if(SystemUtils.IS_OS_WINDOWS){
-               NativeLibraryLoader.loadLibrary(new FastRtpsNativeLibrary());
-//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "libcrypto-1_1-x64");
-//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "libssl-1_1-x64");
-//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "foonathan_memory-0.7.1");
-//               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "fastcdr-1.0");
-            }
-            else {
-               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPS");
-               NativeLibraryLoader.loadLibrary("us.ihmc.rtps.impl.fastRTPS", "FastRTPSWrapper");
-            }
+            NativeLibraryLoader.loadLibrary(new FastRtpsNativeLibrary());
 
             // Force initialization of the FastRTPS class by setting the log level. This allows early bailout if there are linking errors.
             FastRTPSJNI.LogLevel_setLogLevel(0);
