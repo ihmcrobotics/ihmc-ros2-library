@@ -55,9 +55,9 @@ public class FastRTPSDomain implements Domain
          instance = new FastRTPSDomain(useSystemFastRTPS);
       }
 
-      if(FastRTPSDomain.useSystemFastRTPS != useSystemFastRTPS)
+      if (FastRTPSDomain.useSystemFastRTPS != useSystemFastRTPS)
       {
-         if(useSystemFastRTPS)
+         if (useSystemFastRTPS)
          {
             throw new RuntimeException("Loading FastRTPS using the system FastRTPS library, but the builtin FastRTPS library is already loaded.");
          }
@@ -70,44 +70,59 @@ public class FastRTPSDomain implements Domain
       return instance;
    }
 
-   class FastRtpsNativeLibrary implements NativeLibraryDescription {
-
+   class FastRtpsNativeLibrary implements NativeLibraryDescription
+   {
 
       @Override
-      public String getPackage() {
+      public String getPackage()
+      {
          return "us.ihmc.rtps.impl.fastRTPS";
       }
 
       @Override
-      public NativeLibraryWithDependencies[] getLibrariesWithDependencies(Platform platform) {
-         if(SystemUtils.IS_OS_WINDOWS){
-            return new NativeLibraryWithDependencies[]{
-                    NativeLibraryWithDependencies.fromFilename("libcrypto-1_1-x64.dll"),
-                    NativeLibraryWithDependencies.fromFilename( "libssl-1_1-x64.dll"),
-                    NativeLibraryWithDependencies.fromFilename("foonathan_memory-0.7.1.dll"),
-                    NativeLibraryWithDependencies.fromFilename("fastcdr-1.0.dll"),
-                    NativeLibraryWithDependencies.fromFilename("fastrtps-2.5.dll"),
-                    NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll")
-            };
-         }
-         if(SystemUtils.IS_OS_LINUX){
-            return new NativeLibraryWithDependencies[]{
-                    NativeLibraryWithDependencies.fromFilename("libfastcdr.so.1"),
-                    NativeLibraryWithDependencies.fromFilename("libfastrtps.so.2.5"),
-                    NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so")
+      public NativeLibraryWithDependencies[] getLibrariesWithDependencies(OperatingSystem os, Architecture arch)
+      {
 
-            };
+         switch (arch)
+         {
+            case x64:
+               switch (os)
+               {
+                  case WIN64:
+                     return new NativeLibraryWithDependencies[] {NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll",
+                                                                                                            "libcrypto-1_1-x64.dll",
+                                                                                                            "libssl-1_1-x64.dll",
+                                                                                                            "foonathan_memory-0.7.1.dll",
+                                                                                                            "fastcdr-1.0.dll",
+                                                                                                            "fastrtps-2.5.dll")};
+                  case LINUX64:
+                     return new NativeLibraryWithDependencies[] {
+                           NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.5", "libfastcdr.so.1")};
+                  default:
+                     break;
+               }
+            case arm64:
+               switch (os)
+               {
+                  default:
+                     break;
+               }
+
+               break;
          }
-         //explicitly no mac support!
+
+         System.err.println("Unsupported OS/Architecture combination: " + os + " " + arch);
          return null;
+
       }
+
    }
 
    private FastRTPSDomain(boolean useSystemFastRTPS)
    {
       try
       {
-         if(useSystemFastRTPS)
+         if (useSystemFastRTPS)
          {
             System.loadLibrary("FastRTPSWrapper");
          }
@@ -140,7 +155,6 @@ public class FastRTPSDomain implements Domain
       }, "IHMCPubSub-FastRTPSDomain-StopAll"));
    }
 
-
    @Override
    public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
    {
@@ -148,7 +162,6 @@ public class FastRTPSDomain implements Domain
       participants.add(participant);
       return participant;
    }
-
 
    @Override
    public synchronized Publisher createPublisherImpl(Participant participant, PublisherAttributes att, PublisherListener listener)
@@ -294,17 +307,20 @@ public class FastRTPSDomain implements Domain
    }
 
    @Override
-   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes) {
+   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes)
+   {
       return FastRTPSSubscriber.CommonToFastRTPSAttrs(genericSubscriberAttributes);
    }
 
    @Override
-   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes) {
+   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes)
+   {
       return FastRTPSPublisher.CommonToFastRTPSAttrs(genericPublisherAttributes);
    }
 
    @Override
-   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes) {
+   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes)
+   {
       return FastRTPSParticipant.CommonToFastRTPSAttrs(genericParticipantAttributes);
    }
 
