@@ -31,7 +31,6 @@ if(STANDALONE_PLUGIN)
 
     SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS")
 
-#    set(FOONATHAN_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-install")
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
     
     ExternalProject_Add(FoonathanMemory
@@ -93,7 +92,7 @@ if(STANDALONE_PLUGIN)
     link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib")
     include_directories("${FAST_RTPS_INSTALL_PREFIX}/include")
     if(WIN32)
-        set(FastRTPS_LIBRARIES "${FAST_RTPS_INSTALL_PREFIX}/lib/fastrtps-2.5.lib" fastcdr-1.0 foonathan_memory-0.6.2 Iphlpapi Shlwapi)
+        set(FastRTPS_LIBRARIES fastrtps-2.5 fastcdr-1.0 foonathan_memory-0.6.2 Iphlpapi Shlwapi)
     else()
         set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.6.2 dl)
     endif()
@@ -110,7 +109,7 @@ endif()
 
 add_subdirectory(cppsrc/FastRTPS)
 #add_subdirectory(cppsrc/test) # Add when tests are fixed
-add_subdirectory(swig/FastRTPS)
+#add_subdirectory(swig/FastRTPS)
 
 if(NOT STANDALONE_PLUGIN)
     if(ament_cmake_FOUND)
