@@ -91,10 +91,13 @@ if(STANDALONE_PLUGIN)
     ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory FastCDR tinyxml2)
     link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib")
     include_directories("${FAST_RTPS_INSTALL_PREFIX}/include")
+    
+	add_compile_definitions("FASTRTPS_DYN_LINK")
+    
     if(WIN32)
-        set(FastRTPS_LIBRARIES fastrtps-2.5 fastcdr-1.0 foonathan_memory-0.6.2 Iphlpapi Shlwapi)
+        set(FastRTPS_LIBRARIES Iphlpapi Shlwapi)
     else()
-        set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.6.2 dl)
+        set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.7.1 dl)
     endif()
 else()
     message(STATUS "Including fastrtps from ROS 2 build")
@@ -109,7 +112,7 @@ endif()
 
 add_subdirectory(cppsrc/FastRTPS)
 #add_subdirectory(cppsrc/test) # Add when tests are fixed
-#add_subdirectory(swig/FastRTPS)
+add_subdirectory(swig/FastRTPS)
 
 if(NOT STANDALONE_PLUGIN)
     if(ament_cmake_FOUND)

@@ -92,7 +92,7 @@ void NativeParticipantImpl::MyParticipantListener::onParticipantDiscovery(Partic
 {
     if(this->mp_participantimpl->listener!=nullptr)
     {
-        ParticipantProxyData proxy_data = info.info;
+        const ParticipantProxyData& proxy_data = info.info;
 
         logInfo(PARTICIPANT,"Remote participant Guid: " << rtpsinfo.m_guid);
         GuidUnion retGuid;
