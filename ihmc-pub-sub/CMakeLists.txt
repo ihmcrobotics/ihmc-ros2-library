@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(ihmc-pub-sub)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,6 +17,10 @@ message(STATUS "Standalone plugin mode: ${STANDALONE_PLUGIN}")
 
 include(FindOrDownloadJDK)
 include_directories(${JNI_INCLUDE_DIRS})
+
+
+SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
+
 
 if(STANDALONE_PLUGIN)
     include(ExternalProject)
@@ -44,6 +47,7 @@ if(STANDALONE_PLUGIN)
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_ARGS  
             "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
+            "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         )
         
         
@@ -58,7 +62,7 @@ if(STANDALONE_PLUGIN)
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_ARGS
-        "-DTHIRDPARTY=ON"
+        "-DTHIRDPARTY=FORCE"
         "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         "-DCOMPILE_EXAMPLES=OFF"
         "-DBUILD_TESTING=OFF"
@@ -67,6 +71,12 @@ if(STANDALONE_PLUGIN)
 		"-DSTRICT_REALTIME=ON"
         "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
         "-DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}"
+        # Custom install command to install the stripped configuration, saving about 400MB
+        INSTALL_COMMAND
+            "${CMAKE_COMMAND}"
+            --build .
+            --target install/strip
+            --config ${configuration}
     )
 
     ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
@@ -85,14 +95,22 @@ if(STANDALONE_PLUGIN)
         
         
     	FILE(GLOB FASTRTPS_DEPENDENCY_LIBRARIES "${FAST_RTPS_INSTALL_PREFIX}/bin/*.dll")
+        INSTALL(FILES ${FASTRTPS_DEPENDENCY_LIBRARIES}
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
+
+        
     else()
-        set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.7.1 dl)
-        FILE(GLOB FASTRTPS_DEPENDENCY_LIBRARIES "${FAST_RTPS_INSTALL_PREFIX}/bin/*.so")
+        set(FastRTPS_LIBRARIES fastrtps fastcdr)
+        
+        
+        # Annoying rename for the install here, because of the version suffix
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.so.2.6.0"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.so.2.6")
+            
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.so.1.0.24"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.so.1")
     endif()
     
-    
-    INSTALL(FILES ${FASTRTPS_DEPENDENCY_LIBRARIES}
-              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
 else()
     message(STATUS "Including fastrtps from ROS 2 build")
     find_package(fastrtps REQUIRED)
