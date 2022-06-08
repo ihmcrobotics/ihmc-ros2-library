@@ -49,6 +49,12 @@ if(STANDALONE_PLUGIN)
             "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
             "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         )
+    
+    if(WIN32)
+    	SET(FASTRTPS_INSTALL_TARGET "install")
+    else()
+    	SET(FASTRTPS_INSTALL_TARGET "install/strip")
+    endif()
         
         
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
@@ -71,12 +77,12 @@ if(STANDALONE_PLUGIN)
 		"-DSTRICT_REALTIME=ON"
         "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
         "-DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}"
-        # Custom install command to install the stripped configuration, saving about 400MB
+        # Custom install command to install the stripped configuration on Linux, saving about 400MB
         INSTALL_COMMAND
             "${CMAKE_COMMAND}"
             --build .
-            --target install/strip
-            --config ${configuration}
+            --target ${FASTRTPS_INSTALL_TARGET}
+            --config $<CONFIG>
     )
 
     ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
