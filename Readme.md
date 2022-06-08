@@ -171,7 +171,12 @@ SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(pa
 domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());      
 ```
 
+## Developing
+
+Make sure to build the java code using gradle to generate the java classes for the XML definitions.
+
 ## Building
+
 
 ### Java code compilation
 ```
