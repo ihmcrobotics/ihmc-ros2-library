@@ -4,12 +4,3 @@
 [submodule "ihmc-pub-sub/thirdparty/foonathan_memory_vendor"]
 	path = ihmc-pub-sub/thirdparty/foonathan_memory_vendor
 	url = https://github.com/eProsima/foonathan_memory_vendor
-[submodule "ihmc-pub-sub/thirdparty/Fast-CDR"]
-	path = ihmc-pub-sub/thirdparty/Fast-CDR
-	url = https://github.com/eProsima/Fast-CDR.git
-[submodule "ihmc-pub-sub/thirdparty/asio"]
-	path = ihmc-pub-sub/thirdparty/asio
-	url = https://github.com/chriskohlhoff/asio.git
-[submodule "ihmc-pub-sub/thirdparty/tinyxml2"]
-	path = ihmc-pub-sub/thirdparty/tinyxml2
-	url = https://github.com/leethomason/tinyxml2.git
