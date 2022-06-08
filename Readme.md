@@ -301,6 +301,14 @@ make
 make install
 ```
 
+## Updating FastDDS
+
+Several steps needs to be taken to update to the latest version of FastDDS. Mostly to do with fixing the version numbers in filenames.
+
+- Edit [SOURCE_DIR]/ihmc-pub-sub/CMakeLists.txt, scroll down to ### UPDATE FASTDDS VERSIONS HERE ### and update the versions
+- Build and update the native code on all platforms
+- [SOURCE_DIR]/ihmc-pub-sub/src/main/java/us/ihmc/pubsub/impl/fastRTPS/FastRTPSDomain.java and update the getLibrariesWithDependencies(OperatingSystem os, Architecture arch) function
+
 
 ## Developing native code with Eclipse
 

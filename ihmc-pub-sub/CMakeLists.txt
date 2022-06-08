@@ -46,25 +46,6 @@ if(STANDALONE_PLUGIN)
             "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
         )
         
-    ExternalProject_Add(FastCDR
-        SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/Fast-CDR/"    
-        DOWNLOAD_COMMAND ""
-        UPDATE_COMMAND ""
-        INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
-        CMAKE_GENERATOR "${CMAKE_GENERATOR}"
-        CMAKE_ARGS  
-            "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
-        ) 
-        
-        ExternalProject_Add(tinyxml2
-        SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/tinyxml2/"    
-        DOWNLOAD_COMMAND ""
-        UPDATE_COMMAND ""
-        INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
-        CMAKE_GENERATOR "${CMAKE_GENERATOR}"
-        CMAKE_ARGS  
-            "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
-        ) 
         
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
     message(STATUS "FastRTPS install prefix: ${FAST_RTPS_INSTALL_PREFIX}")
@@ -77,10 +58,10 @@ if(STANDALONE_PLUGIN)
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_ARGS
+        "-DTHIRDPARTY=ON"
         "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         "-DCOMPILE_EXAMPLES=OFF"
         "-DBUILD_TESTING=OFF"
-        "-DAsio_INCLUDE_DIR=${PROJECT_SOURCE_DIR}/thirdparty/asio/asio/include"
 		"-DNO_TLS=ON"
 		"-DSHM_TRANSPORT_DEFAULT=ON"
 		"-DSTRICT_REALTIME=ON"
@@ -88,17 +69,30 @@ if(STANDALONE_PLUGIN)
         "-DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}"
     )
 
-    ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory FastCDR tinyxml2)
+    ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
     link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib")
     include_directories("${FAST_RTPS_INSTALL_PREFIX}/include")
     
+    # Enable dynamic linking for building FastRTPS. If this is not set, the defaultlib for the windows compilation is prefixed by lib and the build fails. 
 	add_compile_definitions("FASTRTPS_DYN_LINK")
     
+    
+    
+    ### UPDATE FASTDDS VERSIONS HERE ### 
     if(WIN32)
-        set(FastRTPS_LIBRARIES Iphlpapi Shlwapi)
+    	# Automatic linking is already enabled for FastRTPS
+        set(FastRTPS_LIBRARIES)
+        
+        
+    	FILE(GLOB FASTRTPS_DEPENDENCY_LIBRARIES "${FAST_RTPS_INSTALL_PREFIX}/bin/*.dll")
     else()
         set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.7.1 dl)
+        FILE(GLOB FASTRTPS_DEPENDENCY_LIBRARIES "${FAST_RTPS_INSTALL_PREFIX}/bin/*.so")
     endif()
+    
+    
+    INSTALL(FILES ${FASTRTPS_DEPENDENCY_LIBRARIES}
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
 else()
     message(STATUS "Including fastrtps from ROS 2 build")
     find_package(fastrtps REQUIRED)

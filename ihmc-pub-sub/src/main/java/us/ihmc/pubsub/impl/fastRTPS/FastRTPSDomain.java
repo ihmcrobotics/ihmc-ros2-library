@@ -90,11 +90,8 @@ public class FastRTPSDomain implements Domain
                {
                   case WIN64:
                      return new NativeLibraryWithDependencies[] {NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll",
-                                                                                                            "libcrypto-1_1-x64.dll",
-                                                                                                            "libssl-1_1-x64.dll",
-                                                                                                            "foonathan_memory-0.7.1.dll",
                                                                                                             "fastcdr-1.0.dll",
-                                                                                                            "fastrtps-2.5.dll")};
+                                                                                                            "fastrtps-2.6.dll")};
                   case LINUX64:
                      return new NativeLibraryWithDependencies[] {
                            NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.5", "libfastcdr.so.1")};
