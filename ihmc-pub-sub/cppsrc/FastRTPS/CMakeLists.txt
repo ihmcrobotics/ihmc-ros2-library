@@ -10,13 +10,10 @@ add_library(FastRTPSNativeImpl
             loglevel
             ${HEADER_FILES}
 )
-target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES} rt)
 
 if(WIN32)
-    target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES} rt)
-    target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES} rt)
+    target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES})
 else()
-    target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES} pthread rt)
     target_link_libraries(FastRTPSNativeImpl ${FastRTPS_LIBRARIES} pthread rt)
 endif()
 

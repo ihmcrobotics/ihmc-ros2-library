@@ -84,9 +84,9 @@ public class SubscriberExample
                                                                .domainId(1)
                                                                .name("ParticipantExample")
                                                                .discoveryLeaseDuration(Time.Infinite)
-                                                               .discoveryServerEnabled(true)
-                                                               .discoveryServerId(0)
-                                                               .discoveryServerAddress("127.0.0.1")
+//                                                               .discoveryServerEnabled(true)
+//                                                               .discoveryServerId(0)
+//                                                               .discoveryServerAddress("127.0.0.1")
                                                                .build();
 
       

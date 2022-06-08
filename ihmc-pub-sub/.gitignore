@@ -20,3 +20,4 @@ cmake-build-release-visual-studio/
 buildc/
 swig/FastRTPS/generated/us/ihmc/rtps/impl/fastRTPS/FastRTPSJAVA_wrap.cxx
 .vs
+/.apt_generated/

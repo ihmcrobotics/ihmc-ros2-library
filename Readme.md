@@ -239,8 +239,8 @@ Note: Due to path length limitations, the commpilation can fail. If you did not 
 ##### Requirements:
 
 - CMake [https://cmake.org/download/](https://cmake.org/download/). Recommended edition: Windows win64-x64 installer. Make sure to add to your path.
-- Visual Studio 2019 Community [https://www.visualstudio.com/downloads/](https://www.visualstudio.com/downloads/). 
-	- Make sure to select "Desktop Development with C++" and select "C++ MFC for latest v142 build tools" under Optional.
+- Visual Studio 2022 Community [https://www.visualstudio.com/downloads/](https://www.visualstudio.com/downloads/). 
+	- Make sure to select "Desktop Development with C++" and select "C++ MFC for latest v147 build tools" under Optional.
 	- Restart after installation and start visual studio (!)
 - Swig: Version 3.0.12 or later (make sure to use version 3. 3.0.12 is recommended, as it is the same version as in Ubuntu 18.04)
 	- Unpack in C:\swigwin-3.0.12 or modify later commands accordingly
@@ -256,7 +256,7 @@ Use CMake GUI to create the Visual Studio makefiles.
 cd [Source directory]\ihmc-pub-sub-group\ihmc-pub-sub
 md buildc
 cd buildc
-"C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 16 2019" -A x64 -DSWIG_EXECUTABLE="C:\swigwin-3.0.12\swig.exe"  -DSTANDALONE_PLUGIN=ON ..
+"C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 17 2022" -A x64 -DSWIG_EXECUTABLE="C:\swigwin-3.0.12\swig.exe"  -DSTANDALONE_PLUGIN=ON ..
 "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release --target install
 ```
 

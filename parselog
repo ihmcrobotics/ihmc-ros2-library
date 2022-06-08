@@ -1,0 +1,30 @@
+﻿=================
+Begin Activation Context Generation.
+Input Parameter:
+	Flags = 0
+	ProcessorArchitecture = AMD64
+	CultureFallBacks = en-US;en
+	ManifestPath = C:\Users\Jesper\.ihmc\lib\us\ihmc\rtps\impl\fastRTPS\970B67B6B10B78EB6D8CF53BE7887D461C6C1058\fastrtps-2.5.dll
+	AssemblyDirectory = C:\Users\Jesper\.ihmc\lib\us\ihmc\rtps\impl\fastRTPS\970B67B6B10B78EB6D8CF53BE7887D461C6C1058\
+	Application Config File = 
+-----------------
+INFO: Parsing Manifest File C:\Users\Jesper\.ihmc\lib\us\ihmc\rtps\impl\fastRTPS\970B67B6B10B78EB6D8CF53BE7887D461C6C1058\fastrtps-2.5.dll.
+	INFO: Manifest Definition Identity is Fast-DDS,type="win32",version="2.5.1.0".
+	INFO: Reference: OpenSSL.Fast-DDS,type="win32",version="1.1.1.13"
+INFO: Resolving reference OpenSSL.Fast-DDS,type="win32",version="1.1.1.13".
+	INFO: Resolving reference for ProcessorArchitecture OpenSSL.Fast-DDS,type="win32",version="1.1.1.13".
+		INFO: Resolving reference for culture Neutral.
+			INFO: Applying Binding Policy.
+				INFO: No binding policy redirect found.
+			INFO: Begin assembly probing.
+				INFO: Did not find the assembly in WinSxS.
+				INFO: Attempt to probe manifest at C:\Users\Jesper\.ihmc\lib\us\ihmc\rtps\impl\fastRTPS\970B67B6B10B78EB6D8CF53BE7887D461C6C1058\OpenSSL.Fast-DDS.DLL.
+				INFO: Attempt to probe manifest at C:\Users\Jesper\.ihmc\lib\us\ihmc\rtps\impl\fastRTPS\970B67B6B10B78EB6D8CF53BE7887D461C6C1058\OpenSSL.Fast-DDS.MANIFEST.
+				INFO: Attempt to probe manifest at C:\Users\Jesper\.ihmc\lib\us\ihmc\rtps\impl\fastRTPS\970B67B6B10B78EB6D8CF53BE7887D461C6C1058\OpenSSL.Fast-DDS\OpenSSL.Fast-DDS.DLL.
+				INFO: Attempt to probe manifest at C:\Users\Jesper\.ihmc\lib\us\ihmc\rtps\impl\fastRTPS\970B67B6B10B78EB6D8CF53BE7887D461C6C1058\OpenSSL.Fast-DDS\OpenSSL.Fast-DDS.MANIFEST.
+				INFO: Did not find manifest for culture Neutral.
+			INFO: End assembly probing.
+	ERROR: Cannot resolve reference OpenSSL.Fast-DDS,type="win32",version="1.1.1.13".
+ERROR: Activation Context generation failed.
+End Activation Context Generation.
+

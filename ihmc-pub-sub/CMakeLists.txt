@@ -31,32 +31,46 @@ if(STANDALONE_PLUGIN)
 
     SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS")
 
-    set(FOONATHAN_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-install")
-    message(STATUS "Foonathan memory install prefix: ${FOONATHAN_INSTALL_PREFIX}")
+#    set(FOONATHAN_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-install")
+    set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
+    
     ExternalProject_Add(FoonathanMemory
         SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/foonathan_memory_vendor/"
         BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-build"
         STAMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-stamp"
         DOWNLOAD_COMMAND ""
         UPDATE_COMMAND ""
-        INSTALL_DIR "${FOONATHAN_INSTALL_PREFIX}"
+        INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-tmp"
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_ARGS  
-            "-DCMAKE_INSTALL_PREFIX=${FOONATHAN_INSTALL_PREFIX}"
+            "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
         )
-    if(WIN32)
-        SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/share/foonathan_memory/cmake/")
-    else()
-        SET(foonathan_memory_DIR "${FOONATHAN_INSTALL_PREFIX}/lib/foonathan_memory/cmake/")
-    endif()
-
+        
+    ExternalProject_Add(FastCDR
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/Fast-CDR/"    
+        DOWNLOAD_COMMAND ""
+        UPDATE_COMMAND ""
+        INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
+        CMAKE_GENERATOR "${CMAKE_GENERATOR}"
+        CMAKE_ARGS  
+            "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
+        ) 
+        
+        ExternalProject_Add(tinyxml2
+        SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/tinyxml2/"    
+        DOWNLOAD_COMMAND ""
+        UPDATE_COMMAND ""
+        INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
+        CMAKE_GENERATOR "${CMAKE_GENERATOR}"
+        CMAKE_ARGS  
+            "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
+        ) 
+        
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
     message(STATUS "FastRTPS install prefix: ${FAST_RTPS_INSTALL_PREFIX}")
     ExternalProject_Add(FastRTPS
         SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/Fast-RTPS"
-        BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-build"
-        STAMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-stamp"
         DOWNLOAD_COMMAND ""
         #UPDATE_COMMAND "${CMAKE_COMMAND}" -E chdir "${PROJECT_SOURCE_DIR}" git submodule update --recursive --init "thirdparty/Fast-RTPS"
         UPDATE_COMMAND ""
@@ -64,29 +78,22 @@ if(STANDALONE_PLUGIN)
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_ARGS
-        "-DEPROSIMA_BUILD=OFF"
         "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         "-DCOMPILE_EXAMPLES=OFF"
-	"-DINTERNAL_DEBUG=OFF"
-        "-DBUILD_SHARED_LIBS=OFF"
         "-DBUILD_TESTING=OFF"
-        "-DTHIRDPARTY=ON"
-        "-DTHIRDPARTY_fastcdr=ON"
-        "-DTINYXML2_FROM_SOURCE=ON"
-	"-DNO_TLS=ON"
-	"-DSHM_TRANSPORT_DEFAULT=ON"
-	"-DSTRICT_REALTIME=ON"
+        "-DAsio_INCLUDE_DIR=${PROJECT_SOURCE_DIR}/thirdparty/asio/asio/include"
+		"-DNO_TLS=ON"
+		"-DSHM_TRANSPORT_DEFAULT=ON"
+		"-DSTRICT_REALTIME=ON"
         "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
-        "-DCMAKE_POSITION_INDEPENDENT_CODE=true"
-        "-Dfoonathan_memory_DIR=${foonathan_memory_DIR}"
         "-DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}"
     )
 
-    ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory)
-    link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib" "${FOONATHAN_INSTALL_PREFIX}/lib")
+    ExternalProject_Add_StepDependencies(FastRTPS build FoonathanMemory FastCDR tinyxml2)
+    link_directories("${FAST_RTPS_INSTALL_PREFIX}/lib")
     include_directories("${FAST_RTPS_INSTALL_PREFIX}/include")
     if(WIN32)
-        set(FastRTPS_LIBRARIES libfastrtps-1.9 libfastcdr-1.0 foonathan_memory-0.6.2 Iphlpapi Shlwapi)
+        set(FastRTPS_LIBRARIES "${FAST_RTPS_INSTALL_PREFIX}/lib/fastrtps-2.5.lib" fastcdr-1.0 foonathan_memory-0.6.2 Iphlpapi Shlwapi)
     else()
         set(FastRTPS_LIBRARIES fastrtps fastcdr foonathan_memory-0.6.2 dl)
     endif()

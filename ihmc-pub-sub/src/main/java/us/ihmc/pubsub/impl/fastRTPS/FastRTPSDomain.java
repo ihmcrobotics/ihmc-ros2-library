@@ -138,7 +138,7 @@ public class FastRTPSDomain implements Domain
       {
          if (SystemUtils.IS_OS_WINDOWS)
          {
-            throw new UnsatisfiedLinkError("Cannot load library, make sure to install Microsoft Visual C++ 2019 Redistributable (x64) (https://aka.ms/vs/16/release/vc_redist.x64.exe). "
+            throw new UnsatisfiedLinkError("Cannot load library, make sure to install Microsoft Visual C++ 2022 Redistributable (x64) (https://aka.ms/vs/17/release/vc_redist.x64.exe). "
                   + e.getMessage());
          }
          else
