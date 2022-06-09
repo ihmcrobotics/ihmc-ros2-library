@@ -44,12 +44,9 @@ if(STANDALONE_PLUGIN)
     
     ExternalProject_Add(FoonathanMemory
         SOURCE_DIR "${PROJECT_SOURCE_DIR}/thirdparty/foonathan_memory_vendor/"
-        BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-build"
-        STAMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-stamp"
         DOWNLOAD_COMMAND ""
         UPDATE_COMMAND ""
         INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
-        TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/foonathan_memory-tmp"
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_ARGS  
             "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
@@ -79,7 +76,6 @@ if(STANDALONE_PLUGIN)
         #UPDATE_COMMAND "${CMAKE_COMMAND}" -E chdir "${PROJECT_SOURCE_DIR}" git submodule update --recursive --init "thirdparty/Fast-RTPS"
         UPDATE_COMMAND ""
         INSTALL_DIR "${FAST_RTPS_INSTALL_PREFIX}"
-        TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-tmp"
         CMAKE_GENERATOR "${CMAKE_GENERATOR}"
         CMAKE_ARGS
         "-DTHIRDPARTY=FORCE"
