@@ -62,6 +62,13 @@ if(STANDALONE_PLUGIN)
     else()
     	SET(FASTRTPS_INSTALL_TARGET "install/strip")
     endif()
+    
+    if(WIN32)
+        SET(foonathan_memory_DIR "${FAST_RTPS_INSTALL_PREFIX}/share/foonathan_memory/cmake/")
+    else()
+        SET(foonathan_memory_DIR "${FAST_RTPS_INSTALL_PREFIX}/lib/foonathan_memory/cmake/")
+    endif()
+
         
         
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
@@ -85,6 +92,7 @@ if(STANDALONE_PLUGIN)
         "-DCMAKE_INSTALL_PREFIX=${FAST_RTPS_INSTALL_PREFIX}"
         "-DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}"
         "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
+        "-Dfoonathan_memory_DIR=${foonathan_memory_DIR}"
         # Custom install command to install the stripped configuration on Linux, saving about 400MB
         INSTALL_COMMAND
             "${CMAKE_COMMAND}"

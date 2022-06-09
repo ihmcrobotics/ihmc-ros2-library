@@ -17,6 +17,7 @@ public interface FastRTPSConstants {
   public final static int HAVE_CXX20 = 0;
   public final static int HAVE_CXX17 = 0;
   public final static int HAVE_CXX14 = 0;
+  public final static int HAVE_CXX1Y = 0;
   public final static int HAVE_CXX11 = 1;
   public final static int HAVE_CXX0X = 1;
   public final static int HAVE_CXX_CONSTEXPR = 1;
@@ -25,7 +26,7 @@ public interface FastRTPSConstants {
   public final static int HAVE_SQLITE3 = 1;
   public final static int TLS_FOUND = 0;
   public final static int HAVE_STRICT_REALTIME = 1;
-  public final static int HAVE_LOG_NO_INFO = 0;
+  public final static int HAVE_LOG_NO_INFO = 1;
   public final static int HAVE_LOG_NO_WARNING = 0;
   public final static int HAVE_LOG_NO_ERROR = 0;
 }
