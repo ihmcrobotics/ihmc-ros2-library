@@ -12,7 +12,7 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class DDSConversionTools
 {
-   public static DurationType toDurationType(Time time)
+   public static DurationType timeToDurationType(Time time)
    {
       DurationType dt = new DurationType();
       dt.getContent()
@@ -22,7 +22,7 @@ public class DDSConversionTools
       return dt;
    }
 
-   public static Time fromDurationType(DurationType duration)
+   public static Time durationTypeToTime(DurationType duration)
    {
       if(duration == null)
       {

@@ -132,13 +132,13 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
 
    public T maxBlockingTime(Time time)
    {
-      reliabilityQosPolicyType.setMaxBlockingTime(DDSConversionTools.toDurationType(time));
+      reliabilityQosPolicyType.setMaxBlockingTime(DDSConversionTools.timeToDurationType(time));
       return self();
    }
 
    public Time getMaxBlockingTime()
    {
-      return DDSConversionTools.fromDurationType(reliabilityQosPolicyType.getMaxBlockingTime());
+      return DDSConversionTools.durationTypeToTime(reliabilityQosPolicyType.getMaxBlockingTime());
    }
 
    protected abstract void setPartitionQosPolicyType(PartitionQosPolicyType partitionQosPolicyType);
@@ -189,7 +189,7 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    public T lifespan(Time lifespan)
    {
       LifespanQosPolicyType lifespanQosPolicyType = new LifespanQosPolicyType();
-      lifespanQosPolicyType.setDuration(DDSConversionTools.toDurationType(lifespan));
+      lifespanQosPolicyType.setDuration(DDSConversionTools.timeToDurationType(lifespan));
       setLifespanQosPolicyType(lifespanQosPolicyType);
       return self();
    }
@@ -198,7 +198,7 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    {
       if (getLifespanQosPolicyType() != null)
       {
-         return DDSConversionTools.fromDurationType(getLifespanQosPolicyType().getDuration());
+         return DDSConversionTools.durationTypeToTime(getLifespanQosPolicyType().getDuration());
       }
       else
       {

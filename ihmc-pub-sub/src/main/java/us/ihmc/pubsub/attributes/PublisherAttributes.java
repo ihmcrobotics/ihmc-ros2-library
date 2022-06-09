@@ -80,7 +80,7 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
          publisherProfile.setTimes(new WriterTimesType());
       }
       
-      publisherProfile.getTimes().setHeartbeatPeriod(DDSConversionTools.toDurationType(hearbeat));
+      publisherProfile.getTimes().setHeartbeatPeriod(DDSConversionTools.timeToDurationType(hearbeat));
       
       
       return this;

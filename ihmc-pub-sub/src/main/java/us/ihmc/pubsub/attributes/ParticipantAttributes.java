@@ -93,7 +93,7 @@ public class ParticipantAttributes
    public ParticipantAttributes discoveryLeaseDuration(Time discoveryLeaseDuration)
    {
 
-      participantProfile.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(DDSConversionTools.toDurationType(discoveryLeaseDuration));
+      participantProfile.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(DDSConversionTools.timeToDurationType(discoveryLeaseDuration));
       return this;
    }
 
