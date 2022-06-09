@@ -1,19 +1,45 @@
 package us.ihmc.pubsub.test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.allocations.AllocationProfiler;
 import us.ihmc.commons.allocations.AllocationRecord;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.CDR;
 import us.ihmc.idl.IDLSequence;
-import us.ihmc.idl.generated.test.*;
+import us.ihmc.idl.generated.test.FooAppearanceDefinitionMessage;
+import us.ihmc.idl.generated.test.FooEnumType;
+import us.ihmc.idl.generated.test.FooGraphicObjectMessage;
+import us.ihmc.idl.generated.test.FooHandshake;
+import us.ihmc.idl.generated.test.FooHandshakePubSubType;
+import us.ihmc.idl.generated.test.FooJointDefinition;
+import us.ihmc.idl.generated.test.FooJointType;
+import us.ihmc.idl.generated.test.FooLoadStatus;
+import us.ihmc.idl.generated.test.FooSummary;
+import us.ihmc.idl.generated.test.FooYoRegistryDefinition;
+import us.ihmc.idl.generated.test.FooYoType;
+import us.ihmc.idl.generated.test.FooYoVariableDefinition;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.*;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -25,14 +51,6 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class HandshakeTest
 {
@@ -65,27 +83,27 @@ public class HandshakeTest
       domain.registerType(participant, dataType);
 
 
-      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("Status")
-                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                    .partitions(Collections.singletonList("us/ihmc"))
-                                                                   .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
-                                                                   .historyQosPolicyKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS).build();
+                                                                   .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL).build();
 
       FooHandshakePubSubType dataType2 = new FooHandshakePubSubType();
 
-      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
                                                                       .topicDataType(dataType2)
                                                                       .topicName("Status")
-                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                       .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
-                                                                      .historyQosPolicyKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
                                                                       .build();
 
       SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
-      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, subscriberListener);
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
 
       Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 

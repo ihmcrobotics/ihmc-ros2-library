@@ -3,16 +3,17 @@ package us.ihmc.pubsub.test;
 import java.io.IOException;
 import java.util.Collections;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.DurabilityKind;
-import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -41,17 +42,16 @@ public class CreateSubscriptionUnderLoad
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
                                                                       .topicDataType(dataType)
-                                                                      .namespace("segfault_trigger")
-                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                       .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
-                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
+                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
                                                                       .historyDepth(1)
                                                                       .build();
 
-      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
    }
 
    private class ParticipantListenerImpl implements ParticipantListener

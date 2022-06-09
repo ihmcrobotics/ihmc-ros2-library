@@ -1,13 +1,23 @@
 package us.ihmc.pubsub.test;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.junit.jupiter.api.Test;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -19,9 +29,6 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
-
-import java.io.IOException;
-import java.util.Collections;
 
 public class PublishSubscribeUInt64Test
 {
@@ -42,29 +49,29 @@ public class PublishSubscribeUInt64Test
       StatusMessagePubSubType dataType = new StatusMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("Status")
-                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                    .partitions(Collections.singletonList("us/ihmc"))
-                                                                   .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-                                                                   .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                                   .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
                                                                    .historyDepth(50)
-                                                                   .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
                                                                    .build();
 
       StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
 
-      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
                                                                       .topicDataType(dataType2)
                                                                       .topicName("Status")
-                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                       .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-                                                                      .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                      .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
                                                                       .build();
 
-      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 
       Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 

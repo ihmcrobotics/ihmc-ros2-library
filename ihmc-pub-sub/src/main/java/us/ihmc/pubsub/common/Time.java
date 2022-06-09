@@ -15,6 +15,15 @@
  */
 package us.ihmc.pubsub.common;
 
+import java.io.Serializable;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurationType;
+
+import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
+
 /**
  * Time class.
  * 
@@ -84,4 +93,6 @@ public class Time
       this.seconds = sourceTimestamp.seconds;
       this.nsec = sourceTimestamp.nsec;
    }
+   
+   
 }

@@ -1,6 +1,12 @@
 package us.ihmc.pubsub.test;
 
 import org.junit.jupiter.api.Test;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
@@ -56,24 +62,24 @@ public class MultipleParticipantsInSameProcessTest {
 
         TopicDataType topicDataType = new ChatMessagePubSubType();
 
-        GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
+        PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
                 .topicDataType(topicDataType)
                 .topicName("Status")
-                .reliabilityKind(ReliabilityKind.RELIABLE)
+                .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                 .partitions(Collections.singletonList("us/ihmc"))
-                .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-                .historyQosPolicyKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
                 .historyDepth(10)
-                .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
                 .build();
 
-        GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
+        SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
                 .topicDataType(topicDataType)
                 .topicName("Status")
-                .reliabilityKind(ReliabilityKind.RELIABLE)
+                .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                 .partitions(Collections.singletonList("us/ihmc"))
-                .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-                .historyQosPolicyKind(HistoryQosPolicy.HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
                 .build();
 
         List<Participant> participants = IntStream.rangeClosed(1,100)
@@ -100,7 +106,7 @@ public class MultipleParticipantsInSameProcessTest {
         }).filter(Objects::nonNull).collect(Collectors.toList());
 
 
-        Subscriber subscriber = domain.createSubscriber(participants.get(0), genericSubscriberAttributes, new SubscriberListenerImpl(counter));
+        Subscriber subscriber = domain.createSubscriber(participants.get(0), subscriberAttributes, new SubscriberListenerImpl(counter));
 
 
         //publish one message from each publisher in each participant

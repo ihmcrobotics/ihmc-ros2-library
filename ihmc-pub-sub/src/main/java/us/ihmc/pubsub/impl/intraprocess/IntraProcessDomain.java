@@ -90,10 +90,10 @@ public class IntraProcessDomain implements Domain
          throws IOException, IllegalArgumentException
    {
 
-      if(!(publisherAttributes instanceof GenericPublisherAttributes))
+      if(!(publisherAttributes instanceof PublisherAttributes))
          throw new IllegalArgumentException("Attributes not instance of CommonPublisherAttributes");
 
-      GenericPublisherAttributes typedAttrs = (GenericPublisherAttributes) publisherAttributes;
+      PublisherAttributes typedAttrs = (PublisherAttributes) publisherAttributes;
 
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
       if (intraProcessParticipant == null)
@@ -107,18 +107,13 @@ public class IntraProcessDomain implements Domain
    public synchronized Subscriber createSubscriberImpl(Participant participant, SubscriberAttributes subscriberAttributes, SubscriberListener listener)
          throws IOException, IllegalArgumentException
    {
-      if(!(subscriberAttributes instanceof GenericSubscriberAttributes))
-         throw new IllegalArgumentException("Attributes not instance of CommonSubscriberAttribute");
-
-      GenericSubscriberAttributes typedAttrs = (GenericSubscriberAttributes) subscriberAttributes;
-
       IntraProcessParticipant intraProcessParticipant = participants.get(participant);
       if(intraProcessParticipant == null)
       {
          throw new IllegalArgumentException("This participant is not registered with this domain.");
       }
 
-      return intraProcessParticipant.getDomain().createSubscriber(intraProcessParticipant, typedAttrs, listener);
+      return intraProcessParticipant.getDomain().createSubscriber(intraProcessParticipant, subscriberAttributes, listener);
 
    }
 
@@ -214,16 +209,6 @@ public class IntraProcessDomain implements Domain
       {
          removeParticipant(participantToRemove);
       }
-   }
-
-   @Override
-   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes) {
-      return genericSubscriberAttributes;
-   }
-
-   @Override
-   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes) {
-      return genericPublisherAttributes;
    }
 
 }

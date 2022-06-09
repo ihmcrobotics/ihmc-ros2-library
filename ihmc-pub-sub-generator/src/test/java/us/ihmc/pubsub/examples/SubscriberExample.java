@@ -18,13 +18,17 @@ package us.ihmc.pubsub.examples;
 import java.io.IOException;
 import java.util.Collections;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -91,15 +95,15 @@ public class SubscriberExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
             .topicDataType(dataType)
             .topicName("chatter")
-            .reliabilityKind(ReliabilityKind.BEST_EFFORT)
+            .reliabilityKind(ReliabilityQosKindType.BEST_EFFORT)
             .partitions(Collections.singletonList("us/ihmc"))
-            .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-            .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS).build();
+            .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+            .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL).build();
 
-      Subscriber subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 
    }
 

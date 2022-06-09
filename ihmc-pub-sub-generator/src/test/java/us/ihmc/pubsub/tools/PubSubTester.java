@@ -1,24 +1,30 @@
 package us.ihmc.pubsub.tools;
 
+import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.function.Supplier;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.function.Supplier;
-
-import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
 
 public class PubSubTester<P extends Packet>
 {
@@ -49,28 +55,28 @@ public class PubSubTester<P extends Packet>
       IDLElementTestPubSubType dataType = new IDLElementTestPubSubType();
       domain.registerType(participant, dataType);
 
-      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("pubsubtest")
-                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
-                                                                   .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
-                                                                   .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                   .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
                                                                    .historyDepth(1)
-                                                                   .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
                                                                    .build();
 
       P data = msgTypeSupplier.get();
       TopicDataType<P> topicDataType = (TopicDataType<P>) data.getPubSubTypePacket().get();
 
-      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
                                                                       .topicDataType(topicDataType)
                                                                       .topicName("pubsubtest")
-                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
-                                                                      .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
-                                                                      .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
                                                                       .build();
 
-      subscriber = domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl(data,callbacks));
+      subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(data,callbacks));
 
       publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }

@@ -18,13 +18,18 @@ package us.ihmc.pubsub.examples;
 import java.io.IOException;
 import java.util.Collections;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
@@ -80,14 +85,13 @@ public class PublisherExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      GenericPublisherAttributes attrs = GenericPublisherAttributes.builder()
-                                                     .namespace("hello")
+      PublisherAttributes attrs = PublisherAttributes.builder()
                                                      .topicName("chatter")
                                                      .topicDataType(dataType)
-                                                     .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
-                                                     .reliabilityKind(ReliabilityKind.RELIABLE)
-                                                     .durabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-                                                     .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                     .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
+                                                     .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                     .durabilityKind(DurabilityQosKindType.TRANSIENT)
+                                                     .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
                                                      .historyDepth(50)
                                                      .partitions(Collections.singletonList("us/ihmc"))
                                                      .lifespan(new Time(5, 0))

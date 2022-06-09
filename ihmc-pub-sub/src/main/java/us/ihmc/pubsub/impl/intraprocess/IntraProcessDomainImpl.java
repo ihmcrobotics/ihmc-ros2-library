@@ -27,9 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
-import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
@@ -85,7 +85,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   private void matchSubscribers(GenericPublisherAttributes publisherToMatch, Consumer<IntraProcessSubscriber> exec)
+   private void matchSubscribers(PublisherAttributes publisherToMatch, Consumer<IntraProcessSubscriber> exec)
    {
       List<IntraProcessSubscriber> topicSubscribers = subscribers.get(publisherToMatch.getTopicName());
       if (topicSubscribers != null)
@@ -104,7 +104,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   private void matchPublishers(GenericSubscriberAttributes subscriberToMatch, Consumer<IntraProcessPublisher> exec)
+   private void matchPublishers(SubscriberAttributes subscriberToMatch, Consumer<IntraProcessPublisher> exec)
    {
       List<IntraProcessPublisher> topicPublishers = publishers.get(subscriberToMatch.getTopicName());
       if (topicPublishers != null)
@@ -181,7 +181,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   Subscriber createSubscriber(IntraProcessParticipant participant, GenericSubscriberAttributes attr, SubscriberListener listener) throws IOException
+   Subscriber createSubscriber(IntraProcessParticipant participant, SubscriberAttributes attr, SubscriberListener listener) throws IOException
    {
       domainLock.lock();
       try
@@ -265,7 +265,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   IntraProcessPublisher createPublisher(IntraProcessParticipant participant, GenericPublisherAttributes attr, PublisherListener listener)
+   IntraProcessPublisher createPublisher(IntraProcessParticipant participant, PublisherAttributes attr, PublisherListener listener)
          throws IOException
    {
       domainLock.lock();
@@ -348,7 +348,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   <T> void write(GenericPublisherAttributes attr, TopicDataType<T> type, T data, SampleInfo info) throws IOException
+   <T> void write(PublisherAttributes attr, TopicDataType<T> type, T data, SampleInfo info) throws IOException
    {
       domainLock.lock();
       

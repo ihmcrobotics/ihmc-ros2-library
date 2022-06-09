@@ -18,14 +18,14 @@ package us.ihmc.pubsub;
 import java.io.IOException;
 import java.util.Arrays;
 
-import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
-import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
+
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.PublishModeKind;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
-import us.ihmc.pubsub.attributes.TopicAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
@@ -220,24 +220,6 @@ public interface Domain {
    public void stopAll();
 
    /**
-    * Generate an implementation specific version of SubscriberAttributes
-    * <p>
-    * This method allocates memory
-    *
-    * @return Implementation specific version of SubscriberAttributes
-    */
-   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes);
-
-   /**
-    * Generate an implementation specific version of PublisherAttributes
-    * <p>
-    * This method allocates memory
-    *
-    * @return Implementation specific version of PublisherAttributes
-    */
-   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes);
-
-   /**
     * Create ParticipantAttributes with the following options set
     *
     * - DomainId: domainId
@@ -275,7 +257,7 @@ public interface Domain {
     *
     * @return Implementation specific version of SubscriberAttributes with reasonable defaults.
     */
-   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
+   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityQosKindType reliabilityKind, String... partitions)
    {
       TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
       if(registeredType == null)
@@ -283,19 +265,26 @@ public interface Domain {
          registerType(participant, topicDataType);
       }
 
-      GenericSubscriberAttributes.GenericSubscriberAttributesBuilder subscriberAttributesBuilder = GenericSubscriberAttributes.builder()
-              .topicKind(topicDataType.isGetKeyDefined() ? TopicAttributes.TopicKind.WITH_KEY : TopicAttributes.TopicKind.NO_KEY)
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+              .topicKind(topicDataType.isGetKeyDefined() ? TopicKindType.WITH_KEY : TopicKindType.NO_KEY)
               .topicDataType(topicDataType)
               .topicName(topicName)
               .reliabilityKind(reliabilityKind);
 
       if(partitions != null)
       {
-         subscriberAttributesBuilder.partitions(Arrays.asList(partitions));
+         subscriberAttributes.partitions(Arrays.asList(partitions));
       }
 
-      return createSubscriberAttributes(subscriberAttributesBuilder.build());
+      return subscriberAttributes.build();
    }
+
+   @Deprecated
+   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
+   {
+      return createSubscriberAttributes(participant, topicDataType, topicName, reliabilityKind.toQosKind(), partitions);
+   }
+
 
    /**
     * Create an implementation specific version of PublisherAttributes with the following options set
@@ -317,7 +306,7 @@ public interface Domain {
     *
     * @return Implementation specific version of PublisherAttributes with reasonable defaults.
     */
-   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
+   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityQosKindType reliabilityKind, String... partitions)
    {
       TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
       if(registeredType == null)
@@ -325,23 +314,29 @@ public interface Domain {
          registerType(participant, topicDataType);
       }
 
-      GenericPublisherAttributes.GenericPublisherAttributesBuilder publisherAttributesBuilder =
-              GenericPublisherAttributes.builder()
-                      .topicKind(topicDataType.isGetKeyDefined() ? TopicAttributes.TopicKind.WITH_KEY : TopicAttributes.TopicKind.NO_KEY)
+      PublisherAttributes publisherAttributes =
+              PublisherAttributes.builder()
+                      .topicKind(topicDataType.isGetKeyDefined() ? TopicKindType.WITH_KEY : TopicKindType.NO_KEY)
                       .topicDataType(topicDataType)
                       .topicName(topicName)
                       .reliabilityKind(reliabilityKind);
 
       if(partitions != null)
       {
-         publisherAttributesBuilder.partitions(Arrays.asList(partitions));
+         publisherAttributes.partitions(Arrays.asList(partitions));
       }
 
       if(topicDataType.getTypeSize() > 65000)
       {
-         publisherAttributesBuilder.publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+         publisherAttributes.publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
       }
 
-      return createPublisherAttributes(publisherAttributesBuilder.build());
+      return publisherAttributes;
+   }
+   
+   @Deprecated
+   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
+   {
+      return createPublisherAttributes(participant, topicDataType, topicName, reliabilityKind.toQosKind(), partitions);
    }
 }

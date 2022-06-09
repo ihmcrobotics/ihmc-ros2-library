@@ -15,18 +15,6 @@
  */
 package us.ihmc.pubsub.impl.fastRTPS;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import us.ihmc.pubsub.attributes.DurabilityKind;
-import us.ihmc.pubsub.attributes.Locator;
-import us.ihmc.pubsub.attributes.Locator.Kind;
-import us.ihmc.pubsub.attributes.OwnerShipPolicyKind;
-import us.ihmc.pubsub.attributes.PublishModeKind;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
-import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
-import us.ihmc.rtps.impl.fastRTPS.*;
-
 class FastRTPSCommonFunctions
 {
    public static final int LOCATOR_KIND_RESERVED = 0;

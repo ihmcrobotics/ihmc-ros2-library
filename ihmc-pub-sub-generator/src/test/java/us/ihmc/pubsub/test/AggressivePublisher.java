@@ -3,13 +3,18 @@ package us.ihmc.pubsub.test;
 import java.io.IOException;
 import java.util.Collections;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
@@ -36,15 +41,15 @@ public class AggressivePublisher
 
       // Mimic ROS 2 default settings
 
-      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("segfault_trigger")
-                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                    .partitions(Collections.singletonList("us/ihmc"))
-                                                                   .durabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS)
-                                                                   .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                                   .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
                                                                    .historyDepth(1)
-                                                                   .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
                                                                    .build();
 
       Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());

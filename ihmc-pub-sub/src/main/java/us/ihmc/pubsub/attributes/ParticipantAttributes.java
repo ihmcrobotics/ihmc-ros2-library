@@ -87,17 +87,8 @@ public class ParticipantAttributes
 
    public ParticipantAttributes discoveryLeaseDuration(Time discoveryLeaseDuration)
    {
-      DurationType dt = new DurationType();
-      dt.getContent()
-        .add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
-                               Long.class,
-                               discoveryLeaseDuration.getNanoseconds()));
-      dt.getContent()
-        .add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
-                               Integer.class,
-                               discoveryLeaseDuration.getSeconds()));
 
-      participantProfile.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(dt);
+      participantProfile.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(DDSConversionTools.toDurationType(discoveryLeaseDuration));
       return this;
    }
 

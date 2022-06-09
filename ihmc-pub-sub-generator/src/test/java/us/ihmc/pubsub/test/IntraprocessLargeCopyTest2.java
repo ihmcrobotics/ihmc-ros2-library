@@ -1,5 +1,7 @@
 package us.ihmc.pubsub.test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -8,15 +10,21 @@ import java.util.Random;
 
 import org.gradle.internal.impldep.org.apache.commons.lang.mutable.MutableInt;
 import org.junit.jupiter.api.Test;
-
 import org.junit.jupiter.api.Timeout;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -28,8 +36,6 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *  Create a publisher and subscriber in this thread and send 20 messages with up to 100,000 longs.
@@ -120,17 +126,17 @@ public class IntraprocessLargeCopyTest2
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      GenericPublisherAttributes genericPublisherAttributes = GenericPublisherAttributes.builder()
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
                                                                    .topicDataType(dataType)
                                                                    .topicName("Status")
-                                                                   .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                    .partitions(Collections.singletonList("us/ihmc"))
                                                                    .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
-                                                                                         DurabilityKind.VOLATILE_DURABILITY_QOS
-                                                                                         : DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS)
-                                                                   .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS)
+                                                                                         DurabilityQosKindType.VOLATILE
+                                                                                         : DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
                                                                    .historyDepth(10)
-                                                                   .publishModeKind(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE)
+                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
                                                                    .build();
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
@@ -154,18 +160,18 @@ public class IntraprocessLargeCopyTest2
 
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
-      GenericSubscriberAttributes genericSubscriberAttributes = GenericSubscriberAttributes.builder()
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
                                                                       .topicDataType(dataType2)
                                                                       .topicName("Status")
-                                                                      .reliabilityKind(ReliabilityKind.RELIABLE)
+                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                       .partitions(Collections.singletonList("us/ihmc"))
                                                                       .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
-                                                                                            DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS
-                                                                                            : DurabilityKind.VOLATILE_DURABILITY_QOS)
-                                                                      .historyQosPolicyKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS)
+                                                                                            DurabilityQosKindType.TRANSIENT_LOCAL
+                                                                                            : DurabilityQosKindType.VOLATILE)
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
                                                                       .build();
 
-      return domain.createSubscriber(participant, genericSubscriberAttributes, new SubscriberListenerImpl(messagesReceived));
+      return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
    }
 
    private void publishABunch(Publisher publisher, Random random) throws IOException

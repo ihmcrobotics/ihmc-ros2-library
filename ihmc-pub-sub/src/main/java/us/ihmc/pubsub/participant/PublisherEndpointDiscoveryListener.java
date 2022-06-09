@@ -15,11 +15,8 @@
  */
 package us.ihmc.pubsub.participant;
 
-import java.util.ArrayList;
+import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
 
-import us.ihmc.pubsub.attributes.Locator;
-import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
-import us.ihmc.pubsub.attributes.WriterQosHolder;
 import us.ihmc.pubsub.common.Guid;
 
 /**
@@ -46,7 +43,6 @@ public interface PublisherEndpointDiscoveryListener
     * @param topicKind
     * @param writerQosHolder holds implementation specific version of the WriterQos attributes. Cast to the implementation specific datatype. Only valid till this method returns.
     */
-   void publisherTopicChange(boolean isAlive, Guid guid, ArrayList<Locator> unicastLocatorList, ArrayList<Locator> multicastLocatorList,
-                             Guid participantGuid, String typeName, String topicName, int userDefinedId, long typeMaxSerialized, TopicKind topicKind,
-                             WriterQosHolder writerQosHolder);
+   void publisherTopicChange(boolean isAlive, Guid guid, 
+                             Guid participantGuid, String typeName, String topicName, int userDefinedId, long typeMaxSerialized, TopicKindType topicKind);
 }

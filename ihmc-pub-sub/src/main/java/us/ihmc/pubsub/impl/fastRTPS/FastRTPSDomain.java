@@ -26,8 +26,6 @@ import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
-import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -269,25 +267,11 @@ public class FastRTPSDomain implements Domain
    }
 
    @Override
-   public SubscriberAttributes createSubscriberAttributes(GenericSubscriberAttributes genericSubscriberAttributes)
-   {
-      return FastRTPSSubscriber.CommonToFastRTPSAttrs(genericSubscriberAttributes);
-   }
-
-   @Override
-   public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes)
-   {
-      return FastRTPSPublisher.CommonToFastRTPSAttrs(genericPublisherAttributes);
-   }
-
-   @Override
    public void setLogLevel(LogLevel level)
    {
       us.ihmc.rtps.impl.fastRTPS.LogLevel.setLogLevel(level.getLevel());
    }
    
-   
-
    /**
     * Marshall a ProfilesType to a string
     * 

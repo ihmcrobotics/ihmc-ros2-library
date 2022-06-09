@@ -15,11 +15,8 @@
  */
 package us.ihmc.pubsub.participant;
 
-import java.util.ArrayList;
+import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
 
-import us.ihmc.pubsub.attributes.Locator;
-import us.ihmc.pubsub.attributes.ReaderQosHolder;
-import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
 import us.ihmc.pubsub.common.Guid;
 
 /**
@@ -45,7 +42,7 @@ public interface SubscriberEndpointDiscoveryListener
     * @param javaTopicKind
     * @param readerQosHolder holds implementation specific version of the ReaderQos attributes. Cast to the implementation specific datatype. Only valid till this method returns.
     */
-   void subscriberTopicChange(boolean isAlive, Guid guid, boolean expectsInlineQos, ArrayList<Locator> unicastLocatorList,
-                              ArrayList<Locator> multicastLocatorList, Guid participantGuid, String typeName, String topicName, int userDefinedId,
-                              TopicKind javaTopicKind, ReaderQosHolder readerQosHolder);
+   void subscriberTopicChange(boolean isAlive, Guid guid, boolean expectsInlineQos, 
+                              Guid participantGuid, String typeName, String topicName, int userDefinedId,
+                              TopicKindType javaTopicKind);
 }

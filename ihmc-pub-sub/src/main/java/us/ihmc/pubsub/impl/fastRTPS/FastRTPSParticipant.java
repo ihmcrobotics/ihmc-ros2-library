@@ -10,16 +10,15 @@
 package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.*;
-import com.eprosima.xmlschemas.fastrtps_profiles.RemoteServerAttributes;
+import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
+
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.TopicAttributes.TopicKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
@@ -29,13 +28,8 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
-import us.ihmc.rtps.impl.fastRTPS.*;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
+import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
+import us.ihmc.rtps.impl.fastRTPS.NativeParticipantListener;
 
 class FastRTPSParticipant implements Participant
 {
@@ -198,7 +192,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Type: " + attrs.getTopicDataType() + " is not registered");
       }
 
-      if (attrs.getTopicKind() == TopicKind.WITH_KEY && !topicDataType.isGetKeyDefined())
+      if (attrs.getTopicKind() == TopicKindType.WITH_KEY && !topicDataType.isGetKeyDefined())
       {
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
@@ -225,7 +219,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Type: " + attrs.getTopicDataType() + " is not registered");
       }
 
-      if (attrs.getTopicKind() == TopicKind.WITH_KEY && !topicDataType.isGetKeyDefined())
+      if (attrs.getTopicKind() == TopicKindType.WITH_KEY && !topicDataType.isGetKeyDefined())
       {
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
