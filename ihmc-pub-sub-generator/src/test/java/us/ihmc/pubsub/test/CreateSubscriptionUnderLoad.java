@@ -8,10 +8,10 @@ import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.DurabilityKind;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
 import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
-import us.ihmc.pubsub.attributes.GenericParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -33,8 +33,8 @@ public class CreateSubscriptionUnderLoad
 
       domain.setLogLevel(LogLevel.INFO);
 
-      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
-            .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest").build();
+      ParticipantAttributes attributes = ParticipantAttributes.create()
+            .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 

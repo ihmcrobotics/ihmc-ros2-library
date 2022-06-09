@@ -79,12 +79,8 @@ public class IntraProcessDomain implements Domain
    @Override
    public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
    {
-      if(!(att instanceof GenericParticipantAttributes))
-         throw new IllegalArgumentException("Attributes not instance of CommonParticipantAttributes");
-
-      GenericParticipantAttributes typedAttrs = (GenericParticipantAttributes) att;
       IntraProcessDomainImpl domain = getOrCreateDomain(att.getDomainId());
-      IntraProcessParticipant participant = domain.createParticipant(typedAttrs, participantListener);
+      IntraProcessParticipant participant = domain.createParticipant(att, participantListener);
       participants.put(participant, participant);
       return participant;
    }
@@ -230,8 +226,4 @@ public class IntraProcessDomain implements Domain
       return genericPublisherAttributes;
    }
 
-   @Override
-   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes) {
-      return genericParticipantAttributes;
-   }
 }

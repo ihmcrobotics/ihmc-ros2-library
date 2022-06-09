@@ -55,9 +55,9 @@ public class HandshakeTest
 
       domain.setLogLevel(LogLevel.INFO);
 
-      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
+      ParticipantAttributes attributes = ParticipantAttributes.create()
             .domainId(215)
-            .discoveryLeaseDuration(Time.Infinite).name("StatusTest").build();
+            .discoveryLeaseDuration(Time.Infinite).name("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 

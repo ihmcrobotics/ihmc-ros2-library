@@ -77,11 +77,10 @@ public class MultipleParticipantsInSameProcessTest {
                 .build();
 
         List<Participant> participants = IntStream.rangeClosed(1,100)
-                .mapToObj(i -> GenericParticipantAttributes.builder()
-                        .domainId(215)
-                        .discoveryLeaseDuration(Time.Infinite)
-                        .name("StatusTest"+i)
-                        .build())
+                .mapToObj(i -> ParticipantAttributes.create()
+               .domainId(215)
+               .discoveryLeaseDuration(Time.Infinite)
+               .name("StatusTest"+i))
                 .map(attrs -> {
                     try {
                         return domain.createParticipant(attrs);

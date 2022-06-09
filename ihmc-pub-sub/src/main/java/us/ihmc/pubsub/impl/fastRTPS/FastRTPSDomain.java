@@ -10,15 +10,27 @@
 package us.ihmc.pubsub.impl.fastRTPS;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 import org.apache.commons.lang3.SystemUtils;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.Dds;
+import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
 
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.*;
+import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
@@ -269,14 +281,41 @@ public class FastRTPSDomain implements Domain
    }
 
    @Override
-   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes)
-   {
-      return FastRTPSParticipant.CommonToFastRTPSAttrs(genericParticipantAttributes);
-   }
-
-   @Override
    public void setLogLevel(LogLevel level)
    {
       us.ihmc.rtps.impl.fastRTPS.LogLevel.setLogLevel(level.getLevel());
+   }
+   
+   
+
+   /**
+    * Marshall a ProfilesType to a string
+    * 
+    * Used internally to marshall data
+    * 
+    * @param profile
+    * @return
+    * @throws IOException 
+    */
+   public static String marshalProfile(ProfilesType profile) throws IOException
+   {
+      StringWriter writer = new StringWriter();
+      
+      Dds dds = new Dds();
+      dds.getProfiles().add(profile);
+
+      try
+      {
+         JAXBContext context = JAXBContext.newInstance(Dds.class);
+         Marshaller m = context.createMarshaller();
+         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+         m.marshal(dds, writer);
+      }
+      catch (JAXBException e)
+      {
+         throw new IOException("Colud not marshal XML", e);
+      }
+
+      return writer.toString();
    }
 }

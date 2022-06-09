@@ -39,11 +39,10 @@ public class PubSubTester<P extends Packet>
 
       domain.setLogLevel(LogLevel.INFO);
 
-      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
-                                                              .domainId(systemDomain())
-                                                              .discoveryLeaseDuration(Time.Infinite)
-                                                              .name("PubSubTester")
-                                                              .build();
+      ParticipantAttributes attributes = ParticipantAttributes.create()
+        .domainId(systemDomain())
+        .discoveryLeaseDuration(Time.Infinite)
+        .name("PubSubTester");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 

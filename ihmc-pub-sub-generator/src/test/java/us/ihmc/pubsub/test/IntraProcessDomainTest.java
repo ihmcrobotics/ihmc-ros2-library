@@ -67,10 +67,9 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
 
-      GenericParticipantAttributes genericParticipantAttributes = GenericParticipantAttributes.builder()
-                                                                         .domainId(1)
-                                                                         .name("participant")
-                                                                         .build();
+      ParticipantAttributes genericParticipantAttributes = ParticipantAttributes.create()
+       .domainId(1)
+       .name("participant");
       Participant participant = domain.createParticipant(genericParticipantAttributes);
 
       try
@@ -214,10 +213,9 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
       
-      GenericParticipantAttributes genericParticipantAttributes = GenericParticipantAttributes.builder()
-                                                                         .domainId(1)
-                                                                         .name("participant")
-                                                                         .build();
+      ParticipantAttributes genericParticipantAttributes = ParticipantAttributes.create()
+       .domainId(1)
+       .name("participant");
 
       Participant participant = domain.createParticipant(genericParticipantAttributes, participantListener);
       
@@ -314,10 +312,9 @@ public class IntraProcessDomainTest
          assertEquals(2, (long) participant.get_no_subscribers(topic));
 
          // Create a new participant, see if original participant listeners get triggered
-         GenericParticipantAttributes genericParticipantAttributes2 = GenericParticipantAttributes.builder()
-                                                                              .domainId(1)
-                                                                              .name("participant2")
-                                                                              .build();
+         ParticipantAttributes genericParticipantAttributes2 = ParticipantAttributes.create()
+         .domainId(1)
+         .name("participant2");
          Participant participant2 = domain.createParticipant(genericParticipantAttributes2);
 
          ParticipantDiscoveryInfo participant2info = participantListenerFuture.poll(1, TimeUnit.SECONDS);

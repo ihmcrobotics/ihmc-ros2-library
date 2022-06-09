@@ -238,6 +238,19 @@ Make install copies the generated library in the resources folder. Two C++ test 
 Note: When debugging, set CMAKE_BUILD_TYPE to "Debug" and use "make install" instead of "make install/strip" to preserve debugging information.
 Note: make with multiple thread (-j?) does not seem to work well. You have to run it multiple times because the swig plugin does not define dependencies in the right order.
 
+##### Cross-Compiling
+
+Install required compilers
+```
+sudo apt install qemu-user gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu g++-aarch64-linux-gnu
+```
+
+And change the cmake command to
+```
+cmake -DSWIG_EXECUTABLE=/usr/bin/swig3.0 -DCMAKE_BUILD_TYPE=Release -DSTANDALONE_PLUGIN=ON -DCMAKE_TOOLCHAIN_FILE=../aarch64-toolchain.cmake ..
+```
+
+
 #### Windows
 
 Note: Due to path length limitations, the commpilation can fail. If you did not setup long paths on windows, it is recommended to checkout in C:\ws and compile from there.

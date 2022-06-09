@@ -100,11 +100,10 @@ public class IntraprocessLargeCopyTest3
 
       domain.setLogLevel(LogLevel.INFO);
 
-      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
-                                                              .domainId(215)
-                                                              .discoveryLeaseDuration(Time.Infinite)
-                                                              .name("StatusTest")
-                                                              .build();
+      ParticipantAttributes attributes = ParticipantAttributes.create()
+        .domainId(215)
+        .discoveryLeaseDuration(Time.Infinite)
+        .name("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -133,11 +132,10 @@ public class IntraprocessLargeCopyTest3
 
       domain.setLogLevel(LogLevel.INFO);
 
-      GenericParticipantAttributes attributes = GenericParticipantAttributes.builder()
-                                                              .domainId(215)
-                                                              .discoveryLeaseDuration(Time.Infinite)
-                                                              .name("StatusTest")
-                                                              .build();
+      ParticipantAttributes attributes = ParticipantAttributes.create()
+        .domainId(215)
+        .discoveryLeaseDuration(Time.Infinite)
+        .name("StatusTest");
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();

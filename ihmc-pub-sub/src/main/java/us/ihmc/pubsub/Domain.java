@@ -17,9 +17,15 @@ package us.ihmc.pubsub;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 
-import us.ihmc.pubsub.attributes.*;
+import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
+import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublishModeKind;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.ReliabilityKind;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.pubsub.attributes.TopicAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
@@ -232,37 +238,22 @@ public interface Domain {
    public PublisherAttributes createPublisherAttributes(GenericPublisherAttributes genericPublisherAttributes);
 
    /**
-    * Generate an implementation specific version of ParticipantAttributes
-    * <p>
-    * To access implementation specific features, cast the ParticipantAttributes to their implementation specific version.
-    * <p>
-    * This method allocates memory
-    *
-    * @return Implementation specific version of ParticipantAttributes
-    */
-   public ParticipantAttributes createParticipantAttributes(GenericParticipantAttributes genericParticipantAttributes);
-
-   /**
-    * Create an implementation specific version of ParticipantAttributes with the following options set
+    * Create ParticipantAttributes with the following options set
     *
     * - DomainId: domainId
     * - LeaseDuration: Time.Infinite
     * - Name: name
     *
-    * To access implementation specific features, cast the ParticipantAttributes to their implementation specific version.
     *
     * @param domainId desired domainId for these attributes
     * @param name desired name for these attributes
-    * @return Implementation specific version of ParticipantAttributes with reasonable defaults
+    * @return ParticipantAttributes with reasonable defaults
     */
    default ParticipantAttributes createParticipantAttributes(int domainId, String name)
    {
-      GenericParticipantAttributes attrs = GenericParticipantAttributes.builder()
-              .domainId(domainId)
-              .discoveryLeaseDuration(Time.Infinite)
-              .name(name)
-              .build();
-      return createParticipantAttributes(attrs);
+      ParticipantAttributes attrs = ParticipantAttributes.create().domainId(domainId).discoveryLeaseDuration(Time.Infinite).name(name);
+      
+      return attrs;
    }
 
    /**

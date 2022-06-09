@@ -45,7 +45,7 @@ class FastRTPSParticipant implements Participant
    private final ArrayList<FastRTPSPublisher> publishers = new ArrayList<>();
    private final ArrayList<FastRTPSSubscriber> subscribers = new ArrayList<>();
 
-   private final FastRTPSParticipantAttributes attributes;
+   private final ParticipantAttributes attributes;
    private final ParticipantListener participantListener;
 
    private final Guid guid = new Guid();
@@ -78,101 +78,16 @@ class FastRTPSParticipant implements Participant
       }
    }
 
-   public static FastRTPSParticipantAttributes CommonToFastRTPSAttrs(GenericParticipantAttributes attrs){
-      String profileName = UUID.randomUUID().toString();
-
-      Dds dds = new Dds();
-
-      ProfilesType profilesType = new ProfilesType();
-      ParticipantProfileType participantProfile = new ParticipantProfileType();
-      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_PARTICIPANT), ParticipantProfileType.class, participantProfile));
-      participantProfile.setProfileName(profileName);
-      dds.getProfiles().add(profilesType);
-
-      participantProfile.setDomainId((long) attrs.getDomainId());
-
-      RtpsParticipantAttributesType rtps = new RtpsParticipantAttributesType();
-      rtps.setName(attrs.getName());
-      participantProfile.setRtps(rtps);
-
-      if(attrs.getBindToAddressRestrictions() != null && !attrs.getBindToAddressRestrictions().isEmpty()){
-         LocatorListType locatorList = new LocatorListType();
-         for (InetAddress addr : attrs.getBindToAddressRestrictions()) {
-            LocatorType locator = new LocatorType();
-            Udpv4LocatorType udpv4locator = new Udpv4LocatorType();
-            udpv4locator.setAddress(addr.getHostAddress());
-            locator.setUdpv4(udpv4locator);
-            locatorList.getLocator().add(locator);
-         }
-         rtps.setDefaultUnicastLocatorList(locatorList);
-      }
-
-      BuiltinAttributesType builtin = new BuiltinAttributesType();
-
-      DurationType dt = new DurationType();
-      dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_NANOSEC),
-              Long.class,
-              attrs.getDiscoveryLeaseDuration().getNanoseconds()));
-      dt.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SEC),
-              Integer.class,
-              attrs.getDiscoveryLeaseDuration().getSeconds()));
-
-      DiscoverySettingsType discoverySettingsType = new DiscoverySettingsType();
-      discoverySettingsType.setLeaseDuration(dt);
-      if (attrs.isDiscoveryServerEnabled())
-      {
-         DiscoveryServerList discoveryServerList = new DiscoveryServerList();
-         discoverySettingsType.setDiscoveryProtocol(DiscoveryProtocol.CLIENT);
-
-         RemoteServerAttributes remoteServerAttributes = new RemoteServerAttributes();
-         LocatorListType locatorListType = new LocatorListType();
-         LocatorType locatorType = new LocatorType();
-         Udpv4LocatorType udpv4LocatorType = new Udpv4LocatorType();
-         udpv4LocatorType.setAddress(attrs.getDiscoveryServerAddress());
-         udpv4LocatorType.setPort(attrs.getDiscoveryServerPort());
-         locatorType.setUdpv4(udpv4LocatorType);
-         locatorListType.getLocator().add(locatorType);
-
-         remoteServerAttributes.getContent().add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE,FastRTPSDomain.FAST_DDS_METATRAFFIC_UNICAST_LOCATOR_LIST),
-                 LocatorListType.class,
-                 locatorListType));
-
-         remoteServerAttributes.setPrefix(String.format(FastRTPSDomain.FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX, attrs.getDiscoveryServerId()));
-         discoveryServerList.getRemoteServer().add(remoteServerAttributes);
-         discoverySettingsType.setDiscoveryServersList(discoveryServerList);
-      }
-      builtin.setDiscoveryConfig(discoverySettingsType);
-      rtps.setBuiltin(builtin);
-
-      return new FastRTPSParticipantAttributes(attrs, dds, profileName);
-   }
 
    FastRTPSParticipant(ParticipantAttributes attrs, ParticipantListener participantListener) throws IOException, IllegalArgumentException
    {
-      FastRTPSParticipantAttributes typedAttrs;
-      if(attrs instanceof FastRTPSParticipantAttributes) typedAttrs = (FastRTPSParticipantAttributes) attrs;
-      else if(attrs instanceof GenericParticipantAttributes) typedAttrs = CommonToFastRTPSAttrs((GenericParticipantAttributes) attrs);
-      else throw new IllegalArgumentException("Attributes not instance of supported class");
-
-      StringWriter writer = new StringWriter();
-
-      try
-      {
-         JAXBContext context = JAXBContext.newInstance(Dds.class);
-         Marshaller m = context.createMarshaller();
-         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-         m.marshal(typedAttrs.dds, writer);
-      } catch (JAXBException e )
-      {
-         throw new IOException("Colud not marshal XML", e);
-      }
-
-      String data = writer.toString();
+      String profileName = UUID.randomUUID().toString();
+      String profileXML = attrs.marshall(profileName);
 
       //Set listener first, can be called before the constructor returns
       this.participantListener = participantListener;
-      impl = new NativeParticipantImpl(typedAttrs.profileName, data, data.length(), nativeListener);
-      this.attributes = typedAttrs;
+      impl = new NativeParticipantImpl(profileName, profileXML, profileXML.length(), nativeListener);
+      this.attributes = attrs;
       getGuid(guid);
    }
 
@@ -288,7 +203,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (this.attributes.genericParticipantAttributes.isUseStaticDiscovery())
+      if (this.attributes.isUseStaticDiscovery())
       {
          if (attrs.getUserDefinedId() <= 0)
          {
@@ -315,7 +230,7 @@ class FastRTPSParticipant implements Participant
          throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
-      if (this.attributes.genericParticipantAttributes.isUseStaticDiscovery())
+      if (this.attributes.isUseStaticDiscovery())
       {
          if (attrs.getUserDefinedId() <= 0)
          {

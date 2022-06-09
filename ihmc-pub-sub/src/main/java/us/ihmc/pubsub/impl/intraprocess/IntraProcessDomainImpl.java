@@ -27,9 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.GenericParticipantAttributes;
 import us.ihmc.pubsub.attributes.GenericPublisherAttributes;
 import us.ihmc.pubsub.attributes.GenericSubscriberAttributes;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
@@ -123,7 +123,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   IntraProcessParticipant createParticipant(GenericParticipantAttributes attributes, ParticipantListener listener)
+   IntraProcessParticipant createParticipant(ParticipantAttributes attributes, ParticipantListener listener)
    {
       domainLock.lock();
       try

@@ -69,14 +69,10 @@ public class PublisherExample
       
       domain.setLogLevel(LogLevel.INFO);
 
-      GenericParticipantAttributes attributes2 = GenericParticipantAttributes.builder()
-                                                               .domainId(1)
-                                                               .name("PublisherExample2")
-                                                               .discoveryLeaseDuration(Time.Infinite)
-//                                                               .discoveryServerEnabled(true)
-//                                                               .discoveryServerId(0)
-//                                                               .discoveryServerAddress("127.0.0.1")
-                                                               .build();
+      ParticipantAttributes attributes2 = ParticipantAttributes.create()
+      .domainId(1)
+      .name("PublisherExample2")
+      .discoveryLeaseDuration(Time.Infinite);
 
 
       Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());
