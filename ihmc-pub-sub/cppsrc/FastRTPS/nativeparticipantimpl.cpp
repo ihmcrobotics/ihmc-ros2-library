@@ -83,7 +83,6 @@ void NativeParticipantImpl::registerType(std::string name, int32_t maximumDataSi
 {
     // This functions adds registered types to a vector of shared ptrs, so they get destroyed when this class gets destructed
     std::shared_ptr<RawTopicDataType> topicDataType = std::make_shared<RawTopicDataType>(name, maximumDataSize, hasKey);
-    std::cout << "REGISTERED " + std::string(topicDataType->getName()) + " in " + part->getAttributes().rtps.getName() << std::endl;
     Domain::registerType(part, topicDataType.get());
     registeredTypes.push_back(topicDataType);
 }

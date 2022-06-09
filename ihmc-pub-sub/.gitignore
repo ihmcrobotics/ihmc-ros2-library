@@ -5,6 +5,7 @@ bin
 out
 build
 build-java
+build-*
 buildDocker
 classes
 .gradle
