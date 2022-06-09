@@ -32,7 +32,12 @@ if(STANDALONE_PLUGIN)
     message(STATUS "CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
     message(STATUS "CMake current binary directory: ${CMAKE_CURRENT_BINARY_DIR}")
 
-    SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS")
+    
+    SET(ARCH_PKG "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+    
+    SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS/${ARCH_PKG}")
+    
+    
 
     set(FAST_RTPS_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/Fast-RTPS-install")
     
