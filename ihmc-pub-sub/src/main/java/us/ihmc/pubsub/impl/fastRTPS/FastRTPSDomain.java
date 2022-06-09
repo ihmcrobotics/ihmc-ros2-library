@@ -27,9 +27,7 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.FastRTPSJNI;
-import us.ihmc.tools.nativelibraries.NativeLibraryDescription;
 import us.ihmc.tools.nativelibraries.NativeLibraryLoader;
-import us.ihmc.tools.nativelibraries.NativeLibraryWithDependencies;
 
 public class FastRTPSDomain implements Domain
 {
@@ -68,61 +66,6 @@ public class FastRTPSDomain implements Domain
       }
 
       return instance;
-   }
-
-   class FastRtpsNativeLibrary implements NativeLibraryDescription
-   {
-
-      @Override
-      public String getPackage(OperatingSystem os, Architecture arch)
-      {
-         switch(arch)
-         {
-            case x64:
-               
-              break;
-            case arm64:
-               
-               break;
-         }
-         
-         
-         return "us.ihmc.rtps.impl.fastRTPS";
-      }
-
-      @Override
-      public NativeLibraryWithDependencies getLibraryWithDependencies(OperatingSystem os, Architecture arch)
-      {
-
-         switch (arch)
-         {
-            case x64:
-               switch (os)
-               {
-                  case WIN64:
-                     return NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll",
-                                                                                                            "fastcdr-1.0.dll",
-                                                                                                            "fastrtps-2.6.dll");
-                  case LINUX64:
-                     return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.6", "libfastcdr.so.1");
-                  default:
-                     break;
-               }
-            case arm64:
-               switch (os)
-               {
-                  default:
-                     break;
-               }
-
-               break;
-         }
-
-         System.err.println("Unsupported OS/Architecture combination: " + os + " " + arch);
-         return null;
-
-      }
-
    }
 
    private FastRTPSDomain(boolean useSystemFastRTPS)

@@ -236,6 +236,7 @@ Note: Replace /usr/lib/jvm/java-8-openjdk-amd64/ with your installation of the O
 Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample".
 
 Note: When debugging, set CMAKE_BUILD_TYPE to "Debug" and use "make install" instead of "make install/strip" to preserve debugging information.
+Note: make with multiple thread (-j?) does not seem to work well. You have to run it multiple times because the swig plugin does not define dependencies in the right order.
 
 #### Windows
 
@@ -312,7 +313,7 @@ Several steps needs to be taken to update to the latest version of FastDDS. Most
 
 - Edit [SOURCE_DIR]/ihmc-pub-sub/CMakeLists.txt, scroll down to ### UPDATE FASTDDS VERSIONS HERE ### and update the versions
 - Build and update the native code on all platforms
-- [SOURCE_DIR]/ihmc-pub-sub/src/main/java/us/ihmc/pubsub/impl/fastRTPS/FastRTPSDomain.java and update the getLibrariesWithDependencies(OperatingSystem os, Architecture arch) function
+- [SOURCE_DIR]/ihmc-pub-sub/src/main/java/us/ihmc/pubsub/impl/fastRTPS/FastRtpsNativeLibrary.java and update the getLibrariesWithDependencies(OperatingSystem os, Architecture arch) function
 
 
 ## Developing native code with Eclipse
