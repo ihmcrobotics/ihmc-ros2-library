@@ -22,11 +22,11 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
             switch(os)
             {
                case WIN64:
-                  archPackage = "Windows-AMD64";
+                  archPackage = "Windows.AMD64";
                   break;
                   
                case LINUX64:
-                  archPackage = "Linux-x86_64";
+                  archPackage = "Linux.x86_64";
                   break;
                   
                default:
@@ -38,11 +38,11 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
             switch(os)
             {
                case WIN64:
-                  archPackage = "Windows-ARM64";
+                  archPackage = "Windows.ARM64";
                   break;
                   
                case LINUX64:
-                  archPackage = "Linux-aarch64";
+                  archPackage = "Linux.aarch64";
                   break;
                   
                default:

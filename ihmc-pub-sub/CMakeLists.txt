@@ -33,7 +33,7 @@ if(STANDALONE_PLUGIN)
     message(STATUS "CMake current binary directory: ${CMAKE_CURRENT_BINARY_DIR}")
 
     
-    SET(ARCH_PKG "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+    SET(ARCH_PKG "${CMAKE_SYSTEM_NAME}/${CMAKE_SYSTEM_PROCESSOR}")
     
     SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS/${ARCH_PKG}")
     
