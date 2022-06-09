@@ -44,6 +44,7 @@ public class FastRTPSDomain implements Domain
    public static final String FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX = "44.53.%02X.5f.45.50.52.4f.53.49.4d.41";
    public static final String FAST_DDS_XML_NAMESPACE = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles";
    public static final String FAST_DDS_METATRAFFIC_UNICAST_LOCATOR_LIST = "metatrafficUnicastLocatorList";
+   public static final String FAST_DDS_TRANSPORT = "transport_descriptors";
    public static final String FAST_DDS_PARTICIPANT = "participant";
    public static final String FAST_DDS_PUBLISHER = "publisher";
    public static final String FAST_DDS_SUBSCRIBER = "subscriber";

@@ -90,11 +90,11 @@ public class PublisherExample
                                                      .topicDataType(dataType)
                                                      .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                     .durabilityKind(DurabilityQosKindType.TRANSIENT)
-                                                     .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
+                                                     .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                     .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
                                                      .historyDepth(50)
                                                      .partitions(Collections.singletonList("us/ihmc"))
-                                                     .lifespan(new Time(5, 0))
+                                                     .lifespan(new Time(14, 0))
                                                      .heartBeatPeriodNsec((long) (0.1 * 1e9)) //100ms
                                                      .build();
 

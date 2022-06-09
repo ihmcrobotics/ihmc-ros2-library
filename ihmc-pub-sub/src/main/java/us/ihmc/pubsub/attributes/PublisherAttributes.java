@@ -26,7 +26,6 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
       WriterQosPoliciesType writerQosPoliciesType = new WriterQosPoliciesType();
       writerQosPoliciesType.setDurability(durabilityQosPolicyType);
       writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
-      writerQosPoliciesType.setOwnership(ownershipQosPolicyType);
       publisherProfile.setQos(writerQosPoliciesType);
 
    }

@@ -86,7 +86,8 @@ public class MultipleParticipantsInSameProcessTest {
                 .mapToObj(i -> ParticipantAttributes.create()
                .domainId(215)
                .discoveryLeaseDuration(Time.Infinite)
-               .name("StatusTest"+i))
+               .name("StatusTest"+i)
+               .useOnlySharedMemoryTransport())
                 .map(attrs -> {
                     try {
                         return domain.createParticipant(attrs);

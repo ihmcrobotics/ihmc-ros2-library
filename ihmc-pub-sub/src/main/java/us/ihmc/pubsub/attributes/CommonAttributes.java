@@ -31,7 +31,6 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    protected final HistoryQosPolicyType historyQosPolicyType = new HistoryQosPolicyType();
    protected final DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
    protected final ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
-   protected final OwnershipQosPolicyType ownershipQosPolicyType = new OwnershipQosPolicyType();
 
    public CommonAttributes()
    {
@@ -43,7 +42,6 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       durabilityKind(DurabilityQosKindType.VOLATILE);
       reliabilityKind(ReliabilityQosKindType.RELIABLE);
       topicKind(TopicKindType.NO_KEY);
-      ownershipPolicyKind(OwnershipQosKindType.SHARED);
    }
 
    @SuppressWarnings("unchecked")
@@ -175,13 +173,13 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
 
    public T ownershipPolicyKind(OwnershipQosKindType kind)
    {
-      ownershipQosPolicyType.setKind(kind);
+      LogTools.warn("OwnershipQosPolicy not supported");
       return self();
    }
 
    public OwnershipQosKindType getOwnerShipPolicyKind()
    {
-      return ownershipQosPolicyType.getKind();
+      return null;
    }
    
    

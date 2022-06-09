@@ -24,7 +24,6 @@ public class SubscriberAttributes extends CommonAttributes<SubscriberAttributes>
       ReaderQosPoliciesType readerQosPoliciesType = new ReaderQosPoliciesType();
       readerQosPoliciesType.setDurability(durabilityQosPolicyType);
       readerQosPoliciesType.setReliability(reliabilityQosPolicyType);
-      readerQosPoliciesType.setOwnership(ownershipQosPolicyType);
       subscriberProfile.setQos(readerQosPoliciesType);
    }
 

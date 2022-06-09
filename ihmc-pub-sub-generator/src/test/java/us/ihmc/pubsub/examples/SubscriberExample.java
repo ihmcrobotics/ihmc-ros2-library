@@ -98,10 +98,11 @@ public class SubscriberExample
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
             .topicDataType(dataType)
             .topicName("chatter")
-            .reliabilityKind(ReliabilityQosKindType.BEST_EFFORT)
+            .reliabilityKind(ReliabilityQosKindType.RELIABLE)
             .partitions(Collections.singletonList("us/ihmc"))
             .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-            .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL).build();
+            .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+            .historyDepth(50).build();
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 

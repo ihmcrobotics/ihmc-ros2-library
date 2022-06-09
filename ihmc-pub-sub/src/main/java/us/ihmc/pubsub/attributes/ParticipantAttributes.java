@@ -3,6 +3,8 @@ package us.ihmc.pubsub.attributes;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -11,7 +13,6 @@ import com.eprosima.xmlschemas.fastrtps_profiles.BuiltinAttributesType;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryProtocol;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryServerList;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoverySettingsType;
-import com.eprosima.xmlschemas.fastrtps_profiles.DurationType;
 import com.eprosima.xmlschemas.fastrtps_profiles.EDPType;
 import com.eprosima.xmlschemas.fastrtps_profiles.LocatorListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.LocatorType;
@@ -19,6 +20,9 @@ import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
 import com.eprosima.xmlschemas.fastrtps_profiles.RemoteServerAttributes;
 import com.eprosima.xmlschemas.fastrtps_profiles.RtpsParticipantAttributesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.RtpsTransportDescriptorType;
+import com.eprosima.xmlschemas.fastrtps_profiles.StringListType;
+import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.Udpv4LocatorType;
 
 import us.ihmc.pubsub.common.Time;
@@ -27,6 +31,7 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 public class ParticipantAttributes
 {
    private final ParticipantProfileType participantProfile = new ParticipantProfileType();
+   private final TransportDescriptorListType transportDescriptors = new TransportDescriptorListType();
 
    public ParticipantAttributes()
    {
@@ -143,6 +148,67 @@ public class ParticipantAttributes
       return this;
    }
    
+   
+   /**
+    * Add a transport to use with this participant and register it to this participant
+    * 
+    * 
+    * @param transport
+    * @return
+    */
+   public ParticipantAttributes addTransport(RtpsTransportDescriptorType transport)
+   {
+      transportDescriptors.getTransportDescriptor().add(transport);
+      
+      if(participantProfile.getRtps().getUserTransports() == null)
+      {
+         participantProfile.getRtps().setUserTransports(new StringListType());
+      }
+      participantProfile.getRtps().getUserTransports().getId().add(transport.getTransportId());
+      
+      return this;
+   }
+   
+   /**
+    * Add a shared memory transport to this participant.
+    * 
+    * By setting useBuiltinTransports to false, you can use only a shared memory transport
+    *  
+    * @return
+    */
+   public ParticipantAttributes addSharedMemoryTransport()
+   {
+      String transportName = UUID.randomUUID().toString();
+      RtpsTransportDescriptorType transportDescriptor = new RtpsTransportDescriptorType();
+      transportDescriptor.setTransportId(transportName);
+      transportDescriptor.setType("SHM");
+      
+      addTransport(transportDescriptor);
+      
+      return this;
+   }
+   
+   public ParticipantAttributes useBuiltinTransports(boolean useBuiltinTransports)
+   {
+      participantProfile.getRtps().setUseBuiltinTransports(useBuiltinTransports);
+      return this;
+   }
+   
+   public boolean isUseBuiltinTransports()
+   {
+      return participantProfile.getRtps().isUseBuiltinTransports();
+   }
+   
+   /**
+    * Helper function to disable all transports and use only the shared memory transport
+    * @return
+    */
+   public ParticipantAttributes useOnlySharedMemoryTransport()
+   {
+      useBuiltinTransports(false);
+      addSharedMemoryTransport();
+      return this;
+   }
 
 
    public boolean isUseStaticDiscovery()
@@ -166,12 +232,28 @@ public class ParticipantAttributes
    public String marshall(String profileName) throws IOException
    {
       ProfilesType profilesType = new ProfilesType();
+      
+
+      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant()
+      .add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_TRANSPORT),
+                             TransportDescriptorListType.class,
+                             transportDescriptors));
+      
       profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant()
                   .add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_PARTICIPANT),
                                          ParticipantProfileType.class,
                                          participantProfile));
+
       participantProfile.setProfileName(profileName);
       
-      return FastRTPSDomain.marshalProfile(profilesType);
+      
+      /*
+       * There is a bug in the generation of teh xsd, and inside userTranports, the list spits out <id> tags instead of <transport_id> tags. 
+       * This uses a horrible regex to fix that. Hopefully there are no "other" <id> tags
+       */
+      String profileXML =FastRTPSDomain.marshalProfile(profilesType); 
+      profileXML = Pattern.compile("<id>(.*)<\\/id>").matcher(profileXML).replaceAll("<transport_id>$1<\\/transport_id>");
+
+      return profileXML;
    }
 }
