@@ -197,21 +197,6 @@ git submodule update --init --recursive
 
 #### Linux
 
-##### With Docker
-
-Run `ihmc-pub-sub-group/ihmc-pub-sub $ ./buildWithDocker.sh`
-
-The Docker image is hosted at [https://hub.docker.com/r/ihmcrobotics/pub-sub]().
-
-If changes to the Dockerfile are needed, build it with the following command, incrementing the version.
-Then, increment the version in the buildWithDocker.sh file before running.
-
-```
-# docker build --tag ihmcrobotics/pub-sub:0.X .
-# docker rm pub-sub
-```
-
-For more about IHMC Robotics's usage of Docker, see [https://github.com/ihmcrobotics/ihmc-open-robotics-software/tree/develop/docker]().
 
 ##### Manually
 
