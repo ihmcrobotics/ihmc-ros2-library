@@ -16,43 +16,42 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
    public String getPackage(OperatingSystem os, Architecture arch)
    {
       String archPackage = "";
-      switch(arch)
+      switch (arch)
       {
          case x64:
-            switch(os)
+            switch (os)
             {
                case WIN64:
                   archPackage = "Windows.AMD64";
                   break;
-                  
+
                case LINUX64:
                   archPackage = "Linux.x86_64";
                   break;
-                  
+
                default:
                   archPackage = "unknown";
                   break;
             }
-           break;
+            break;
          case arm64:
-            switch(os)
+            switch (os)
             {
                case WIN64:
                   archPackage = "Windows.ARM64";
                   break;
-                  
+
                case LINUX64:
                   archPackage = "Linux.aarch64";
                   break;
-                  
+
                default:
                   archPackage = "unknown";
                   break;
             }
             break;
       }
-      
-      
+
       return "us.ihmc.rtps.impl.fastRTPS." + archPackage;
    }
 
@@ -60,31 +59,17 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
    public NativeLibraryWithDependencies getLibraryWithDependencies(OperatingSystem os, Architecture arch)
    {
 
-      switch (arch)
+      switch (os)
       {
-         case x64:
-            switch (os)
-            {
-               case WIN64:
-                  return NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll",
-                                                                                                         "fastcdr-1.0.dll",
-                                                                                                         "fastrtps-2.6.dll");
-               case LINUX64:
-                  return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.6", "libfastcdr.so.1");
-               default:
-                  break;
-            }
-         case arm64:
-            switch (os)
-            {
-               default:
-                  break;
-            }
-
+         case WIN64:
+            return NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll", "fastcdr-1.0.dll", "fastrtps-2.6.dll");
+         case LINUX64:
+            return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.6", "libfastcdr.so.1");
+         default:
             break;
       }
 
-      System.err.println("Unsupported OS/Architecture combination: " + os + " " + arch);
+      System.err.println("Unsupported OS: " + os);
       return null;
 
    }

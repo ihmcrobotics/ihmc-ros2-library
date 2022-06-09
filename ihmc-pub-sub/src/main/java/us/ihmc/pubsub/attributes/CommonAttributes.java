@@ -206,11 +206,4 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       }
    }
 
-
-   public T heartBeatPeriodNsec(long l)
-   {
-      LogTools.error("TODO: Implement me: hearBeatPeriodNSec");
-      return self();
-   }
-
 }

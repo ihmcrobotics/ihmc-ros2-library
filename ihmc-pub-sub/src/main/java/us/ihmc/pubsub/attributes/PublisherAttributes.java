@@ -12,7 +12,10 @@ import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosPolicyType;
 import com.eprosima.xmlschemas.fastrtps_profiles.PublisherProfileType;
 import com.eprosima.xmlschemas.fastrtps_profiles.WriterQosPoliciesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.WriterTimesType;
 
+import us.ihmc.log.LogTools;
+import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
@@ -67,6 +70,21 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
       return publisherProfile.getUserDefinedID();
    }
    
+
+   public PublisherAttributes heartBeatPeriod(Time hearbeat)
+   {
+      LogTools.error("TODO: Implement me: hearBeatPeriodNSec");
+      
+      if(publisherProfile.getTimes() == null)
+      {
+         publisherProfile.setTimes(new WriterTimesType());
+      }
+      
+      publisherProfile.getTimes().setHeartbeatPeriod(DDSConversionTools.toDurationType(hearbeat));
+      
+      
+      return this;
+   }
    
 
    public String marshall(String profileName) throws IOException
