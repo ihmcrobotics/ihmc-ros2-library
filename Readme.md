@@ -329,22 +329,6 @@ Several steps needs to be taken to update to the latest version of FastDDS. Most
 - [SOURCE_DIR]/ihmc-pub-sub/src/main/java/us/ihmc/pubsub/impl/fastRTPS/FastRtpsNativeLibrary.java and update the getLibrariesWithDependencies(OperatingSystem os, Architecture arch) function
 
 
-## Developing native code with Eclipse
-
-```
-# clone ihmc-pub-sub-group
-cd ..
-mkdir ebuild
-cd ebuild
-cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug -D CMAKE_ECLIPSE_VERSION="4.8 (Photon)" ../ihmc-pub-sub-group/ihmc-pub-sub
-# Import "existing projects into Eclipse"
-```
-See more: https://gitlab.kitware.com/cmake/community/wikis/doc/editors/Eclipse-CDT4-Generator
-
-## Developing native code with CLion
-
-Run `ihmc-pub-sub-group/ihmc-pub-sub $ ./codeWithDocker.sh`
-
 ## License
 
 The IHMC Pub/Sub library is licensed under the Apache 2.0. See LICENSE.txt
