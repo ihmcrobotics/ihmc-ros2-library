@@ -53,7 +53,7 @@ public class SubscriberAttributes extends CommonAttributes<SubscriberAttributes>
    {
       ProfilesType profilesType = new ProfilesType();
       profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant()
-                  .add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_PUBLISHER),
+                  .add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SUBSCRIBER),
                                          SubscriberProfileType.class,
                                          subscriberProfile));
       subscriberProfile.setProfileName(profileName);

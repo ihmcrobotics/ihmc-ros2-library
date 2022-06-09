@@ -5,7 +5,6 @@ plugins {
    id("us.ihmc.ihmc-cd") version "1.23"
    id("com.github.hierynomus.license") version "0.14.0"
    id("org.unbroken-dome.xjc") version "2.0.0"
-   id("io.freefair.lombok") version "6.2.0"
 }
 
 ihmc {
