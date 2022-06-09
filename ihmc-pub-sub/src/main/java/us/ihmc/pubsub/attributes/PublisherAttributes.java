@@ -73,8 +73,6 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
 
    public PublisherAttributes heartBeatPeriod(Time hearbeat)
    {
-      LogTools.error("TODO: Implement me: hearBeatPeriodNSec");
-      
       if(publisherProfile.getTimes() == null)
       {
          publisherProfile.setTimes(new WriterTimesType());
