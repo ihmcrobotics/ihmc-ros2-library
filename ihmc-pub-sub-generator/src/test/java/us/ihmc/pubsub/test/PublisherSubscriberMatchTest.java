@@ -21,19 +21,17 @@ public class PublisherSubscriberMatchTest
    {
       TopicDataType topicDataType = new ChatMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-                                                                      .topicName("TOPIC")
-                                                                      .topicDataType(topicDataType)
-                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                      .build();
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicName("TOPIC")
+       .topicDataType(topicDataType)
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .durabilityKind(DurabilityQosKindType.VOLATILE);
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
-                                                                   .topicName("TOPIC")
-                                                                   .topicDataType(topicDataType)
-                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                   .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                   .build();
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicName("TOPIC")
+       .topicDataType(topicDataType)
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .durabilityKind(DurabilityQosKindType.VOLATILE);
 
       assertTrue(IntraProcessUtil.subscriberPublisherMatches(subscriberAttributes, genericPublisherAttributes));
 

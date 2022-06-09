@@ -55,26 +55,24 @@ public class PubSubTester<P extends Packet>
       IDLElementTestPubSubType dataType = new IDLElementTestPubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
-                                                                   .topicDataType(dataType)
-                                                                   .topicName("pubsubtest")
-                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                   .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-                                                                   .historyDepth(1)
-                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-                                                                   .build();
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicDataType(dataType)
+       .topicName("pubsubtest")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .historyDepth(1)
+       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
 
       P data = msgTypeSupplier.get();
       TopicDataType<P> topicDataType = (TopicDataType<P>) data.getPubSubTypePacket().get();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-                                                                      .topicDataType(topicDataType)
-                                                                      .topicName("pubsubtest")
-                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-                                                                      .build();
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(topicDataType)
+       .topicName("pubsubtest")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
       subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(data,callbacks));
 

@@ -62,25 +62,23 @@ public class MultipleParticipantsInSameProcessTest {
 
         TopicDataType topicDataType = new ChatMessagePubSubType();
 
-        PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
-                .topicDataType(topicDataType)
-                .topicName("Status")
-                .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                .partitions(Collections.singletonList("us/ihmc"))
-                .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-                .historyDepth(10)
-                .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-                .build();
+        PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicDataType(topicDataType)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .historyDepth(10)
+       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
 
-        SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-                .topicDataType(topicDataType)
-                .topicName("Status")
-                .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                .partitions(Collections.singletonList("us/ihmc"))
-                .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-                .build();
+        SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(topicDataType)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
         List<Participant> participants = IntStream.rangeClosed(1,100)
                 .mapToObj(i -> ParticipantAttributes.create()

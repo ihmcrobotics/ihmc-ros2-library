@@ -85,18 +85,17 @@ public class PublisherExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes attrs = PublisherAttributes.builder()
-                                                     .topicName("chatter")
-                                                     .topicDataType(dataType)
-                                                     .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-                                                     .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                     .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                     .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-                                                     .historyDepth(50)
-                                                     .partitions(Collections.singletonList("us/ihmc"))
-                                                     .lifespan(new Time(14, 0))
-                                                     .heartBeatPeriodNsec((long) (0.1 * 1e9)) //100ms
-                                                     .build();
+      PublisherAttributes attrs = PublisherAttributes.create()
+        .topicName("chatter")
+        .topicDataType(dataType)
+        .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
+        .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+        .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+        .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+        .historyDepth(50)
+        .partitions(Collections.singletonList("us/ihmc"))
+        .lifespan(new Time(14, 0))
+        .heartBeatPeriodNsec((long) (0.1 * 1e9));
 
       System.out.println("creating publisher");
       Publisher publisher = domain.createPublisher(participant, attrs, new PublisherListenerImpl());

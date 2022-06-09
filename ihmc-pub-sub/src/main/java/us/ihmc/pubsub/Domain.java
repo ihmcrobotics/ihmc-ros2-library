@@ -265,7 +265,7 @@ public interface Domain {
          registerType(participant, topicDataType);
       }
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
               .topicKind(topicDataType.isGetKeyDefined() ? TopicKindType.WITH_KEY : TopicKindType.NO_KEY)
               .topicDataType(topicDataType)
               .topicName(topicName)
@@ -276,7 +276,7 @@ public interface Domain {
          subscriberAttributes.partitions(Arrays.asList(partitions));
       }
 
-      return subscriberAttributes.build();
+      return subscriberAttributes;
    }
 
    @Deprecated
@@ -315,7 +315,7 @@ public interface Domain {
       }
 
       PublisherAttributes publisherAttributes =
-              PublisherAttributes.builder()
+              PublisherAttributes.create()
                       .topicKind(topicDataType.isGetKeyDefined() ? TopicKindType.WITH_KEY : TopicKindType.NO_KEY)
                       .topicDataType(topicDataType)
                       .topicName(topicName)

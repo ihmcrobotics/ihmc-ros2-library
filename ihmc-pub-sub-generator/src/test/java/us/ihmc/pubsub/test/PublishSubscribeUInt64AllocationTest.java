@@ -76,29 +76,27 @@ public class PublishSubscribeUInt64AllocationTest
       StatusMessagePubSubType dataType = new StatusMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
-                                                                   .topicDataType(dataType)
-                                                                   .topicName("Status")
-                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                   .partitions(Collections.singletonList("us/ihmc"))
-                                                                   .durabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
-                                                                                         DurabilityQosKindType.VOLATILE
-                                                                                         : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-                                                                   .historyDepth(50)
-                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-                                                                   .build();
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicDataType(dataType)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
+                             DurabilityQosKindType.VOLATILE
+                             : DurabilityQosKindType.TRANSIENT_LOCAL)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .historyDepth(50)
+       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
 
       StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-                                                                      .topicDataType(dataType2)
-                                                                      .topicName("Status")
-                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                      .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-                                                                      .build();
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(dataType2)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
       SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);

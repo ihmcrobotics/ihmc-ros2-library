@@ -95,14 +95,14 @@ public class SubscriberExample
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-            .topicDataType(dataType)
-            .topicName("chatter")
-            .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-            .partitions(Collections.singletonList("us/ihmc"))
-            .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-            .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-            .historyDepth(50).build();
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+      .topicDataType(dataType)
+      .topicName("chatter")
+      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+      .partitions(Collections.singletonList("us/ihmc"))
+      .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+      .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+      .historyDepth(50);
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 

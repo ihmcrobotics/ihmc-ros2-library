@@ -153,16 +153,15 @@ public class IntraprocessLargeCopyTest
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
-                                                                   .topicDataType(dataType)
-                                                                   .topicName("Status")
-                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                   .partitions(Collections.singletonList("us/ihmc"))
-                                                                   .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-                                                                   .historyDepth(10)
-                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-                                                                   .build();
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicDataType(dataType)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .historyDepth(10)
+       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
@@ -185,14 +184,13 @@ public class IntraprocessLargeCopyTest
 
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-                                                                      .topicDataType(dataType2)
-                                                                      .topicName("Status")
-                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                      .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-                                                                      .build();
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(dataType2)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
       return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
    }

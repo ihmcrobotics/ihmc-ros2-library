@@ -116,18 +116,17 @@ public class IntraprocessLargeCopyTest3
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
-                                                                   .topicDataType(dataType)
-                                                                   .topicName("Status")
-                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                   .partitions(Collections.singletonList("us/ihmc"))
-                                                                   .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
-                                                                                         DurabilityQosKindType.VOLATILE
-                                                                                         : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-                                                                   .historyDepth(10) // does nothing unless keep_last
-                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-                                                                   .build();
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicDataType(dataType)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
+                             DurabilityQosKindType.VOLATILE
+                             : DurabilityQosKindType.TRANSIENT_LOCAL)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
+       .historyDepth(10) // does nothing unless keep_last
+       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
@@ -149,16 +148,15 @@ public class IntraprocessLargeCopyTest3
 
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-                                                                      .topicDataType(dataType2)
-                                                                      .topicName("Status")
-                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                      .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
-                                                                                            DurabilityQosKindType.VOLATILE
-                                                                                            : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-                                                                      .build();
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(dataType2)
+       .topicName("Status")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
+                             DurabilityQosKindType.VOLATILE
+                             : DurabilityQosKindType.TRANSIENT_LOCAL)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
       return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
    }

@@ -42,14 +42,13 @@ public class CreateSubscriptionUnderLoad
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.builder()
-                                                                      .topicDataType(dataType)
-                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                      .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                      .historyDepth(1)
-                                                                      .build();
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(dataType)
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyDepth(1);
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
    }

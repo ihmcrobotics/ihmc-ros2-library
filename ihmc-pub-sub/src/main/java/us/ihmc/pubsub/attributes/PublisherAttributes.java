@@ -30,16 +30,10 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
 
    }
 
-   public static PublisherAttributes builder()
+   public static PublisherAttributes create()
    {
       return new PublisherAttributes();
    }
-
-   public PublisherAttributes build()
-   {
-      return this;
-   }
-
 
    /**
     * Get the raw XML profile, to allow access to all settings

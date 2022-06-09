@@ -27,14 +27,9 @@ public class SubscriberAttributes extends CommonAttributes<SubscriberAttributes>
       subscriberProfile.setQos(readerQosPoliciesType);
    }
 
-   public static SubscriberAttributes builder()
+   public static SubscriberAttributes create()
    {
       return new SubscriberAttributes();
-   }
-
-   public SubscriberAttributes build()
-   {
-      return this;
    }
 
    public SubscriberAttributes userDefinedId(short id)

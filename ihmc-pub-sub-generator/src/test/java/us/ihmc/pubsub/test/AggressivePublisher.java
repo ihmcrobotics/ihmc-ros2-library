@@ -41,16 +41,15 @@ public class AggressivePublisher
 
       // Mimic ROS 2 default settings
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.builder()
-                                                                   .topicDataType(dataType)
-                                                                   .topicName("segfault_trigger")
-                                                                   .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-                                                                   .partitions(Collections.singletonList("us/ihmc"))
-                                                                   .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                   .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-                                                                   .historyDepth(1)
-                                                                   .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-                                                                   .build();
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicDataType(dataType)
+       .topicName("segfault_trigger")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .historyDepth(1)
+       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
 
       Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 
