@@ -78,6 +78,9 @@ public class PublisherExample
       .domainId(1)
       .name("PublisherExample2")
       .discoveryLeaseDuration(Time.Infinite);
+      //.discoveryServer("127.0.0.1", 4);
+      
+      System.out.println(attributes2.marshall("test"));
 
 
       Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());

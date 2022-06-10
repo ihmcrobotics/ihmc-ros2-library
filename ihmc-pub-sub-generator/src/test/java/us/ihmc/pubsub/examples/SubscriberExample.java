@@ -88,6 +88,7 @@ public class SubscriberExample
       .domainId(1)
       .name("ParticipantExample")
       .discoveryLeaseDuration(Time.Infinite);
+      //.discoveryServer("127.0.0.1", 4);
 
       
       Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());

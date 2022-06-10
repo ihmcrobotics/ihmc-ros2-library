@@ -50,6 +50,8 @@ public class FastRTPSDomain implements Domain
    public static final String FAST_DDS_SUBSCRIBER = "subscriber";
    public static final String FAST_DDS_NANOSEC = "nanosec";
    public static final String FAST_DDS_SEC = "sec";
+   public static final int DEFAULT_DISCOVERY_SERVER_PORT = 11811;
+
 
    private final ArrayList<FastRTPSParticipant> participants = new ArrayList<>();
 

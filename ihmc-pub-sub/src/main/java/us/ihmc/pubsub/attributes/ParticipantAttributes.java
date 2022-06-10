@@ -30,6 +30,7 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class ParticipantAttributes
 {
+   
    private final ParticipantProfileType participantProfile = new ParticipantProfileType();
    private final TransportDescriptorListType transportDescriptors = new TransportDescriptorListType();
 
@@ -96,14 +97,24 @@ public class ParticipantAttributes
       participantProfile.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(DDSConversionTools.timeToDurationType(discoveryLeaseDuration));
       return this;
    }
-
+   
    public ParticipantAttributes discoveryServer(String discoveryServerAddress, int discoveryServerId)
    {
-      return discoveryServer(discoveryServerAddress, discoveryServerId, 11811);
+      return discoveryServer(discoveryServerAddress, discoveryServerId, FastRTPSDomain.DEFAULT_DISCOVERY_SERVER_PORT);
    }
 
    public ParticipantAttributes discoveryServer(String discoveryServerAddress, int discoveryServerId, int discoveryServerPort)
    {
+      if (discoveryServerId < 0 || discoveryServerId > 255)
+      {
+         throw new RuntimeException("Invalid discovery server ID");
+      }
+
+      if (discoveryServerPort < 0 || discoveryServerPort > 65535)
+      {
+         throw new RuntimeException("Invalid discovery server port");
+      }
+      
       DiscoverySettingsType discoverySettingsType = participantProfile.getRtps().getBuiltin().getDiscoveryConfig();
       DiscoveryServerList discoveryServerList = new DiscoveryServerList();
       discoverySettingsType.setDiscoveryProtocol(DiscoveryProtocol.CLIENT);
@@ -122,7 +133,7 @@ public class ParticipantAttributes
                                                    LocatorListType.class,
                                                    locatorListType));
 
-      remoteServerAttributes.setPrefix(String.format(FastRTPSDomain.FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX, discoverySettingsType));
+      remoteServerAttributes.setPrefix(String.format(FastRTPSDomain.FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX, discoveryServerId));
       discoveryServerList.getRemoteServer().add(remoteServerAttributes);
       discoverySettingsType.setDiscoveryServersList(discoveryServerList);
 
