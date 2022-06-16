@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -21,6 +24,7 @@ import us.ihmc.idl.generated.test.BigMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
+import us.ihmc.pubsub.attributes.DDSConversionTools;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -99,6 +103,16 @@ public class IntraprocessLargeCopyTest3
          Thread.yield();
       }
    }
+   
+   private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
+   {
+      return ParticipantAttributes.create()
+            .domainId(215)
+            .discoveryLeaseDuration(Time.Infinite)
+            .name(name)
+            .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
+   }
+
 
    private Publisher createPublisher(PubSubImplementation impl) throws IOException
    {
@@ -106,10 +120,7 @@ public class IntraprocessLargeCopyTest3
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
+      ParticipantAttributes attributes = createParticipantAttributes("StatusTestPUblisher");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -125,8 +136,10 @@ public class IntraprocessLargeCopyTest3
                              DurabilityQosKindType.VOLATILE
                              : DurabilityQosKindType.TRANSIENT_LOCAL)
        .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-       .historyDepth(10) // does nothing unless keep_last
-       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
+       .historyDepth(100)
+       // When the subscriber comes online, it'll block the writer for a bit. Using a large blocking time makes sure the writer successfully writes to the reader.
+       .maxBlockingTime(DDSConversionTools.createTime(10.0))
+       ; 
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
@@ -137,10 +150,7 @@ public class IntraprocessLargeCopyTest3
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
+      ParticipantAttributes attributes = createParticipantAttributes("StatusTestSubscriber");
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();
@@ -156,7 +166,8 @@ public class IntraprocessLargeCopyTest3
        .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
                              DurabilityQosKindType.VOLATILE
                              : DurabilityQosKindType.TRANSIENT_LOCAL)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .historyDepth(100);
 
       return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
    }

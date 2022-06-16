@@ -70,7 +70,7 @@ public class DDSConversionTools
     * @param timeInSeconds
     * @return Time for DDS
     */
-   public Time createTime(double timeInSeconds)
+   public static Time createTime(double timeInSeconds)
    {
       Time time = new Time();
       int seconds = (int) timeInSeconds;

@@ -160,8 +160,7 @@ public class IntraprocessLargeCopyTest
        .partitions(Collections.singletonList("us/ihmc"))
        .durabilityKind(DurabilityQosKindType.VOLATILE)
        .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-       .historyDepth(10)
-       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
+       .historyDepth(10);
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }

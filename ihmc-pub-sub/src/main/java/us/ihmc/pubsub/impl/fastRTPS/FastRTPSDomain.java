@@ -111,7 +111,8 @@ public class FastRTPSDomain implements Domain
       }
       Runtime.getRuntime().addShutdownHook(new Thread(() ->
       {
-         LogTools.info("FastRTPS domain is going down.");
+         // Do not use logtools here, log4j does not like to be initialized in the shutdown hook.
+         System.out.println("[" + getClass().getSimpleName() +"] FastRTPS domain is going down.");
          stopAll();
          // It appears that without a small sleep, the printout does not show up.
          ThreadTools.sleep(10);

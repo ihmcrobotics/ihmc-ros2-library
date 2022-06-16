@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -85,7 +88,10 @@ public class IntraprocessLargeCopyTest2
          try
          {
             Thread.sleep(100L);
-            publishABunch(publisher, random);
+            if(publisher.isAvailable())
+            {
+               publishABunch(publisher, random);
+            }
          }
          catch (IOException | InterruptedException e)
          {
@@ -109,6 +115,16 @@ public class IntraprocessLargeCopyTest2
          Thread.yield();
       }
    }
+   
+   
+   private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
+   {
+      return ParticipantAttributes.create()
+            .domainId(215)
+            .discoveryLeaseDuration(Time.Infinite)
+            .name(name)
+            .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
+   }
 
    private Publisher createPublisher(PubSubImplementation impl) throws IOException
    {
@@ -116,15 +132,15 @@ public class IntraprocessLargeCopyTest2
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
+      ParticipantAttributes attributes = createParticipantAttributes("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
+      System.out.println(attributes.marshall(""));
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
+      
+      System.out.println(dataType.getTypeSize());
 
       PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
        .topicDataType(dataType)
@@ -136,7 +152,7 @@ public class IntraprocessLargeCopyTest2
                              : DurabilityQosKindType.TRANSIENT_LOCAL)
        .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
        .historyDepth(10)
-       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
+       .publishModeKind(PublishModeQosKindType.SYNCHRONOUS);
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
@@ -147,10 +163,7 @@ public class IntraprocessLargeCopyTest2
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
+      ParticipantAttributes attributes = createParticipantAttributes("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
