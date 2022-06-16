@@ -51,6 +51,9 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
  */
 public class IntraprocessLargeCopyTest2
 {
+   private static final int NUMBER_OF_MESSAGES_TO_SEND = 80;
+
+   
    @Test
    @Timeout(10)// timeout = 10000
    public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
@@ -82,7 +85,7 @@ public class IntraprocessLargeCopyTest2
       System.setErr(new PrintStream(byteArrayOutputStream));
 
       // create one subscriber
-      CountDownLatch messagesReceived = new CountDownLatch(20);
+      CountDownLatch messagesReceived = new CountDownLatch(NUMBER_OF_MESSAGES_TO_SEND);
       Runnable subscriberCloser = createSubscriber(impl, messagesReceived);
 
       // create one publisher
@@ -99,7 +102,7 @@ public class IntraprocessLargeCopyTest2
       assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"),
                                                    "Standard error contains java.lang.IndexOutOfBoundsException");
 
-      // make sure to receive at least 9 of 20 messages
+      // make sure to receive all messages
       assertTrue(messagesReceived.await(10, TimeUnit.SECONDS), "Timeout waiting for message receive");
       
       subscriberCloser.run();
@@ -192,7 +195,7 @@ public class IntraprocessLargeCopyTest2
 
    private void publishABunch(Publisher publisher, Random random) throws IOException
    {
-      for (int i = 0; i < 20; i++)
+      for (int i = 0; i < NUMBER_OF_MESSAGES_TO_SEND; i++)
       {
          BigMessage bigMessage = new BigMessage();
          int randomSize = random.nextInt(100000); // randomly fill to the initial size declared in the .msg
