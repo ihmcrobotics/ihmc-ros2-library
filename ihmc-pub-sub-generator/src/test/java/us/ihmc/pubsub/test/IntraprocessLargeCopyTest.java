@@ -5,9 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.Future;
 
 import org.junit.jupiter.api.Test;
 
@@ -66,7 +70,7 @@ public class IntraprocessLargeCopyTest
       performCopyTest(random, impl);
    }
 
-   private void performCopyTest(Random random, PubSubImplementation impl) throws InterruptedException
+   private void performCopyTest(Random random, PubSubImplementation impl) throws InterruptedException, IOException
    {
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
@@ -75,17 +79,7 @@ public class IntraprocessLargeCopyTest
       System.setErr(new PrintStream(byteArrayOutputStream));
 
       // start subscriber in separate thread
-      Thread subscriberThread = new Thread(() -> {
-         try
-         {
-            createSubscriber(impl);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-      }, "SubscriberThread");
-      subscriberThread.start();
+      Runnable subscriberCloser = createSubscriber(impl);
 
 
       // start 5 publisher threads
@@ -95,8 +89,7 @@ public class IntraprocessLargeCopyTest
          Thread publisherThread = new Thread(() -> {
             try
             {
-               Publisher publisher = createPublisher(impl);
-               publishABunch(publisher, random);
+               createPublisherAndPublishABunch(impl, random);
             }
             catch (IOException e)
             {
@@ -120,7 +113,6 @@ public class IntraprocessLargeCopyTest
       });
 
       // join with the subscriber thread
-      subscriberThread.join();
 
 
       // wait for things to happen
@@ -135,18 +127,36 @@ public class IntraprocessLargeCopyTest
       // this captures the output of the program to make sure bad threading exceptions didn't happen
       assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"),
                                                    "Standard error contains java.lang.IndexOutOfBoundsException");
+      
+      // Tear down everything
+      subscriberCloser.run();
+      
+      
+   }
+   
+   private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
+   {
+      return ParticipantAttributes.create()
+            .domainId(215)
+            .discoveryLeaseDuration(Time.Infinite)
+            .name(name)
+            .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
    }
 
-   private Publisher createPublisher(PubSubImplementation impl) throws IOException
+   /**
+    * Do everything in the thread in a single function so we can shutdown the domain afterwards
+    * 
+    * @param impl
+    * @param random
+    * @throws IOException
+    */
+   private void createPublisherAndPublishABunch(PubSubImplementation impl, Random random) throws IOException
    {
       Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.ERROR);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
+      ParticipantAttributes attributes = createParticipantAttributes("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -162,20 +172,22 @@ public class IntraprocessLargeCopyTest
        .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
        .historyDepth(10);
 
-      return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+       Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+       publishABunch(publisher, random);               
+       
+       domain.removePublisher(publisher);
+       domain.removeParticipant(participant);
+       
+
    }
 
-   private Subscriber createSubscriber(PubSubImplementation impl) throws IOException
+   private Runnable createSubscriber(PubSubImplementation impl) throws IOException
    {
       Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.ERROR);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
-
+      ParticipantAttributes attributes = createParticipantAttributes("StatusTest");
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();
@@ -188,10 +200,15 @@ public class IntraprocessLargeCopyTest
        .topicName("Status")
        .reliabilityKind(ReliabilityQosKindType.RELIABLE)
        .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
        .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
-      return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+      
+      return () -> {
+         domain.removeSubscriber(subscriber);
+         domain.removeParticipant(participant);
+      };
    }
 
    private void publishABunch(Publisher publisher, Random random) throws IOException

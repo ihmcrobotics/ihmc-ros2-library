@@ -1,6 +1,7 @@
 package us.ihmc.pubsub.test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,6 +11,8 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.gradle.internal.impldep.org.apache.commons.lang.mutable.MutableInt;
 import org.junit.jupiter.api.Test;
@@ -25,6 +28,7 @@ import us.ihmc.idl.generated.test.BigMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
+import us.ihmc.pubsub.attributes.DDSConversionTools;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -78,26 +82,12 @@ public class IntraprocessLargeCopyTest2
       System.setErr(new PrintStream(byteArrayOutputStream));
 
       // create one subscriber
-      MutableInt messagesReceived = new MutableInt(0);
-      Subscriber subscriber = createSubscriber(impl, messagesReceived);
+      CountDownLatch messagesReceived = new CountDownLatch(20);
+      Runnable subscriberCloser = createSubscriber(impl, messagesReceived);
 
       // create one publisher
-      Publisher publisher = createPublisher(impl);
+      Runnable publisherCloser = createPublisherAndPublishABunch(impl, random);
 
-      new Thread(() -> {
-         try
-         {
-            Thread.sleep(100L);
-            if(publisher.isAvailable())
-            {
-               publishABunch(publisher, random);
-            }
-         }
-         catch (IOException | InterruptedException e)
-         {
-            e.printStackTrace();
-         }
-      }).start();
 
       System.err.flush();
 
@@ -110,10 +100,10 @@ public class IntraprocessLargeCopyTest2
                                                    "Standard error contains java.lang.IndexOutOfBoundsException");
 
       // make sure to receive at least 9 of 20 messages
-      while (messagesReceived.toInteger() < 9)
-      {
-         Thread.yield();
-      }
+      assertTrue(messagesReceived.await(10, TimeUnit.SECONDS), "Timeout waiting for message receive");
+      
+      subscriberCloser.run();
+      publisherCloser.run();
    }
    
    
@@ -126,7 +116,7 @@ public class IntraprocessLargeCopyTest2
             .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
    }
 
-   private Publisher createPublisher(PubSubImplementation impl) throws IOException
+   private Runnable createPublisherAndPublishABunch(PubSubImplementation impl, Random random) throws IOException
    {
       Domain domain = DomainFactory.getDomain(impl);
 
@@ -135,7 +125,6 @@ public class IntraprocessLargeCopyTest2
       ParticipantAttributes attributes = createParticipantAttributes("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
-      System.out.println(attributes.marshall(""));
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
@@ -151,13 +140,23 @@ public class IntraprocessLargeCopyTest2
                              DurabilityQosKindType.VOLATILE
                              : DurabilityQosKindType.TRANSIENT_LOCAL)
        .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-       .historyDepth(10)
-       .publishModeKind(PublishModeQosKindType.SYNCHRONOUS);
+       .historyDepth(20)
+       .maxBlockingTime(DDSConversionTools.createTime(100.0));
 
-      return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+      publishABunch(publisher, random);
+      
+      
+      return () ->
+      {
+         domain.removePublisher(publisher);
+         domain.removeParticipant(participant);
+      };
+      
+      
    }
 
-   private Subscriber createSubscriber(PubSubImplementation impl, MutableInt messagesReceived) throws IOException
+   private Runnable createSubscriber(PubSubImplementation impl, CountDownLatch messagesReceived) throws IOException
    {
       Domain domain = DomainFactory.getDomain(impl);
 
@@ -178,11 +177,17 @@ public class IntraprocessLargeCopyTest2
        .reliabilityKind(ReliabilityQosKindType.RELIABLE)
        .partitions(Collections.singletonList("us/ihmc"))
        .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
-                             DurabilityQosKindType.TRANSIENT_LOCAL
-                             : DurabilityQosKindType.VOLATILE)
+                             DurabilityQosKindType.VOLATILE
+                             : DurabilityQosKindType.TRANSIENT_LOCAL)
        .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
-      return domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
+      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
+      
+      return () ->
+      {
+         domain.removeSubscriber(subscriber);
+         domain.removeParticipant(participant);
+      };
    }
 
    private void publishABunch(Publisher publisher, Random random) throws IOException
@@ -207,10 +212,10 @@ public class IntraprocessLargeCopyTest2
    {
       private final BigMessage data = new BigMessage();
       private final SampleInfo info = new SampleInfo();
-      private final MutableInt messagesReceived;
+      private final CountDownLatch messagesReceived;
       int i = 0;
 
-      public SubscriberListenerImpl(MutableInt messagesReceived)
+      public SubscriberListenerImpl(CountDownLatch messagesReceived)
       {
          this.messagesReceived = messagesReceived;
       }
@@ -231,7 +236,7 @@ public class IntraprocessLargeCopyTest2
             BigMessage copied = new BigMessage();
             copied.set(data);
             System.out.println("Received: " + i++ + " Copied id: " + copied.getId() + " size: " + copied.getLargeSequence().size());
-            messagesReceived.add(1);
+            messagesReceived.countDown();
          }
       }
 

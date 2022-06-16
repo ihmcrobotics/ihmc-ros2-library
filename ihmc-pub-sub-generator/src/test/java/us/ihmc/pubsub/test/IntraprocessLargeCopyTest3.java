@@ -110,7 +110,7 @@ public class IntraprocessLargeCopyTest3
             .domainId(215)
             .discoveryLeaseDuration(Time.Infinite)
             .name(name)
-            .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
+            .bindToAddressRestrictions(false, Arrays.asList(InetAddress.getByName("127.0.0.1")));
    }
 
 
