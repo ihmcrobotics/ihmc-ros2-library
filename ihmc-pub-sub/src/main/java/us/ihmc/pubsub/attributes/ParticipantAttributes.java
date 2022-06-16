@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.AddressListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.BuiltinAttributesType;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryProtocol;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryServerList;
@@ -140,20 +141,41 @@ public class ParticipantAttributes
       return this;
    }
 
-   public ParticipantAttributes bindToAddressRestrictions(List<InetAddress> bindToAddressRestrictions)
+
+   /**
+    * Bind this participant to only the addresses in bindToAddressRestrictions
+    * 
+    * Functionality, this will create a new UDPv4 transport with the whitelist set to "bindToAddressRestrictions". Optionally, a shared memory transport will be added as well.
+    * useBuiltinTransports will be set to false 
+    * 
+    * @param useSharedMemory Enabled shared memory communication by adding a shared memory transport to this participant.
+    * @param bindToAddressRestrictions Limit the scope of this participant to the list of hosts. If null or empty, the participant will not be able to communicate.
+    * @return
+    */
+   public ParticipantAttributes bindToAddressRestrictions(boolean useSharedMemory, List<InetAddress> bindToAddressRestrictions)
    {
+      useBuiltinTransports(false);
+      if(useSharedMemory)
+      {
+         addSharedMemoryTransport();  
+      }
+      
       if (bindToAddressRestrictions != null && !bindToAddressRestrictions.isEmpty())
       {
-         LocatorListType locatorList = new LocatorListType();
+         // Create a new UDP transport,
+         String transportName = UUID.randomUUID().toString();
+         RtpsTransportDescriptorType transportDescriptor = new RtpsTransportDescriptorType();
+         transportDescriptor.setTransportId(transportName);
+         transportDescriptor.setType("UDPv4");
+         AddressListType addressWhitelist = new AddressListType();
+
          for (InetAddress addr : bindToAddressRestrictions)
          {
-            LocatorType locator = new LocatorType();
-            Udpv4LocatorType udpv4locator = new Udpv4LocatorType();
-            udpv4locator.setAddress(addr.getHostAddress());
-            locator.setUdpv4(udpv4locator);
-            locatorList.getLocator().add(locator);
+            addressWhitelist.getAddress().add(addr.getHostAddress());
          }
-         participantProfile.getRtps().setDefaultUnicastLocatorList(locatorList);
+         
+         transportDescriptor.setInterfaceWhiteList(addressWhitelist);
+         addTransport(transportDescriptor);
       }
       
       return this;
