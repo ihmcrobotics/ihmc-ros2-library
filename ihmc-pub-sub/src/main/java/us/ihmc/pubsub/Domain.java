@@ -325,12 +325,7 @@ public interface Domain {
       {
          publisherAttributes.partitions(Arrays.asList(partitions));
       }
-
-      if(topicDataType.getTypeSize() > 65000)
-      {
-         publisherAttributes.publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
-      }
-
+      
       return publisherAttributes;
    }
    
