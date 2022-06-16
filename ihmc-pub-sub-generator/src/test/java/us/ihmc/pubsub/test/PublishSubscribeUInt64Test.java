@@ -60,7 +60,7 @@ public class PublishSubscribeUInt64Test
                                                                          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
                                                                          .partitions(Collections.singletonList("us/ihmc"))
                                                                          .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
 
          Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 

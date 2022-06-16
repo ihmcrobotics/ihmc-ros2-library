@@ -59,7 +59,7 @@ public class HandshakeTest
    public int sendIndex = 0;
 
    @Tag("allocation")
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testPublishSubscribeFooHandshake() throws IOException
    {
       PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;
@@ -70,76 +70,76 @@ public class HandshakeTest
       Random random = new Random(29103902183L);
 
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
-
-      domain.setLogLevel(LogLevel.INFO);
-
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-            .domainId(215)
-            .discoveryLeaseDuration(Time.Infinite).name("StatusTest");
-
-      Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
-
-      FooHandshakePubSubType dataType = new FooHandshakePubSubType();
-      domain.registerType(participant, dataType);
-
-
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
-       .topicDataType(dataType)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
-
-      FooHandshakePubSubType dataType2 = new FooHandshakePubSubType();
-
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
-       .topicDataType(dataType2)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
-
-      SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
-
-      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
-
-      List<FooHandshake> preallocatedHandshakes = new ArrayList<>();
-      for (int n = 0; n < NUMBER_OF_MESSAGES_TO_SEND; n++)
+      try
       {
-         System.out.println("Constructing random handshake " + n + "...");
-         preallocatedHandshakes.add(constructRandomHandshake(random, n));
+
+         domain.setLogLevel(LogLevel.INFO);
+
+         ParticipantAttributes attributes = ParticipantAttributes.create().domainId(220).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+
+         Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
+
+         FooHandshakePubSubType dataType = new FooHandshakePubSubType();
+         domain.registerType(participant, dataType);
+
+         PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
+                                                                             .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                             .partitions(Collections.singletonList("us/ihmc"))
+                                                                             .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                             .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+
+         FooHandshakePubSubType dataType2 = new FooHandshakePubSubType();
+
+         SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
+                                                                         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                         .partitions(Collections.singletonList("us/ihmc"))
+                                                                         .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+
+         SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
+         Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
+
+         Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+
+         List<FooHandshake> preallocatedHandshakes = new ArrayList<>();
+         for (int n = 0; n < NUMBER_OF_MESSAGES_TO_SEND; n++)
+         {
+            System.out.println("Constructing random handshake " + n + "...");
+            preallocatedHandshakes.add(constructRandomHandshake(random, n));
+         }
+
+         writeNHandshakes(publisher, preallocatedHandshakes, 1); // warmup
+
+         allocationProfiler.startRecordingAllocations(); // start recording
+
+         writeNHandshakes(publisher, preallocatedHandshakes, NUMBER_OF_MESSAGES_TO_SEND - 1); // write the rest
+
+         allocationProfiler.stopRecordingAllocations(); // stop recording
+
+         ThreadTools.sleep(100);
+
+         for (int i = 0; i < subscriberListener.i; i++)
+         {
+            PrintTools.info(this, "Message received: " + subscriberListener.receivedMessages[i].getDt());
+         }
+
+         List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
+
+         String message = "";
+         for (AllocationRecord allocation : allocations)
+         {
+            message += allocation.toString() + "\n";
+         }
+         System.out.println(message);
+
+         LogTools.info("Recieved: " + subscriberListener.i + "/" + NUMBER_OF_MESSAGES_TO_SEND + " messages");
+         assertTrue(allocations.size() == 0, "allocated " + allocations.size() + ": \n" + message);
+         assertTrue(subscriberListener.i >= 1, "did not receive all");
       }
-
-      writeNHandshakes(publisher, preallocatedHandshakes, 1); // warmup
-
-      allocationProfiler.startRecordingAllocations(); // start recording
-
-      writeNHandshakes(publisher, preallocatedHandshakes, NUMBER_OF_MESSAGES_TO_SEND - 1); // write the rest
-
-      allocationProfiler.stopRecordingAllocations();  // stop recording
-
-      ThreadTools.sleep(100);
-
-      for (int i = 0; i < subscriberListener.i; i++)
+      finally
       {
-         PrintTools.info(this, "Message received: " + subscriberListener.receivedMessages[i].getDt());
+         domain.stopAll();
       }
-
-      List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
-
-      String message = "";
-      for (AllocationRecord allocation : allocations)
-      {
-         message += allocation.toString() + "\n";
-      }
-      System.out.println(message);
-
-      LogTools.info("Recieved: " + subscriberListener.i + "/" + NUMBER_OF_MESSAGES_TO_SEND + " messages");
-      assertTrue(allocations.size() == 0, "allocated " + allocations.size() + ": \n" + message);
-      assertTrue(subscriberListener.i >= 1, "did not receive all");
    }
 
    private void writeNHandshakes(Publisher publisher, List<FooHandshake> preallocatedHandshakes, int handshakesToWrite) throws IOException

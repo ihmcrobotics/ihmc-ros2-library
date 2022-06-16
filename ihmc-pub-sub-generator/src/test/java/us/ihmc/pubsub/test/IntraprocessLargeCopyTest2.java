@@ -102,7 +102,7 @@ public class IntraprocessLargeCopyTest2
          assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"), "Standard error contains java.lang.IndexOutOfBoundsException");
 
          // make sure to receive all messages
-         assertTrue(messagesReceived.await(10, TimeUnit.SECONDS), "Timeout waiting for message receive");
+         assertTrue(messagesReceived.await(20, TimeUnit.SECONDS), "Timeout waiting for message receive");
       }
       finally
       {
@@ -113,7 +113,7 @@ public class IntraprocessLargeCopyTest2
    private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
    {
       return ParticipantAttributes.create().domainId(216).discoveryLeaseDuration(Time.Infinite).name(name)
-                                  .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
+                                  .useOnlySharedMemoryTransport();
    }
 
    private Publisher createPublisher(Domain domain, PubSubImplementation impl) throws IOException
@@ -136,7 +136,7 @@ public class IntraprocessLargeCopyTest2
                                                                           .durabilityKind(impl == PubSubImplementation.INTRAPROCESS
                                                                                 ? DurabilityQosKindType.VOLATILE
                                                                                 : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                          .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(20)
+                                                                          .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(NUMBER_OF_MESSAGES_TO_SEND + 1)
                                                                           .maxBlockingTime(DDSConversionTools.createTime(100.0));
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
@@ -161,7 +161,8 @@ public class IntraprocessLargeCopyTest2
                                                                       .partitions(Collections.singletonList("us/ihmc"))
                                                                       .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ? DurabilityQosKindType.VOLATILE
                                                                             : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+                                                                      .historyDepth(NUMBER_OF_MESSAGES_TO_SEND + 1);
 
       domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
 

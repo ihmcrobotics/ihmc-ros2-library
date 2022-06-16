@@ -143,7 +143,7 @@ public class IntraprocessLargeCopyTest
    private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
    {
       return ParticipantAttributes.create().domainId(215).discoveryLeaseDuration(Time.Infinite).name(name)
-                                  .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
+                                  .useOnlySharedMemoryTransport();
    }
 
    /**
