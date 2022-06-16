@@ -294,7 +294,6 @@ public interface Domain {
     * Topic.TopicName: topicName
     * Topic.QoS.partitions: partitions
     * Topic.QoS.ReliabilityKind: reliablityKind
-    * if topicDataType.getTypeSize() > 65kB QoS.publishMode will be set to ASYNCHRONOUS_PUBLISH_MODE
     *
     * Furthermore, if topicDataType has not been registered with the participant then it will be registered.
     *
