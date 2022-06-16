@@ -49,24 +49,24 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
  */
 public class IntraprocessLargeCopyTest
 {
-//   @Disabled // not working, no output, not sure why
-   @Test// timeout = 300000
+   //   @Disabled // not working, no output, not sure why
+   @Test // timeout = 300000
    public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
 
       PubSubImplementation impl = PubSubImplementation.FAST_RTPS;
-      
+
       performCopyTest(random, impl);
    }
-   
-   @Test// timeout = 300000
+
+   @Test // timeout = 300000
    public void testRepeatedLargeCopiesInIntraprocessCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
 
       PubSubImplementation impl = PubSubImplementation.INTRAPROCESS;
-      
+
       performCopyTest(random, impl);
    }
 
@@ -75,72 +75,75 @@ public class IntraprocessLargeCopyTest
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
       PrintStream systemErr = System.err;
-
-      System.setErr(new PrintStream(byteArrayOutputStream));
-
-      // start subscriber in separate thread
-      Runnable subscriberCloser = createSubscriber(impl);
-
-
-      // start 5 publisher threads
-      ArrayList<Thread> threads = new ArrayList<>();
-      for (int i = 0; i < 5; i++)
+      Domain domain = DomainFactory.getDomain(impl);
+      try
       {
-         Thread publisherThread = new Thread(() -> {
+
+         System.setErr(new PrintStream(byteArrayOutputStream));
+
+         // start subscriber in separate thread
+         createSubscriber(domain);
+
+         // start 5 publisher threads
+         ArrayList<Thread> threads = new ArrayList<>();
+         for (int i = 0; i < 5; i++)
+         {
+            Thread publisherThread = new Thread(() ->
+            {
+               try
+               {
+                  Publisher publisher = createPublisher(domain);
+                  publishABunch(publisher, random);
+               }
+               catch (IOException e)
+               {
+                  e.printStackTrace();
+               }
+            }, "PublisherThread");
+            publisherThread.start();
+            threads.add(publisherThread);
+         }
+
+         // join with all of the publisher threads
+         threads.stream().forEach(thread ->
+         {
             try
             {
-               createPublisherAndPublishABunch(impl, random);
+               thread.join();
             }
-            catch (IOException e)
+            catch (InterruptedException e)
             {
                e.printStackTrace();
             }
-         }, "PublisherThread");
-         publisherThread.start();
-         threads.add(publisherThread);
+         });
+
+         // join with the subscriber thread
+
+         // wait for things to happen
+         ThreadTools.sleep(5000);
+
+         System.err.flush();
+
+         System.setErr(systemErr);
+
+         System.err.println(byteArrayOutputStream.toString());
+
+         // this captures the output of the program to make sure bad threading exceptions didn't happen
+         assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"), "Standard error contains java.lang.IndexOutOfBoundsException");
+
+      }
+      finally
+      {
+         // Tear down everything
+         domain.stopAll();
       }
 
-      // join with all of the publisher threads
-      threads.stream().forEach(thread -> {
-         try
-         {
-            thread.join();
-         }
-         catch (InterruptedException e)
-         {
-            e.printStackTrace();
-         }
-      });
-
-      // join with the subscriber thread
-
-
-      // wait for things to happen
-      ThreadTools.sleep(5000);
-
-      System.err.flush();
-
-      System.setErr(systemErr);
-      
-      System.err.println(byteArrayOutputStream.toString());
-
-      // this captures the output of the program to make sure bad threading exceptions didn't happen
-      assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"),
-                                                   "Standard error contains java.lang.IndexOutOfBoundsException");
-      
-      // Tear down everything
-      subscriberCloser.run();
-      
-      
    }
-   
+
    private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
    {
-      return ParticipantAttributes.create()
-            .domainId(215)
-            .discoveryLeaseDuration(Time.Infinite)
-            .name(name)
-            .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
+      return ParticipantAttributes.create().domainId(215).discoveryLeaseDuration(Time.Infinite).name(name)
+                                  .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
    }
 
    /**
@@ -150,9 +153,8 @@ public class IntraprocessLargeCopyTest
     * @param random
     * @throws IOException
     */
-   private void createPublisherAndPublishABunch(PubSubImplementation impl, Random random) throws IOException
+   private Publisher createPublisher(Domain domain) throws IOException
    {
-      Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.ERROR);
 
@@ -163,27 +165,18 @@ public class IntraprocessLargeCopyTest
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
-       .topicDataType(dataType)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-       .historyDepth(10);
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
+                                                                          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                          .partitions(Collections.singletonList("us/ihmc"))
+                                                                          .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                          .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(10);
 
-       Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
-       publishABunch(publisher, random);               
-       
-       domain.removePublisher(publisher);
-       domain.removeParticipant(participant);
-       
+      return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 
    }
 
-   private Runnable createSubscriber(PubSubImplementation impl) throws IOException
+   private void createSubscriber(Domain domain) throws IOException
    {
-      Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.ERROR);
 
@@ -195,20 +188,14 @@ public class IntraprocessLargeCopyTest
 
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
-       .topicDataType(dataType2)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
+                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                      .partitions(Collections.singletonList("us/ihmc"))
+                                                                      .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
-      
-      return () -> {
-         domain.removeSubscriber(subscriber);
-         domain.removeParticipant(participant);
-      };
+      domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+
    }
 
    private void publishABunch(Publisher publisher, Random random) throws IOException
@@ -222,17 +209,17 @@ public class IntraprocessLargeCopyTest
 
          // pack each message to a random size up to 100000
          int randomSize = random.nextInt(100000);
-//         System.out.println("Random: " + randomSize);
+         //         System.out.println("Random: " + randomSize);
          for (int j = 0; j < randomSize; j++)
          {
-            idlSubmessage.setHello(i + j);  // set the values to all be different
+            idlSubmessage.setHello(i + j); // set the values to all be different
             msg.getLargeSequence().add().set(idlSubmessage);
          }
          //         try
          {
             publisher.write(msg);
 
-//            System.out.println("Publishing: " + i);
+            //            System.out.println("Publishing: " + i);
             //            Thread.sleep(1000);
          }
          //         catch (InterruptedException e)

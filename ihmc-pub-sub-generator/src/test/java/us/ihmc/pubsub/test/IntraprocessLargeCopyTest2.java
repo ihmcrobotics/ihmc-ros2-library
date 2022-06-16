@@ -14,13 +14,11 @@ import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.gradle.internal.impldep.org.apache.commons.lang.mutable.MutableInt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
 
 import us.ihmc.idl.generated.test.BigMessage;
@@ -53,26 +51,25 @@ public class IntraprocessLargeCopyTest2
 {
    private static final int NUMBER_OF_MESSAGES_TO_SEND = 80;
 
-   
    @Test
-   @Timeout(10)// timeout = 10000
+   @Timeout(10) // timeout = 10000
    public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
 
       PubSubImplementation impl = PubSubImplementation.FAST_RTPS;
-      
+
       performCopyTest(random, impl);
    }
-   
-   @Test// timeout = 10000
+
+   @Test // timeout = 10000
    @Timeout(10)
    public void testRepeatedLargeCopiesInIntraprocessCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
 
       PubSubImplementation impl = PubSubImplementation.INTRAPROCESS;
-      
+
       performCopyTest(random, impl);
    }
 
@@ -81,47 +78,46 @@ public class IntraprocessLargeCopyTest2
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
       PrintStream systemErr = System.err;
+      Domain domain = DomainFactory.getDomain(impl);
 
-      System.setErr(new PrintStream(byteArrayOutputStream));
+      try
+      {
+         System.setErr(new PrintStream(byteArrayOutputStream));
 
-      // create one subscriber
-      CountDownLatch messagesReceived = new CountDownLatch(NUMBER_OF_MESSAGES_TO_SEND);
-      Runnable subscriberCloser = createSubscriber(impl, messagesReceived);
+         // create one subscriber
+         CountDownLatch messagesReceived = new CountDownLatch(NUMBER_OF_MESSAGES_TO_SEND);
+         createSubscriber(domain, impl, messagesReceived);
 
-      // create one publisher
-      Runnable publisherCloser = createPublisherAndPublishABunch(impl, random);
+         // create one publisher
+         Publisher publisher = createPublisher(domain, impl);
+         publishABunch(publisher, random);
 
+         System.err.flush();
 
-      System.err.flush();
+         System.setErr(systemErr);
 
-      System.setErr(systemErr);
-      
-      System.err.println(byteArrayOutputStream.toString());
+         System.err.println(byteArrayOutputStream.toString());
 
-      // capture all the output for analysis
-      assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"),
-                                                   "Standard error contains java.lang.IndexOutOfBoundsException");
+         // capture all the output for analysis
+         assertFalse(byteArrayOutputStream.toString().contains("IndexOutOfBoundsException"), "Standard error contains java.lang.IndexOutOfBoundsException");
 
-      // make sure to receive all messages
-      assertTrue(messagesReceived.await(10, TimeUnit.SECONDS), "Timeout waiting for message receive");
-      
-      subscriberCloser.run();
-      publisherCloser.run();
+         // make sure to receive all messages
+         assertTrue(messagesReceived.await(10, TimeUnit.SECONDS), "Timeout waiting for message receive");
+      }
+      finally
+      {
+         domain.stopAll();
+      }
    }
-   
-   
+
    private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
    {
-      return ParticipantAttributes.create()
-            .domainId(215)
-            .discoveryLeaseDuration(Time.Infinite)
-            .name(name)
-            .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
+      return ParticipantAttributes.create().domainId(216).discoveryLeaseDuration(Time.Infinite).name(name)
+                                  .bindToAddressRestrictions(true, Arrays.asList(InetAddress.getByName("127.0.0.1")));
    }
 
-   private Runnable createPublisherAndPublishABunch(PubSubImplementation impl, Random random) throws IOException
+   private Publisher createPublisher(Domain domain, PubSubImplementation impl) throws IOException
    {
-      Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.INFO);
 
@@ -131,37 +127,23 @@ public class IntraprocessLargeCopyTest2
 
       BigMessagePubSubType dataType = new BigMessagePubSubType();
       domain.registerType(participant, dataType);
-      
+
       System.out.println(dataType.getTypeSize());
 
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
-       .topicDataType(dataType)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
-                             DurabilityQosKindType.VOLATILE
-                             : DurabilityQosKindType.TRANSIENT_LOCAL)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-       .historyDepth(20)
-       .maxBlockingTime(DDSConversionTools.createTime(100.0));
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
+                                                                          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                          .partitions(Collections.singletonList("us/ihmc"))
+                                                                          .durabilityKind(impl == PubSubImplementation.INTRAPROCESS
+                                                                                ? DurabilityQosKindType.VOLATILE
+                                                                                : DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                          .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(20)
+                                                                          .maxBlockingTime(DDSConversionTools.createTime(100.0));
 
-      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
-      publishABunch(publisher, random);
-      
-      
-      return () ->
-      {
-         domain.removePublisher(publisher);
-         domain.removeParticipant(participant);
-      };
-      
-      
+      return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
 
-   private Runnable createSubscriber(PubSubImplementation impl, CountDownLatch messagesReceived) throws IOException
+   private void createSubscriber(Domain domain, PubSubImplementation impl, CountDownLatch messagesReceived) throws IOException
    {
-      Domain domain = DomainFactory.getDomain(impl);
 
       domain.setLogLevel(LogLevel.INFO);
 
@@ -174,23 +156,15 @@ public class IntraprocessLargeCopyTest2
 
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
-       .topicDataType(dataType2)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ?
-                             DurabilityQosKindType.VOLATILE
-                             : DurabilityQosKindType.TRANSIENT_LOCAL)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
+                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                      .partitions(Collections.singletonList("us/ihmc"))
+                                                                      .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ? DurabilityQosKindType.VOLATILE
+                                                                            : DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
-      
-      return () ->
-      {
-         domain.removeSubscriber(subscriber);
-         domain.removeParticipant(participant);
-      };
+      domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));
+
    }
 
    private void publishABunch(Publisher publisher, Random random) throws IOException
@@ -205,7 +179,7 @@ public class IntraprocessLargeCopyTest2
          {
             bigMessage.getLargeSequence().add().setHello(i + j);
          }
-         
+
          publisher.write(bigMessage);
          System.out.println("write " + i);
       }
@@ -222,7 +196,7 @@ public class IntraprocessLargeCopyTest2
       {
          this.messagesReceived = messagesReceived;
       }
-      
+
       @Override
       public void onNewDataMessage(Subscriber subscriber)
       {

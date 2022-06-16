@@ -32,67 +32,65 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class PublishSubscribeUInt64Test
 {
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testPublishSubscribeUInt32() throws IOException
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
 
-      domain.setLogLevel(LogLevel.INFO);
-
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
-
-      Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
-
-      StatusMessagePubSubType dataType = new StatusMessagePubSubType();
-      domain.registerType(participant, dataType);
-
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
-       .topicDataType(dataType)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-       .historyDepth(50)
-       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
-
-      StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
-
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
-       .topicDataType(dataType2)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
-
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
-
-      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
-
-      StatusMessage msg = new StatusMessage();
-      msg.setPause(false);
-      msg.setSequenceId(0);
-
-      int i = 0;
-      for (; i < 10; i++)
+      try
       {
-         try
-         {
-            msg.setPause(i % 2 == 0);
-            msg.setSequenceId(i);
-            publisher.write(msg);
+         domain.setLogLevel(LogLevel.INFO);
 
-            System.out.println("Publishing: " + msg.toString());
-            Thread.sleep(1000);
-            ++i;
-         }
-         catch (InterruptedException e)
+         ParticipantAttributes attributes = ParticipantAttributes.create().domainId(219).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+
+         Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
+
+         StatusMessagePubSubType dataType = new StatusMessagePubSubType();
+         domain.registerType(participant, dataType);
+
+         PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
+                                                                             .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                             .partitions(Collections.singletonList("us/ihmc"))
+                                                                             .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                             .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
+
+         StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
+
+         SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
+                                                                         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                         .partitions(Collections.singletonList("us/ihmc"))
+                                                                         .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+
+         Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+
+         Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+
+         StatusMessage msg = new StatusMessage();
+         msg.setPause(false);
+         msg.setSequenceId(0);
+
+         int i = 0;
+         for (; i < 10; i++)
          {
+            try
+            {
+               msg.setPause(i % 2 == 0);
+               msg.setSequenceId(i);
+               publisher.write(msg);
+
+               System.out.println("Publishing: " + msg.toString());
+               Thread.sleep(1000);
+               ++i;
+            }
+            catch (InterruptedException e)
+            {
+            }
          }
+      }
+      finally
+      {
+         domain.stopAll();
       }
    }
 

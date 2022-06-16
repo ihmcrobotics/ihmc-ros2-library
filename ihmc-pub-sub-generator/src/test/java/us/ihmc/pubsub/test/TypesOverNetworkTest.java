@@ -16,62 +16,67 @@ import java.util.Random;
  */
 public class TypesOverNetworkTest
 {
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testSerializationOfAllTypesOverRealNetwork() throws IOException
    {
       PubSubTester<IDLElementTest> tester = new PubSubTester<>(IDLElementTest::new);
-
-      int NUMBER_MESSAGES_TO_SEND = 10;
-      Random random = new Random(2934810948124L);
-
-      IDLElementTest[] messageArray = new IDLElementTest[NUMBER_MESSAGES_TO_SEND];
-
-      for (int i = 0; i < NUMBER_MESSAGES_TO_SEND; i++)
+      try
       {
-         messageArray[i] = populateIDLElementTest(new IDLElementTest(), random, i);
-      }
 
-      ArrayList<AssertionError> errors = new ArrayList<>();
-      tester.callbacks.add(((data, info) -> {
+         int NUMBER_MESSAGES_TO_SEND = 10;
+         Random random = new Random(2934810948124L);
 
-         System.out.println("Receiving: " + data.getStringTestAsString());
+         IDLElementTest[] messageArray = new IDLElementTest[NUMBER_MESSAGES_TO_SEND];
 
-         // use string to match up messages, allowing for out of order or dropped messages
          for (int i = 0; i < NUMBER_MESSAGES_TO_SEND; i++)
          {
-            if (messageArray[i].getStringTestAsString().equals(data.getStringTestAsString()))
-            {
-               System.out.println("Looking for errors...");
-               ArrayList<AssertionError> localErrors = epsilonEquals(messageArray[i], data, 0.0);
-               errors.addAll(localErrors);
+            messageArray[i] = populateIDLElementTest(new IDLElementTest(), random, i);
+         }
 
-               for (AssertionError error : localErrors)
-                  error.printStackTrace();
+         ArrayList<AssertionError> errors = new ArrayList<>();
+         tester.callbacks.add(((data, info) ->
+         {
+
+            System.out.println("Receiving: " + data.getStringTestAsString());
+
+            // use string to match up messages, allowing for out of order or dropped messages
+            for (int i = 0; i < NUMBER_MESSAGES_TO_SEND; i++)
+            {
+               if (messageArray[i].getStringTestAsString().equals(data.getStringTestAsString()))
+               {
+                  System.out.println("Looking for errors...");
+                  ArrayList<AssertionError> localErrors = epsilonEquals(messageArray[i], data, 0.0);
+                  errors.addAll(localErrors);
+
+                  for (AssertionError error : localErrors)
+                     error.printStackTrace();
+               }
+            }
+
+         }));
+
+         for (int i = 0; i < NUMBER_MESSAGES_TO_SEND; i++)
+         {
+            try
+            {
+               tester.publisher.write(messageArray[i]);
+
+               System.out.println("Publishing: " + messageArray[i].getStringTestAsString());
+               Thread.sleep(200);
+            }
+            catch (InterruptedException e)
+            {
             }
          }
-
-      }));
-
-      for (int i = 0; i < NUMBER_MESSAGES_TO_SEND; i++)
-      {
-         try
-         {
-            tester.publisher.write(messageArray[i]);
-
-            System.out.println("Publishing: " + messageArray[i].getStringTestAsString());
-            Thread.sleep(200);
-         }
-         catch (InterruptedException e)
-         {
-         }
+         System.out.println("Num errors: " + errors.size());
+         
+         for (AssertionError error : errors)
+            throw error;
       }
-
-      tester.domain.stopAll();
-
-      System.out.println("Num errors: " + errors.size());
-
-      for (AssertionError error : errors)
-         throw error;
+      finally
+      {
+         tester.domain.stopAll();
+      }
    }
 
    private IDLElementTest populateIDLElementTest(IDLElementTest test, Random random, int index)

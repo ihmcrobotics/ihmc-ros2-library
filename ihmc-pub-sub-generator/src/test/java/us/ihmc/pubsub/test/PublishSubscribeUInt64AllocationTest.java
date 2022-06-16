@@ -64,73 +64,71 @@ public class PublishSubscribeUInt64AllocationTest
 
       Domain domain = DomainFactory.getDomain(pubSubImplementation);
 
-      domain.setLogLevel(LogLevel.INFO);
-
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(215)
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("StatusTest");
-
-      Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
-
-      StatusMessagePubSubType dataType = new StatusMessagePubSubType();
-      domain.registerType(participant, dataType);
-
-      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
-       .topicDataType(dataType)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS ?
-                             DurabilityQosKindType.VOLATILE
-                             : DurabilityQosKindType.TRANSIENT_LOCAL)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
-       .historyDepth(50)
-       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
-
-      StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
-
-      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
-       .topicDataType(dataType2)
-       .topicName("Status")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
-
-      SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
-
-      Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
-
-      StatusMessage msg = new StatusMessage();
-      msg.setPause(false);
-      msg.setSequenceId(0);
-
-      publishNMessages(publisher, msg, 1); // warmup
-
-      allocationProfiler.startRecordingAllocations(); // start recording
-
-      publishNMessages(publisher, msg, NUMBER_OF_MESSAGES_TO_SEND);
-
-      allocationProfiler.stopRecordingAllocations();  // stop recording
-
-      for (StatusMessage message : subscriberListener.receivedMessages)
+      try
       {
-         if (message != null)
-            PrintTools.info(this, "Message received: " + message.toString());
+         domain.setLogLevel(LogLevel.INFO);
+
+         ParticipantAttributes attributes = ParticipantAttributes.create().domainId(218).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+
+         Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
+
+         StatusMessagePubSubType dataType = new StatusMessagePubSubType();
+         domain.registerType(participant, dataType);
+
+         PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
+                                                                             .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                             .partitions(Collections.singletonList("us/ihmc"))
+                                                                             .durabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS
+                                                                                   ? DurabilityQosKindType.VOLATILE
+                                                                                   : DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                             .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
+
+         StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
+
+         SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
+                                                                         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                         .partitions(Collections.singletonList("us/ihmc"))
+                                                                         .durabilityKind(DurabilityQosKindType.VOLATILE)
+                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+
+         SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
+         Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
+
+         Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+
+         StatusMessage msg = new StatusMessage();
+         msg.setPause(false);
+         msg.setSequenceId(0);
+
+         publishNMessages(publisher, msg, 1); // warmup
+
+         allocationProfiler.startRecordingAllocations(); // start recording
+
+         publishNMessages(publisher, msg, NUMBER_OF_MESSAGES_TO_SEND);
+
+         allocationProfiler.stopRecordingAllocations(); // stop recording
+
+         for (StatusMessage message : subscriberListener.receivedMessages)
+         {
+            if (message != null)
+               PrintTools.info(this, "Message received: " + message.toString());
+         }
+
+         List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
+
+         String message = "";
+         for (AllocationRecord allocation : allocations)
+         {
+            message += allocation.toString() + "\n";
+         }
+         System.out.println(message);
+
+         assertTrue(allocations.size() == 0, "allocated " + allocations.size() + ": \n" + message);
       }
-
-      List<AllocationRecord> allocations = allocationProfiler.pollAllocations();
-
-      String message = "";
-      for (AllocationRecord allocation : allocations)
+      finally
       {
-         message += allocation.toString() + "\n";
+         domain.stopAll();
       }
-      System.out.println(message);
-
-      assertTrue(allocations.size() == 0, "allocated " + allocations.size() + ": \n" + message);
    }
 
    private void publishNMessages(Publisher publisher, StatusMessage msg, int numberOfMessagesToSend) throws IOException
