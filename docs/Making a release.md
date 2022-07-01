@@ -36,7 +36,7 @@ In `ihmc-pub-sub-group/group.gradle.properties`, up the version number.
 
 #### Step 4: Publish artifacts
 
-Publish artifacts to Bintray.
+Publish artifacts to Maven Central.
 
 `gradle compositePublish -PpublishUrl=ihmcRelease`
 
