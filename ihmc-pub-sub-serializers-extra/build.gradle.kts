@@ -6,7 +6,7 @@ plugins {
 
 ihmc {
    loadProductProperties("../group.gradle.properties")
-   
+
    configureDependencyResolution()
    configurePublications()
 }
