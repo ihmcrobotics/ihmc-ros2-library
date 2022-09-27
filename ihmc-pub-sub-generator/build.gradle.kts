@@ -8,10 +8,6 @@ plugins {
 ihmc {
    loadProductProperties("../group.gradle.properties")
 
-	// Temporary for testing the new native library loader version
-	repository("https://artifacts.halodi.com/repository/maven-open-source-group")
-	
-
    configureDependencyResolution()
    resourceDirectory("main", "templates")
    javaDirectory("test", "generated-java")
