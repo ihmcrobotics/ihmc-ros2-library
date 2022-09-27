@@ -12,6 +12,7 @@ ihmc {
 
    configureDependencyResolution()
    javaDirectory("main", "../../swig/FastRTPS/generated")
+   javaDirectory("main", "../../build/generated/sources/xjc/java/main")
    configurePublications()
 }
 
@@ -32,8 +33,6 @@ testDependencies {
    api("us.ihmc:ihmc-commons-testing:0.30.6")
 }
 
-val generatedXSDSourcesPath = file("build/generated/sources/xjc/java/main")
-
 sourceSets {
    main {
       xjcSchema {
@@ -41,18 +40,9 @@ sourceSets {
          include("fastRTPS_profiles.xsd")
          exclude("governance.xsd", "permissions.xsd")
       }
-      java {
-         srcDir(generatedXSDSourcesPath)
-      }
    }
 }
 
 tasks {
    compileJava.configure { dependsOn.add(xjcGenerate) }
-}
-
-idea {
-   module {
-      generatedSourceDirs.add(generatedXSDSourcesPath)
-   }
 }
