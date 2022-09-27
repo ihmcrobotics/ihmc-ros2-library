@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MultipleParticipantsInSameProcessTest
 {
-
    private class SubscriberListenerImpl implements SubscriberListener
    {
       AtomicInteger counter;
@@ -140,6 +139,5 @@ public class MultipleParticipantsInSameProcessTest
       {
          domain.stopAll();
       }
-
    }
 }

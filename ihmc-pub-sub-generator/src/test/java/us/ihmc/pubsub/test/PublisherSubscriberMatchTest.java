@@ -15,7 +15,6 @@ import us.ihmc.pubsub.impl.intraprocess.IntraProcessUtil;
 
 public class PublisherSubscriberMatchTest
 {
-
    @Test
    public void TestMatchingAttributes()
    {
@@ -34,6 +33,5 @@ public class PublisherSubscriberMatchTest
        .durabilityKind(DurabilityQosKindType.VOLATILE);
 
       assertTrue(IntraProcessUtil.subscriberPublisherMatches(subscriberAttributes, genericPublisherAttributes));
-
    }
 }

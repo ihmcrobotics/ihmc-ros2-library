@@ -35,7 +35,6 @@ public class EndpointDiscoveryProtocolListenerExample
 {
    private class ParticipantListenerImpl implements ParticipantListener
    {
-
       @Override
       public void onParticipantDiscovery(Participant participant, ParticipantDiscoveryInfo info)
       {
@@ -44,7 +43,6 @@ public class EndpointDiscoveryProtocolListenerExample
          System.out.println("Guid: " + info.getGuid().toString());
          System.out.println("Name: " + info.getName());
       }
-
    }
 
    private class PublisherEndpointDiscoveryListenerImpl implements PublisherEndpointDiscoveryListener
@@ -67,7 +65,6 @@ public class EndpointDiscoveryProtocolListenerExample
          System.out.println("TypeName: " + typeName);
          System.out.println("TopicName: " + topicName);
       }
-
    }
 
    private class SubscriberEndpointDiscoveryListenerImpl implements SubscriberEndpointDiscoveryListener
@@ -92,7 +89,6 @@ public class EndpointDiscoveryProtocolListenerExample
       }
 
    }
-   
    
    public EndpointDiscoveryProtocolListenerExample() throws IOException
    {

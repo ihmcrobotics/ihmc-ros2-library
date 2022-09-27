@@ -41,10 +41,8 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class SubscriberExample
 {
-
    private class ParticipantListenerImpl implements ParticipantListener
    {
-
       @Override
       public void onParticipantDiscovery(Participant participant, ParticipantDiscoveryInfo info)
       {
@@ -90,7 +88,6 @@ public class SubscriberExample
       .discoveryLeaseDuration(Time.Infinite);
       //.discoveryServer("127.0.0.1", 4);
 
-      
       Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());
 
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
@@ -106,7 +103,6 @@ public class SubscriberExample
       .historyDepth(50);
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
-
    }
 
    public static void main(String[] args) throws IOException, InterruptedException

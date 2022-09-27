@@ -43,7 +43,6 @@ public class PublisherExample
 {
    private class ParticipantListenerImpl implements ParticipantListener
    {
-
       @Override
       public void onParticipantDiscovery(Participant participant, ParticipantDiscoveryInfo info)
       {
@@ -52,12 +51,10 @@ public class PublisherExample
          System.out.println("Guid: " + info.getGuid().toString());
          System.out.println("Name: " + info.getName());
       }
-
    }
    
    private class PublisherListenerImpl implements PublisherListener
    {
-
       @Override
       public void onPublicationMatched(Publisher publisher, MatchingInfo info)
       {
@@ -65,7 +62,6 @@ public class PublisherExample
          System.out.println("Status: " + info.getStatus());
          System.out.println("Guid: " + info.getGuid().toString());
       }
-      
    }
 
    public PublisherExample() throws IOException
@@ -102,8 +98,7 @@ public class PublisherExample
 
       System.out.println("creating publisher");
       Publisher publisher = domain.createPublisher(participant, attrs, new PublisherListenerImpl());
-      
-      
+
       ChatMessage msg = new ChatMessage();
       msg.setSender("Java");
       
