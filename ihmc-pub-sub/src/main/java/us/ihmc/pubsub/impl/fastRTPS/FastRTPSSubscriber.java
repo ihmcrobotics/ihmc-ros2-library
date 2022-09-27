@@ -15,26 +15,20 @@
  */
 package us.ihmc.pubsub.impl.fastRTPS;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.UUID;
-
 import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
-import us.ihmc.pubsub.common.ChangeKind;
-import us.ihmc.pubsub.common.Guid;
-import us.ihmc.pubsub.common.MatchingInfo;
-import us.ihmc.pubsub.common.SampleIdentity;
-import us.ihmc.pubsub.common.SampleInfo;
-import us.ihmc.pubsub.common.SerializedPayload;
-import us.ihmc.pubsub.common.Time;
+import us.ihmc.pubsub.common.*;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
 import us.ihmc.rtps.impl.fastRTPS.NativeSubscriberImpl;
 import us.ihmc.rtps.impl.fastRTPS.NativeSubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.SampleInfoMarshaller;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 class FastRTPSSubscriber<T> implements Subscriber<T>
 {
@@ -107,9 +101,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       payload.getData().limit(dataLength);
    }
 
-
-   FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, SubscriberAttributes attrs, SubscriberListener<T> listener,
-                      NativeParticipantImpl participantImpl)
+   FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, SubscriberAttributes attrs, SubscriberListener<T> listener, NativeParticipantImpl participantImpl)
          throws IOException
    {
       synchronized (destructorLock)

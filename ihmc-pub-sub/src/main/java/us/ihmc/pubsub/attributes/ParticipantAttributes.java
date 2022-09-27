@@ -31,7 +31,6 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class ParticipantAttributes
 {
-   
    private final ParticipantProfileType participantProfile = new ParticipantProfileType();
    private final TransportDescriptorListType transportDescriptors = new TransportDescriptorListType();
 
@@ -141,7 +140,6 @@ public class ParticipantAttributes
       return this;
    }
 
-
    /**
     * Bind this participant to only the addresses in bindToAddressRestrictions
     * 
@@ -180,11 +178,9 @@ public class ParticipantAttributes
       
       return this;
    }
-   
-   
+
    /**
     * Add a transport to use with this participant and register it to this participant
-    * 
     * 
     * @param transport
     * @return
@@ -242,7 +238,6 @@ public class ParticipantAttributes
       addSharedMemoryTransport();
       return this;
    }
-
 
    public boolean isUseStaticDiscovery()
    {

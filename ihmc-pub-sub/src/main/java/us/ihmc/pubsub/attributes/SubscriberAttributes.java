@@ -78,5 +78,4 @@ public class SubscriberAttributes extends CommonAttributes<SubscriberAttributes>
    {
       return subscriberProfile.getQos().getLifespan();
    }
-
 }

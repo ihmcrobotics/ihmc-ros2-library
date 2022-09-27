@@ -15,15 +15,6 @@
  */
 package us.ihmc.pubsub.common;
 
-import java.io.Serializable;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurationType;
-
-import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
-
 /**
  * Time class.
  * 
@@ -44,7 +35,7 @@ public class Time
     * Create new time object
     * 
     * @param seconds
-    * @param fraction Fraction of second (1 fraction = 1/(2^32) seconds) 
+    * @param nsec additional nanoseconds)
     */
    public Time(int seconds, long nsec)
    {
@@ -93,6 +84,4 @@ public class Time
       this.seconds = sourceTimestamp.seconds;
       this.nsec = sourceTimestamp.nsec;
    }
-   
-   
 }

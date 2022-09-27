@@ -72,7 +72,6 @@ class FastRTPSParticipant implements Participant
       }
    }
 
-
    FastRTPSParticipant(ParticipantAttributes attrs, ParticipantListener participantListener) throws IOException, IllegalArgumentException
    {
       String profileName = UUID.randomUUID().toString();

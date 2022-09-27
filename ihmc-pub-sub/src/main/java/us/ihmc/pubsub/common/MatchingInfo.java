@@ -44,7 +44,6 @@ public class MatchingInfo
    private MatchingStatus status;
    private final Guid guid = new Guid();
    
-   
    /**
     * 
     * This method does not allocate memory

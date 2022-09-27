@@ -16,7 +16,6 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
  *  Mostly used for Time
  *  
  * @author jesper
- *
  */
 public class DDSConversionTools
 {

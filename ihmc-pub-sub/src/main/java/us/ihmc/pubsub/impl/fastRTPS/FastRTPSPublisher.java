@@ -69,7 +69,6 @@ class FastRTPSPublisher implements Publisher
       }
    }
 
-
    @SuppressWarnings("unchecked")
    FastRTPSPublisher(TopicDataType<?> topicDataTypeIn, PublisherAttributes attributes, PublisherListener listener,
                      NativeParticipantImpl participant)

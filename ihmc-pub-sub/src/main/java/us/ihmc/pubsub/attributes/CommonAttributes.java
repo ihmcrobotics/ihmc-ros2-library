@@ -11,7 +11,6 @@ import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosPolicyType;
 import com.eprosima.xmlschemas.fastrtps_profiles.LifespanQosPolicyType;
 import com.eprosima.xmlschemas.fastrtps_profiles.NameVectorType;
 import com.eprosima.xmlschemas.fastrtps_profiles.OwnershipQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.OwnershipQosPolicyType;
 import com.eprosima.xmlschemas.fastrtps_profiles.PartitionQosPolicyType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosPolicyType;
@@ -78,8 +77,6 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       topicAttributesType.setName(name);
       return self();
    }
-   
-   
 
    public String getTopicName()
    {
@@ -181,8 +178,7 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    {
       return null;
    }
-   
-   
+
    protected abstract void setLifespanQosPolicyType(LifespanQosPolicyType lifespanQosPolicyType);
    protected abstract LifespanQosPolicyType getLifespanQosPolicyType();
 
@@ -205,5 +201,4 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
          return null;
       }
    }
-
 }

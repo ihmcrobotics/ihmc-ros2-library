@@ -20,5 +20,4 @@ class FastRTPSCommonFunctions
    public static final int LOCATOR_KIND_RESERVED = 0;
    public static final int LOCATOR_KIND_UDPv4 = 1;
    public static final int LOCATOR_KIND_UDPv6 = 2;
-
 }

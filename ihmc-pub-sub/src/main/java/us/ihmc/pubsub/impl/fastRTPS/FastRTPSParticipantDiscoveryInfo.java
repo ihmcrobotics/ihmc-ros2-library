@@ -26,6 +26,7 @@ public class FastRTPSParticipantDiscoveryInfo extends ParticipantDiscoveryInfo
 
    FastRTPSParticipantDiscoveryInfo()
    {
+
    }
    
    public void updateInfo(int status, NativeParticipantListener nativeParticipantListener, long infoPtr, long guidHigh, long guidLow)

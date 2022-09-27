@@ -5,7 +5,6 @@ import us.ihmc.tools.nativelibraries.NativeLibraryWithDependencies;
 
 class FastRtpsNativeLibrary implements NativeLibraryDescription
 {
-
    /**
     * Get the package name for the library
     * 
@@ -71,7 +70,5 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
 
       System.err.println("Unsupported OS: " + os);
       return null;
-
    }
-
 }

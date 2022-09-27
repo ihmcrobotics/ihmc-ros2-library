@@ -210,5 +210,4 @@ public class IntraProcessDomain implements Domain
          removeParticipant(participantToRemove);
       }
    }
-
 }

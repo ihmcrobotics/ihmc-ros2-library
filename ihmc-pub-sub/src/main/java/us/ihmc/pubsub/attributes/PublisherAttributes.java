@@ -14,7 +14,6 @@ import com.eprosima.xmlschemas.fastrtps_profiles.PublisherProfileType;
 import com.eprosima.xmlschemas.fastrtps_profiles.WriterQosPoliciesType;
 import com.eprosima.xmlschemas.fastrtps_profiles.WriterTimesType;
 
-import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
@@ -30,7 +29,6 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
       writerQosPoliciesType.setDurability(durabilityQosPolicyType);
       writerQosPoliciesType.setReliability(reliabilityQosPolicyType);
       publisherProfile.setQos(writerQosPoliciesType);
-
    }
 
    public static PublisherAttributes create()
@@ -47,8 +45,6 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
    {
       return publisherProfile;
    }
-
-
 
    public PublisherAttributes publishModeKind(PublishModeQosKindType kind)
    {
@@ -69,7 +65,6 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
    {
       return publisherProfile.getUserDefinedID();
    }
-   
 
    public PublisherAttributes heartBeatPeriod(Time hearbeat)
    {
@@ -79,8 +74,7 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
       }
       
       publisherProfile.getTimes().setHeartbeatPeriod(DDSConversionTools.timeToDurationType(hearbeat));
-      
-      
+
       return this;
    }
    
@@ -120,9 +114,4 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
    {
       return publisherProfile.getQos().getLifespan();
    }
-
-   
-   
-
-
 }
