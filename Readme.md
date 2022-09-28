@@ -46,15 +46,15 @@ See [test/us/ihmc/idl/serializers/extra](ihmc-pub-sub-serializers-extra/src/test
 ## Maven artifact coordinates
 
 `compile group: "us.ihmc", name: "ihmc-pub-sub", version: `
-[ ![Download](https://api.bintray.com/packages/ihmcrobotics/maven-release/ihmc-pub-sub/images/download.svg) ](https://bintray.com/ihmcrobotics/maven-release/ihmc-pub-sub/_latestVersion)
+[ ![ihmc-pub-sub](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-pub-sub/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-pub-sub)
 `  // IHMC Pub Sub RTPS library`
 
 `compile group: "us.ihmc", name: "ihmc-pub-sub-generator", version: `
-[ ![Download](https://api.bintray.com/packages/ihmcrobotics/maven-release/ihmc-pub-sub-generator/images/download.svg) ](https://bintray.com/ihmcrobotics/maven-release/ihmc-pub-sub-generator/_latestVersion)
+[ ![ihmc-pub-sub-generator](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-pub-sub-generator/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-pub-sub-generator)
 `  // Generate java classes from .idl messages`
 
 `compile group: "us.ihmc", name: "ihmc-pub-sub-serializers-extra", version: `
-[ ![Download](https://api.bintray.com/packages/ihmcrobotics/maven-release/ihmc-pub-sub-serializers-extra/images/download.svg) ](https://bintray.com/ihmcrobotics/maven-release/ihmc-pub-sub-serializers-extra/_latestVersion)
+[ ![ihmc-pub-sub-serializers-extra](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-pub-sub-serializers-extra/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-pub-sub-serializers-extra)
 `  // Serializers for JSON, BSON, YAML, Java Properties, and XML`
 
 ## Supported platforms
