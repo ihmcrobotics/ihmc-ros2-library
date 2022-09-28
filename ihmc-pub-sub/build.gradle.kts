@@ -23,14 +23,14 @@ mainDependencies {
    api("us.ihmc:ihmc-native-library-loader:2.0.1")
    api("net.sf.trove4j:trove4j:3.0.3")
    api("us.ihmc:euclid:0.19.0")
-   api("us.ihmc:ihmc-commons:0.30.6")
-   api("us.ihmc:log-tools:0.6.1")
+   api("us.ihmc:ihmc-commons:0.31.0")
+   api("us.ihmc:log-tools:0.6.3")
    api("jakarta.xml.bind:jakarta.xml.bind-api:2.3.2")
    api("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 }
 
 testDependencies {
-   api("us.ihmc:ihmc-commons-testing:0.30.6")
+   api("us.ihmc:ihmc-commons-testing:0.31.0")
 }
 
 sourceSets {
