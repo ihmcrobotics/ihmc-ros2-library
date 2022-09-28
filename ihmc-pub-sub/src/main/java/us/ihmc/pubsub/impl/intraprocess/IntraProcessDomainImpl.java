@@ -27,6 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.DiscoveryStatus;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
@@ -82,14 +85,14 @@ class IntraProcessDomainImpl
       }
    }
 
-   private void matchSubscribers(IntraProcessPublisherAttributes publisherToMatch, Consumer<IntraProcessSubscriber> exec)
+   private void matchSubscribers(PublisherAttributes publisherToMatch, Consumer<IntraProcessSubscriber> exec)
    {
-      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(publisherToMatch.getTopic().getTopicName());
+      List<IntraProcessSubscriber> topicSubscribers = subscribers.get(publisherToMatch.getTopicName());
       if (topicSubscribers != null)
       {
          for (IntraProcessSubscriber subscriber : topicSubscribers)
          {
-            if (subscriber.getAttributes().publisherMatches(publisherToMatch))
+            if (IntraProcessUtil.subscriberPublisherMatches(subscriber.getAttributes(), publisherToMatch))
             {
                if (logLevel == LogLevel.INFO)
                {
@@ -101,14 +104,14 @@ class IntraProcessDomainImpl
       }
    }
 
-   private void matchPublishers(IntraProcessSubscriberAttributes subscriberToMatch, Consumer<IntraProcessPublisher> exec)
+   private void matchPublishers(SubscriberAttributes subscriberToMatch, Consumer<IntraProcessPublisher> exec)
    {
-      List<IntraProcessPublisher> topicPublishers = publishers.get(subscriberToMatch.getTopic().getTopicName());
+      List<IntraProcessPublisher> topicPublishers = publishers.get(subscriberToMatch.getTopicName());
       if (topicPublishers != null)
       {
          for (IntraProcessPublisher publisher : topicPublishers)
          {
-            if (subscriberToMatch.publisherMatches(publisher.getAttributes()))
+            if (IntraProcessUtil.subscriberPublisherMatches(subscriberToMatch, publisher.getAttributes()))
             {
                if (logLevel == LogLevel.INFO)
                {
@@ -120,7 +123,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   IntraProcessParticipant createParticipant(IntraProcessParticipantAttributes attributes, ParticipantListener listener)
+   IntraProcessParticipant createParticipant(ParticipantAttributes attributes, ParticipantListener listener)
    {
       domainLock.lock();
       try
@@ -178,14 +181,14 @@ class IntraProcessDomainImpl
       }
    }
 
-   Subscriber createSubscriber(IntraProcessParticipant participant, IntraProcessSubscriberAttributes attr, SubscriberListener listener) throws IOException
+   Subscriber createSubscriber(IntraProcessParticipant participant, SubscriberAttributes attr, SubscriberListener listener) throws IOException
    {
       domainLock.lock();
       try
       {
          IntraProcessSubscriber subscriber = participant.createSubscriber(this, attr, listener);
 
-         String topicName = attr.getTopic().getTopicName();
+         String topicName = attr.getTopicName();
          List<IntraProcessSubscriber> topicSubscribers = subscribers.get(topicName);
          if (topicSubscribers == null)
          {
@@ -226,7 +229,7 @@ class IntraProcessDomainImpl
       domainLock.lock();
       try
       {
-         String topicName = subscriber.getAttributes().getTopic().getTopicName();
+         String topicName = subscriber.getAttributes().getTopicName();
          List<IntraProcessSubscriber> topicSubscribers = subscribers.get(topicName);
          if (topicSubscribers == null)
          {
@@ -262,14 +265,14 @@ class IntraProcessDomainImpl
       }
    }
 
-   IntraProcessPublisher createPublisher(IntraProcessParticipant participant, IntraProcessPublisherAttributes attr, PublisherListener listener)
+   IntraProcessPublisher createPublisher(IntraProcessParticipant participant, PublisherAttributes attr, PublisherListener listener)
          throws IOException
    {
       domainLock.lock();
       try
       {
          IntraProcessPublisher publisher = participant.createPublisher(this, attr, listener);
-         String topicName = attr.getTopic().getTopicName();
+         String topicName = attr.getTopicName();
          List<IntraProcessPublisher> topicPublishers = publishers.get(topicName);
          if (topicPublishers == null)
          {
@@ -283,10 +286,9 @@ class IntraProcessDomainImpl
 
          if (logLevel == LogLevel.INFO)
          {
-            IntraProcessLog.info(this, "Adding publisher " + publisher);
+            IntraProcessLog.info(this, "Adding publisher in topic: " + publisher.getAttributes().getTopicName() + " : " + publisher);
          }
          topicPublishers.add(publisher);
-
          if (logLevel == LogLevel.INFO)
             IntraProcessLog.info(this, "Notifying publisher discovery listeners");
          matchParticipants((participantToNotify) -> participantToNotify.notifyPublisherDiscoveryListener(publisher));
@@ -310,7 +312,7 @@ class IntraProcessDomainImpl
       domainLock.lock();
       try
       {
-         String topicName = publisher.getAttributes().getTopic().getTopicName();
+         String topicName = publisher.getAttributes().getTopicName();
          List<IntraProcessPublisher> topicSubscribers = publishers.get(topicName);
          if (topicSubscribers == null)
          {
@@ -346,18 +348,18 @@ class IntraProcessDomainImpl
       }
    }
 
-   <T> void write(IntraProcessPublisherAttributes attr, TopicDataType<T> type, T data, SampleInfo info) throws IOException
+   <T> void write(PublisherAttributes attr, TopicDataType<T> type, T data, SampleInfo info) throws IOException
    {
       domainLock.lock();
       
       try
       {
-         List<IntraProcessSubscriber> topicSubscribers = subscribers.get(attr.getTopic().getTopicName());
+         List<IntraProcessSubscriber> topicSubscribers = subscribers.get(attr.getTopicName());
          if (topicSubscribers != null)
          {
             for (IntraProcessSubscriber subscriber : topicSubscribers)
             {
-               if (subscriber.getAttributes().publisherMatches(attr))
+               if (IntraProcessUtil.subscriberPublisherMatches(subscriber.getAttributes(), attr))
                {
                   if (logLevel == LogLevel.INFO)
                   {

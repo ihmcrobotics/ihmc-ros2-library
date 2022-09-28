@@ -36,7 +36,7 @@ namespace fastRTPS{
     class NativeSubscriberListener
     {
     public:
-        virtual void onSubscriptionMatched(MatchingStatus status, int64_t guidHigh, int64_t guidLow) {}
+        virtual void onSubscriptionMatched(int matchingStatus, int64_t guidHigh, int64_t guidLow) {}
         virtual void onNewDataMessage() {}
         virtual ~NativeSubscriberListener() {}
     };
@@ -45,23 +45,14 @@ namespace fastRTPS{
     class NativeSubscriberImpl
     {
     public:
+
         NativeSubscriberImpl(
-                int32_t entityId,
-                int32_t userDefinedID,
-                int32_t maximumPayloadSize,
-                MemoryManagementPolicy_t memoryManagementPolicy,
-                TopicAttributes* topic,
-                ReaderQos* qos,
-                ReaderTimes* times,
-                LocatorList_t* unicastLocatorList,
-                LocatorList_t* multicastLocatorList,
-                LocatorList_t* remoteLocatorList,
-                bool expectsInlineQos,
                 NativeParticipantImpl* participant,
                 NativeSubscriberListener* listener) throw(FastRTPSException);
 
 
         bool createSubscriber();
+        bool createSubscriber(std::string subscriberProfile, const char *XMLConfigData, size_t XMLdataLength);
 
         int64_t getGuidLow()
         {
@@ -76,12 +67,11 @@ namespace fastRTPS{
 
         void waitForUnreadMessage();
 
-        bool readnextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
-        bool takeNextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
+        bool readnextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller);
+        bool takeNextData(int32_t maxDataLength, unsigned char* data, SampleInfoMarshaller* marshaller);
 
         bool isInCleanState();
         int64_t getUnreadCount();
-
 
         virtual ~NativeSubscriberImpl();
     private:
@@ -107,7 +97,7 @@ namespace fastRTPS{
         SubscriberAttributes attr;
 
 
-        void updateMarshaller(SampleInfoMarshaller* marshaller, SampleInfo_t& sampleInfo, TopicKind_t topicKind, OwnershipQosPolicyKind ownerShipQosKind);
+        void updateMarshaller(SampleInfoMarshaller* marshaller, SampleInfo_t& sampleInfo);
 
     };
 }}}}}

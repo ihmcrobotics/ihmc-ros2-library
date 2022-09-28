@@ -1,24 +1,30 @@
 package us.ihmc.pubsub.tools;
 
+import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.function.Supplier;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.function.Supplier;
-
-import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
 
 public class PubSubTester<P extends Packet>
 {
@@ -39,32 +45,37 @@ public class PubSubTester<P extends Packet>
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(systemDomain());
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("PubSubTester");
+      ParticipantAttributes attributes = ParticipantAttributes.create()
+        .domainId(systemDomain())
+        .discoveryLeaseDuration(Time.Infinite)
+        .name("PubSubTester");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       IDLElementTestPubSubType dataType = new IDLElementTestPubSubType();
       domain.registerType(participant, dataType);
 
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "pubsubtest", ReliabilityKind.RELIABLE);
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(1);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
+      PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+       .topicDataType(dataType)
+       .topicName("pubsubtest")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .historyDepth(1)
+       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
 
       P data = msgTypeSupplier.get();
       TopicDataType<P> topicDataType = (TopicDataType<P>) data.getPubSubTypePacket().get();
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, topicDataType, "pubsubtest", ReliabilityKind.RELIABLE);
-      subscriberAttributes.getTopic().getHistoryQos().setDepth(1);
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(topicDataType)
+       .topicName("pubsubtest")
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
 
       subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(data,callbacks));
 
-      publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
+      publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
 }

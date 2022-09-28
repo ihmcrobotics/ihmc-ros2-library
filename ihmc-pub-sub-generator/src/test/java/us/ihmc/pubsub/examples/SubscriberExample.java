@@ -15,15 +15,19 @@
  */
 package us.ihmc.pubsub.examples;
 
+import java.io.IOException;
+import java.util.Collections;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.DurabilityKind;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -35,14 +39,10 @@ import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
-import java.io.IOException;
-
 public class SubscriberExample
 {
-
    private class ParticipantListenerImpl implements ParticipantListener
    {
-
       @Override
       public void onParticipantDiscovery(Participant participant, ParticipantDiscoveryInfo info)
       {
@@ -82,21 +82,27 @@ public class SubscriberExample
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("SubscriberExample");
-      Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
+      ParticipantAttributes attributes2 = ParticipantAttributes.create()
+      .domainId(1)
+      .name("ParticipantExample")
+      .discoveryLeaseDuration(Time.Infinite);
+      //.discoveryServer("127.0.0.1", 4);
+
+      Participant participant = domain.createParticipant(attributes2, new ParticipantListenerImpl());
 
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType, "ChatBox1", ReliabilityKind.BEST_EFFORT, "us/ihmc");
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+      .topicDataType(dataType)
+      .topicName("chatter")
+      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+      .partitions(Collections.singletonList("us/ihmc"))
+      .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+      .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+      .historyDepth(50);
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
-
    }
 
    public static void main(String[] args) throws IOException, InterruptedException

@@ -26,27 +26,27 @@
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
-NativeParticipantImpl::NativeParticipantImpl(RTPSParticipantAttributes& rtps, NativeParticipantListener* listener) throw(FastRTPSException) :
+NativeParticipantImpl::NativeParticipantImpl(std::string participantProfile, const char *XMLConfigData, size_t XMLdataLength, NativeParticipantListener *listener) throw(FastRTPSException) :
     listener(listener),
     m_rtps_listener(this)
 {
 
+
     ParticipantAttributes attributes;
-    attributes.rtps = rtps;
 
+    try
+    {
+        Domain::loadXMLProfilesString(XMLConfigData, XMLdataLength);
+        part = Domain::createParticipant(participantProfile, &m_rtps_listener);
+        attributes = part->getAttributes();
 
-
-	try
-	{
-        part = Domain::createParticipant(attributes, &m_rtps_listener);
-	}
-	catch(const std::exception &e)
-	{
-		std::cerr << "[ERROR]" << e.what() << std::endl;
-		throw FastRTPSException("Problem creating RTPSParticipant");
-		return;
-	}
-	
+    }
+    catch(const std::exception &e)
+    {
+        std::cerr << "[ERROR]" << e.what() << std::endl;
+        throw FastRTPSException("Problem creating RTPSParticipant");
+        return;
+    }
 
     if(part == nullptr)
     {
@@ -56,8 +56,6 @@ NativeParticipantImpl::NativeParticipantImpl(RTPSParticipantAttributes& rtps, Na
 
     logInfo(PARTICIPANT,"Guid: " << part->getGuid());
     CommonFunctions::guidcpy(part->getGuid(), &guid);
-
-
 }
 
 NativeParticipantImpl::~NativeParticipantImpl()
@@ -93,7 +91,7 @@ void NativeParticipantImpl::MyParticipantListener::onParticipantDiscovery(Partic
 {
     if(this->mp_participantimpl->listener!=nullptr)
     {
-        ParticipantProxyData proxy_data = info.info;
+        const ParticipantProxyData& proxy_data = info.info;
 
         logInfo(PARTICIPANT,"Remote participant Guid: " << rtpsinfo.m_guid);
         GuidUnion retGuid;
@@ -101,55 +99,6 @@ void NativeParticipantImpl::MyParticipantListener::onParticipantDiscovery(Partic
 
         this->mp_participantimpl->listener->onParticipantDiscovery((int64_t)&proxy_data, retGuid.primitive.high, retGuid.primitive.low, info.status);
     }
-}
-
-void NativeParticipantImpl::MyParticipantListener::onSubscriberDiscovery(Participant *participant, ReaderDiscoveryInfo &&info)
-{
-    const ReaderProxyData&  proxyData = info.info;
-
-    GuidUnion guid;
-    CommonFunctions::guidcpy(proxyData.guid(), &guid);
-    GuidUnion participantGuid;
-    CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
-
-    this->mp_participantimpl->listener->onSubscriberDiscovery(info.status, guid.primitive.high, guid.primitive.low, proxyData.m_expectsInlineQos,
-                                                              &proxyData.remote_locators(),
-                                                              participantGuid.primitive.high,
-                                                              participantGuid.primitive.low,
-                                                              proxyData.typeName().to_string(),
-                                                              proxyData.topicName().to_string(),
-                                                              proxyData.userDefinedId(),
-                                                              proxyData.topicKind(),
-                                                              &proxyData.m_qos);
-}
-
-void NativeParticipantImpl::MyParticipantListener::onPublisherDiscovery(Participant *participant, WriterDiscoveryInfo &&info)
-{
-
-    if(this->mp_participantimpl->listener!=nullptr)
-    {
-
-        const WriterProxyData& proxyData = info.info;
-        GuidUnion guid;
-        CommonFunctions::guidcpy(proxyData.guid(), &guid);
-        GuidUnion participantGuid;
-        CommonFunctions::guidcpy(proxyData.RTPSParticipantKey(), &participantGuid);
-
-
-        this->mp_participantimpl->listener->onPublisherDiscovery(info.status,
-                                                                 guid.primitive.high,
-                                                                 guid.primitive.low,
-                                                                 &proxyData.remote_locators(),
-                                                                 participantGuid.primitive.high,
-                                                                 participantGuid.primitive.low,
-                                                                 proxyData.typeName().to_string(),
-                                                                 proxyData.topicName().to_string(),
-                                                                 proxyData.userDefinedId(),
-                                                                 proxyData.typeMaxSerialized(),
-                                                                 proxyData.topicKind(),
-                                                                 &proxyData.m_qos);
-    }
-
 }
 
 

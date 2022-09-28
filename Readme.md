@@ -171,12 +171,16 @@ SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(pa
 domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());      
 ```
 
+## Developing
+
+Make sure to build the java code using gradle to generate the java classes for the XML definitions.
+
 ## Building
+
 
 ### Java code compilation
 ```
-gradle build
-gradle publishToMavenLocal
+ihmc-pub-sub-group $ gradle compositeTask -PtaskName=compileJava
 ```
 
 ### Native code Compilation
@@ -185,7 +189,7 @@ This section is for rebuilding the native side of the project.
 Compiled binaries have already been included in the source code repository.
 Therefore, this section is mainly for maintainers.
 
-FastRTPS is included as a Git submodule. Update the submodules to make sure FastRTPS is included:
+Fast-DDS and foonathan_memory_vendor are included as Git submodules. Update the submodules to make sure they are included:
 
 ```
 git submodule update --init --recursive
@@ -193,7 +197,10 @@ git submodule update --init --recursive
 
 #### Linux
 
-##### Requirements:
+
+##### Manually
+
+###### Requirements:
 
 - CMake 3.1 or later
 - GNU C++
@@ -214,6 +221,20 @@ Note: Replace /usr/lib/jvm/java-8-openjdk-amd64/ with your installation of the O
 Make install copies the generated library in the resources folder. Two C++ test applications are provided, "SubscriberExample" and "PublisherExample". These are not installed but can be found in the cmake build folder under "cppsrc/FastRTPS/SubscriberExample" and "cppsrc/FastRTPS/PublisherExample".
 
 Note: When debugging, set CMAKE_BUILD_TYPE to "Debug" and use "make install" instead of "make install/strip" to preserve debugging information.
+Note: make with multiple thread (-j?) does not seem to work well. You have to run it multiple times because the swig plugin does not define dependencies in the right order.
+
+##### Cross-Compiling
+
+Install required compilers
+```
+sudo apt install qemu-user gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu g++-aarch64-linux-gnu
+```
+
+And change the cmake command to
+```
+cmake -DSWIG_EXECUTABLE=/usr/bin/swig3.0 -DCMAKE_BUILD_TYPE=Release -DSTANDALONE_PLUGIN=ON -DCMAKE_TOOLCHAIN_FILE=../aarch64-toolchain.cmake ..
+```
+
 
 #### Windows
 
@@ -222,8 +243,8 @@ Note: Due to path length limitations, the commpilation can fail. If you did not 
 ##### Requirements:
 
 - CMake [https://cmake.org/download/](https://cmake.org/download/). Recommended edition: Windows win64-x64 installer. Make sure to add to your path.
-- Visual Studio 2019 Community [https://www.visualstudio.com/downloads/](https://www.visualstudio.com/downloads/). 
-	- Make sure to select "Desktop Development with C++" and select "C++ MFC for latest v142 build tools" under Optional.
+- Visual Studio 2022 Community [https://www.visualstudio.com/downloads/](https://www.visualstudio.com/downloads/). 
+	- Make sure to select "Desktop Development with C++" and select "C++ MFC for latest v147 build tools" under Optional.
 	- Restart after installation and start visual studio (!)
 - Swig: Version 3.0.12 or later (make sure to use version 3. 3.0.12 is recommended, as it is the same version as in Ubuntu 18.04)
 	- Unpack in C:\swigwin-3.0.12 or modify later commands accordingly
@@ -239,7 +260,7 @@ Use CMake GUI to create the Visual Studio makefiles.
 cd [Source directory]\ihmc-pub-sub-group\ihmc-pub-sub
 md buildc
 cd buildc
-"C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 16 2019" -A x64 -DSWIG_EXECUTABLE="C:\swigwin-3.0.12\swig.exe"  -DSTANDALONE_PLUGIN=ON ..
+"C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 17 2022" -A x64 -DSWIG_EXECUTABLE="C:\swigwin-3.0.12\swig.exe"  -DSTANDALONE_PLUGIN=ON ..
 "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release --target install
 ```
 
@@ -284,18 +305,14 @@ make
 make install
 ```
 
+## Updating FastDDS
 
-## Developing native code with Eclipse
+Several steps needs to be taken to update to the latest version of FastDDS. Mostly to do with fixing the version numbers in filenames.
 
-```
-# clone ihmc-pub-sub-group
-cd ..
-mkdir ebuild
-cd ebuild
-cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug -D CMAKE_ECLIPSE_VERSION="4.8 (Photon)" ../ihmc-pub-sub-group/ihmc-pub-sub
-# Import "existing projects into Eclipse"
-```
-See more: https://gitlab.kitware.com/cmake/community/wikis/doc/editors/Eclipse-CDT4-Generator
+- Edit [SOURCE_DIR]/ihmc-pub-sub/CMakeLists.txt, scroll down to ### UPDATE FASTDDS VERSIONS HERE ### and update the versions
+- Build and update the native code on all platforms
+- [SOURCE_DIR]/ihmc-pub-sub/src/main/java/us/ihmc/pubsub/impl/fastRTPS/FastRtpsNativeLibrary.java and update the getLibrariesWithDependencies(OperatingSystem os, Architecture arch) function
+
 
 ## License
 

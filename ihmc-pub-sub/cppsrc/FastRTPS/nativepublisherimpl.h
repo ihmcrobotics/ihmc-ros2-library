@@ -41,31 +41,23 @@ namespace fastRTPS{
     class NativePublisherListener
     {
     public:
-        virtual void onWriterMatched(MatchingStatus status, int64_t guidHigh, int64_t guidLow) {}
+        virtual void onWriterMatched(int matchingStatus, int64_t guidHigh, int64_t guidLow) {}
         virtual ~NativePublisherListener() {}
     };
 
     class NativePublisherImpl
     {
     public:
+
         NativePublisherImpl(
-                int32_t entityId,
-                int32_t userDefinedID,
-                int32_t maximumPayloadSize,
-                MemoryManagementPolicy_t memoryManagementPolicy,
-                TopicAttributes* topic,
-                WriterQos* qos,
-                WriterTimes* times,
-                LocatorList_t* unicastLocatorList,
-                LocatorList_t* multicastLocatorList,
-                LocatorList_t* remoteLocatorList,
-                ThroughputControllerDescriptor* throughputController,
                 NativeParticipantImpl* participant,
                 NativePublisherListener* listener) throw(FastRTPSException);
+
         virtual ~NativePublisherImpl();
 
 
         bool createPublisher();
+        bool createPublisher(std::string publisherProfile,const char *XMLConfigData, size_t XMLdataLength);
         void write(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void dispose(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
         void unregister(unsigned char* data, int32_t dataLength, int16_t encapsulation, unsigned char* key, int32_t keyLength);
@@ -91,6 +83,7 @@ namespace fastRTPS{
         }publisherListener;
 
 
+        bool isXMLPofile;
         NativePublisherListener* listener;
         PublisherAttributes attr;
         GuidUnion guid;

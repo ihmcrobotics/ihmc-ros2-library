@@ -1,16 +1,18 @@
 package us.ihmc.pubsub.test;
 
 import java.io.IOException;
+import java.util.Collections;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
 
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.DurabilityKind;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -32,19 +34,21 @@ public class CreateSubscriptionUnderLoad
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("CreateSubscriptionProcessDuringAggressivePublishTest");
+      ParticipantAttributes attributes = ParticipantAttributes.create()
+            .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest");
+
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
       ChatMessagePubSubType dataType = new ChatMessagePubSubType();
       domain.registerType(participant, dataType);
 
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType, "segfault_trigger", ReliabilityKind.RELIABLE, "us/ihmc");
-      subscriberAttributes.getTopic().getHistoryQos().setDepth(1);
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.VOLATILE_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
+      SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+       .topicDataType(dataType)
+       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .partitions(Collections.singletonList("us/ihmc"))
+       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
+       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyDepth(1);
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
    }

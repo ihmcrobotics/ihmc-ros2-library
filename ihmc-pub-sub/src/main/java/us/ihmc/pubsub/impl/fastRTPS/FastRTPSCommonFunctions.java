@@ -13,36 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.ihmc.pubsub.common;
+package us.ihmc.pubsub.impl.fastRTPS;
 
-/**
- * Struct InstanceHandle_t, used to contain the key for WITH_KEY topics. 
- * 
- * @author Jesper Smith
- */
-public class InstanceHandle
+class FastRTPSCommonFunctions
 {
-   private byte value[] = new byte[16];
-
-   public boolean isDefined()
-   {
-      for(int i = 0; i < 16; i++)
-      {
-         if(value[i] != 0)
-         {
-            return true;
-         }
-      }
-      return false;
-   }
-
-   public byte[] getValue()
-   {
-      return value;
-   }
-
-   public void setValue(byte[] value)
-   {
-      this.value = value;
-   }
+   public static final int LOCATOR_KIND_RESERVED = 0;
+   public static final int LOCATOR_KIND_UDPv4 = 1;
+   public static final int LOCATOR_KIND_UDPv6 = 2;
 }

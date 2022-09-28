@@ -35,8 +35,8 @@ public class NativeParticipantImpl {
     }
   }
 
-  public NativeParticipantImpl(RTPSParticipantAttributes rtps, NativeParticipantListener listener) throws java.io.IOException {
-    this(FastRTPSJNI.new_NativeParticipantImpl(RTPSParticipantAttributes.getCPtr(rtps), rtps, NativeParticipantListener.getCPtr(listener), listener), true);
+  public NativeParticipantImpl(String participantProfile, String XMLConfigData, long XMLdataLength, NativeParticipantListener listener) throws java.io.IOException {
+    this(FastRTPSJNI.new_NativeParticipantImpl(participantProfile, XMLConfigData, XMLdataLength, NativeParticipantListener.getCPtr(listener), listener), true);
   }
 
   public long getGuidLow() {

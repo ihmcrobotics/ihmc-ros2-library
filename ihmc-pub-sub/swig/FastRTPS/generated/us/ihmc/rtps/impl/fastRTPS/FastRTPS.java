@@ -51,43 +51,4 @@ public class FastRTPS implements FastRTPSConstants {
     }
   }
 
-  public static boolean IsAddressDefined(Locator_t loc) {
-    return FastRTPSJNI.IsAddressDefined(Locator_t.getCPtr(loc), loc);
-  }
-
-  public static boolean IsLocatorValid(Locator_t loc) {
-    return FastRTPSJNI.IsLocatorValid(Locator_t.getCPtr(loc), loc);
-  }
-
-  public static short getLocatorOctet(int octet, Locator_t locator) {
-    return FastRTPSJNI.getLocatorOctet(octet, Locator_t.getCPtr(locator), locator);
-  }
-
-  public static void setLocatorOctet(Locator_t locator, int oct, short value) {
-    FastRTPSJNI.setLocatorOctet(Locator_t.getCPtr(locator), locator, oct, value);
-  }
-
-  public static Locator_t getLocator(LocatorList_t list, int index) {
-    long cPtr = FastRTPSJNI.getLocator(LocatorList_t.getCPtr(list), list, index);
-    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
-  }
-
-  public static Locator_t getRemoteUnicastLocator(RemoteLocatorList list, int index) {
-    long cPtr = FastRTPSJNI.getRemoteUnicastLocator(RemoteLocatorList.getCPtr(list), list, index);
-    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
-  }
-
-  public static Locator_t getRemoteMulticastLocator(RemoteLocatorList list, int index) {
-    long cPtr = FastRTPSJNI.getRemoteMulticastLocator(RemoteLocatorList.getCPtr(list), list, index);
-    return (cPtr == 0) ? null : new Locator_t(cPtr, false);
-  }
-
-  public static int getRemoteMulticastLocatorSize(RemoteLocatorList list) {
-    return FastRTPSJNI.getRemoteMulticastLocatorSize(RemoteLocatorList.getCPtr(list), list);
-  }
-
-  public static int getRemoteUnicastLocatorSize(RemoteLocatorList list) {
-    return FastRTPSJNI.getRemoteUnicastLocatorSize(RemoteLocatorList.getCPtr(list), list);
-  }
-
 }

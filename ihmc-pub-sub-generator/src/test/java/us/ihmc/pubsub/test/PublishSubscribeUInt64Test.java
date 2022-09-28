@@ -1,13 +1,23 @@
 package us.ihmc.pubsub.test;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.junit.jupiter.api.Test;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.*;
-import us.ihmc.pubsub.attributes.HistoryQosPolicy.HistoryQosPolicyKind;
+import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SampleInfo;
@@ -20,63 +30,67 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
-import java.io.IOException;
-
 public class PublishSubscribeUInt64Test
 {
-   @Test// timeout = 30000
+   @Test // timeout = 30000
    public void testPublishSubscribeUInt32() throws IOException
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
 
-      domain.setLogLevel(LogLevel.INFO);
-
-      ParticipantAttributes attributes = domain.createParticipantAttributes();
-      attributes.setDomainId(215);
-      attributes.setLeaseDuration(Time.Infinite);
-      attributes.setName("StatusTest");
-
-      Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
-
-      StatusMessagePubSubType dataType = new StatusMessagePubSubType();
-      domain.registerType(participant, dataType);
-
-      PublisherAttributes publisherAttributes = domain.createPublisherAttributes(participant, dataType, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      publisherAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_LAST_HISTORY_QOS);
-      publisherAttributes.getTopic().getHistoryQos().setDepth(50);
-      publisherAttributes.getQos().setPublishMode(PublishModeKind.ASYNCHRONOUS_PUBLISH_MODE);
-
-      StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
-
-      SubscriberAttributes subscriberAttributes = domain.createSubscriberAttributes(participant, dataType2, "Status", ReliabilityKind.RELIABLE, "us/ihmc");
-      subscriberAttributes.getQos().setDurabilityKind(DurabilityKind.TRANSIENT_LOCAL_DURABILITY_QOS);
-      subscriberAttributes.getTopic().getHistoryQos().setKind(HistoryQosPolicyKind.KEEP_ALL_HISTORY_QOS);
-
-      Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
-
-      Publisher publisher = domain.createPublisher(participant, publisherAttributes, new PublisherListenerImpl());
-
-      StatusMessage msg = new StatusMessage();
-      msg.setPause(false);
-      msg.setSequenceId(0);
-
-      int i = 0;
-      for (; i < 10; i++)
+      try
       {
-         try
-         {
-            msg.setPause(i % 2 == 0);
-            msg.setSequenceId(i);
-            publisher.write(msg);
+         domain.setLogLevel(LogLevel.INFO);
 
-            System.out.println("Publishing: " + msg.toString());
-            Thread.sleep(1000);
-            ++i;
-         }
-         catch (InterruptedException e)
+         ParticipantAttributes attributes = ParticipantAttributes.create().domainId(219).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+
+         Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
+
+         StatusMessagePubSubType dataType = new StatusMessagePubSubType();
+         domain.registerType(participant, dataType);
+
+         PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
+                                                                             .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                             .partitions(Collections.singletonList("us/ihmc"))
+                                                                             .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                             .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
+
+         StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
+
+         SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
+                                                                         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                         .partitions(Collections.singletonList("us/ihmc"))
+                                                                         .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
+                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
+
+         Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
+
+         Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
+
+         StatusMessage msg = new StatusMessage();
+         msg.setPause(false);
+         msg.setSequenceId(0);
+
+         int i = 0;
+         for (; i < 10; i++)
          {
+            try
+            {
+               msg.setPause(i % 2 == 0);
+               msg.setSequenceId(i);
+               publisher.write(msg);
+
+               System.out.println("Publishing: " + msg.toString());
+               Thread.sleep(1000);
+               ++i;
+            }
+            catch (InterruptedException e)
+            {
+            }
          }
+      }
+      finally
+      {
+         domain.stopAll();
       }
    }
 

@@ -15,14 +15,19 @@
  */
 package us.ihmc.pubsub.attributes;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+
 /**
  * Definition of the reliability QoS kind.
  * 
  * Note that subscribers and publishers needs to match reliability kind
  * 
+ * Replaced by ReliabilityQosKindType
+ * 
  * @author Jesper Smith
  *
  */
+@Deprecated
 public enum ReliabilityKind
 {
    /**
@@ -32,5 +37,20 @@ public enum ReliabilityKind
    /**
     * Use best-effort communication 
     */
-   BEST_EFFORT
+   BEST_EFFORT;
+   
+   public ReliabilityQosKindType toQosKind()
+   {
+      switch(this)
+      {
+         case RELIABLE:
+            return ReliabilityQosKindType.RELIABLE;
+         case BEST_EFFORT:
+            return ReliabilityQosKindType.BEST_EFFORT;
+      }
+      
+      throw new RuntimeException("Invalid kind");
+   }
+   
+   
 }

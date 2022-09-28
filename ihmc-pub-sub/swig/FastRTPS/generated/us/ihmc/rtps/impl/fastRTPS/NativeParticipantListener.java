@@ -50,16 +50,8 @@ public class NativeParticipantListener {
     FastRTPSJNI.NativeParticipantListener_change_ownership(this, swigCPtr, true);
   }
 
-  public void onParticipantDiscovery(long infoPtr, long guidHigh, long guidLow, ParticipantDiscoveryInfo.DISCOVERY_STATUS status) {
-    if (getClass() == NativeParticipantListener.class) FastRTPSJNI.NativeParticipantListener_onParticipantDiscovery(swigCPtr, this, infoPtr, guidHigh, guidLow, status.swigValue()); else FastRTPSJNI.NativeParticipantListener_onParticipantDiscoverySwigExplicitNativeParticipantListener(swigCPtr, this, infoPtr, guidHigh, guidLow, status.swigValue());
-  }
-
-  public void onPublisherDiscovery(WriterDiscoveryInfo.DISCOVERY_STATUS discovery_status, long guidHigh, long guidLow, RemoteLocatorList remoteLocatorList, long participantGuidHigh, long participantGuidLow, String typeName, String topicName, int userDefinedId, long typeMaxSerialized, TopicKind_t topicKind, WriterQos writerQoS) {
-    if (getClass() == NativeParticipantListener.class) FastRTPSJNI.NativeParticipantListener_onPublisherDiscovery(swigCPtr, this, discovery_status.swigValue(), guidHigh, guidLow, RemoteLocatorList.getCPtr(remoteLocatorList), remoteLocatorList, participantGuidHigh, participantGuidLow, typeName, topicName, userDefinedId, typeMaxSerialized, topicKind.swigValue(), WriterQos.getCPtr(writerQoS), writerQoS); else FastRTPSJNI.NativeParticipantListener_onPublisherDiscoverySwigExplicitNativeParticipantListener(swigCPtr, this, discovery_status.swigValue(), guidHigh, guidLow, RemoteLocatorList.getCPtr(remoteLocatorList), remoteLocatorList, participantGuidHigh, participantGuidLow, typeName, topicName, userDefinedId, typeMaxSerialized, topicKind.swigValue(), WriterQos.getCPtr(writerQoS), writerQoS);
-  }
-
-  public void onSubscriberDiscovery(ReaderDiscoveryInfo.DISCOVERY_STATUS discovery_status, long guidHigh, long guidLow, boolean expectsInlineQos, RemoteLocatorList remoteLocatorList, long participantGuidHigh, long participantGuidLow, String typeName, String topicName, int userDefinedId, TopicKind_t topicKind, ReaderQos readerQoS) {
-    if (getClass() == NativeParticipantListener.class) FastRTPSJNI.NativeParticipantListener_onSubscriberDiscovery(swigCPtr, this, discovery_status.swigValue(), guidHigh, guidLow, expectsInlineQos, RemoteLocatorList.getCPtr(remoteLocatorList), remoteLocatorList, participantGuidHigh, participantGuidLow, typeName, topicName, userDefinedId, topicKind.swigValue(), ReaderQos.getCPtr(readerQoS), readerQoS); else FastRTPSJNI.NativeParticipantListener_onSubscriberDiscoverySwigExplicitNativeParticipantListener(swigCPtr, this, discovery_status.swigValue(), guidHigh, guidLow, expectsInlineQos, RemoteLocatorList.getCPtr(remoteLocatorList), remoteLocatorList, participantGuidHigh, participantGuidLow, typeName, topicName, userDefinedId, topicKind.swigValue(), ReaderQos.getCPtr(readerQoS), readerQoS);
+  public void onParticipantDiscovery(long infoPtr, long guidHigh, long guidLow, int discoveryStatus) {
+    if (getClass() == NativeParticipantListener.class) FastRTPSJNI.NativeParticipantListener_onParticipantDiscovery(swigCPtr, this, infoPtr, guidHigh, guidLow, discoveryStatus); else FastRTPSJNI.NativeParticipantListener_onParticipantDiscoverySwigExplicitNativeParticipantListener(swigCPtr, this, infoPtr, guidHigh, guidLow, discoveryStatus);
   }
 
   public String getName(long infoPtr) {

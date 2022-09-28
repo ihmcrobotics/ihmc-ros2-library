@@ -22,6 +22,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
@@ -49,7 +50,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    
    private final TopicDataType<T> topicDataType;
    private final Guid guid;
-   private final IntraProcessSubscriberAttributes attr;
+   private final SubscriberAttributes attr;
    private IntraProcessParticipant participant;
    private SubscriberListener<T> listener;
 
@@ -57,15 +58,15 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
 
    private boolean available = true;
 
-   IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, IntraProcessSubscriberAttributes attr,
+   IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, SubscriberAttributes attr,
                           SubscriberListener<T> listener)
          throws IOException
    {
       @SuppressWarnings("unchecked")
-      TopicDataType<T> topicDataType = (TopicDataType<T>) intraProcessParticipant.getTopicDataType(attr.getTopic().getTopicDataType());
+      TopicDataType<T> topicDataType = (TopicDataType<T>) intraProcessParticipant.getTopicDataType(attr.getTopicDataType().getName());
       if (topicDataType == null)
       {
-         throw new IOException("Cannot registered publisher with topic " + attr.getTopic().getTopicDataType() + ". Topic data type is not registered.");
+         throw new IOException("Cannot registered publisher with topic " + attr.getTopicDataType() + ". Topic data type is not registered.");
       }
       this.topicDataType = topicDataType.newInstance();
       this.guid = guid;
@@ -178,7 +179,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    }
 
    @Override
-   public IntraProcessSubscriberAttributes getAttributes()
+   public SubscriberAttributes getAttributes()
    {
       return attr;
    }

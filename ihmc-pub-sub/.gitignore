@@ -5,6 +5,8 @@ bin
 out
 build
 build-java
+build-*
+buildDocker
 classes
 .gradle
 CMakeLists.txt.user
@@ -19,3 +21,4 @@ cmake-build-release-visual-studio/
 buildc/
 swig/FastRTPS/generated/us/ihmc/rtps/impl/fastRTPS/FastRTPSJAVA_wrap.cxx
 .vs
+/.apt_generated/

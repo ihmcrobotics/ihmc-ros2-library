@@ -1,120 +1,81 @@
-/**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package us.ihmc.pubsub.attributes;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-/**
- * Class SubscriberAttributes, used by the user to define the attributes of a Subscriber.
- * 
- * @author Jesper Smith
- *
- * @param <ReaderQos_t>
- * @param <ReaderTimes_t>
- * @param <LocatorList_t>
- */
-public abstract class SubscriberAttributes
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.LifespanQosPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PartitionQosPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReaderQosPoliciesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.SubscriberProfileType;
+
+import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
+
+public class SubscriberAttributes extends CommonAttributes<SubscriberAttributes>
 {
-   protected final TopicAttributes topic = new TopicAttributes();
-   protected final ArrayList<Locator> unicastLocatorList = new ArrayList<>();
-   protected final ArrayList<Locator> multicastLocatorList = new ArrayList<>();
-   protected final ArrayList<Locator> outLocatorList = new ArrayList<>();
-
-   private int userDefinedID = -1;
-   private int entityID = -1;
-   private boolean expectsInlineQos;
-   private MemoryManagementPolicy historyMemoryPolicy = MemoryManagementPolicy.PREALLOCATED_MEMORY_MODE;
+   private final SubscriberProfileType subscriberProfile = new SubscriberProfileType();
 
    public SubscriberAttributes()
    {
+      subscriberProfile.setTopic(topicAttributesType);
+
+      ReaderQosPoliciesType readerQosPoliciesType = new ReaderQosPoliciesType();
+      readerQosPoliciesType.setDurability(durabilityQosPolicyType);
+      readerQosPoliciesType.setReliability(reliabilityQosPolicyType);
+      subscriberProfile.setQos(readerQosPoliciesType);
    }
 
-   public int getUserDefinedID()
+   public static SubscriberAttributes create()
    {
-      return userDefinedID;
+      return new SubscriberAttributes();
    }
 
-   public void setUserDefinedID(int userDefinedID)
+   public SubscriberAttributes userDefinedId(short id)
    {
-      this.userDefinedID = userDefinedID;
+      subscriberProfile.setUserDefinedID(id);
+      return this;
    }
 
-   public int getEntityID()
+   public short getUserDefinedId()
    {
-      return entityID;
+      return subscriberProfile.getUserDefinedID();
    }
 
-   public void setEntityID(int entityID)
+   public String marshall(String profileName) throws IOException
    {
-      this.entityID = entityID;
+      ProfilesType profilesType = new ProfilesType();
+      profilesType.getLibrarySettingsOrTransportDescriptorsOrParticipant()
+                  .add(new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, FastRTPSDomain.FAST_DDS_SUBSCRIBER),
+                                         SubscriberProfileType.class,
+                                         subscriberProfile));
+      subscriberProfile.setProfileName(profileName);
+
+      return FastRTPSDomain.marshalProfile(profilesType);
    }
 
-   public boolean isExpectsInlineQos()
+   @Override
+   protected void setPartitionQosPolicyType(PartitionQosPolicyType partitionQosPolicyType)
    {
-      return expectsInlineQos;
+      subscriberProfile.getQos().setPartition(partitionQosPolicyType);
    }
 
-   public void setExpectsInlineQos(boolean expectsInlineQos)
+   @Override
+   protected PartitionQosPolicyType getPartitionQosPolicyType()
    {
-      this.expectsInlineQos = expectsInlineQos;
+      return subscriberProfile.getQos().getPartition();
    }
 
-   public MemoryManagementPolicy getHistoryMemoryPolicy()
+   @Override
+   protected void setLifespanQosPolicyType(LifespanQosPolicyType lifespanQosPolicyType)
    {
-      return historyMemoryPolicy;
+      subscriberProfile.getQos().setLifespan(lifespanQosPolicyType);
    }
 
-   public void setHistoryMemoryPolicy(MemoryManagementPolicy historyMemoryPolicy)
+   @Override
+   protected LifespanQosPolicyType getLifespanQosPolicyType()
    {
-      this.historyMemoryPolicy = historyMemoryPolicy;
-   }
-
-   public TopicAttributes getTopic()
-   {
-      return topic;
-   }
-
-   /** 
-    * @return holder for Qos settings
-    */
-   public abstract ReaderQosHolder getQos();
-
-   /** 
-    * Get implementation specific version of reader times.
-    * 
-    * Implementations: 
-    *    FastRTPS: us.ihmc.rtps.impl.fastRTPS.ReaderTimes
-    * 
-    * @return implementation specific version of reader times.
-    */
-   public abstract <T> T getTimes();
-
-   public List<Locator> getUnicastLocatorList()
-   {
-      return unicastLocatorList;
-   }
-
-   public List<Locator> getMulticastLocatorList()
-   {
-      return multicastLocatorList;
-   }
-
-   public List<Locator> getOutLocatorList()
-   {
-      return outLocatorList;
+      return subscriberProfile.getQos().getLifespan();
    }
 }

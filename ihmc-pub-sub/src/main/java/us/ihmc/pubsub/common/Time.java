@@ -35,7 +35,7 @@ public class Time
     * Create new time object
     * 
     * @param seconds
-    * @param fraction Fraction of second (1 fraction = 1/(2^32) seconds) 
+    * @param nsec additional nanoseconds)
     */
    public Time(int seconds, long nsec)
    {
