@@ -150,10 +150,10 @@ public class ParticipantAttributes
     * @param bindToAddressRestrictions Limit the scope of this participant to the list of hosts. If null or empty, the participant will not be able to communicate.
     * @return
     */
-   public ParticipantAttributes bindToAddressRestrictions(boolean useSharedMemory, List<InetAddress> bindToAddressRestrictions)
+   public ParticipantAttributes bindToAddressRestrictions(boolean addSharedMemoryTransport, List<InetAddress> bindToAddressRestrictions)
    {
       useBuiltinTransports(false);
-      if(useSharedMemory)
+      if(addSharedMemoryTransport)
       {
          addSharedMemoryTransport();  
       }
