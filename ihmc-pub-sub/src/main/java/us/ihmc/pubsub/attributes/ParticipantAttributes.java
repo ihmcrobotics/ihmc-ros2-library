@@ -165,6 +165,7 @@ public class ParticipantAttributes
          RtpsTransportDescriptorType transportDescriptor = new RtpsTransportDescriptorType();
          transportDescriptor.setTransportId(transportName);
          transportDescriptor.setType("UDPv4");
+         transportDescriptor.setMaxMessageSize(1500L);
          AddressListType addressWhitelist = new AddressListType();
 
          for (InetAddress addr : bindToAddressRestrictions)
