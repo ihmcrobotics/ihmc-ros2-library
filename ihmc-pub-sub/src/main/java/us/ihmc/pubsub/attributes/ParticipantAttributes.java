@@ -167,6 +167,8 @@ public class ParticipantAttributes
          transportDescriptor.setType("UDPv4");
          // Set the max message size equal to the standard Ethernet MTU (1500 bytes)
          // This prevents fragmentation of large messages at the network layer, leaving that to Fast-DDS to handle
+         // The default value is 65500 bytes.
+         // See: https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/transports.html
          // See: https://github.com/eProsima/Fast-DDS/issues/3053
          // See: https://en.wikipedia.org/wiki/Maximum_transmission_unit
          transportDescriptor.setMaxMessageSize(1500L);
