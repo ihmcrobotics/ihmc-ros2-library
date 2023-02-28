@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.test;
 public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.test.IDLElementTest>
 {
    public static final java.lang.String name = "test::IDLElementTest";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "2256c03172989006081648eed6625184484584d6c5097d21d9b866f93a977bf8";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();

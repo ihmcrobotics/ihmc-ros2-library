@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.nested;
 public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.nested.NestedElement>
 {
    public static final java.lang.String name = "nested::NestedElement";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "880f9856340c85ce15112f494e94df58af0faf40cf5cc3a1eb261c6b5b963912";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();

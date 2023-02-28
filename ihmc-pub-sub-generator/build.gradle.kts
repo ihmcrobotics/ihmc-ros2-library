@@ -22,6 +22,7 @@ mainDependencies {
    api("us.ihmc:eprosima-idl-parser:source")
    api("org.anarres:jcpp:1.4.12")
    api("us.ihmc:euclid:0.19.1")
+   api("commons-codec:commons-codec:1.15")
 }
 
 testDependencies {

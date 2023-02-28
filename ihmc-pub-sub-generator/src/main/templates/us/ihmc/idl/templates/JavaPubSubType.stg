@@ -24,6 +24,18 @@ $javadocpubsub(type="struct", name=struct.name, filename=[ctx.filename, ".idl"])
 public class $struct.name$PubSubType implements us.ihmc.pubsub.TopicDataType<$struct.javaTypename$>
 {
    public static final java.lang.String name = "$typecode$";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "$ctx.checksum$";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "$ctx.version$";
+   }
 
 $if(struct.abstract)$
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();

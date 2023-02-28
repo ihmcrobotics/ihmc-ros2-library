@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.test;
 public class FooEnumTypePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.test.FooEnumType>
 {
    public static final java.lang.String name = "test::FooEnumType";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "be8a5c900d1fedba723f03964d3d0483f9f38dedffbd1dafe98bccecea134246";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();

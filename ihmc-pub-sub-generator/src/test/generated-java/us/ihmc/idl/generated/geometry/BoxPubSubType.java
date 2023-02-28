@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.geometry;
 public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.geometry.Box>
 {
    public static final java.lang.String name = "geometry::Box";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "c53d34c430d17da3c96feb617e62efeab7ec73feaf5cb440bf8d74fa3531b45d";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();

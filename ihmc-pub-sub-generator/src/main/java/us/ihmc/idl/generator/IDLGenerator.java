@@ -29,6 +29,8 @@ import org.anarres.cpp.Feature;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +52,8 @@ import java.util.List;
  */
 public class IDLGenerator
 {
+   public static final String DEFAULT_VERSION = "local";
+   
    public static void main(String[] args) throws IOException
    {
       ArrayList<File> defaultIncludePath = new ArrayList<>();
@@ -56,7 +61,7 @@ public class IDLGenerator
 
       if (args.length == 3)
       {
-         execute(new File(args[0]), args[1], new File(args[2]), defaultIncludePath);
+         execute(new File(args[0]), args[1], new File(args[2]), defaultIncludePath, DEFAULT_VERSION);
       }
       else
       {
@@ -87,7 +92,7 @@ public class IDLGenerator
             return;
          }
 
-         execute(file, res, fileChooser.getSelectedFile(), defaultIncludePath);
+         execute(file, res, fileChooser.getSelectedFile(), defaultIncludePath, DEFAULT_VERSION);
          dialog.dispose();
       }
    }
@@ -115,6 +120,27 @@ public class IDLGenerator
       CppReader reader = new CppReader(preprocessor);
       return new BufferedReader(reader);
    }
+   
+   /**
+    * Generate a SHA-256 checksum using the pre-processed idl file 
+    * 
+    * @param idlFile
+    * @param includePath
+    * @return
+    * @throws IOException
+    */
+   public static String generateChecksum(File idlFile, List<File> includePath) throws IOException
+   {
+      Reader reader = createPreProcessedInputStream(idlFile, includePath);
+      try
+      {
+         return DigestUtils.sha256Hex(IOUtils.toByteArray(reader, Charset.defaultCharset()));
+      }
+      finally
+      {
+         reader.close();
+      }
+   }
 
    /**
     * Generate java classes from an IDL file
@@ -124,7 +150,7 @@ public class IDLGenerator
     * @param targetDirectory Directory to save the generated files in. The whole package structure is generated in this directory
     * @throws IOException
     */
-   public static void execute(File idlFile, String packageName, File targetDirectory, List<File> includePath) throws IOException
+   public static void execute(File idlFile, String packageName, File targetDirectory, List<File> includePath, String version) throws IOException
    {
       String idlFilename = idlFile.getAbsolutePath();
 
@@ -174,6 +200,10 @@ public class IDLGenerator
 
       if (idlFile.exists())
       {
+         String checksum = generateChecksum(idlFile, includePath);
+         context.setChecksum(checksum);
+         context.setVersion(version);
+         
          Reader reader = createPreProcessedInputStream(idlFile, includePath);
          ANTLRInputStream input = new ANTLRInputStream(reader);
          IDLLexer lexer = new IDLLexer(input);

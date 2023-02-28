@@ -31,6 +31,26 @@ import us.ihmc.pubsub.common.SerializedPayload;
  */
 public interface TopicDataType<T>
 {
+   
+   /**
+    * Get the SHA-256 checksum of the pre-proccessed definition file used to generate this TopicDataType.
+    * 
+    * This could be used to check if the definition files are compatible between two nodes.
+    * 
+    * @return SHA-256 of the pre-processed definition file
+    */
+   public String getDefinitionChecksum();
+   
+   /**
+    * Get the human readable version of the definition file.
+    * 
+    * This is setup by the build environment for the messages and should be used to create the error message
+    * if the definition checksum does not match
+    * 
+    * @return Human readable version 
+    */
+   public String getDefinitionVersion();
+   
    /**
     * Serialize method, it should be implemented by the user.
     *

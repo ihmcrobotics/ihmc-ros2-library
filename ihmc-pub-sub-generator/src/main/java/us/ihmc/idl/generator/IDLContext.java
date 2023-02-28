@@ -30,6 +30,9 @@ public class IDLContext extends Context
 
    private String m_file;
 
+   private String m_checksum;
+   private String m_version;
+   
    IDLContext(String onlyFileName, String idlFilename, ArrayList<String> arg2)
    {
       super(onlyFileName, idlFilename, arg2);
@@ -114,4 +117,26 @@ public class IDLContext extends Context
    {
       return false;
    }
+   
+
+   public String getChecksum()
+   {
+      return m_checksum;
+   }
+
+   public void setChecksum(String m_checksum)
+   {
+      this.m_checksum = m_checksum;
+   }
+
+   public String getVersion()
+   {
+      return m_version;
+   }
+
+   public void setVersion(String m_version)
+   {
+      this.m_version = m_version;
+   }
+   
 }

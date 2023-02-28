@@ -39,6 +39,11 @@ public class IDLGeneratorTask extends DefaultTask
     * [Optional] Prefix to the package path
     */
    public String packagePrefix = "";
+   
+   /**
+    * [Optional] Version string added to the PubSubType of each file
+    */
+   public String version = "";
 
    /**
     * [Required] output directory
@@ -94,7 +99,7 @@ public class IDLGeneratorTask extends DefaultTask
 
       for (File idl : idlList)
       {
-         IDLGenerator.execute(idl, packagePrefix, targetDirectory, includeList);
+         IDLGenerator.execute(idl, packagePrefix, targetDirectory, includeList, version);
       }
    }
 }
