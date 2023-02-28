@@ -7,6 +7,8 @@ plugins {
 ihmc {
    loadProductProperties("../group.gradle.properties")
 
+   repository("https://artifacts.halodi.com/repository/maven-open-source-group")
+
    configureDependencyResolution()
    configurePublications()
 }
