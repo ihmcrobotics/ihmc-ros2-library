@@ -118,7 +118,6 @@ public class IDLContext extends Context
       return false;
    }
    
-
    public String getChecksum()
    {
       return m_checksum;
@@ -138,5 +137,4 @@ public class IDLContext extends Context
    {
       this.m_version = m_version;
    }
-   
 }
