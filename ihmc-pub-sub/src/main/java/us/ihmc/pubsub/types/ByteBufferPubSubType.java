@@ -58,19 +58,6 @@ public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
 
       return size;
    }
-   
-
-   @Override
-   public String getDefinitionChecksum()
-   {
-      return "";
-   }
-
-   @Override
-   public String getDefinitionVersion()
-   {
-      return "";
-   }
 
    /**
     * Constructor for the ByteBuffer pub/sub type.

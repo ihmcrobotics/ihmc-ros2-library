@@ -31,6 +31,15 @@ import us.ihmc.pubsub.common.SerializedPayload;
  */
 public interface TopicDataType<T>
 {
+   /**
+    * Default checksum for builtin types that are not defined by a code generator
+    */
+   public static final String DEFAULT_CHECKSUM = "[builtin]";
+   
+   /**
+    * Default version for builtin types
+    */
+   public static final String DEFAULT_VERSION = "[unversioned]";
    
    /**
     * Get the SHA-256 checksum of the pre-proccessed definition file used to generate this TopicDataType.
@@ -39,7 +48,10 @@ public interface TopicDataType<T>
     * 
     * @return SHA-256 of the pre-processed definition file
     */
-   public String getDefinitionChecksum();
+   public default String getDefinitionChecksum()
+   {
+      return DEFAULT_CHECKSUM;
+   }
    
    /**
     * Get the human readable version of the definition file.
@@ -49,7 +61,10 @@ public interface TopicDataType<T>
     * 
     * @return Human readable version 
     */
-   public String getDefinitionVersion();
+   public default String getDefinitionVersion()
+   {
+      return DEFAULT_VERSION;
+   }
    
    /**
     * Serialize method, it should be implemented by the user.
