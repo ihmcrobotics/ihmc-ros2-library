@@ -43,6 +43,12 @@ sourceSets {
    }
 }
 
+tasks.create<Exec>("updateSubmodules") {
+   commandLine("git", "submodule", "update", "--init", "--recursive")
+}
+
+tasks.getByPath("compileJava").dependsOn("updateSubmodules")
+
 tasks {
    compileJava.configure { dependsOn.add(xjcGenerate) }
 }
