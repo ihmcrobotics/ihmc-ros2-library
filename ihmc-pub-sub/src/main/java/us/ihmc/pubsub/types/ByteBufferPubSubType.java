@@ -159,5 +159,4 @@ public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
    {
       throw new NotImplementedException("Interchange serializer is not implemented for bytebuffer pub/sub type");
    }
-
 }
