@@ -116,11 +116,18 @@ if(STANDALONE_PLUGIN)
         INSTALL(FILES ${FASTRTPS_DEPENDENCY_LIBRARIES}
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
 
-        
+    elseif(APPLE)
+        set(FastRTPS_LIBRARIES fastrtps fastcdr)
+
+        # Annoying rename for the install here, because of the version suffix
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.2.6.0.dylib"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.2.6.dylib")
+
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.1.0.24.dylib"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.1.dylib")
     else()
         set(FastRTPS_LIBRARIES fastrtps fastcdr)
-        
-        
+
         # Annoying rename for the install here, because of the version suffix
         INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.so.2.6.0"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.so.2.6")

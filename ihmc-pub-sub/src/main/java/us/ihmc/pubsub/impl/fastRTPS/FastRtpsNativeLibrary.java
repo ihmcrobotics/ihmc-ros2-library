@@ -44,6 +44,10 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
                   archPackage = "Linux.aarch64";
                   break;
 
+               case MACOSX64:
+                  archPackage = "Darwin.arm64";
+                  break;
+
                default:
                   archPackage = "unknown";
                   break;
@@ -64,6 +68,8 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
             return NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll", "fastcdr-1.0.dll", "fastrtps-2.6.dll");
          case LINUX64:
             return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.6", "libfastcdr.so.1");
+         case MACOSX64:
+            return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.jnilib", "libfastrtps.2.6.dylib", "libfastcdr.1.dylib");
          default:
             break;
       }
