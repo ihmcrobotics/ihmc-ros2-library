@@ -1,7 +1,7 @@
 plugins {
    idea
    id("us.ihmc.ihmc-build")
-   id("us.ihmc.ihmc-ci") version "7.6"
+   id("us.ihmc.ihmc-ci") version "7.7"
    id("us.ihmc.ihmc-cd") version "1.23"
    id("com.github.hierynomus.license") version "0.14.0"
    id("org.unbroken-dome.xjc") version "2.0.0"
@@ -42,6 +42,12 @@ sourceSets {
       }
    }
 }
+
+tasks.create<Exec>("updateSubmodules") {
+   commandLine("git", "submodule", "update", "--init", "--recursive")
+}
+
+tasks.getByPath("compileJava").dependsOn("updateSubmodules")
 
 tasks {
    compileJava.configure { dependsOn.add(xjcGenerate) }

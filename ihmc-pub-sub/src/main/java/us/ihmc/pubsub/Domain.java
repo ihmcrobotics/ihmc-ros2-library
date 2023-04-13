@@ -18,13 +18,11 @@ package us.ihmc.pubsub;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
 
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.pubsub.attributes.ReliabilityKind;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.Time;
@@ -279,13 +277,6 @@ public interface Domain {
       return subscriberAttributes;
    }
 
-   @Deprecated
-   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
-   {
-      return createSubscriberAttributes(participant, topicDataType, topicName, reliabilityKind.toQosKind(), partitions);
-   }
-
-
    /**
     * Create an implementation specific version of PublisherAttributes with the following options set
     *
@@ -326,11 +317,5 @@ public interface Domain {
       }
       
       return publisherAttributes;
-   }
-   
-   @Deprecated
-   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityKind reliabilityKind, String... partitions)
-   {
-      return createPublisherAttributes(participant, topicDataType, topicName, reliabilityKind.toQosKind(), partitions);
    }
 }
