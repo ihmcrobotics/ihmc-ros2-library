@@ -16,10 +16,10 @@ set(SWIG_OPT_LINKER_FLAGS "")
 swig_add_module(FastRTPSWrapper java FastRTPS.i $<TARGET_OBJECTS:FastRTPSNativeImpl>)
 add_dependencies(FastRTPSWrapper FastRTPSNativeImpl JDK)
 
-if(WIN32)
+if(WIN32 OR APPLE)
 	swig_link_libraries(FastRTPSWrapper ${FastRTPS_LIBRARIES} ${SWIG_OPT_LINKER_FLAGS})
 else()
-        swig_link_libraries(FastRTPSWrapper ${FastRTPS_LIBRARIES} ${SWIG_OPT_LINKER_FLAGS} pthread rt )
+    swig_link_libraries(FastRTPSWrapper ${FastRTPS_LIBRARIES} ${SWIG_OPT_LINKER_FLAGS} pthread rt )
 endif()
 
 swig_link_libraries(FastRTPSWrapper ${SWIG_OPT_LINKER_FLAGS})

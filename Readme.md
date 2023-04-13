@@ -275,7 +275,11 @@ Note: You can use macincloud.com to get a VM with a build setup
 Requirements 
 - XCode (run at least once to accept the license terms)
 - CMake
+- JDK 1.8+
 
+#### Setup Java include path
+echo export "JAVA_HOME=\$(/usr/libexec/java_home)" >> ~/.zshrc
+echo export "JAVA_INCLUDE_PATH=$JAVA_HOME/include" >> ~/.zshrc
 
 ##### Installing Swig
 
