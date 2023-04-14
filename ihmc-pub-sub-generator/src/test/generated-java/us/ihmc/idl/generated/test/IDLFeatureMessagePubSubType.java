@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.test;
 public class IDLFeatureMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.test.IDLFeatureMessage>
 {
    public static final java.lang.String name = "test::IDLFeatureMessage";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "d0f3bd6612b54849e1e1f15428787240db6f998744234f35d83f65a7f898ee12";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();

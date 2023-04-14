@@ -26,7 +26,7 @@ public class GenerateTestMessages
          IDLGenerator.execute(idl.toFile(),
                               "us.ihmc.idl.generated",
                               Paths.get("generated-java").toFile(),
-                              Arrays.asList(Paths.get("idl").toFile()));
+                              Arrays.asList(Paths.get("idl").toFile()), IDLGenerator.DEFAULT_VERSION);
       }
    }
 }

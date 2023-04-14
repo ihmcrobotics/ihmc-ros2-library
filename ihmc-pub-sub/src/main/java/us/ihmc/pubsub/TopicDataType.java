@@ -32,6 +32,41 @@ import us.ihmc.pubsub.common.SerializedPayload;
 public interface TopicDataType<T>
 {
    /**
+    * Default checksum for builtin types that are not defined by a code generator
+    */
+   public static final String DEFAULT_CHECKSUM = "[builtin]";
+   
+   /**
+    * Default version for builtin types
+    */
+   public static final String DEFAULT_VERSION = "[unversioned]";
+   
+   /**
+    * Get the SHA-256 checksum of the pre-proccessed definition file used to generate this TopicDataType.
+    * 
+    * This could be used to check if the definition files are compatible between two nodes.
+    * 
+    * @return SHA-256 of the pre-processed definition file
+    */
+   public default String getDefinitionChecksum()
+   {
+      return DEFAULT_CHECKSUM;
+   }
+   
+   /**
+    * Get the human readable version of the definition file.
+    * 
+    * This is setup by the build environment for the messages and should be used to create the error message
+    * if the definition checksum does not match
+    * 
+    * @return Human readable version 
+    */
+   public default String getDefinitionVersion()
+   {
+      return DEFAULT_VERSION;
+   }
+   
+   /**
     * Serialize method, it should be implemented by the user.
     *
     * @param data

@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.chat;
 public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.chat.ChatMessage>
 {
    public static final java.lang.String name = "chat::ChatMessage";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "6a34c3bf55a0290c3ae16902546ae081a9f9799a12d6951828c0a91b57bae840";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();

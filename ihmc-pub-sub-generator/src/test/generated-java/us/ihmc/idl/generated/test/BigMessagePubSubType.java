@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.test;
 public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.test.BigMessage>
 {
    public static final java.lang.String name = "test::BigMessage";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "7913ad25642e81557a06d3c6339ac1e67a7cbfb45f0024e4bbd9d2140ca44cca";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();

@@ -11,6 +11,18 @@ package us.ihmc.idl.generated.test;
 public class StatusMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.generated.test.StatusMessage>
 {
    public static final java.lang.String name = "test::StatusMessage";
+   
+   @Override
+   public final String getDefinitionChecksum()
+   {
+   		return "00740af999db29d58ae810e28851070465262c6bba169cb0c82d115a2ff09120";
+   }
+   
+   @Override
+   public final String getDefinitionVersion()
+   {
+   		return "local";
+   }
 
    private final us.ihmc.idl.CDR serializeCDR = new us.ihmc.idl.CDR();
    private final us.ihmc.idl.CDR deserializeCDR = new us.ihmc.idl.CDR();
