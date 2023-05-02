@@ -12,7 +12,7 @@ ihmc {
 }
 
 mainDependencies {
-    api("us.ihmc:ihmc-pub-sub:source")
+    api("us.ihmc:ihmc-pub-sub:sourc0.18.4")
     api("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0")
@@ -22,5 +22,5 @@ mainDependencies {
 }
 
 testDependencies {
-    api("us.ihmc:ihmc-pub-sub-generator-test:source")
+    api("us.ihmc:ihmc-pub-sub-generator-test:sourc0.18.4")
 }
