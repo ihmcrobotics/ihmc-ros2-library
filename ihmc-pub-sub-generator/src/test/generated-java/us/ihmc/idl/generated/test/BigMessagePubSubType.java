@@ -13,13 +13,13 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    public static final java.lang.String name = "test::BigMessage";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "85f0e78a9889d4cbb647a0028d04d2b9e90883615a9cf5906bcba600e26da4a1";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

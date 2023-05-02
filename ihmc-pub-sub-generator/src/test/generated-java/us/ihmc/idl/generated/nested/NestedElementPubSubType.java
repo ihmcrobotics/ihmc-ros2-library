@@ -13,13 +13,13 @@ public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.
    public static final java.lang.String name = "nested::NestedElement";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "2e2bfec4d4819ad00cbb8b5156d157270603584c15596aa60e9d54fb113906b7";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

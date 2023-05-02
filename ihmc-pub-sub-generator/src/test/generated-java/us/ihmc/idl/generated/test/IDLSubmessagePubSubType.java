@@ -13,13 +13,13 @@ public class IDLSubmessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.
    public static final java.lang.String name = "test::IDLSubmessage";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "55c57aeb47f3b3c2cd1bfa1d42333bcf1e0c50e9f4e62e347bafc6a62a41249b";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

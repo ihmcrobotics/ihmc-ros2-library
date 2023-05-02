@@ -13,13 +13,13 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
    public static final java.lang.String name = "chat::ChatMessage";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "ab4e0e2b883369505f0e7246223a943d909e949b50048f6ea03ad7e659b9f2a2";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

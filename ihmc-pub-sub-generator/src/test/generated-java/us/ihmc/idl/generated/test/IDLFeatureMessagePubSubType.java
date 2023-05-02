@@ -13,13 +13,13 @@ public class IDLFeatureMessagePubSubType implements us.ihmc.pubsub.TopicDataType
    public static final java.lang.String name = "test::IDLFeatureMessage";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "b15eebeb0973b0c4f15ebfdc57462b411e6e5cf4a04b2553cf22560882c1e506";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

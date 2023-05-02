@@ -13,13 +13,13 @@ public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us
    public static final java.lang.String name = "test::IDLElementTest";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "aa10d9eb05237b7df516eba027f9a2c5209299f2add98a641520b0bc7c7d27d9";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

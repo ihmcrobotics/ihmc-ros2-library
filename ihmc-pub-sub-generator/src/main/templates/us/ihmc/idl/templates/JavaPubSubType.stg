@@ -26,13 +26,13 @@ public class $struct.name$PubSubType implements us.ihmc.pubsub.TopicDataType<$st
    public static final java.lang.String name = "$typecode$";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "$ctx.checksum$";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "$ctx.version$";
    }

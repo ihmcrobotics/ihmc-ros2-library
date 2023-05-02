@@ -13,13 +13,13 @@ public class StatusMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.
    public static final java.lang.String name = "test::StatusMessage";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "fa12c9b04c8fa5935003f9c039419a53df2643ac5cb49ebc3c90091983f0dcf9";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

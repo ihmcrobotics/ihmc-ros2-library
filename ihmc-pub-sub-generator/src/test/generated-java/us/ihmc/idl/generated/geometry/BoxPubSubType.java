@@ -13,13 +13,13 @@ public class BoxPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.idl.g
    public static final java.lang.String name = "geometry::Box";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "8351b92621479f30b0e44fa9c2eb0aeeb69d4e498ede17257ccf877bc41a7508";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }

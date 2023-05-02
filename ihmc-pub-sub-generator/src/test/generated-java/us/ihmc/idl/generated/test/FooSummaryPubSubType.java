@@ -13,13 +13,13 @@ public class FooSummaryPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    public static final java.lang.String name = "test::FooSummary";
    
    @Override
-   public final String getDefinitionChecksum()
+   public final java.lang.String getDefinitionChecksum()
    {
    		return "139e6db624b1ceaa57b92618c26ffdce0d461930165565a5b28dd617cb2c0d2e";
    }
    
    @Override
-   public final String getDefinitionVersion()
+   public final java.lang.String getDefinitionVersion()
    {
    		return "local";
    }
