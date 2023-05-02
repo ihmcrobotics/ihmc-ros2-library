@@ -15,7 +15,7 @@ public class StatusMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.
    @Override
    public final String getDefinitionChecksum()
    {
-   		return "00740af999db29d58ae810e28851070465262c6bba169cb0c82d115a2ff09120";
+   		return "fa12c9b04c8fa5935003f9c039419a53df2643ac5cb49ebc3c90091983f0dcf9";
    }
    
    @Override

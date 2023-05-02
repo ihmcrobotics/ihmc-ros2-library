@@ -15,7 +15,7 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    @Override
    public final String getDefinitionChecksum()
    {
-   		return "7913ad25642e81557a06d3c6339ac1e67a7cbfb45f0024e4bbd9d2140ca44cca";
+   		return "85f0e78a9889d4cbb647a0028d04d2b9e90883615a9cf5906bcba600e26da4a1";
    }
    
    @Override

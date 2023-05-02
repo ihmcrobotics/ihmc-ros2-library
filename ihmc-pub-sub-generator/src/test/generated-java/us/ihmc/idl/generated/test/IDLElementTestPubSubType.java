@@ -15,7 +15,7 @@ public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us
    @Override
    public final String getDefinitionChecksum()
    {
-   		return "2256c03172989006081648eed6625184484584d6c5097d21d9b866f93a977bf8";
+   		return "aa10d9eb05237b7df516eba027f9a2c5209299f2add98a641520b0bc7c7d27d9";
    }
    
    @Override

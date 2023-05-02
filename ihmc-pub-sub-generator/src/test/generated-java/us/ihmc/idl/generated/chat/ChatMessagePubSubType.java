@@ -15,7 +15,7 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
    @Override
    public final String getDefinitionChecksum()
    {
-   		return "6a34c3bf55a0290c3ae16902546ae081a9f9799a12d6951828c0a91b57bae840";
+   		return "ab4e0e2b883369505f0e7246223a943d909e949b50048f6ea03ad7e659b9f2a2";
    }
    
    @Override

@@ -15,7 +15,7 @@ public class FooYoVariableDefinitionPubSubType implements us.ihmc.pubsub.TopicDa
    @Override
    public final String getDefinitionChecksum()
    {
-   		return "be8a5c900d1fedba723f03964d3d0483f9f38dedffbd1dafe98bccecea134246";
+   		return "139e6db624b1ceaa57b92618c26ffdce0d461930165565a5b28dd617cb2c0d2e";
    }
    
    @Override

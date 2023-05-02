@@ -15,7 +15,7 @@ public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.
    @Override
    public final String getDefinitionChecksum()
    {
-   		return "880f9856340c85ce15112f494e94df58af0faf40cf5cc3a1eb261c6b5b963912";
+   		return "2e2bfec4d4819ad00cbb8b5156d157270603584c15596aa60e9d54fb113906b7";
    }
    
    @Override
