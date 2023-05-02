@@ -51,4 +51,5 @@ tasks.getByPath("compileJava").dependsOn("updateSubmodules")
 
 tasks {
    compileJava.configure { dependsOn.add(xjcGenerate) }
+   named("sourceJar").configure { dependsOn.add(xjcGenerate) }
 }
