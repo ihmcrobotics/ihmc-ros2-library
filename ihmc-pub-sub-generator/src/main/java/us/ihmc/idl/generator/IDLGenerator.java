@@ -157,6 +157,19 @@ public class IDLGenerator
     * @param targetDirectory Directory to save the generated files in. The whole package structure is generated in this directory
     * @throws IOException
     */
+   public static void execute(File idlFile, String packageName, File targetDirectory, List<File> includePath) throws IOException
+   {
+      execute(idlFile, packageName, targetDirectory, includePath, DEFAULT_VERSION);
+   }
+
+   /**
+    * Generate java classes from an IDL file
+    *
+    * @param idlFile IDL file to parse
+    * @param packageName Target package (IDL Module gets added to this)
+    * @param targetDirectory Directory to save the generated files in. The whole package structure is generated in this directory
+    * @throws IOException
+    */
    public static void execute(File idlFile, String packageName, File targetDirectory, List<File> includePath, String version) throws IOException
    {
       String idlFilename = idlFile.getAbsolutePath();
