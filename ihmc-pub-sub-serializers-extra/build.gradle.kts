@@ -22,5 +22,5 @@ mainDependencies {
 }
 
 testDependencies {
-    api("us.ihmc:ihmc-pub-sub-generator-test:sourc0.18.5")
+    api("us.ihmc:ihmc-pub-sub-generator-test:source")
 }
