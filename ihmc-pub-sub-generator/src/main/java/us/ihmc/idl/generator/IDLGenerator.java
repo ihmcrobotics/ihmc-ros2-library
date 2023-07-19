@@ -153,13 +153,15 @@ public class IDLGenerator
       Reader reader = createPreProcessedInputStream(idlFile, includePath, true);
       try
       {
-         byte[] data = IOUtils.toByteArray(reader,  StandardCharsets.UTF_8);
+         String stringData = IOUtils.toString(reader);
+         stringData = stringData.replace("\r\n", "\n");
+         
          if(DEBUG)
          {
-            Files.write(Paths.get(idlFile.getName() + ".preprocessed"), data);
+            Files.write(Paths.get(idlFile.getName() + ".preprocessed"), stringData.getBytes(StandardCharsets.UTF_8));
          }
          
-         return DigestUtils.sha256Hex(data);
+         return DigestUtils.sha256Hex(stringData);
       }
       finally
       {
