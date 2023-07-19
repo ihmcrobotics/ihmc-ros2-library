@@ -19,10 +19,13 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +50,8 @@ import com.eprosima.idl.parser.typecode.PrimitiveTypeCode;
 import com.eprosima.idl.parser.typecode.TypeCode;
 import com.eprosima.idl.util.Util;
 
+import us.ihmc.log.LogTools;
+
 /**
  * The IDL file parser and code generator.
  *
@@ -58,8 +63,15 @@ public class IDLGenerator
 {
    public static final String DEFAULT_VERSION = "local";
    
+   public static final boolean DEBUG = System.getProperty("debug") != null;
+   
    public static void main(String[] args) throws IOException
    {
+      if(DEBUG)
+      {
+         LogTools.info("Debug enabled");
+      }
+      
       ArrayList<File> defaultIncludePath = new ArrayList<>();
       defaultIncludePath.add(new File("."));
 
@@ -141,7 +153,13 @@ public class IDLGenerator
       Reader reader = createPreProcessedInputStream(idlFile, includePath, true);
       try
       {
-         return DigestUtils.sha256Hex(IOUtils.toByteArray(reader, Charset.defaultCharset()));
+         byte[] data = IOUtils.toByteArray(reader,  StandardCharsets.UTF_8);
+         if(DEBUG)
+         {
+            Files.write(Paths.get(idlFile.getName() + ".preprocessed"), data);
+         }
+         
+         return DigestUtils.sha256Hex(data);
       }
       finally
       {
