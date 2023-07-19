@@ -12,7 +12,7 @@ ihmc {
 }
 
 mainDependencies {
-    api("us.ihmc:ihmc-pub-sub:sourc0.18.5")
+    api("us.ihmc:ihmc-pub-sub:source")
     api("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0")
     api("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0")
