@@ -63,7 +63,7 @@ public class IDLGenerator
 {
    public static final String DEFAULT_VERSION = "local";
    
-   public static final boolean DEBUG = System.getProperty("debug") != null;
+   public static final boolean DEBUG = System.getProperty("debug-idl") != null;
    
    public static void main(String[] args) throws IOException
    {
@@ -154,14 +154,23 @@ public class IDLGenerator
       try
       {
          String stringData = IOUtils.toString(reader);
-         stringData = stringData.replace("\r\n", "\n");
+         
+         // Keep only ascii characters in the range from ! to ~, removing control characters, whitespace characters and non-ascii characters from the input.
+         stringData = stringData.replaceAll("[^\\x21-\\x7E]", "");
          
          if(DEBUG)
          {
             Files.write(Paths.get(idlFile.getName() + ".preprocessed"), stringData.getBytes(StandardCharsets.UTF_8));
          }
          
-         return DigestUtils.sha256Hex(stringData);
+         String digest = DigestUtils.sha256Hex(stringData);
+         
+         if(DEBUG)
+         {
+            LogTools.info("Digest is " + digest);
+         }
+         
+         return digest;
       }
       finally
       {
