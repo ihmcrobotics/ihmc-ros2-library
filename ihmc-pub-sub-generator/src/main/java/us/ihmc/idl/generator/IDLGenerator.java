@@ -63,15 +63,10 @@ public class IDLGenerator
 {
    public static final String DEFAULT_VERSION = "local";
    
-   public static final boolean DEBUG = System.getProperty("debug-idl") != null;
+   public static final boolean WRITE_CHECKSUM_INPUT_TO_FILE = System.getProperty("write-preprocessed-checksum-idl") != null;
    
    public static void main(String[] args) throws IOException
    {
-      if(DEBUG)
-      {
-         LogTools.info("Debug enabled");
-      }
-      
       ArrayList<File> defaultIncludePath = new ArrayList<>();
       defaultIncludePath.add(new File("."));
 
@@ -158,17 +153,14 @@ public class IDLGenerator
          // Keep only ascii characters in the range from ! to ~, removing control characters, whitespace characters and non-ascii characters from the input.
          stringData = stringData.replaceAll("[^\\x21-\\x7E]", "");
          
-         if(DEBUG)
+         if(WRITE_CHECKSUM_INPUT_TO_FILE)
          {
             Files.write(Paths.get(idlFile.getName() + ".preprocessed"), stringData.getBytes(StandardCharsets.UTF_8));
          }
          
          String digest = DigestUtils.sha256Hex(stringData);
          
-         if(DEBUG)
-         {
-            LogTools.info("Digest is " + digest);
-         }
+         LogTools.debug(idlFile.getAbsolutePath() + " checksum: " + digest);
          
          return digest;
       }
