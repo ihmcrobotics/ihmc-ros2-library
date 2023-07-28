@@ -108,7 +108,7 @@ public class IDLGenerator
       }
    }
 
-   private static Reader createPreProcessedInputStream(File idlFile, List<File> includePathIn, boolean stripComments) throws IOException
+   public static Reader createPreProcessedInputStream(File idlFile, List<File> includePathIn, boolean stripComments) throws IOException
    {
       PreprocessorFilter preprocessor = new PreprocessorFilter();
       if(!stripComments)
