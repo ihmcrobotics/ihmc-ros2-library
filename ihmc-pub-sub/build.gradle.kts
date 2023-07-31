@@ -2,7 +2,7 @@ plugins {
    idea
    id("us.ihmc.ihmc-build")
    id("us.ihmc.ihmc-ci") version "8.3"
-   id("us.ihmc.ihmc-cd") version "1.24"
+   id("us.ihmc.ihmc-cd") version "1.26"
    id("com.github.hierynomus.license") version "0.14.0"
    id("org.unbroken-dome.xjc") version "2.0.0"
 }
