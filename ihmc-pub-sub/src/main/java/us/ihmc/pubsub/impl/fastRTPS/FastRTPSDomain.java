@@ -23,7 +23,6 @@ import com.eprosima.xmlschemas.fastrtps_profiles.Dds;
 import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
 
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
@@ -109,14 +108,6 @@ public class FastRTPSDomain implements Domain
             throw e;
          }
       }
-      Runtime.getRuntime().addShutdownHook(new Thread(() ->
-      {
-         // Do not use logtools here, log4j does not like to be initialized in the shutdown hook.
-         System.out.println("[" + getClass().getSimpleName() +"] FastRTPS domain is going down.");
-         stopAll();
-         // It appears that without a small sleep, the printout does not show up.
-         ThreadTools.sleep(10);
-      }, "IHMCPubSub-FastRTPSDomain-StopAll"));
    }
 
    @Override
