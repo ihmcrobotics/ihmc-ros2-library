@@ -19,10 +19,13 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +50,8 @@ import com.eprosima.idl.parser.typecode.PrimitiveTypeCode;
 import com.eprosima.idl.parser.typecode.TypeCode;
 import com.eprosima.idl.util.Util;
 
+import us.ihmc.log.LogTools;
+
 /**
  * The IDL file parser and code generator.
  *
@@ -57,6 +62,8 @@ import com.eprosima.idl.util.Util;
 public class IDLGenerator
 {
    public static final String DEFAULT_VERSION = "local";
+   
+   public static final boolean WRITE_CHECKSUM_INPUT_TO_FILE = System.getProperty("write-preprocessed-checksum-idl") != null;
    
    public static void main(String[] args) throws IOException
    {
@@ -101,7 +108,7 @@ public class IDLGenerator
       }
    }
 
-   private static Reader createPreProcessedInputStream(File idlFile, List<File> includePathIn, boolean stripComments) throws IOException
+   public static Reader createPreProcessedInputStream(File idlFile, List<File> includePathIn, boolean stripComments) throws IOException
    {
       PreprocessorFilter preprocessor = new PreprocessorFilter();
       if(!stripComments)
@@ -141,7 +148,21 @@ public class IDLGenerator
       Reader reader = createPreProcessedInputStream(idlFile, includePath, true);
       try
       {
-         return DigestUtils.sha256Hex(IOUtils.toByteArray(reader, Charset.defaultCharset()));
+         String stringData = IOUtils.toString(reader);
+         
+         // Keep only ascii characters in the range from ! to ~, removing control characters, whitespace characters and non-ascii characters from the input.
+         stringData = stringData.replaceAll("[^\\x21-\\x7E]", "");
+         
+         if(WRITE_CHECKSUM_INPUT_TO_FILE)
+         {
+            Files.write(Paths.get(idlFile.getName() + ".preprocessed"), stringData.getBytes(StandardCharsets.UTF_8));
+         }
+         
+         String digest = DigestUtils.sha256Hex(stringData);
+         
+         LogTools.debug(idlFile.getAbsolutePath() + " checksum: " + digest);
+         
+         return digest;
       }
       finally
       {
