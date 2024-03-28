@@ -358,6 +358,20 @@ public interface ROS2NodeInterface
     *
     * @param topic                       The topic
     * @param newMessageListener          New message listener
+    * @return a ROS 2 subscription
+    */
+   default <T> ROS2Subscription<T> createSubscription(ROS2Topic<T> topic,
+                                                      NewMessageListener<T> newMessageListener)
+   {
+      return createSubscription(topic.getType(), newMessageListener, topic.getName(), topic.getQoS());
+   }
+
+   /**
+    * Create a new ROS 2 compatible subscription. This call can be used to make a ROS 2 topic with the
+    * default qos profile.
+    *
+    * @param topic                       The topic
+    * @param newMessageListener          New message listener
     * @param subscriptionMatchedListener Subscription matched listener
     * @return a ROS 2 subscription
     */
