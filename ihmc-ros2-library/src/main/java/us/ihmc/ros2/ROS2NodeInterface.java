@@ -117,18 +117,6 @@ public interface ROS2NodeInterface
 
    /**
     * Create a new ROS 2 compatible publisher in this node.
-    *
-    * @param topic with Pose3D type
-    * @return a ROS 2 publisher
-    */
-   default ROS2PublisherBasics<Pose3D> createPose3DPublisher(ROS2Topic<Pose3D> topic)
-   {
-      PosePubSubType.setImplementation(new Pose3DPubSubTypeImpl());
-      return createPublisher(new PosePubSubType(), topic.getName(), topic.getQoS());
-   }
-
-   /**
-    * Create a new ROS 2 compatible publisher in this node.
     * This call makes a publisher with the default settings.
     *
     * @param topicDataType The topic data type of the message

@@ -1,11 +1,29 @@
 package us.ihmc.ros2;
 
+import geometry_msgs.msg.dds.Point32PubSubType;
+import geometry_msgs.msg.dds.PointPubSubType;
+import geometry_msgs.msg.dds.Pose2DPubSubType;
 import geometry_msgs.msg.dds.PosePubSubType;
+import geometry_msgs.msg.dds.QuaternionPubSubType;
+import geometry_msgs.msg.dds.TransformPubSubType;
+import geometry_msgs.msg.dds.Vector3PubSubType;
 import org.apache.commons.lang3.StringUtils;
+import us.ihmc.euclid.geometry.Pose2D;
 import us.ihmc.euclid.geometry.Pose3D;
+import us.ihmc.euclid.transform.QuaternionBasedTransform;
+import us.ihmc.euclid.tuple3D.Point3D;
+import us.ihmc.euclid.tuple3D.Point3D32;
+import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.CommonAttributes;
+import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.Point3D32PubSubTypeImpl;
+import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.Point3DPubSubTypeImpl;
+import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.Pose2DPubSubTypeImpl;
 import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.Pose3DPubSubTypeImpl;
+import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.QuaternionPubSubTypeImpl;
+import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.TransformPubSubTypeImpl;
+import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.Vector3PubSubTypeImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -234,10 +252,40 @@ public class ROS2TopicNameTools
    @SuppressWarnings({"unchecked", "rawtypes"})
    public static <T> TopicDataType<T> newMessageTopicDataTypeInstance(Class<T> messageType)
    {
+      if (messageType.equals(Point3D32.class))
+      {
+         Point32PubSubType.setImplementation(new Point3D32PubSubTypeImpl());
+         return (TopicDataType<T>) new Point32PubSubType();
+      }
+      if (messageType.equals(Point3D.class))
+      {
+         PointPubSubType.setImplementation(new Point3DPubSubTypeImpl());
+         return (TopicDataType<T>) new PointPubSubType();
+      }
+      if (messageType.equals(Pose2D.class))
+      {
+         Pose2DPubSubType.setImplementation(new Pose2DPubSubTypeImpl());
+         return (TopicDataType<T>) new Pose2DPubSubType();
+      }
       if (messageType.equals(Pose3D.class))
       {
          PosePubSubType.setImplementation(new Pose3DPubSubTypeImpl());
          return (TopicDataType<T>) new PosePubSubType();
+      }
+      if (messageType.equals(Quaternion.class))
+      {
+         QuaternionPubSubType.setImplementation(new QuaternionPubSubTypeImpl());
+         return (TopicDataType<T>) new QuaternionPubSubType();
+      }
+      if (messageType.equals(QuaternionBasedTransform.class))
+      {
+         TransformPubSubType.setImplementation(new TransformPubSubTypeImpl());
+         return (TopicDataType<T>) new TransformPubSubType();
+      }
+      if (messageType.equals(Vector3D.class))
+      {
+         Vector3PubSubType.setImplementation(new Vector3PubSubTypeImpl());
+         return (TopicDataType<T>) new Vector3PubSubType();
       }
 
       Method pubSubTypeGetter;
