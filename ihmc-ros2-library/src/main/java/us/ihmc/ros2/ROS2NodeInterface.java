@@ -7,8 +7,6 @@ import java.util.function.Consumer;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.RtpsTransportDescriptorType;
 
-import geometry_msgs.msg.dds.PosePubSubType;
-import us.ihmc.euclid.geometry.Pose3D;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
@@ -17,7 +15,6 @@ import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.subscriber.Subscriber;
-import us.ihmc.ros2.rosidl.geometry_msgs.msg.dds.Pose3DPubSubTypeImpl;
 
 public interface ROS2NodeInterface
 {
@@ -322,11 +319,13 @@ public interface ROS2NodeInterface
     * Create a new ROS 2 compatible subscription. This call can be used to make a ROS 2 topic with the
     * default qos profile.
     *
+    * Note: This method generates garbage!
+    *
     * @param topic                       The topic
     * @param messageCallback             Message listener that gives the taken message directly
     * @return a ROS 2 subscription
     */
-   default <T> ROS2Subscription<T> createSubscription(ROS2Topic<T> topic, Consumer<T> messageCallback)
+   default <T> ROS2Subscription<T> createSubscription2(ROS2Topic<T> topic, Consumer<T> messageCallback)
    {
       TopicDataType<T> topicDataType = ROS2TopicNameTools.newMessageTopicDataTypeInstance(topic.getType());
       return createSubscription(topicDataType, new NewMessageListener<T>()
