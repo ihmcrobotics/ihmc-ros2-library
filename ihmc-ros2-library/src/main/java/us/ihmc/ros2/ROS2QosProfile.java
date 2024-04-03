@@ -3,6 +3,7 @@ package us.ihmc.ros2;
 import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+import us.ihmc.log.LogTools;
 
 import java.util.Objects;
 
@@ -18,9 +19,26 @@ import java.util.Objects;
  */
 public class ROS2QosProfile
 {
+   /**
+    * The default QOS mode is BEST_EFFORT because we think it can actually
+    * result in a more reliable setup in practice. This setting may be changed
+    * by setting the environment variable "ROS_DEFAULT_QOS" to "RELIABLE" or
+    * "BEST_EFFORT".
+    */
    public static ROS2QosProfile DEFAULT()
    {
-      return BEST_EFFORT();
+      String defaultQoS = System.getenv("ROS_DEFAULT_QOS");
+
+      if (defaultQoS != null && defaultQoS.trim().equalsIgnoreCase("reliable"))
+      {
+         LogTools.info("Topics with unspecified QoS will use RELIABLE.");
+         return RELIABLE();
+      }
+      else
+      {
+         LogTools.info("Topics with unspecified QoS will use BEST_EFFORT.");
+         return BEST_EFFORT();
+      }
    }
 
    public static ROS2QosProfile RELIABLE()
