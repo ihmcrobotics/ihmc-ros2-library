@@ -19,18 +19,15 @@ This library builds on [IHMC Pub Sub Group](https://github.com/ihmcrobotics/ihmc
 
 ## Download
 
-In your build.gradle:
-
-```kts
-api("us.ihmc:ihmc-ros2-library:[ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library)") // publish/subscribe API
-
-api("us.ihmc:ros2-msg-to-pubsub-generator:[ ![ros2-msg-to-pubsub-generator](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator)") // generator for .msg -> .java
-```
+In your `build.gradle.kts`:
 
 Publish/subscribe API:
+
 `api("us.ihmc:ihmc-ros2-library:`
 [ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library)
+
 Generator for .msg -> .java
+
 `api("us.ihmc:ros2-msg-to-pubsub-generator:`
 [ ![ros2-msg-to-pubsub-generator](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator)
 
