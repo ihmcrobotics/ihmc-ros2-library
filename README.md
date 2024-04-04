@@ -1,5 +1,6 @@
 # IHMC Java ROS 2 Communication
 
+[![Automated Tests](https://github.com/ihmcrobotics/ihmc-java-ros2-communication/actions/workflows/gradle.yml/badge.svg)](https://github.com/ihmcrobotics/ihmc-java-ros2-communication/actions/workflows/gradle.yml)
 
 ROS2 messaging for Java.
 
