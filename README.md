@@ -21,13 +21,18 @@ This library builds on [IHMC Pub Sub Group](https://github.com/ihmcrobotics/ihmc
 
 In your build.gradle:
 
-`compile group: "us.ihmc", name: "ihmc-ros2-library", version: `
-[ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library)
-`  // publish/subscribe API`
+```kts
+api("us.ihmc:ihmc-ros2-library:[ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library)") // publish/subscribe API
 
-`compile group: "us.ihmc", name: "ros2-msg-to-pubsub-generator", version: `
+api("us.ihmc:ros2-msg-to-pubsub-generator:[ ![ros2-msg-to-pubsub-generator](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator)") // generator for .msg -> .java
+```
+
+Publish/subscribe API:
+`api("us.ihmc:ihmc-ros2-library:`
+[ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library)
+Generator for .msg -> .java
+`api("us.ihmc:ros2-msg-to-pubsub-generator:`
 [ ![ros2-msg-to-pubsub-generator](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator)
-` // generator for .msg -> .java`
 
 ## IHMC ROS2 Library
 
@@ -41,10 +46,11 @@ This library provides a minimal implementation of a Ros2Node in Java. Two versio
 See `NonRealtimeROS2PublishSubscribeExample.java` and `RealtimeROS2PublishSubscribeExample.java`.
 
 ## Environment Options
-| Environment Variable                | Description                                      |
-|-------------------------------------|--------------------------------------------------|
-| ROS_DOMAIN_ID                       | Set the ROS 2 domain ID to use (integer, 0-101)  |
-| ROS_DISABLE_SHARED_MEMORY_TRANSPORT | Disable shared memory transport if set to `true` |
+| Environment Variable                | Description                                                        |
+|-------------------------------------|--------------------------------------------------------------------|
+| ROS_DOMAIN_ID                       | Set the ROS 2 domain ID to use (integer, 0-101)                    |
+| ROS_DISABLE_SHARED_MEMORY_TRANSPORT | Disable shared memory transport if set to `true`                   |
+| ROS_DEFAULT_QOS                     | QoS for topics that don't specify it (`RELIABLE` or `BEST_EFFORT`) |
 
 ## Note
 
