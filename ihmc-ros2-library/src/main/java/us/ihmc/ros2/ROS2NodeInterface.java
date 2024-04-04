@@ -96,7 +96,8 @@ public interface ROS2NodeInterface
          }
       }
 
-      LogTools.info("ROS_DOMAIN_ID from environment is {} (fallback only; ignore if set manually)", rosDomainIdAsInteger);
+      LogTools.info("ROS_DOMAIN_ID environment variable is {}.", rosDomainIdAsInteger);
+      LogTools.info("Nodes created without a specified domain ID will use ROS_DOMAIN_ID.");
 
       return rosDomainIdAsInteger;
    }

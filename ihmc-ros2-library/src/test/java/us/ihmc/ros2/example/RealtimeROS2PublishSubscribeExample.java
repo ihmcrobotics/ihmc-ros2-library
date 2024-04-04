@@ -15,12 +15,11 @@
  */
 package us.ihmc.ros2.example;
 
-import java.io.IOException;
-
 import org.apache.commons.lang3.SystemUtils;
 
 import std_msgs.msg.dds.Int64;
 import std_msgs.msg.dds.Int64PubSubType;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.QueuedROS2Subscription;
@@ -42,18 +41,25 @@ import us.ihmc.util.PeriodicThreadSchedulerFactory;
  */
 public class RealtimeROS2PublishSubscribeExample
 {
-   public static void main(String[] args) throws IOException, InterruptedException
-   {
-      PeriodicThreadSchedulerFactory threadFactory = SystemUtils.IS_OS_LINUX ? // realtime threads only work on linux
-            new PeriodicRealtimeThreadSchedulerFactory(20) :           // see https://github.com/ihmcrobotics/ihmc-realtime
-            new PeriodicNonRealtimeThreadSchedulerFactory();                   // to setup realtime threads
-      
-      RealtimeROS2Node node = new RealtimeROS2Node(DomainFactory.getDomain(PubSubImplementation.FAST_RTPS), threadFactory, "NonRealtimeROS2PublishSubscribeExample", "/us/ihmc");
-      ROS2PublisherBasics<Int64> publisher = node.createPublisher(new Int64PubSubType(), "/example", ROS2QosProfile.KEEP_HISTORY(3), 10);
-      QueuedROS2Subscription<Int64> subscription = node.createQueuedSubscription(new Int64PubSubType(), "/example", ROS2QosProfile.KEEP_HISTORY(3), 10);
+   private ROS2PublisherBasics<Int64> publisher;
+   private QueuedROS2Subscription<Int64> subscription;
 
-      
-      node.spin(); // start the realtime node thread
+   public RealtimeROS2PublishSubscribeExample()
+   {
+      RealtimeROS2Node node;
+      try
+      {
+         node = setupNode(SystemUtils.IS_OS_LINUX);
+         node.spin(); // start the realtime node thread
+      }
+      catch (RuntimeException e)
+      {
+         LogTools.error(e.getMessage());
+         LogTools.warn("Using non-realtime.");
+
+         node = setupNode(false);
+         node.spin(); // start the realtime node thread
+      }
 
       Int64 message = new Int64();
       for (int i = 0; i < 10; i++)
@@ -83,5 +89,29 @@ public class RealtimeROS2PublishSubscribeExample
       System.out.println("Received all messages!");
       
       node.destroy();
+   }
+
+   /**
+    * Realtime threads only work on Linux.
+    * See https://github.com/ihmcrobotics/ihmc-realtime to setup realtime threads.
+    */
+   private RealtimeROS2Node setupNode(boolean useRealtimeThread)
+   {
+      PeriodicThreadSchedulerFactory threadFactory = useRealtimeThread ?
+            new PeriodicRealtimeThreadSchedulerFactory(20) :
+            new PeriodicNonRealtimeThreadSchedulerFactory();
+
+      RealtimeROS2Node node = new RealtimeROS2Node(DomainFactory.getDomain(PubSubImplementation.FAST_RTPS),
+                                                   threadFactory,
+                                                   "RealtimeROS2PublishSubscribeExample");
+      publisher = node.createPublisher(new Int64PubSubType(), "/example", ROS2QosProfile.KEEP_HISTORY(3), 10);
+      subscription = node.createQueuedSubscription(new Int64PubSubType(), "/example", ROS2QosProfile.KEEP_HISTORY(3), 10);
+
+      return node;
+   }
+
+   public static void main(String[] args)
+   {
+      new RealtimeROS2PublishSubscribeExample();
    }
 }

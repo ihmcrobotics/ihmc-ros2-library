@@ -20,6 +20,17 @@ public class ROS2Node extends ROS2NodeBasics
     *
     * @param pubSubImplementation The implementation to use.
     * @param name                 Name of the ROS 2 node
+    */
+   public ROS2Node(PubSubImplementation pubSubImplementation, String name)
+   {
+      this(DomainFactory.getDomain(pubSubImplementation), name);
+   }
+
+   /**
+    * Create a new ROS 2 node with the default namespace.
+    *
+    * @param pubSubImplementation The implementation to use.
+    * @param name                 Name of the ROS 2 node
     * @param domainId             Desired ROS domain ID
     * @param addressRestriction   Restrict network traffic to the given addresses. When provided, it
     *                             should describe one of the addresses of the computer hosting this node.
