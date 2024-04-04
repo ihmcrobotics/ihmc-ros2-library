@@ -31,9 +31,9 @@ Generator for `.msg` -> `.java`:
 `api("us.ihmc:ros2-msg-to-pubsub-generator:<version>")` Latest: 
 [ ![ros2-msg-to-pubsub-generator](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator)
 
-## IHMC ROS2 Library
+## IHMC ROS 2 Library
 
-This library provides a minimal implementation of a Ros2Node in Java. Two versions are available:
+This library provides a minimal implementation of a ROS 2 node in Java. Two versions are available:
 
 - **ROS2Node**: Publishes in the same thread and uses direct callbacks for incoming messages.
 - **RealtimeROS2Node**:	Stores outgoing and incoming messages in a queue and uses non-blocking calls to publish messages and allows polling for new messages.
