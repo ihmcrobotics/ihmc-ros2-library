@@ -23,12 +23,12 @@ In your `build.gradle.kts`:
 
 Publish/subscribe API:
 
-`api("us.ihmc:ihmc-ros2-library:<version>)` Latest:
+`api("us.ihmc:ihmc-ros2-library:<version>")` Latest:
 [ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library)
 
-Generator for .msg -> .java
+Generator for `.msg` -> `.java`:
 
-`api("us.ihmc:ros2-msg-to-pubsub-generator:<version>)` Latest: 
+`api("us.ihmc:ros2-msg-to-pubsub-generator:<version>")` Latest: 
 [ ![ros2-msg-to-pubsub-generator](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-msg-to-pubsub-generator)
 
 ## IHMC ROS2 Library
