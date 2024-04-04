@@ -15,7 +15,7 @@ public class TwoNumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.m
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "9890bde665fa4dc422effed4f54153f0ea288dd33a35d29bdbcd3c7d73b948ac";
+   		return "5f154f3cb8993585415d4ff5932bbfca2028af1514d52bc7cd881cd999b935d5";
    }
    
    @Override

@@ -15,7 +15,7 @@ public class NumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.msg.
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "e7b4af79cdc4eef00bbb02eb932429668742c3807a978a002bc10d1d050daadc";
+   		return "0a8e645895177cdd4f899e1e12c54076fafe98ce5bfb4e5003d5a61b79a62ee0";
    }
    
    @Override

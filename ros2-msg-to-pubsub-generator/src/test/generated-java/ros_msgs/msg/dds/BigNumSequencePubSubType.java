@@ -15,7 +15,7 @@ public class BigNumSequencePubSubType implements us.ihmc.pubsub.TopicDataType<ro
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "534e087c65aed232aad66cdd54c4cfeb4743907d014c37625c4a0650bfcaf53f";
+   		return "e096d173daf0b557338ea3ffacfe07d80c33f4e9283d32707915d29c688172a6";
    }
    
    @Override
