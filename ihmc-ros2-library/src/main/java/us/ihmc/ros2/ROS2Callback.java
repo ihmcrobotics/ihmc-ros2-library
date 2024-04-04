@@ -9,8 +9,9 @@ import java.util.function.Consumer;
  * Callback listener to non-null reception of a message on a ROS 2 topic.
  *
  * @param <T> messageType
- * @deprecated Use {@link ROS2NodeInterface#createSubscription} instead
+ * @deprecated Use {@link ROS2NodeInterface#createSubscription2} instead
  */
+@Deprecated
 public class ROS2Callback<T>
 {
    private final Consumer<T> messageCallback;
