@@ -5,7 +5,7 @@ package us.ihmc.ros2;
  *
  * @param <T> data type
  */
-public class QueuedROS2Subscription<T> extends ROS2Subscription<T> implements RealtimeROS2Subscription<T>
+public class QueuedROS2Subscription<T> extends ROS2Subscription<T>
 {
    private final RealtimeROS2SubscriptionListener<T> listener;
    private final ROS2Subscription<T> subscriber;

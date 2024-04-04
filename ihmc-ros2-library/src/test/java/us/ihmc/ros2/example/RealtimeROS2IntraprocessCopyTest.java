@@ -26,8 +26,8 @@ import ros_msgs.msg.dds.Num;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.QueuedROS2Subscription;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.ros2.RealtimeROS2Node;
-import us.ihmc.ros2.RealtimeROS2Publisher;
 import us.ihmc.util.PeriodicNonRealtimeThreadSchedulerFactory;
 import us.ihmc.util.PeriodicRealtimeThreadSchedulerFactory;
 import us.ihmc.util.PeriodicThreadSchedulerFactory;
@@ -57,7 +57,7 @@ public class RealtimeROS2IntraprocessCopyTest
                       new PeriodicRealtimeThreadSchedulerFactory(20) :           // see https://github.com/ihmcrobotics/ihmc-realtime
                       new PeriodicNonRealtimeThreadSchedulerFactory();           // to setup realtime threads
       RealtimeROS2Node node = new RealtimeROS2Node(DomainFactory.getDomain(PubSubImplementation.INTRAPROCESS), threadFactory, "RealtimeROS2IntraprocessCopyTest", "/us/ihmc");
-      RealtimeROS2Publisher<BigNumSequence> publisher = node.createPublisher(new BigNumSequencePubSubType(), "/example");
+      ROS2PublisherBasics<BigNumSequence> publisher = node.createPublisher(new BigNumSequencePubSubType(), "/example");
       QueuedROS2Subscription<BigNumSequence> subscription = node.createQueuedSubscription(new BigNumSequencePubSubType(), "/example");
 
       node.spin(); // start the realtime node thread

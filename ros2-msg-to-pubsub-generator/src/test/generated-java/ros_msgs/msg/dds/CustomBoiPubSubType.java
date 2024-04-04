@@ -15,7 +15,7 @@ public class CustomBoiPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "bfb66db5e75d577da8083672d444590723eef52c123901dc644dbdef9a65e5df";
+   		return "73d3714c68508d18728661f861dec4d5f9457168b72341b5395d7f474099a55a";
    }
    
    @Override

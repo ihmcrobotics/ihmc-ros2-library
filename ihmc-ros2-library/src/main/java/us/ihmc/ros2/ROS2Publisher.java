@@ -4,8 +4,6 @@ import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.publisher.Publisher;
 
-import java.io.IOException;
-
 /**
  * A ROS 2 compatible publisher
  *
@@ -13,6 +11,9 @@ import java.io.IOException;
  */
 public class ROS2Publisher<T> implements ROS2PublisherBasics<T>
 {
+   private static final int NUMBER_OF_EXCEPTIONS_TO_PRINT = 5;
+   private int numberOfExceptions = 0;
+
    private final Domain domain;
    private final Publisher publisher;
 
@@ -23,7 +24,7 @@ public class ROS2Publisher<T> implements ROS2PublisherBasics<T>
    }
 
    @Override
-   public boolean publish(T data)
+   public synchronized boolean publish(T data)
    {
       try
       {
@@ -34,12 +35,21 @@ public class ROS2Publisher<T> implements ROS2PublisherBasics<T>
          }
          else
          {
-            return false;
+            throw new Exception("Failed to publish message. Type: " + data.getClass().getSimpleName());
          }
       }
-      catch (IOException ioException)
+      catch (Exception exception)
       {
-         LogTools.error(ioException.getMessage());
+         if (numberOfExceptions <= NUMBER_OF_EXCEPTIONS_TO_PRINT)
+         {
+            LogTools.error(exception.getMessage());
+
+            if (++numberOfExceptions > NUMBER_OF_EXCEPTIONS_TO_PRINT)
+            {
+               LogTools.error("Stopping to print exceptions after {}.", NUMBER_OF_EXCEPTIONS_TO_PRINT);
+            }
+         }
+
          return false;
       }
    }

@@ -18,6 +18,7 @@ public class QueuedROS2Publisher<T> extends ROS2Publisher<T>
    private final ConcurrentRingBuffer<T> concurrentRingBuffer;
    private final Stopwatch throttleStopwatch = new Stopwatch().start();
    private long errorCount = 0;
+   private int numberOfExceptions = 0;
 
    QueuedROS2Publisher(TopicDataType<T> topicDataType, ROS2Publisher<T> rosPublisher, int queueDepth)
    {
@@ -37,24 +38,43 @@ public class QueuedROS2Publisher<T> extends ROS2Publisher<T>
    @Override
    public boolean publish(T data)
    {
-      T next = concurrentRingBuffer.next();
-      if (next != null)
+      try
       {
-         topicDataType.copy(data, next);
-         concurrentRingBuffer.commit();
-         return true;
-      }
-      else
-      {
-         if (throttleStopwatch.totalElapsed() > 1.0)
+         T next = concurrentRingBuffer.next();
+         if (next != null)
          {
-            errorCount++;
-            throttleStopwatch.reset();
-            LogTools.error("No space left in concurrent ring buffer. Buffer capacity: {} Topic: {} Occurence #: {}",
-                           concurrentRingBuffer.getCapacity(),
-                           getPublisher().getAttributes().getTopicName(),
-                           errorCount);
+            topicDataType.copy(data, next);
+            concurrentRingBuffer.commit();
+            return true;
          }
+         else
+         {
+            if (throttleStopwatch.totalElapsed() > 1.0)
+            {
+               errorCount++;
+               throttleStopwatch.reset();
+               LogTools.error("No space left in concurrent ring buffer. Buffer capacity: {} Topic: {} Occurence #: {}",
+                              concurrentRingBuffer.getCapacity(),
+                              getPublisher().getAttributes().getTopicName(),
+                              errorCount);
+            }
+            return false;
+         }
+      }
+      catch (Exception exception)
+      {
+         if (numberOfExceptions < 6)
+         {
+            exception.printStackTrace();
+            numberOfExceptions++;
+
+            if (numberOfExceptions >= 6)
+            {
+
+               LogTools.error("Stopping to print exceptions after 5.");
+            }
+         }
+
          return false;
       }
    }

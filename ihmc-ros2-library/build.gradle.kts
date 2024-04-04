@@ -15,6 +15,8 @@ mainDependencies {
    api("us.ihmc:ihmc-pub-sub:0.19.0")
    api("us.ihmc:ihmc-realtime:1.6.0")
    api("us.ihmc:ihmc-commons:0.32.0")
+
+   api("us.ihmc:ros2-common-interfaces:source")
 }
 
 testDependencies {

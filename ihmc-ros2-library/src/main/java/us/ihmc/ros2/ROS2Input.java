@@ -21,36 +21,41 @@ public class ROS2Input<T>
    private final TypedNotification<T> messageNotification = new TypedNotification<>();
    private final List<Consumer<T>> userCallbacks = new ArrayList<>();
 
+   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, ROS2Topic<?> topic)
+   {
+      this(ros2Node, messageType, topic.getName(), topic.getQoS());
+   }
+
    public ROS2Input(ROS2NodeInterface ros2Node, ROS2Topic<T> topic)
    {
       this(ros2Node, topic, ROS2TopicNameTools.newMessageInstance(topic.getType()), message -> true);
    }
 
-   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, ROS2Topic topicName)
+   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, ROS2Topic<?> topic, MessageFilter<T> messageFilter)
    {
-      this(ros2Node, messageType, topicName.withTypeName(messageType).toString());
+      this(ros2Node, messageType, topic.getName(), topic.getQoS(), ROS2TopicNameTools.newMessageInstance(messageType), messageFilter);
    }
 
-   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, String topicName)
+   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, String topicName, ROS2QosProfile qosProfile)
    {
-      this(ros2Node, messageType, topicName, ROS2TopicNameTools.newMessageInstance(messageType), message -> true);
+      this(ros2Node, messageType, topicName, qosProfile, ROS2TopicNameTools.newMessageInstance(messageType), message -> true);
    }
 
-   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, ROS2Topic topicName, T initialValue, MessageFilter<T> messageFilter)
+   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, ROS2Topic<?> topic, T initialValue, MessageFilter<T> messageFilter)
    {
-      this(ros2Node, messageType, topicName.withTypeName(messageType).toString(), initialValue, messageFilter);
+      this(ros2Node, messageType, topic.getName(), topic.getQoS(), initialValue, messageFilter);
    }
 
    public ROS2Input(ROS2NodeInterface ros2Node, ROS2Topic<T> topic, T initialValue, MessageFilter<T> messageFilter)
    {
-      this(ros2Node, topic.getType(), topic.getName(), initialValue, messageFilter);
+      this(ros2Node, topic.getType(), topic.getName(), topic.getQoS(), initialValue, messageFilter);
    }
 
-   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, String topicName, T initialValue, MessageFilter<T> messageFilter)
+   public ROS2Input(ROS2NodeInterface ros2Node, Class<T> messageType, String topicName, ROS2QosProfile qosProfile, T initialValue, MessageFilter<T> messageFilter)
    {
       atomicReference = new AtomicReference<>(initialValue);
       this.messageFilter = messageFilter;
-      ros2Callback = new ROS2Callback<>(ros2Node, messageType, topicName, this::messageReceivedCallback);
+      ros2Callback = new ROS2Callback<>(ros2Node, messageType, topicName, qosProfile, this::messageReceivedCallback);
    }
 
    public interface MessageFilter<T>
@@ -85,11 +90,6 @@ public class ROS2Input<T>
    public boolean hasReceivedFirstMessage()
    {
       return hasReceivedFirstMessage;
-   }
-
-   public void setEnabled(boolean enabled)
-   {
-      ros2Callback.setEnabled(enabled);
    }
 
    public void addCallback(Consumer<T> messageReceivedCallback)

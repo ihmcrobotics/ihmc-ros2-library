@@ -64,6 +64,7 @@ public class ROS2TopicTest
       ihmcPrefixed.withOutput();
       ihmcPrefixed.withIOQualifier("client");
       ihmcPrefixed.withIOQualifier("server");
+      ihmcPrefixed.withQoS(ROS2QosProfile.RELIABLE());
       assertEquals("/ihmc", ihmcPrefixed.toString());
 
       assertEquals("/ihmc/cat/bengal_tiger", ihmcPrefixed.withModule("cat/bengal_tiger").getName());
@@ -83,6 +84,17 @@ public class ROS2TopicTest
       assertEquals("/ihmc/robot_one/hello/int8/meow", meow.toString());
       assertEquals("/ihmc/robot_one/hello/input/int8/meow", input.toString());
       assertEquals("/ihmc/robot_one/hello/output/int8/meow", output.toString());
+
+      ROS2Topic<?> meowReliable = output.withQoS(ROS2QosProfile.RELIABLE());
+      assertEquals("/ihmc/robot_one/hello/output/int8/meow", meowReliable.toString());
+      assertEquals(ROS2QosProfile.RELIABLE(), meowReliable.getQoS());
+      assertNotEquals(output, meowReliable);
+
+      ROS2Topic<?> meowBestEffort = meowReliable.withSuffix("meow_best_effort");
+      assertEquals(ROS2QosProfile.RELIABLE(), meowBestEffort.getQoS());
+      meowBestEffort = meowBestEffort.withQoS(ROS2QosProfile.BEST_EFFORT());
+      assertEquals(ROS2QosProfile.BEST_EFFORT(), meowBestEffort.getQoS());
+      assertEquals("/ihmc/robot_one/hello/output/int8/meow_best_effort", meowBestEffort.toString());
 
       assertEquals("/ihmc", output.withSuffix("").withIOQualifier(null).withModule(null).withRobot(null).clearTypeName().toString());
       assertEquals("", output.withPrefix(null).withIOQualifier(null).withSuffix("").withModule(null).withRobot(null).clearTypeName().toString());

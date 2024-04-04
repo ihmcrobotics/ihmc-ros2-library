@@ -58,6 +58,8 @@ public class ROS2Topic<T>
    private final String typeName;
    private final String suffix;
    private final Class<T> messageType;
+   /** Allows a QoS to be carried along with the topic to keep boilerplate to a minimum. */
+   private final ROS2QosProfile qos;
 
    public ROS2Topic() // TODO make private and provide static root name method?
    {
@@ -68,9 +70,17 @@ public class ROS2Topic<T>
       typeName = "";
       suffix = "";
       messageType = null;
+      qos = ROS2QosProfile.DEFAULT();
    }
 
-   private ROS2Topic(String prefix, String robotName, String moduleName, String ioQualifier, String typeName, String suffix, Class<T> messageType)
+   private ROS2Topic(String prefix,
+                     String robotName,
+                     String moduleName,
+                     String ioQualifier,
+                     String typeName,
+                     String suffix,
+                     Class<T> messageType,
+                     ROS2QosProfile qos)
    {
       this.prefix = prefix;
       this.robotName = robotName;
@@ -79,6 +89,7 @@ public class ROS2Topic<T>
       this.typeName = typeName;
       this.suffix = suffix;
       this.messageType = messageType;
+      this.qos = qos;
    }
 
    private ROS2Topic<T> copyIfNotEqual(String prefix,
@@ -87,32 +98,33 @@ public class ROS2Topic<T>
                                        String ioQualifier,
                                        String typeName,
                                        String suffix,
-                                       Class<T> messageType)
+                                       Class<T> messageType,
+                                       ROS2QosProfile qos)
    {
-      if (equals(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType))
+      if (equals(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType, qos))
       {
          return this;
       }
       else
       {
-         return new ROS2Topic<>(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType);
+         return new ROS2Topic<>(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType, qos);
       }
    }
 
    public ROS2Topic<T> withPrefix(String prefix)
    {
-      return copyIfNotEqual(processTopicNamePart(prefix), robotName, moduleName, ioQualifier, typeName, suffix, messageType);
+      return copyIfNotEqual(processTopicNamePart(prefix), robotName, moduleName, ioQualifier, typeName, suffix, messageType, qos);
    }
 
    public ROS2Topic<T> withRobot(String robotName)
    {
-      return copyIfNotEqual(prefix, processTopicNamePart(robotName), moduleName, ioQualifier, typeName, suffix, messageType);
+      return copyIfNotEqual(prefix, processTopicNamePart(robotName), moduleName, ioQualifier, typeName, suffix, messageType, qos);
    }
 
    // TODO: Allow multiple parts as String... that gets turned into part1/part2/part3
    public ROS2Topic<T> withModule(String moduleName)
    {
-      return copyIfNotEqual(prefix, robotName, processTopicNamePart(moduleName), ioQualifier, typeName, suffix, messageType);
+      return copyIfNotEqual(prefix, robotName, processTopicNamePart(moduleName), ioQualifier, typeName, suffix, messageType, qos);
    }
 
    public ROS2Topic<T> withInput()
@@ -127,7 +139,7 @@ public class ROS2Topic<T>
 
    public ROS2Topic<T> withIOQualifier(String ioQualifier)
    {
-      return copyIfNotEqual(prefix, robotName, moduleName, processTopicNamePart(ioQualifier), typeName, suffix, messageType);
+      return copyIfNotEqual(prefix, robotName, moduleName, processTopicNamePart(ioQualifier), typeName, suffix, messageType, qos);
    }
 
    public ROS2Topic<T> withTypeName()
@@ -136,17 +148,22 @@ public class ROS2Topic<T>
       {
          throw new RuntimeException("This topic does not have a type yet. Cannot add type name");
       }
-      return copyIfNotEqual(prefix, robotName, moduleName, ioQualifier, processTopicNamePart(messageTypeToTopicNamePart(messageType)), suffix, messageType);
+      return copyIfNotEqual(prefix, robotName, moduleName, ioQualifier, processTopicNamePart(messageTypeToTopicNamePart(messageType)), suffix, messageType, qos);
    }
 
    public ROS2Topic<T> clearTypeName()
    {
-      return copyIfNotEqual(prefix, robotName, moduleName, ioQualifier, "", suffix, messageType);
+      return copyIfNotEqual(prefix, robotName, moduleName, ioQualifier, "", suffix, messageType, qos);
    }
 
    public ROS2Topic<T> withSuffix(String suffix)
    {
-      return copyIfNotEqual(prefix, robotName, moduleName, ioQualifier, typeName, processTopicNamePart(suffix), messageType);
+      return copyIfNotEqual(prefix, robotName, moduleName, ioQualifier, typeName, processTopicNamePart(suffix), messageType, qos);
+   }
+
+   public ROS2Topic<T> withQoS(ROS2QosProfile qos)
+   {
+      return copyIfNotEqual(prefix, robotName, moduleName, ioQualifier, typeName, processTopicNamePart(suffix), messageType, qos);
    }
 
    public <K> ROS2Topic<K> withType(Class<K> messageType)
@@ -157,7 +174,7 @@ public class ROS2Topic<T>
       }
       else if (this.messageType == null)
       {
-         return new ROS2Topic<>(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType);
+         return new ROS2Topic<>(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType, qos);
       }
       else if (Objects.equals(messageType, this.messageType))
       {
@@ -176,6 +193,7 @@ public class ROS2Topic<T>
 
    /**
     * If this topic doesn't have a value for a field, take the value from the passed topic.
+    * We always take the passed in topic's QoS setting.
     * @param topic to fill in the blanks with
     */
    public ROS2Topic<T> withTopic(ROS2Topic<?> topic)
@@ -186,11 +204,12 @@ public class ROS2Topic<T>
       String newIOQualifier = takeSecondIfFirstEmpty(ioQualifier, topic.ioQualifier);
       String newTypeName = takeSecondIfFirstEmpty(typeName, topic.typeName);
       String newSuffix = takeSecondIfFirstEmpty(suffix, topic.suffix);
+      ROS2QosProfile newQoS = topic.getQoS();
       if (topic.messageType != null && !topic.messageType.equals(messageType))
       {
          throw new RuntimeException("Cannot change the type of a topic with the withTopic method");
       }
-      return new ROS2Topic<>(newPrefix, newRobotName, newModuleName, newIOQualifier, newTypeName, newSuffix, messageType);
+      return new ROS2Topic<>(newPrefix, newRobotName, newModuleName, newIOQualifier, newTypeName, newSuffix, messageType, newQoS);
    }
 
    private String takeSecondIfFirstEmpty(String first, String second)
@@ -208,6 +227,11 @@ public class ROS2Topic<T>
    public Class<T> getType()
    {
       return messageType;
+   }
+
+   public ROS2QosProfile getQoS()
+   {
+      return qos;
    }
 
    public String getName()
@@ -242,10 +266,18 @@ public class ROS2Topic<T>
                     otherTopic.ioQualifier,
                     otherTopic.typeName,
                     otherTopic.suffix,
-                    otherTopic.messageType);
+                    otherTopic.messageType,
+                    otherTopic.qos);
    }
 
-   private boolean equals(String prefix, String robotName, String moduleName, String ioQualifier, String typeName, String suffix, Class<?> messageType)
+   private boolean equals(String prefix,
+                          String robotName,
+                          String moduleName,
+                          String ioQualifier,
+                          String typeName,
+                          String suffix,
+                          Class<?> messageType,
+                          ROS2QosProfile qos)
    {
       return Objects.equals(this.prefix, prefix) &&
              Objects.equals(this.robotName, robotName) &&
@@ -253,12 +285,13 @@ public class ROS2Topic<T>
              Objects.equals(this.ioQualifier, ioQualifier) &&
              Objects.equals(this.typeName, typeName) &&
              Objects.equals(this.suffix, suffix) &&
-             Objects.equals(this.messageType, messageType);
+             Objects.equals(this.messageType, messageType) &&
+             Objects.equals(this.qos, qos);
    }
 
    @Override
    public int hashCode()
    {
-      return Objects.hash(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType);
+      return Objects.hash(prefix, robotName, moduleName, ioQualifier, typeName, suffix, messageType, qos);
    }
 }

@@ -1,6 +1,6 @@
 package us.ihmc.ros2;
 
-public interface ROS2PublisherBasics<T> extends RealtimeROS2Publisher<T>
+public interface ROS2PublisherBasics<T>
 {
    /**
     * Publish data to the ROS 2 domain.

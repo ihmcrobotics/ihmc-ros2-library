@@ -145,11 +145,11 @@ public class CommunicationTest
             Domain domain = DomainFactory.getDomain(PubSubImplementation.INTRAPROCESS);
             RealtimeROS2Node node = new RealtimeROS2Node(domain, PeriodicNonRealtimeThreadScheduler::new, "ROS2CommunicationTest", "/us/ihmc");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
-            RealtimeROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
+            ROS2PublisherBasics<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
             messagesReceived.setValue(0);
 
-            RealtimeROS2Subscription<TwoNum> subscription = node.createQueuedSubscription(topicDataType, "/chatter");
+            QueuedROS2Subscription<TwoNum> subscription = node.createQueuedSubscription(topicDataType, "/chatter");
 
             node.spin();
 

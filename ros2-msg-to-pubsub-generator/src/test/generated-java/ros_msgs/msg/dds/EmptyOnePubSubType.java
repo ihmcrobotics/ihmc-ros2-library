@@ -15,7 +15,7 @@ public class EmptyOnePubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "91ad063f5f6249952e89d023adc8f698e89b7e52a4c5a5918d752f2eab8aeedf";
+   		return "e84161c0605080c021906af007b5c881c0fbc275ea30f169f67347df78c826a1";
    }
    
    @Override

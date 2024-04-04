@@ -9,6 +9,8 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
+import us.ihmc.pubsub.publisher.Publisher;
+import us.ihmc.pubsub.subscriber.Subscriber;
 
 import java.io.IOException;
 
@@ -20,6 +22,8 @@ import java.io.IOException;
  */
 class ROS2NodeBasics implements ROS2NodeInterface
 {
+   public static final String DEFAULT_NAMESPACE = "/us/ihmc";
+
    private Domain domain;
    private Participant participant;
 
@@ -33,9 +37,8 @@ class ROS2NodeBasics implements ROS2NodeInterface
     * @param name       Name for the node
     * @param namespace  Namespace for the ros node i.e. DDS partition
     * @param attributes Participant attributes to configure the node
-    * @throws IOException if no participant can be made
     */
-   ROS2NodeBasics(Domain domain, String name, String namespace, ParticipantAttributes attributes) throws IOException
+   ROS2NodeBasics(Domain domain, String name, String namespace, ParticipantAttributes attributes)
    {
       this.domain = domain;
 
@@ -46,7 +49,14 @@ class ROS2NodeBasics implements ROS2NodeInterface
       this.namespace = namespace;
 
       attributes.name(name);
-      participant = domain.createParticipant(attributes);
+      try
+      {
+         participant = domain.createParticipant(attributes);
+      }
+      catch (IOException ioException)
+      {
+         throw new RuntimeException(ioException);
+      }
    }
 
    /**
@@ -55,10 +65,9 @@ class ROS2NodeBasics implements ROS2NodeInterface
     * @param topicDataType       The topic data type of the message
     * @param publisherAttributes Publisher attributes created with @see{createPublisherAttributes}
     * @return a ROS 2 publisher
-    * @throws IOException if no publisher can be made
     */
    @Override
-   public <T> ROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, PublisherAttributes publisherAttributes) throws IOException
+   public <T> ROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, PublisherAttributes publisherAttributes)
    {
       TopicDataType<?> registeredType = domain.getRegisteredType(participant, topicDataType.getName());
       if (registeredType == null)
@@ -66,7 +75,17 @@ class ROS2NodeBasics implements ROS2NodeInterface
          domain.registerType(participant, topicDataType);
       }
 
-      return new ROS2Publisher<>(domain, domain.createPublisher(participant, publisherAttributes));
+      Publisher publisher;
+      try
+      {
+         publisher = domain.createPublisher(participant, publisherAttributes);
+      }
+      catch (IOException ioException)
+      {
+         throw new RuntimeException(ioException);
+      }
+
+      return new ROS2Publisher<>(domain, publisher);
    }
 
    /**
@@ -94,7 +113,6 @@ class ROS2NodeBasics implements ROS2NodeInterface
     */
    @Override
    public <T> QueuedROS2Subscription<T> createQueuedSubscription(TopicDataType<T> topicDataType, SubscriberAttributes subscriberAttributes, int queueSize)
-         throws IOException
    {
       RealtimeROS2SubscriptionListener<T> listener = new RealtimeROS2SubscriptionListener<>(topicDataType, queueSize);
       ROS2Subscription<T> subscriber = createSubscription(topicDataType, listener, subscriberAttributes);
@@ -135,7 +153,7 @@ class ROS2NodeBasics implements ROS2NodeInterface
    @Override
    public <T> ROS2Subscription<T> createSubscription(TopicDataType<T> topicDataType,
                                                      NewMessageListener<T> subscriberListener,
-                                                     SubscriberAttributes subscriberAttributes) throws IOException
+                                                     SubscriberAttributes subscriberAttributes)
    {
       TopicDataType<?> registeredType = domain.getRegisteredType(participant, topicDataType.getName());
       if (registeredType == null)
@@ -143,7 +161,17 @@ class ROS2NodeBasics implements ROS2NodeInterface
          domain.registerType(participant, topicDataType);
       }
 
-      return new ROS2Subscription<T>(domain, domain.createSubscriber(participant, subscriberAttributes, subscriberListener));
+      Subscriber<T> subscriber;
+      try
+      {
+         subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
+      }
+      catch (IOException ioException)
+      {
+         throw new RuntimeException(ioException);
+      }
+
+      return new ROS2Subscription<T>(domain, subscriber);
    }
 
    /**

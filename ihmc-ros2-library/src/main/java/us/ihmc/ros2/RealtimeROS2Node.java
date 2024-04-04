@@ -1,14 +1,16 @@
 package us.ihmc.ros2;
 
 import us.ihmc.pubsub.Domain;
+import us.ihmc.pubsub.DomainFactory;
+import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
+import us.ihmc.util.PeriodicNonRealtimeThreadSchedulerFactory;
 import us.ihmc.util.PeriodicThreadScheduler;
 import us.ihmc.util.PeriodicThreadSchedulerFactory;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +37,48 @@ public class RealtimeROS2Node implements ROS2NodeInterface
    private long threadPeriod = DEFAULT_THREAD_PERIOD_MICROSECONDS;
 
    /**
+    * Create a new realtime ROS 2 node with non-realtime thread with the default namespace.
+    *
+    * @param pubSubImplementation   The implementation to use.
+    * @param name                   Name of the ROS 2 node
+    * @param domainId               Desired ROS domain ID
+    * @param addressRestriction     Restrict network traffic to the given addresses. When provided, it
+    *                               should describe one of the addresses of the computer hosting this node.
+    *                               Optional.
+    */
+   public RealtimeROS2Node(PubSubImplementation pubSubImplementation, String name, int domainId, InetAddress... addressRestriction)
+   {
+      this(DomainFactory.getDomain(pubSubImplementation),
+           new PeriodicNonRealtimeThreadSchedulerFactory(),
+           name,
+           ROS2NodeBasics.DEFAULT_NAMESPACE,
+           domainId,
+           addressRestriction);
+   }
+
+   /**
+    * Create a new realtime ROS 2 node with the default namespace.
+    *
+    * @param pubSubImplementation  The implementation to use.
+    * @param threadFactory         Thread factory for the publisher. Either
+    *                              PeriodicRealtimeThreadSchedulerFactory or
+    *                              PeriodicNonRealtimeThreadSchedulerFactory depending on the application
+    * @param name                  Name of the ROS 2 node
+    * @param domainId              Desired ROS domain ID
+    * @param addressRestriction    Restrict network traffic to the given addresses. When provided, it
+    *                              should describe one of the addresses of the computer hosting this node.
+    *                              Optional.
+    */
+   public RealtimeROS2Node(PubSubImplementation pubSubImplementation,
+                           PeriodicThreadSchedulerFactory threadFactory,
+                           String name,
+                           int domainId,
+                           InetAddress... addressRestriction)
+   {
+      this(DomainFactory.getDomain(pubSubImplementation), threadFactory, name, ROS2NodeBasics.DEFAULT_NAMESPACE, domainId, addressRestriction);
+   }
+
+   /**
     * Create a new realtime ROS 2 node
     *
     * @param domain        DDS domain to use. Use DomainFactory.getDomain(implementation)
@@ -43,9 +87,8 @@ public class RealtimeROS2Node implements ROS2NodeInterface
     *                      PeriodicNonRealtimeThreadSchedulerFactory depending on the application
     * @param name          Name of the ROS 2 node
     * @param namespace     Namespace of the ROS 2 node
-    * @throws IOException if the participant cannot be made
     */
-   public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace) throws IOException
+   public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace)
    {
       this(domain, threadFactory, name, namespace, ROS2NodeInterface.domainFromEnvironment(), ROS2NodeInterface.useSHMFromEnvironment());
    }
@@ -63,14 +106,13 @@ public class RealtimeROS2Node implements ROS2NodeInterface
     * @param addressRestriction Restrict network traffic to the given addresses. When provided, it
     *                           should describe one of the addresses of the computer hosting this node.
     *                           Optional.
-    * @throws IOException if the participant cannot be made
     */
    public RealtimeROS2Node(Domain domain,
                            PeriodicThreadSchedulerFactory threadFactory,
                            String name,
                            String namespace,
                            int domainId,
-                           InetAddress... addressRestriction) throws IOException
+                           InetAddress... addressRestriction)
    {
       this(domain, threadFactory, name, namespace, domainId, ROS2NodeInterface.useSHMFromEnvironment(), addressRestriction);
    }
@@ -89,7 +131,6 @@ public class RealtimeROS2Node implements ROS2NodeInterface
     * @param addressRestriction Restrict network traffic to the given addresses. When provided, it
     *                           should describe one of the addresses of the computer hosting this node.
     *                           Optional.
-    * @throws IOException if the participant cannot be made
     */
    public RealtimeROS2Node(Domain domain,
                            PeriodicThreadSchedulerFactory threadFactory,
@@ -97,7 +138,7 @@ public class RealtimeROS2Node implements ROS2NodeInterface
                            String namespace,
                            int domainId,
                            boolean useSharedMemory,
-                           InetAddress... addressRestriction) throws IOException
+                           InetAddress... addressRestriction)
    {
       this(domain, threadFactory, name, namespace, ROS2NodeInterface.createParticipantAttributes(domainId, useSharedMemory, addressRestriction));
    }
@@ -112,10 +153,8 @@ public class RealtimeROS2Node implements ROS2NodeInterface
     * @param name          Name of the ROS 2 node
     * @param namespace     Namespace of the ROS 2 node
     * @param attributes    ParticipantAttributes for the domain
-    * @throws IOException if the participant cannot be made
     */
    public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace, ParticipantAttributes attributes)
-         throws IOException
    {
 
       this.node = new ROS2NodeBasics(domain, name, namespace, attributes);
@@ -150,18 +189,17 @@ public class RealtimeROS2Node implements ROS2NodeInterface
    }
    
    @Override
-   public <T> QueuedROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, PublisherAttributes publisherAttributes) throws IOException
+   public <T> QueuedROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, PublisherAttributes publisherAttributes)
    {
       return createPublisher(topicDataType, publisherAttributes, DEFAULT_QUEUE_SIZE);
    }
 
    public <T> QueuedROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, String topicName, ROS2QosProfile qosProfile, int queueSize)
-         throws IOException
    {
       return createPublisher(topicDataType, createPublisherAttributes(topicDataType, topicName, qosProfile), queueSize);
    }
 
-   public <T> QueuedROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, PublisherAttributes publisherAttributes, int queueSize) throws IOException
+   public <T> QueuedROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, PublisherAttributes publisherAttributes, int queueSize)
    {
       startupLock.lock();
       try
@@ -183,7 +221,6 @@ public class RealtimeROS2Node implements ROS2NodeInterface
 
    @Override
    public <T> QueuedROS2Subscription<T> createQueuedSubscription(TopicDataType<T> topicDataType, SubscriberAttributes subscriberAttributes, int queueSize)
-         throws IOException
    {
       return node.createQueuedSubscription(topicDataType, subscriberAttributes, queueSize);
    }
@@ -237,7 +274,7 @@ public class RealtimeROS2Node implements ROS2NodeInterface
    @Override
    public <T> ROS2Subscription<T> createSubscription(TopicDataType<T> topicDataType,
                                                      NewMessageListener<T> subscriberListener,
-                                                     SubscriberAttributes subscriberAttributes) throws IOException
+                                                     SubscriberAttributes subscriberAttributes)
    {
       return node.createSubscription(topicDataType, subscriberListener, subscriberAttributes);
    }
