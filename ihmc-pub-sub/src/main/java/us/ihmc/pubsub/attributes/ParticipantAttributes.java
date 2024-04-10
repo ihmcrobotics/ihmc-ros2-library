@@ -146,14 +146,15 @@ public class ParticipantAttributes
     * Functionality, this will create a new UDPv4 transport with the whitelist set to "bindToAddressRestrictions". Optionally, a shared memory transport will be added as well.
     * useBuiltinTransports will be set to false 
     * 
-    * @param useSharedMemory Enabled shared memory communication by adding a shared memory transport to this participant.
+    * @param addSharedMemoryTransport Enabled shared memory communication by adding a shared memory transport to this participant.
     * @param bindToAddressRestrictions Limit the scope of this participant to the list of hosts. If null or empty, the participant will not be able to communicate.
     * @return
     */
    public ParticipantAttributes bindToAddressRestrictions(boolean addSharedMemoryTransport, List<InetAddress> bindToAddressRestrictions)
    {
       useBuiltinTransports(false);
-      if(addSharedMemoryTransport)
+
+      if (addSharedMemoryTransport)
       {
          addSharedMemoryTransport();  
       }
