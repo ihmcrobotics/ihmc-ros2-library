@@ -1,10 +1,10 @@
 package us.ihmc.ros2;
 
 import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.AddressListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.RtpsTransportDescriptorType;
 
 import us.ihmc.log.LogTools;
@@ -24,45 +24,42 @@ public interface ROS2NodeInterface
    {
       ParticipantAttributes participantAttributes = ParticipantAttributes.create().domainId(domainId).discoveryLeaseDuration(Time.Infinite);
 
-      boolean restrictedToAddress = false;
-      if (addressRestriction != null)
-      {
-         if (addressRestriction.length > 0)
-         {
-            if (addressRestriction[0] != null) // Check for null on the first element, to make sure passing in null works as usual -> no address restrictions
-            {
-               participantAttributes.bindToAddressRestrictions(useSharedMemory, Arrays.asList(addressRestriction));
-               restrictedToAddress = true;
-            }
-         }
-      }
-      
-      // If not restricted to an address, disable shared memory if useSharedMemory is false
-      if(!restrictedToAddress)
-      {
-         if(!useSharedMemory)
-         {
-            // Disable default transports
-            participantAttributes.useBuiltinTransports(false);
-                        
-            // Add custom UDPv4 transport
-            String transportName = UUID.randomUUID().toString();
-            RtpsTransportDescriptorType transportDescriptor = new RtpsTransportDescriptorType();
-            transportDescriptor.setTransportId(transportName);
-            transportDescriptor.setType("UDPv4");
+      // Always override the transport so we're sure what it is
+      participantAttributes.useBuiltinTransports(false);
 
-            participantAttributes.addTransport(transportDescriptor);
-
-         }
+      // If this is false then shared memory will be disabled
+      if (useSharedMemory)
+      {
+         participantAttributes.addSharedMemoryTransport();
       }
-      
+
+      // Add custom UDPv4 transport
+      String transportName = UUID.randomUUID().toString();
+      RtpsTransportDescriptorType transportDescriptor = new RtpsTransportDescriptorType();
+      transportDescriptor.setTransportId(transportName);
+      transportDescriptor.setType("UDPv4");
+
+      // Apply address restrictions
+      // Check for null on the first element, to make sure passing in null works as usual -> no address restrictions
+      if (addressRestriction != null && addressRestriction.length > 0 && addressRestriction[0] != null)
+      {
+         AddressListType addressWhitelist = new AddressListType();
+         for (InetAddress address : addressRestriction)
+         {
+            addressWhitelist.getAddress().add(address.getHostAddress());
+         }
+         transportDescriptor.setInterfaceWhiteList(addressWhitelist);
+      }
+
+      participantAttributes.addTransport(transportDescriptor);
+
       return participantAttributes;
    }
    
    static boolean useSHMFromEnvironment()
    {
       String disableSharedMemoryTransportEnv = System.getenv("ROS_DISABLE_SHARED_MEMORY_TRANSPORT");
-      if(disableSharedMemoryTransportEnv == null)
+      if (disableSharedMemoryTransportEnv == null)
       {
          return false;
       }
