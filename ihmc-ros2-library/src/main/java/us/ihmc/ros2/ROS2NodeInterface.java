@@ -38,6 +38,13 @@ public interface ROS2NodeInterface
       RtpsTransportDescriptorType transportDescriptor = new RtpsTransportDescriptorType();
       transportDescriptor.setTransportId(transportName);
       transportDescriptor.setType("UDPv4");
+      // Set the max message size equal to the standard Ethernet MTU (1500 bytes)
+      // This prevents fragmentation of large messages at the network layer, leaving that to Fast-DDS to handle
+      // The default value is 65500 bytes.
+      // See: https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/transports.html
+      // See: https://github.com/eProsima/Fast-DDS/issues/3053
+      // See: https://en.wikipedia.org/wiki/Maximum_transmission_unit
+      transportDescriptor.setMaxMessageSize(1500L);
 
       // Apply address restrictions
       // Check for null on the first element, to make sure passing in null works as usual -> no address restrictions
