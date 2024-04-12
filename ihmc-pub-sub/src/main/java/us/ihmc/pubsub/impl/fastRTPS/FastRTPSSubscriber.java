@@ -200,6 +200,8 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
+               PubSubStats.SUBSCRIBER_STATS.get(this).recordPayloadSize(payload.getLength());
+               
                topicDataType.deserialize(payload, data);
             }
             catch (IOException e)
@@ -252,6 +254,8 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
+               PubSubStats.SUBSCRIBER_STATS.get(this).recordPayloadSize(payload.getLength());
+
                topicDataType.deserialize(payload, data);
             }
             catch (IOException e)

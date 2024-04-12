@@ -1,6 +1,5 @@
 package us.ihmc.pubsub.stats;
 
-import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.publisher.Publisher;
 
 public class PublisherStats
@@ -13,7 +12,7 @@ public class PublisherStats
    private final Publisher publisher;
    private long numberOfPublishedMessages = 0;
    private long largestMessageSize = 0;
-   private long latestMessageSize = 0;
+   private long currentMessageSize = 0;
    private long numberOfPublishedBytes = 0;
    private final PubSubRateCalculator publishFrequency = new PubSubRateCalculator();
    private final PubSubRateCalculator bandwidthCalculator = new PubSubRateCalculator();
@@ -25,15 +24,13 @@ public class PublisherStats
 
    public void recordPublication(int payloadSize)
    {
-      latestMessageSize = payloadSize;
+      currentMessageSize = payloadSize;
 
       if (payloadSize > largestMessageSize)
       {
          if (payloadSize > HIGH_PAYLOAD_LIMIT)
-            LogTools.warn("Message payload is high for topic: %s Type: %s Size: %.2f kB"
-                                .formatted(publisher.getAttributes().getHumanReadableTopicName(),
-                                           publisher.getAttributes().getHumanReadableTopicDataTypeName(),
-                                           payloadSize / 1000.0));
+            PubSubStatsTools.printLargePayloadWarning(publisher.getAttributes(), payloadSize);
+
          largestMessageSize = payloadSize;
       }
 
@@ -56,9 +53,9 @@ public class PublisherStats
       return largestMessageSize;
    }
 
-   public long getLatestMessageSize()
+   public long getCurrentMessageSize()
    {
-      return latestMessageSize;
+      return currentMessageSize;
    }
 
    public double getPublishFrequency()
