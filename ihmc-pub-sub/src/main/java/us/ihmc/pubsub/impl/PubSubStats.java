@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public class PubSubStats
 {
+   public static volatile long NUMBER_OF_PARTICIPANTS_CREATED = 0;
    public static volatile long NUMBER_OF_PUBLISHED_MESSAGES = 0;
    public static volatile long NUMBER_OF_MATCHED_SUBSCRIPTIONS = 0;
    public static volatile long NUMBER_OF_RECEIVED_MESSAGES = 0;
