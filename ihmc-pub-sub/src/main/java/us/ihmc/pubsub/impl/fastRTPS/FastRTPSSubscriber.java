@@ -19,6 +19,7 @@ import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.*;
+import us.ihmc.pubsub.impl.PubSubStats;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
@@ -61,6 +62,8 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                matchingInfo.getGuid().fromPrimitives(guidHigh, guidLow);
                matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[matchingStatus]);
                listener.onSubscriptionMatched(FastRTPSSubscriber.this, matchingInfo);
+
+               ++PubSubStats.NUMBER_OF_MATCHED_SUBSCRIPTIONS;
             }
          }
          catch (Throwable e)
@@ -78,6 +81,8 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             {
                listener.onNewDataMessage(FastRTPSSubscriber.this);
             }
+
+            ++PubSubStats.NUMBER_OF_RECEIVED_MESSAGES;
          }
          catch (Throwable e)
          {
