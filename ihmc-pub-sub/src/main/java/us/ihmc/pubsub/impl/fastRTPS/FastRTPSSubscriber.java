@@ -83,6 +83,8 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             }
 
             ++PubSubStats.NUMBER_OF_RECEIVED_MESSAGES;
+
+            PubSubStats.SUBSCRIBER_STATS.get(FastRTPSSubscriber.this).recordMessageReceived();
          }
          catch (Throwable e)
          {

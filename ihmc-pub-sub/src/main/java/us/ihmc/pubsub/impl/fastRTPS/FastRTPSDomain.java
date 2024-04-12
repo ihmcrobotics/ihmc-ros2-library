@@ -31,6 +31,7 @@ import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.impl.PubSubStats;
 import us.ihmc.pubsub.impl.PublisherStats;
+import us.ihmc.pubsub.impl.SubscriberStats;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
@@ -160,6 +161,9 @@ public class FastRTPSDomain implements Domain
          if (fastRTPSParticipant == participant)
          {
             subscriber = fastRTPSParticipant.createSubscriber(attrs, listener);
+
+            PubSubStats.SUBSCRIBER_STATS.put(subscriber, new SubscriberStats(subscriber));
+
             break;
          }
       }

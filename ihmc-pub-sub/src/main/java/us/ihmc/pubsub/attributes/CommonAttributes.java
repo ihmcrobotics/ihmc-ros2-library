@@ -31,6 +31,9 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    protected final DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
    protected final ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
 
+   private String humanReadableTopicName = "";
+   private String humanReadableTopicDataTypeName = "";
+
    public CommonAttributes()
    {
       topicAttributesType.setHistoryQos(historyQosPolicyType);
@@ -53,6 +56,10 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    {
       this.topicDataType = topicDataType;
       topicAttributesType.setDataType(topicDataType.getName());
+
+      String centerPartReplaced = topicDataType.getName().replaceAll("::msg::dds_::", "/");
+      humanReadableTopicDataTypeName = centerPartReplaced.substring(0, centerPartReplaced.length() - 1); // Remove last underscore
+
       return self();
    }
 
@@ -75,6 +82,9 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    public T topicName(String name)
    {
       topicAttributesType.setName(name);
+
+      humanReadableTopicName = topicAttributesType.getName().substring(2); // Remove rt prefix
+
       return self();
    }
 
@@ -200,5 +210,15 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       {
          return null;
       }
+   }
+
+   public String getHumanReadableTopicName()
+   {
+      return humanReadableTopicName;
+   }
+
+   public String getHumanReadableTopicDataTypeName()
+   {
+      return humanReadableTopicDataTypeName;
    }
 }

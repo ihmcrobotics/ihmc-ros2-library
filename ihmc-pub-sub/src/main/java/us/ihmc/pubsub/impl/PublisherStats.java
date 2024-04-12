@@ -1,9 +1,15 @@
 package us.ihmc.pubsub.impl;
 
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.publisher.Publisher;
 
 public class PublisherStats
 {
+   /**
+    * We have observed issues when messages are larger than this.
+    */
+   public static final int HIGH_PAYLOAD_LIMIT = 250000;
+
    private final Publisher publisher;
    private long numberOfPublishedMessages = 0;
    private long largestMessageSize = 0;
@@ -19,7 +25,14 @@ public class PublisherStats
       latestMessageSize = payloadSize;
 
       if (payloadSize > largestMessageSize)
+      {
+         if (payloadSize > HIGH_PAYLOAD_LIMIT)
+            LogTools.warn("Message payload is high for topic: %s Type: %s Size: %.2f kB"
+                                .formatted(publisher.getAttributes().getHumanReadableTopicName(),
+                                           publisher.getAttributes().getHumanReadableTopicDataTypeName(),
+                                           payloadSize / 1000.0));
          largestMessageSize = payloadSize;
+      }
 
       ++numberOfPublishedMessages;
    }

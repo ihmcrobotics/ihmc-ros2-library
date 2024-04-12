@@ -92,8 +92,6 @@ class FastRTPSPublisher implements Publisher
             throw new IOException("Cannot create publisher");
          }
          guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
-
-         ++PubSubStats.NUMBER_OF_PUBLISHERS_CREATED;
       }
    }
 
