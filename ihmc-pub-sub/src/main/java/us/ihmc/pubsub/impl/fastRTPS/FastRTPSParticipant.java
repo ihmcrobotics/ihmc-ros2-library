@@ -20,7 +20,7 @@ import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
-import us.ihmc.pubsub.impl.PubSubStats;
+import us.ihmc.pubsub.stats.PubSubStats;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.participant.PublisherEndpointDiscoveryListener;

@@ -1,4 +1,4 @@
-package us.ihmc.pubsub.impl;
+package us.ihmc.pubsub.stats;
 
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;

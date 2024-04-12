@@ -26,7 +26,7 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SerializedPayload;
-import us.ihmc.pubsub.impl.PubSubStats;
+import us.ihmc.pubsub.stats.PubSubStats;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;

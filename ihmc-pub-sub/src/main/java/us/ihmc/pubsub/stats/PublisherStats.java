@@ -1,4 +1,4 @@
-package us.ihmc.pubsub.impl;
+package us.ihmc.pubsub.stats;
 
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.publisher.Publisher;
@@ -14,6 +14,9 @@ public class PublisherStats
    private long numberOfPublishedMessages = 0;
    private long largestMessageSize = 0;
    private long latestMessageSize = 0;
+   private long numberOfPublishedBytes = 0;
+   private final PubSubRateCalculator publishFrequency = new PubSubRateCalculator();
+   private final PubSubRateCalculator bandwidthCalculator = new PubSubRateCalculator();
 
    public PublisherStats(Publisher publisher)
    {
@@ -35,6 +38,7 @@ public class PublisherStats
       }
 
       ++numberOfPublishedMessages;
+      numberOfPublishedBytes += payloadSize;
    }
 
    public Publisher getPublisher()
@@ -55,5 +59,15 @@ public class PublisherStats
    public long getLatestMessageSize()
    {
       return latestMessageSize;
+   }
+
+   public double getPublishFrequency()
+   {
+      return publishFrequency.finiteDifference(numberOfPublishedMessages);
+   }
+
+   public double getBandwidth()
+   {
+      return bandwidthCalculator.finiteDifference(numberOfPublishedBytes);
    }
 }

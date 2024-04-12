@@ -19,7 +19,7 @@ import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.*;
-import us.ihmc.pubsub.impl.PubSubStats;
+import us.ihmc.pubsub.stats.PubSubStats;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
