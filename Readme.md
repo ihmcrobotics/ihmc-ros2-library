@@ -177,8 +177,18 @@ Make sure to build the java code using gradle to generate the java classes for t
 
 ## Building
 
+First, make sure to update the submodules.
+Fast-DDS and foonathan_memory_vendor are included as Git submodules. 
 
-### Java code compilation
+```
+git submodule update --init --recursive
+```
+
+### Java code generation and compilation
+
+This step is necessary to generate required classes from JAXB schema.
+The code will not compile until this is run once.
+
 ```
 ihmc-pub-sub-group $ gradle compositeTask -PtaskName=compileJava
 ```
@@ -188,12 +198,6 @@ ihmc-pub-sub-group $ gradle compositeTask -PtaskName=compileJava
 This section is for rebuilding the native side of the project.
 Compiled binaries have already been included in the source code repository.
 Therefore, this section is mainly for maintainers.
-
-Fast-DDS and foonathan_memory_vendor are included as Git submodules. Update the submodules to make sure they are included:
-
-```
-git submodule update --init --recursive
-```
 
 #### Linux
 
