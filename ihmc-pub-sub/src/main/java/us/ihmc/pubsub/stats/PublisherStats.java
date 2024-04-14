@@ -14,8 +14,10 @@ public class PublisherStats
    private long largestMessageSize = 0;
    private long currentMessageSize = 0;
    private long numberOfPublishedBytes = 0;
-   private final PubSubRateCalculator publishFrequency = new PubSubRateCalculator();
+   private final PubSubRateCalculator publishFrequencyCalculator = new PubSubRateCalculator();
    private final PubSubRateCalculator bandwidthCalculator = new PubSubRateCalculator();
+   private double publishFrequency = 0.0;
+   private double bandwidth = 0.0;
 
    public PublisherStats(Publisher publisher)
    {
@@ -36,6 +38,13 @@ public class PublisherStats
 
       ++numberOfPublishedMessages;
       numberOfPublishedBytes += payloadSize;
+   }
+
+   /** This should be called at a periodic rate. */
+   public void update()
+   {
+      publishFrequency = publishFrequencyCalculator.finiteDifference(numberOfPublishedMessages);
+      bandwidth = bandwidthCalculator.finiteDifference(numberOfPublishedBytes);
    }
 
    public Publisher getPublisher()
@@ -60,11 +69,11 @@ public class PublisherStats
 
    public double getPublishFrequency()
    {
-      return publishFrequency.finiteDifference(numberOfPublishedMessages);
+      return publishFrequency;
    }
 
    public double getBandwidth()
    {
-      return bandwidthCalculator.finiteDifference(numberOfPublishedBytes);
+      return bandwidth;
    }
 }
