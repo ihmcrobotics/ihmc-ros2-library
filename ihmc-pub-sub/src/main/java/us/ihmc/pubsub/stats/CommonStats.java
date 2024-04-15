@@ -9,10 +9,12 @@ public class CommonStats
     */
    public static final int HIGH_PAYLOAD_LIMIT = 250000;
 
-   private long numberOfEvents = 0;
-   private long largestMessageSize = 0;
-   private long currentMessageSize = 0;
-   private long cumulativePayloadBytes = 0;
+   private volatile long numberOfEvents = 0;
+   private volatile long largestMessageSize = 0;
+   private volatile long currentMessageSize = 0;
+   private volatile long cumulativePayloadBytes = 0;
+
+   // Analysis fields -- not modified by pubsub threads
    private final PubSubRateCalculator eventFrequencyCalculator = new PubSubRateCalculator();
    private final PubSubRateCalculator bandwidthCalculator = new PubSubRateCalculator();
    private double publishFrequency = 0.0;
@@ -38,7 +40,7 @@ public class CommonStats
       cumulativePayloadBytes += payloadSize;
    }
 
-   /** This should be called at a periodic rate. */
+   /** This should be called at a periodic rate to update the derivative calculations. */
    public void update()
    {
       publishFrequency = eventFrequencyCalculator.finiteDifference(numberOfEvents);
