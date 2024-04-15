@@ -1,6 +1,7 @@
 package us.ihmc.pubsub.stats;
 
 import us.ihmc.pubsub.attributes.CommonAttributes;
+import us.ihmc.pubsub.participant.Participant;
 
 public class CommonStats
 {
@@ -8,6 +9,8 @@ public class CommonStats
     * We have observed issues when messages are larger than this.
     */
    public static final int HIGH_PAYLOAD_LIMIT = 250000;
+
+   private final Participant participant;
 
    private volatile long numberOfEvents = 0;
    private volatile long largestMessageSize = 0;
@@ -19,6 +22,11 @@ public class CommonStats
    private final PubSubRateCalculator bandwidthCalculator = new PubSubRateCalculator();
    private double publishFrequency = 0.0;
    private double bandwidth = 0.0;
+
+   public CommonStats(Participant participant)
+   {
+      this.participant = participant;
+   }
 
    public void recordEvent()
    {
@@ -70,5 +78,10 @@ public class CommonStats
    public double getBandwidth()
    {
       return bandwidth;
+   }
+
+   public Participant getParticipant()
+   {
+      return participant;
    }
 }

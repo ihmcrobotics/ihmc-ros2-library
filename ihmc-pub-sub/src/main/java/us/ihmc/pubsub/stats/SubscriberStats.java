@@ -1,13 +1,16 @@
 package us.ihmc.pubsub.stats;
 
+import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.subscriber.Subscriber;
 
 public class SubscriberStats extends CommonStats
 {
    private final Subscriber<?> subscriber;
 
-   public SubscriberStats(Subscriber<?> subscriber)
+   public SubscriberStats(Participant participant, Subscriber<?> subscriber)
    {
+      super(participant);
+
       this.subscriber = subscriber;
    }
 

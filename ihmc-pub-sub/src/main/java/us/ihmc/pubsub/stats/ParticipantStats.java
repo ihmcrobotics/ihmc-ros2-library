@@ -9,9 +9,16 @@ import java.util.TreeSet;
 
 public class ParticipantStats
 {
+   public static final Comparator<Publisher> COMPARING2;
+   static
+   {
+      Comparator<Publisher> topicNameComparator = Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName());
+      COMPARING2 = topicNameComparator.thenComparing(Object::hashCode);
+   }
+
    private final Participant participant;
-   private final TreeSet<Publisher> publishers = new TreeSet<>(Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName()));
-   private final TreeSet<Subscriber<?>> subscribers = new TreeSet<>(Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName()));
+   private final TreeSet<Publisher> publishers = new TreeSet<>(COMPARING2);
+   private final TreeSet<Subscriber<?>> subscribers = new TreeSet<>(PubSubStats.SUB_TOPIC_NAME_COMPARATOR);
 
    public ParticipantStats(Participant participant)
    {

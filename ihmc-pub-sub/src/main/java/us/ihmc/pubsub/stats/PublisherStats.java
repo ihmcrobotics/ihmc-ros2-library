@@ -1,13 +1,16 @@
 package us.ihmc.pubsub.stats;
 
+import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
 
 public class PublisherStats extends CommonStats
 {
    private final Publisher publisher;
 
-   public PublisherStats(Publisher publisher)
+   public PublisherStats(Participant participant, Publisher publisher)
    {
+      super(participant);
+
       this.publisher = publisher;
    }
 

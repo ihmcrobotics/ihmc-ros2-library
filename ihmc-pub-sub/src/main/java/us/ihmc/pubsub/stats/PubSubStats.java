@@ -4,10 +4,15 @@ import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class PubSubStats
 {
+   public static final Comparator<Publisher> PUB_TOPIC_NAME_COMPARATOR = Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName())
+                                                                                   .thenComparingInt(Object::hashCode);
+   public static final Comparator<Subscriber<?>> SUB_TOPIC_NAME_COMPARATOR = Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName());
+
    public static volatile long NUMBER_OF_PUBLISHED_MESSAGES = 0;
    public static volatile long NUMBER_OF_MATCHED_SUBSCRIPTIONS = 0;
    public static volatile long NUMBER_OF_RECEIVED_MESSAGES = 0;
@@ -25,13 +30,13 @@ public class PubSubStats
    public static void registerPublisher(Participant participant, Publisher publisher)
    {
       PubSubStats.PARTICIPANT_STATS.get(participant).registerPublisher(publisher);
-      PubSubStats.PUBLISHER_STATS.put(publisher, new PublisherStats(publisher));
+      PubSubStats.PUBLISHER_STATS.put(publisher, new PublisherStats(participant, publisher));
    }
 
    public static void registerSubscriber(Participant participant, Subscriber<?> subscriber)
    {
       PubSubStats.PARTICIPANT_STATS.get(participant).registerSubscriber(subscriber);
-      PubSubStats.SUBSCRIBER_STATS.put(subscriber, new SubscriberStats(subscriber));
+      PubSubStats.SUBSCRIBER_STATS.put(subscriber, new SubscriberStats(participant, subscriber));
    }
 
    public static void recordMatchedSubscription()
