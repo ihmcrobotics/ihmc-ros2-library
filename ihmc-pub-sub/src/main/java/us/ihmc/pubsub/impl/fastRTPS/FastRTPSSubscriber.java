@@ -63,7 +63,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[matchingStatus]);
                listener.onSubscriptionMatched(FastRTPSSubscriber.this, matchingInfo);
 
-               ++PubSubStats.NUMBER_OF_MATCHED_SUBSCRIPTIONS;
+               PubSubStats.recordMatchedSubscription();
             }
          }
          catch (Throwable e)
@@ -82,9 +82,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                listener.onNewDataMessage(FastRTPSSubscriber.this);
             }
 
-            ++PubSubStats.NUMBER_OF_RECEIVED_MESSAGES;
-
-            PubSubStats.SUBSCRIBER_STATS.get(FastRTPSSubscriber.this).recordMessageReceived();
+            PubSubStats.recordMessageReceived(FastRTPSSubscriber.this);
          }
          catch (Throwable e)
          {
@@ -200,7 +198,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
-               PubSubStats.SUBSCRIBER_STATS.get(this).recordPayloadSize(payload.getLength());
+               PubSubStats.recordMessageConsumed(this, payload.getLength());
                
                topicDataType.deserialize(payload, data);
             }
@@ -254,7 +252,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
-               PubSubStats.SUBSCRIBER_STATS.get(this).recordPayloadSize(payload.getLength());
+               PubSubStats.recordMessageConsumed(this, payload.getLength());
 
                topicDataType.deserialize(payload, data);
             }

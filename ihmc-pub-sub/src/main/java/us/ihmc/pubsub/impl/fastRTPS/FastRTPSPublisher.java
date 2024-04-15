@@ -107,12 +107,7 @@ class FastRTPSPublisher implements Publisher
          
          serializeMessage(data);
 
-         ++PubSubStats.NUMBER_OF_PUBLISHED_MESSAGES;
-
-         PubSubStats.PUBLISHER_STATS.get(this).recordPublication(payload.getLength());
-
-         if (payload.getLength() > PubSubStats.LARGEST_MESSAGE_SIZE)
-            PubSubStats.LARGEST_MESSAGE_SIZE = payload.getLength();
+         PubSubStats.recordPublication(this, payload.getLength());
 
          impl.write(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }

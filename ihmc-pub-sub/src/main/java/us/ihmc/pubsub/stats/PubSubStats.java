@@ -15,5 +15,32 @@ public class PubSubStats
    public static volatile long LARGEST_MESSAGE_SIZE = 0;
 
    public static final TreeMap<Publisher, PublisherStats> PUBLISHER_STATS = new TreeMap<>(Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName()));
-   public static final TreeMap<Subscriber, SubscriberStats> SUBSCRIBER_STATS = new TreeMap<>(Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName()));
+   public static final TreeMap<Subscriber<?>, SubscriberStats> SUBSCRIBER_STATS = new TreeMap<>(Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName()));
+
+   public static void recordMatchedSubscription()
+   {
+      ++PubSubStats.NUMBER_OF_MATCHED_SUBSCRIPTIONS;
+   }
+
+   public static void recordPublication(Publisher publisher, int payloadLength)
+   {
+      ++NUMBER_OF_PUBLISHED_MESSAGES;
+
+      PUBLISHER_STATS.get(publisher).recordPublication(payloadLength);
+
+      if (payloadLength > PubSubStats.LARGEST_MESSAGE_SIZE)
+         PubSubStats.LARGEST_MESSAGE_SIZE = payloadLength;
+   }
+
+   public static void recordMessageReceived(Subscriber<?> subscriber)
+   {
+      ++NUMBER_OF_RECEIVED_MESSAGES;
+
+      SUBSCRIBER_STATS.get(subscriber).recordMessageReceived();
+   }
+
+   public static void recordMessageConsumed(Subscriber<?> subscriber, int payloadLength)
+   {
+      SUBSCRIBER_STATS.get(subscriber).recordPayloadSize(payloadLength);
+   }
 }
