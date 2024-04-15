@@ -30,8 +30,6 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.stats.PubSubStats;
-import us.ihmc.pubsub.stats.PublisherStats;
-import us.ihmc.pubsub.stats.SubscriberStats;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
@@ -133,7 +131,7 @@ public class FastRTPSDomain implements Domain
          {
             publisher = fastRTPSParticipant.createPublisher(att, listener);
 
-            PubSubStats.PUBLISHER_STATS.put(publisher, new PublisherStats(publisher));
+            PubSubStats.registerPublisher(participant, publisher);
 
             break;
          }
@@ -162,7 +160,7 @@ public class FastRTPSDomain implements Domain
          {
             subscriber = fastRTPSParticipant.createSubscriber(attrs, listener);
 
-            PubSubStats.SUBSCRIBER_STATS.put(subscriber, new SubscriberStats(subscriber));
+            PubSubStats.registerSubscriber(participant, subscriber);
 
             break;
          }

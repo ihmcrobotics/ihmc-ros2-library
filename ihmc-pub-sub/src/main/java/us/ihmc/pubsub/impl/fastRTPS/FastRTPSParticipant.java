@@ -84,7 +84,7 @@ class FastRTPSParticipant implements Participant
       this.attributes = attrs;
       getGuid(guid);
 
-      ++PubSubStats.NUMBER_OF_PARTICIPANTS_CREATED;
+      PubSubStats.registerParticipant(this);
    }
 
    synchronized void delete()
