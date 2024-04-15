@@ -2,15 +2,9 @@ package us.ihmc.pubsub.stats;
 
 import us.ihmc.pubsub.subscriber.Subscriber;
 
-public class SubscriberStats
+public class SubscriberStats extends CommonStats
 {
    private final Subscriber<?> subscriber;
-   private long numberOfReceivedMessages = 0;
-   private long largestMessageSize = 0;
-   private long currentMessageSize = 0;
-   private long numberOfReceivedBytes = 0;
-   private final PubSubRateCalculator receiveFrequency = new PubSubRateCalculator();
-   private final PubSubRateCalculator bandwidthCalculator = new PubSubRateCalculator();
 
    public SubscriberStats(Subscriber<?> subscriber)
    {
@@ -19,22 +13,12 @@ public class SubscriberStats
 
    public void recordMessageReceived()
    {
-      ++numberOfReceivedMessages;
+      recordEvent();
    }
 
    public void recordPayloadSize(int payloadSize)
    {
-      currentMessageSize = payloadSize;
-
-      if (payloadSize > largestMessageSize)
-      {
-         if (payloadSize > PublisherStats.HIGH_PAYLOAD_LIMIT)
-            PubSubStatsTools.printLargePayloadWarning(subscriber.getAttributes(), payloadSize);
-
-         largestMessageSize = payloadSize;
-      }
-
-      numberOfReceivedBytes += payloadSize;
+      registerPayload(subscriber.getAttributes(), payloadSize);
    }
 
    public Subscriber<?> getSubscriber()
@@ -44,26 +28,11 @@ public class SubscriberStats
 
    public long getNumberOfReceivedMessages()
    {
-      return numberOfReceivedMessages;
-   }
-
-   public long getLargestMessageSize()
-   {
-      return largestMessageSize;
-   }
-
-   public long getCurrentMessageSize()
-   {
-      return currentMessageSize;
+      return getNumberOfEvents();
    }
 
    public double getReceiveFrequency()
    {
-      return receiveFrequency.finiteDifference(numberOfReceivedMessages);
-   }
-
-   public double getBandwidth()
-   {
-      return bandwidthCalculator.finiteDifference(numberOfReceivedBytes);
+      return getEventFrequency();
    }
 }
