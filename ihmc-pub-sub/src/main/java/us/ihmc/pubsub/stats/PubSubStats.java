@@ -9,9 +9,10 @@ import java.util.HashMap;
 
 public class PubSubStats
 {
-   public static final Comparator<Publisher> PUB_TOPIC_NAME_COMPARATOR = Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName())
-                                                                                   .thenComparingInt(Object::hashCode);
-   public static final Comparator<Subscriber<?>> SUB_TOPIC_NAME_COMPARATOR = Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName());
+   public static final Comparator<Publisher> PUBS_BY_TOPIC_NAME = Comparator.<Publisher, String>comparing(o -> o.getAttributes().getHumanReadableTopicName())
+                                                                            .thenComparing(Object::hashCode);
+   public static final Comparator<Subscriber<?>> SUBS_BY_TOPIC_NAME = Comparator.<Subscriber<?>, String>comparing(o -> o.getAttributes().getHumanReadableTopicName())
+                                                                            .thenComparing(Object::hashCode);
 
    public static volatile long NUMBER_OF_PUBLISHED_MESSAGES = 0;
    public static volatile long NUMBER_OF_MATCHED_SUBSCRIPTIONS = 0;
@@ -39,9 +40,11 @@ public class PubSubStats
       PubSubStats.SUBSCRIBER_STATS.put(subscriber, new SubscriberStats(participant, subscriber));
    }
 
-   public static void recordMatchedSubscription()
+   public static void recordMatchedSubscription(Subscriber<?> subscriber)
    {
       ++PubSubStats.NUMBER_OF_MATCHED_SUBSCRIPTIONS;
+
+      PubSubStats.SUBSCRIBER_STATS.get(subscriber).recordMatched();
    }
 
    public static void recordPublication(Publisher publisher, int payloadLength)

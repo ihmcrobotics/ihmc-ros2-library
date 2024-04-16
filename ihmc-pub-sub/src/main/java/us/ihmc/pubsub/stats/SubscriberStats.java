@@ -7,6 +7,8 @@ public class SubscriberStats extends CommonStats
 {
    private final Subscriber<?> subscriber;
 
+   private volatile boolean hasMatched = false;
+
    public SubscriberStats(Participant participant, Subscriber<?> subscriber)
    {
       super(participant);
@@ -37,5 +39,15 @@ public class SubscriberStats extends CommonStats
    public double getReceiveFrequency()
    {
       return getEventFrequency();
+   }
+
+   public void recordMatched()
+   {
+      hasMatched = true;
+   }
+
+   public boolean getHasMatched()
+   {
+      return hasMatched;
    }
 }

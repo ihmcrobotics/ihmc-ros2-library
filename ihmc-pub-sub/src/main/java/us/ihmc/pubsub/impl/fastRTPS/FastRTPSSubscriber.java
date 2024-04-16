@@ -63,7 +63,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[matchingStatus]);
                listener.onSubscriptionMatched(FastRTPSSubscriber.this, matchingInfo);
 
-               PubSubStats.recordMatchedSubscription();
+               PubSubStats.recordMatchedSubscription(FastRTPSSubscriber.this);
             }
          }
          catch (Throwable e)

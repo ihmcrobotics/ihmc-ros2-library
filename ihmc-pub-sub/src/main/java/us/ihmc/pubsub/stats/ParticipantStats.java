@@ -4,21 +4,13 @@ import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
 
-import java.util.Comparator;
 import java.util.TreeSet;
 
 public class ParticipantStats
 {
-   public static final Comparator<Publisher> COMPARING2;
-   static
-   {
-      Comparator<Publisher> topicNameComparator = Comparator.comparing(o -> o.getAttributes().getHumanReadableTopicName());
-      COMPARING2 = topicNameComparator.thenComparing(Object::hashCode);
-   }
-
    private final Participant participant;
-   private final TreeSet<Publisher> publishers = new TreeSet<>(COMPARING2);
-   private final TreeSet<Subscriber<?>> subscribers = new TreeSet<>(PubSubStats.SUB_TOPIC_NAME_COMPARATOR);
+   private final TreeSet<Publisher> publishers = new TreeSet<>(PubSubStats.PUBS_BY_TOPIC_NAME);
+   private final TreeSet<Subscriber<?>> subscribers = new TreeSet<>(PubSubStats.SUBS_BY_TOPIC_NAME);
 
    public ParticipantStats(Participant participant)
    {
