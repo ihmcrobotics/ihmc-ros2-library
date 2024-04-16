@@ -190,6 +190,8 @@ class FastRTPSPublisher implements Publisher
          nativeListenerImpl.delete();
          impl = null;
       }
+
+      PubSubStats.markPublisherRemoved(this);
    }
 
    @Override

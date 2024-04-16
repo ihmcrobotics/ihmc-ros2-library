@@ -116,6 +116,9 @@ public class FastRTPSDomain implements Domain
    {
       FastRTPSParticipant participant = new FastRTPSParticipant(att, participantListener);
       participants.add(participant);
+
+      PubSubStats.registerParticipant(participant);
+
       return participant;
    }
 

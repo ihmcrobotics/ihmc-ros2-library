@@ -83,8 +83,6 @@ class FastRTPSParticipant implements Participant
       impl = new NativeParticipantImpl(profileName, profileXML, profileXML.length(), nativeListener);
       this.attributes = attrs;
       getGuid(guid);
-
-      PubSubStats.registerParticipant(this);
    }
 
    synchronized void delete()
@@ -99,6 +97,8 @@ class FastRTPSParticipant implements Participant
       }
       impl.delete();
       nativeListener.delete();
+
+      PubSubStats.markParticipantRemoved(this);
    }
 
    private void getGuid(Guid guid)

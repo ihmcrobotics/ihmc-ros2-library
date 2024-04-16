@@ -32,27 +32,27 @@ public class PubSubStats
 
    public static void registerPublisher(Participant participant, Publisher publisher)
    {
-      PubSubStats.PARTICIPANT_STATS.get(participant).registerPublisher(publisher);
-      PubSubStats.PUBLISHER_STATS.put(publisher, new PublisherStats(participant, publisher));
+      PARTICIPANT_STATS.get(participant).registerPublisher(publisher);
+      PUBLISHER_STATS.put(publisher, new PublisherStats(participant, publisher));
    }
 
    public static void registerSubscriber(Participant participant, Subscriber<?> subscriber)
    {
-      PubSubStats.PARTICIPANT_STATS.get(participant).registerSubscriber(subscriber);
+      PARTICIPANT_STATS.get(participant).registerSubscriber(subscriber);
 
       SubscriberStats subscriberStats = new SubscriberStats(participant, subscriber);
 
       if (matchedSubscriberBuffer.remove(subscriber))
          subscriberStats.recordMatched();
 
-      PubSubStats.SUBSCRIBER_STATS.put(subscriber, subscriberStats);
+      SUBSCRIBER_STATS.put(subscriber, subscriberStats);
    }
 
    public static void recordMatchedSubscription(Subscriber<?> subscriber)
    {
-      ++PubSubStats.NUMBER_OF_MATCHED_SUBSCRIPTIONS;
+      ++NUMBER_OF_MATCHED_SUBSCRIPTIONS;
 
-      SubscriberStats subscriberStats = PubSubStats.SUBSCRIBER_STATS.get(subscriber);
+      SubscriberStats subscriberStats = SUBSCRIBER_STATS.get(subscriber);
 
       // Sometimes the subscription will match before registerSubscriber is called
       if (subscriberStats != null)
@@ -67,8 +67,8 @@ public class PubSubStats
 
       PUBLISHER_STATS.get(publisher).recordPublication(payloadLength);
 
-      if (payloadLength > PubSubStats.LARGEST_MESSAGE_SIZE)
-         PubSubStats.LARGEST_MESSAGE_SIZE = payloadLength;
+      if (payloadLength > LARGEST_MESSAGE_SIZE)
+         LARGEST_MESSAGE_SIZE = payloadLength;
    }
 
    public static void recordMessageReceived(Subscriber<?> subscriber)
@@ -81,5 +81,20 @@ public class PubSubStats
    public static void recordMessageConsumed(Subscriber<?> subscriber, int payloadLength)
    {
       SUBSCRIBER_STATS.get(subscriber).recordPayloadSize(payloadLength);
+   }
+
+   public static void markParticipantRemoved(Participant participant)
+   {
+      PARTICIPANT_STATS.get(participant).markRemoved();
+   }
+
+   public static void markPublisherRemoved(Publisher publisher)
+   {
+      PUBLISHER_STATS.get(publisher).markRemoved();
+   }
+
+   public static void markSubscriberRemoved(Subscriber<?> subscriber)
+   {
+      SUBSCRIBER_STATS.get(subscriber).markRemoved();
    }
 }

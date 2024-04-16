@@ -16,6 +16,7 @@ public class CommonStats
    private volatile long largestMessageSize = 0;
    private volatile long currentMessageSize = 0;
    private volatile long cumulativePayloadBytes = 0;
+   private volatile boolean removed = false;
 
    // Analysis fields -- not modified by pubsub threads
    private final PubSubRateCalculator eventFrequencyCalculator = new PubSubRateCalculator();
@@ -83,5 +84,15 @@ public class CommonStats
    public Participant getParticipant()
    {
       return participant;
+   }
+
+   public void markRemoved()
+   {
+      removed = true;
+   }
+
+   public boolean getRemoved()
+   {
+      return removed;
    }
 }

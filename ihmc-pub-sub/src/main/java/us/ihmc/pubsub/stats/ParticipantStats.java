@@ -12,6 +12,8 @@ public class ParticipantStats
    private final TreeSet<Publisher> publishers = new TreeSet<>(PubSubStats.PUBS_BY_TOPIC_NAME);
    private final TreeSet<Subscriber<?>> subscribers = new TreeSet<>(PubSubStats.SUBS_BY_TOPIC_NAME);
 
+   private volatile boolean removed = false;
+
    public ParticipantStats(Participant participant)
    {
       this.participant = participant;
@@ -40,5 +42,15 @@ public class ParticipantStats
    public TreeSet<Subscriber<?>> getSubscribers()
    {
       return subscribers;
+   }
+
+   public void markRemoved()
+   {
+      removed = true;
+   }
+
+   public boolean getRemoved()
+   {
+      return removed;
    }
 }

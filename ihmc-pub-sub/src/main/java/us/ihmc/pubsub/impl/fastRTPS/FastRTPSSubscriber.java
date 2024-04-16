@@ -313,6 +313,8 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          nativeListenerImpl.delete();
          impl = null;
       }
+
+      PubSubStats.markSubscriberRemoved(this);
    }
 
    TopicDataType<T> getTopicDataType()
