@@ -51,7 +51,7 @@ class FastRTPSParticipant implements Participant
    private PublisherEndpointDiscoveryListener publisherDiscoveryListener = null;
    private SubscriberEndpointDiscoveryListener subscriberDiscoveryListener = null;
 
-   private boolean isRemoved = false;
+   private volatile boolean isRemoved = false;
 
    private class NativeParticipantListenerImpl extends NativeParticipantListener
    {

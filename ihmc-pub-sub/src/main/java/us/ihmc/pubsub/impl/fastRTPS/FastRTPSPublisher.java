@@ -46,11 +46,11 @@ class FastRTPSPublisher implements Publisher
    private final ByteBuffer keyBuffer = ByteBuffer.allocateDirect(16);
    private final NativePublisherListenerImpl nativeListenerImpl = new NativePublisherListenerImpl();
 
-   private boolean isRemoved = false;
-   private long numberOfPublications = 0;
-   private long largestMessageSize = 0;
-   private long currentMessageSize = 0;
-   private long cumulativePayloadBytes = 0;
+   private volatile boolean isRemoved = false;
+   private volatile long numberOfPublications = 0;
+   private volatile long largestMessageSize = 0;
+   private volatile long currentMessageSize = 0;
+   private volatile long cumulativePayloadBytes = 0;
 
    private class NativePublisherListenerImpl extends NativePublisherListener
    {

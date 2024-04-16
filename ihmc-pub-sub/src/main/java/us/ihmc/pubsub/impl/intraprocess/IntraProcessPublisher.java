@@ -41,8 +41,8 @@ class IntraProcessPublisher <T> implements Publisher
    private IntraProcessParticipant participant;
    private PublisherListener listener;
 
-   private long sequence = 0;
-   private boolean isRemoved = false;
+   private volatile long sequence = 0;
+   private volatile boolean isRemoved = false;
 
    public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, PublisherAttributes attr,
                                 PublisherListener listener)

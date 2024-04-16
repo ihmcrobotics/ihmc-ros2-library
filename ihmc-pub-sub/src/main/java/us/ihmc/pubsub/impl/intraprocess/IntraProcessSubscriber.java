@@ -56,10 +56,10 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
 
    private final LinkedList<MessageHolder> messageQueue;
 
-   private boolean hasMatched = false;
+   private volatile boolean hasMatched = false;
    private boolean available = true;
-   private boolean isRemoved = false;
-   private long numberOfReceivedMessages = 0;
+   private volatile boolean isRemoved = false;
+   private volatile long numberOfReceivedMessages = 0;
 
    IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, SubscriberAttributes attr,
                           SubscriberListener<T> listener)
