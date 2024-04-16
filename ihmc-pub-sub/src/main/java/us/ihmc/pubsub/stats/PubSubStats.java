@@ -6,6 +6,7 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class PubSubStats
 {
@@ -22,6 +23,7 @@ public class PubSubStats
    public static final HashMap<Participant, ParticipantStats> PARTICIPANT_STATS = new HashMap<>();
    public static final HashMap<Publisher, PublisherStats> PUBLISHER_STATS = new HashMap<>();
    public static final HashMap<Subscriber<?>, SubscriberStats> SUBSCRIBER_STATS = new HashMap<>();
+   public static final HashSet<Subscriber<?>> matchedSubscriberBuffer = new HashSet<>();
 
    public static void registerParticipant(Participant participant)
    {
@@ -37,14 +39,26 @@ public class PubSubStats
    public static void registerSubscriber(Participant participant, Subscriber<?> subscriber)
    {
       PubSubStats.PARTICIPANT_STATS.get(participant).registerSubscriber(subscriber);
-      PubSubStats.SUBSCRIBER_STATS.put(subscriber, new SubscriberStats(participant, subscriber));
+
+      SubscriberStats subscriberStats = new SubscriberStats(participant, subscriber);
+
+      if (matchedSubscriberBuffer.remove(subscriber))
+         subscriberStats.recordMatched();
+
+      PubSubStats.SUBSCRIBER_STATS.put(subscriber, subscriberStats);
    }
 
    public static void recordMatchedSubscription(Subscriber<?> subscriber)
    {
       ++PubSubStats.NUMBER_OF_MATCHED_SUBSCRIPTIONS;
 
-      PubSubStats.SUBSCRIBER_STATS.get(subscriber).recordMatched();
+      SubscriberStats subscriberStats = PubSubStats.SUBSCRIBER_STATS.get(subscriber);
+
+      // Sometimes the subscription will match before registerSubscriber is called
+      if (subscriberStats != null)
+         subscriberStats.recordMatched();
+      else
+         matchedSubscriberBuffer.add(subscriber);
    }
 
    public static void recordPublication(Publisher publisher, int payloadLength)
