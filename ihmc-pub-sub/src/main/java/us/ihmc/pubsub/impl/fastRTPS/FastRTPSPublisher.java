@@ -26,7 +26,6 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.SerializedPayload;
-import us.ihmc.pubsub.stats.PubSubStats;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
@@ -46,6 +45,12 @@ class FastRTPSPublisher implements Publisher
 
    private final ByteBuffer keyBuffer = ByteBuffer.allocateDirect(16);
    private final NativePublisherListenerImpl nativeListenerImpl = new NativePublisherListenerImpl();
+
+   private boolean isRemoved = false;
+   private long numberOfPublications = 0;
+   private long largestMessageSize = 0;
+   private long currentMessageSize = 0;
+   private long cumulativePayloadBytes = 0;
 
    private class NativePublisherListenerImpl extends NativePublisherListener
    {
@@ -107,7 +112,11 @@ class FastRTPSPublisher implements Publisher
          
          serializeMessage(data);
 
-         PubSubStats.recordPublication(this, payload.getLength());
+         ++numberOfPublications;
+         currentMessageSize = payload.getLength();
+         if (payload.getLength() > largestMessageSize)
+            largestMessageSize = payload.getLength();
+         cumulativePayloadBytes += payload.getLength();
 
          impl.write(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }
@@ -191,7 +200,7 @@ class FastRTPSPublisher implements Publisher
          impl = null;
       }
 
-      PubSubStats.markPublisherRemoved(this);
+      isRemoved = true;
    }
 
    @Override
@@ -234,5 +243,35 @@ class FastRTPSPublisher implements Publisher
       {
          return impl != null;
       }
+   }
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
+   @Override
+   public long getNumberOfPublications()
+   {
+      return numberOfPublications;
+   }
+
+   @Override
+   public long getCurrentMessageSize()
+   {
+      return currentMessageSize;
+   }
+
+   @Override
+   public long getLargestMessageSize()
+   {
+      return largestMessageSize;
+   }
+
+   @Override
+   public long getCumulativePayloadBytes()
+   {
+      return cumulativePayloadBytes;
    }
 }

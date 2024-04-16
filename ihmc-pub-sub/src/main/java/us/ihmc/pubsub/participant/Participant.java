@@ -16,9 +16,12 @@
 package us.ihmc.pubsub.participant;
 
 import java.io.IOException;
+import java.util.List;
 
 import us.ihmc.pubsub.attributes.ParticipantAttributes;
 import us.ihmc.pubsub.common.Guid;
+import us.ihmc.pubsub.publisher.Publisher;
+import us.ihmc.pubsub.subscriber.Subscriber;
 
 /**
  * Class Participant used to group Publishers and Subscribers into a single working unit
@@ -86,4 +89,12 @@ public interface Participant
     * @return true if this participant is available
     */
    public boolean isAvailable();
+
+   public boolean isRemoved();
+
+   /** This list is meant for external access. The user may synchronize over the returned list for thread safety. */
+   public List<Publisher> getAllPublishersForStatistics();
+
+   /** This list is meant for external access. The user may synchronize over the returned list for thread safety. */
+   public List<Subscriber<?>> getAllSubscribersForStatistics();
 }

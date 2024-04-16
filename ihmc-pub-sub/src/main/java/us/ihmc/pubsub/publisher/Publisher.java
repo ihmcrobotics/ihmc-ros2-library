@@ -103,4 +103,19 @@ public interface Publisher
     * @return true if this publisher is available
     */
    public boolean isAvailable();
+
+   /** @return If the publisher has been destroyed/deleted/removed. */
+   public boolean isRemoved();
+
+   /** @return Total number of publications for statistic collection. */
+   public long getNumberOfPublications();
+
+   /** @return Latest published message payload for statistic collection. */
+   public long getCurrentMessageSize();
+
+   /** @return Largest ever published message payload for statistic collection. */
+   public long getLargestMessageSize();
+
+   /** @return Total payload bytes over all publications for statistic collection and bandwidth calculation. */
+   public long getCumulativePayloadBytes();
 }

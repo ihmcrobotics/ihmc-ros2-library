@@ -40,6 +40,7 @@ public class IntraProcessDomain implements Domain
    private final IntraProcessDomainImpl domains[] = new IntraProcessDomainImpl[233];
 
    private final HashMap<Participant, IntraProcessParticipant> participants = new HashMap<>();
+   private final ArrayList<Participant> allParticipantsForStatistics = new ArrayList<>();
 
    public static synchronized IntraProcessDomain getInstance()
    {
@@ -82,6 +83,10 @@ public class IntraProcessDomain implements Domain
       IntraProcessDomainImpl domain = getOrCreateDomain(att.getDomainId());
       IntraProcessParticipant participant = domain.createParticipant(att, participantListener);
       participants.put(participant, participant);
+      synchronized (allParticipantsForStatistics)
+      {
+         allParticipantsForStatistics.add(participant);
+      }
       return participant;
    }
 
@@ -209,5 +214,11 @@ public class IntraProcessDomain implements Domain
       {
          removeParticipant(participantToRemove);
       }
+   }
+
+   @Override
+   public List<Participant> getAllParticipantsForStatistics()
+   {
+      return allParticipantsForStatistics;
    }
 }

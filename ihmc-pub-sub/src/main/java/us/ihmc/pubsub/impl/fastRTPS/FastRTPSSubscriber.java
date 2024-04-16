@@ -19,7 +19,6 @@ import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.*;
-import us.ihmc.pubsub.stats.PubSubStats;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
@@ -50,6 +49,13 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
 
    private final NativeSubscriberListenerImpl nativeListenerImpl = new NativeSubscriberListenerImpl();
 
+   private boolean hasMatched = false;
+   private boolean isRemoved = false;
+   private long numberOfReceivedMessages = 0;
+   private long largestMessageSize = 0;
+   private long currentMessageSize = 0;
+   private long cumulativePayloadBytes = 0;
+
    private class NativeSubscriberListenerImpl extends NativeSubscriberListener
    {
       @Override
@@ -62,8 +68,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                matchingInfo.getGuid().fromPrimitives(guidHigh, guidLow);
                matchingInfo.setStatus(MatchingInfo.MatchingStatus.values[matchingStatus]);
                listener.onSubscriptionMatched(FastRTPSSubscriber.this, matchingInfo);
-
-               PubSubStats.recordMatchedSubscription(FastRTPSSubscriber.this);
+               hasMatched = true;
             }
          }
          catch (Throwable e)
@@ -82,7 +87,7 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
                listener.onNewDataMessage(FastRTPSSubscriber.this);
             }
 
-            PubSubStats.recordMessageReceived(FastRTPSSubscriber.this);
+            ++numberOfReceivedMessages;
          }
          catch (Throwable e)
          {
@@ -198,8 +203,11 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
-               PubSubStats.recordMessageConsumed(this, payload.getLength());
-               
+               currentMessageSize = payload.getLength();
+               if (payload.getLength() > largestMessageSize)
+                  largestMessageSize = payload.getLength();
+               cumulativePayloadBytes += payload.getLength();
+
                topicDataType.deserialize(payload, data);
             }
             catch (IOException e)
@@ -252,7 +260,10 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
             preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
             try
             {
-               PubSubStats.recordMessageConsumed(this, payload.getLength());
+               currentMessageSize = payload.getLength();
+               if (payload.getLength() > largestMessageSize)
+                  largestMessageSize = payload.getLength();
+               cumulativePayloadBytes += payload.getLength();
 
                topicDataType.deserialize(payload, data);
             }
@@ -314,12 +325,18 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
          impl = null;
       }
 
-      PubSubStats.markSubscriberRemoved(this);
+      isRemoved = true;
    }
 
    TopicDataType<T> getTopicDataType()
    {
       return topicDataType;
+   }
+
+   @Override
+   public boolean hasMatched()
+   {
+      return hasMatched;
    }
 
    @Override
@@ -329,5 +346,35 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
       {
          return impl != null;
       }
+   }
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
+   @Override
+   public long getNumberOfReceivedMessages()
+   {
+      return numberOfReceivedMessages;
+   }
+
+   @Override
+   public long getCurrentMessageSize()
+   {
+      return currentMessageSize;
+   }
+
+   @Override
+   public long getLargestMessageSize()
+   {
+      return largestMessageSize;
+   }
+
+   @Override
+   public long getCumulativePayloadBytes()
+   {
+      return cumulativePayloadBytes;
    }
 }

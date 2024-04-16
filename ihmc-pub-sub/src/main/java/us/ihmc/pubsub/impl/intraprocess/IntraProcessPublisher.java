@@ -42,6 +42,7 @@ class IntraProcessPublisher <T> implements Publisher
    private PublisherListener listener;
 
    private long sequence = 0;
+   private boolean isRemoved = false;
 
    public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, PublisherAttributes attr,
                                 PublisherListener listener)
@@ -78,7 +79,7 @@ class IntraProcessPublisher <T> implements Publisher
       newInfo.getSampleIdentity().getSequenceNumber().set(sequence);
 
       domain.write(attr, topicDataType, (T) data, newInfo);
-      
+
       sequence++;
    }
 
@@ -148,8 +149,39 @@ class IntraProcessPublisher <T> implements Publisher
    void destroy()
    {
       available = false;
+      isRemoved = true;
       domain = null;
       participant = null;
       listener = null;
+   }
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
+   @Override
+   public long getNumberOfPublications()
+   {
+      return sequence;
+   }
+
+   @Override
+   public long getCurrentMessageSize()
+   {
+      return 0;
+   }
+
+   @Override
+   public long getLargestMessageSize()
+   {
+      return 0;
+   }
+
+   @Override
+   public long getCumulativePayloadBytes()
+   {
+      return 0;
    }
 }

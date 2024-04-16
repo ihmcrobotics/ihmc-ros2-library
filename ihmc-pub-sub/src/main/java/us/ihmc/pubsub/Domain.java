@@ -17,6 +17,7 @@ package us.ihmc.pubsub;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
 import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
@@ -318,4 +319,7 @@ public interface Domain {
       
       return publisherAttributes;
    }
+
+   /** This list is meant for external access. The user may synchronize over the returned list for thread safety. */
+   public List<Participant> getAllParticipantsForStatistics();
 }
