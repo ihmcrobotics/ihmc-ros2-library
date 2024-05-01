@@ -49,12 +49,12 @@ class FastRTPSSubscriber<T> implements Subscriber<T>
 
    private final NativeSubscriberListenerImpl nativeListenerImpl = new NativeSubscriberListenerImpl();
 
-   private volatile boolean hasMatched = false;
-   private volatile boolean isRemoved = false;
-   private volatile long numberOfReceivedMessages = 0;
-   private volatile long largestMessageSize = 0;
-   private volatile long currentMessageSize = 0;
-   private volatile long cumulativePayloadBytes = 0;
+   private boolean hasMatched = false;
+   private boolean isRemoved = false;
+   private long numberOfReceivedMessages = 0;
+   private long largestMessageSize = 0;
+   private long currentMessageSize = 0;
+   private long cumulativePayloadBytes = 0;
 
    private class NativeSubscriberListenerImpl extends NativeSubscriberListener
    {

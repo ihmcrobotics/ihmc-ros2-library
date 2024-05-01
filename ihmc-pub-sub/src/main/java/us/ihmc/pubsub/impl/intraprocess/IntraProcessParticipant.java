@@ -46,7 +46,7 @@ public class IntraProcessParticipant implements Participant
    private final Guid guid = new Guid();
 
    private boolean isAvailable = true;
-   private volatile boolean isRemoved = true;
+   private boolean isRemoved = true;
 
    private int entityId = 0;
 
