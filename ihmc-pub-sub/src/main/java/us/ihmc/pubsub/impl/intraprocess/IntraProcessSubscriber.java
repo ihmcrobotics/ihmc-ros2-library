@@ -56,7 +56,10 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
 
    private final LinkedList<MessageHolder> messageQueue;
 
+   private boolean hasMatched = false;
    private boolean available = true;
+   private boolean isRemoved = false;
+   private long numberOfReceivedMessages = 0;
 
    IntraProcessSubscriber(Guid guid, IntraProcessDomainImpl domain, IntraProcessParticipant intraProcessParticipant, SubscriberAttributes attr,
                           SubscriberListener<T> listener)
@@ -115,6 +118,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
             info.set(next.info);
          }
          messageLock.unlock();
+         ++numberOfReceivedMessages;
          return true;
       }
       else
@@ -153,6 +157,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
             info.set(next.info);
          }
          messageLock.unlock();
+         ++numberOfReceivedMessages;
          return true;
       }
       else
@@ -191,6 +196,12 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    }
 
    @Override
+   public boolean hasMatched()
+   {
+      return hasMatched;
+   }
+
+   @Override
    public boolean isAvailable()
    {
       return available;
@@ -204,6 +215,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
          info.setStatus(matchedMatching);
          info.getGuid().set(publisher.getGuid());
          listener.onSubscriptionMatched(this, info);
+         hasMatched = true;
       }
    }
 
@@ -215,6 +227,7 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
    void destroy()
    {
       available = false;
+      isRemoved = true;
       participant = null;
       listener = null;
       messageQueue.clear();
@@ -230,5 +243,35 @@ class IntraProcessSubscriber<T> implements Subscriber<T>
       {
          listener.onNewDataMessage(this);
       }
+   }
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
+   @Override
+   public long getNumberOfReceivedMessages()
+   {
+      return numberOfReceivedMessages;
+   }
+
+   @Override
+   public long getCurrentMessageSize()
+   {
+      return 0;
+   }
+
+   @Override
+   public long getLargestMessageSize()
+   {
+      return 0;
+   }
+
+   @Override
+   public long getCumulativePayloadBytes()
+   {
+      return 0;
    }
 }

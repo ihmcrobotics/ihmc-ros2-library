@@ -12,6 +12,7 @@ package us.ihmc.pubsub.impl.fastRTPS;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -51,12 +52,13 @@ public class FastRTPSDomain implements Domain
    public static final String FAST_DDS_SEC = "sec";
    public static final int DEFAULT_DISCOVERY_SERVER_PORT = 11811;
 
-
    private final ArrayList<FastRTPSParticipant> participants = new ArrayList<>();
+   private final ArrayList<Participant> allParticipantsForStatistics = new ArrayList<>();
 
    private static boolean useSystemFastRTPS = false;
    private static FastRTPSDomain instance = null;
 
+   /** This method will create the instance if it does not exist. */
    public static synchronized FastRTPSDomain getInstance(boolean useSystemFastRTPS)
    {
       if (instance == null)
@@ -77,6 +79,12 @@ public class FastRTPSDomain implements Domain
          }
       }
 
+      return instance;
+   }
+
+   /** @return The instance if {@link #getInstance} has been called, else null. */
+   public static synchronized Domain accessInstance()
+   {
       return instance;
    }
 
@@ -115,6 +123,10 @@ public class FastRTPSDomain implements Domain
    {
       FastRTPSParticipant participant = new FastRTPSParticipant(att, participantListener);
       participants.add(participant);
+      synchronized (allParticipantsForStatistics)
+      {
+         allParticipantsForStatistics.add(participant);
+      }
       return participant;
    }
 
@@ -296,5 +308,11 @@ public class FastRTPSDomain implements Domain
       }
 
       return writer.toString();
+   }
+
+   @Override
+   public List<Participant> getAllParticipantsForStatistics()
+   {
+      return allParticipantsForStatistics;
    }
 }

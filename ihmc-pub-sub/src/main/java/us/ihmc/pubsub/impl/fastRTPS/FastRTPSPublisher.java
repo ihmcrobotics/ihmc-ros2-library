@@ -46,6 +46,12 @@ class FastRTPSPublisher implements Publisher
    private final ByteBuffer keyBuffer = ByteBuffer.allocateDirect(16);
    private final NativePublisherListenerImpl nativeListenerImpl = new NativePublisherListenerImpl();
 
+   private boolean isRemoved = false;
+   private long numberOfPublications = 0;
+   private long largestMessageSize = 0;
+   private long currentMessageSize = 0;
+   private long cumulativePayloadBytes = 0;
+
    private class NativePublisherListenerImpl extends NativePublisherListener
    {
       private final MatchingInfo matchingInfo = new MatchingInfo();
@@ -105,6 +111,13 @@ class FastRTPSPublisher implements Publisher
          }
          
          serializeMessage(data);
+
+         ++numberOfPublications;
+         currentMessageSize = payload.getLength();
+         if (payload.getLength() > largestMessageSize)
+            largestMessageSize = payload.getLength();
+         cumulativePayloadBytes += payload.getLength();
+
          impl.write(payload.getData(), payload.getLength(), payload.getEncapsulation(), keyBuffer, keyBuffer.position());
       }
    }
@@ -186,6 +199,8 @@ class FastRTPSPublisher implements Publisher
          nativeListenerImpl.delete();
          impl = null;
       }
+
+      isRemoved = true;
    }
 
    @Override
@@ -228,5 +243,35 @@ class FastRTPSPublisher implements Publisher
       {
          return impl != null;
       }
+   }
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
+   @Override
+   public long getNumberOfPublications()
+   {
+      return numberOfPublications;
+   }
+
+   @Override
+   public long getCurrentMessageSize()
+   {
+      return currentMessageSize;
+   }
+
+   @Override
+   public long getLargestMessageSize()
+   {
+      return largestMessageSize;
+   }
+
+   @Override
+   public long getCumulativePayloadBytes()
+   {
+      return cumulativePayloadBytes;
    }
 }

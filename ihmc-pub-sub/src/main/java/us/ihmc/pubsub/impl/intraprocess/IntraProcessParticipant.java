@@ -35,7 +35,9 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.participant.PublisherEndpointDiscoveryListener;
 import us.ihmc.pubsub.participant.SubscriberEndpointDiscoveryListener;
+import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
+import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 public class IntraProcessParticipant implements Participant
@@ -44,7 +46,8 @@ public class IntraProcessParticipant implements Participant
    private final Guid guid = new Guid();
 
    private boolean isAvailable = true;
-   
+   private boolean isRemoved = true;
+
    private int entityId = 0;
 
    private IntraProcessDomainImpl domain;
@@ -55,6 +58,8 @@ public class IntraProcessParticipant implements Participant
 
    private final ArrayList<IntraProcessSubscriber> subscribers = new ArrayList<>();
    private final ArrayList<IntraProcessPublisher> publishers = new ArrayList<>();
+   private final ArrayList<Publisher> allPublishersForStatistics = new ArrayList<>();
+   private final ArrayList<Subscriber<?>> allSubscribersForStatistics = new ArrayList<>();
    
    private final HashMap<String, TopicDataType<?>> registeredTopicDataTypes = new HashMap<>();
 
@@ -135,7 +140,13 @@ public class IntraProcessParticipant implements Participant
    {
       return isAvailable;
    }
-   
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
    private Guid createNextGuid()
    {
       entityId++;
@@ -151,6 +162,10 @@ public class IntraProcessParticipant implements Participant
       
       IntraProcessPublisher publisher = new IntraProcessPublisher(createNextGuid(), domain, this, attr, listener);
       publishers.add(publisher);
+      synchronized (allPublishersForStatistics)
+      {
+         allPublishersForStatistics.add(publisher);
+      }
       return publisher;
    }
    
@@ -158,6 +173,10 @@ public class IntraProcessParticipant implements Participant
    {
       IntraProcessSubscriber subscriber = new IntraProcessSubscriber(createNextGuid(), domain, this, attr, listener);
       subscribers.add(subscriber);
+      synchronized (allSubscribersForStatistics)
+      {
+         allSubscribersForStatistics.add(subscriber);
+      }
       return subscriber;
    }
 
@@ -232,10 +251,23 @@ public class IntraProcessParticipant implements Participant
    void destroy()
    {
       isAvailable = false;
+      isRemoved = true;
       domain = null;
       participantListener = null;
       publisherEndpointDiscoveryListener = null;
       subscriberEndpointDiscoveryListener = null;
       registeredTopicDataTypes.clear();
+   }
+
+   @Override
+   public ArrayList<Publisher> getAllPublishersForStatistics()
+   {
+      return allPublishersForStatistics;
+   }
+
+   @Override
+   public ArrayList<Subscriber<?>> getAllSubscribersForStatistics()
+   {
+      return allSubscribersForStatistics;
    }
 }

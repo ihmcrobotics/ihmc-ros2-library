@@ -144,6 +144,9 @@ public interface Subscriber<T>
     */
    public boolean isInCleanState();
 
+   /** @return If the subscriber has matched with a publisher. */
+   public boolean hasMatched();
+
    /**
     * Checks if this publisher is available to read data from the domain 
     * 
@@ -152,4 +155,19 @@ public interface Subscriber<T>
     * @return true if this subscriber is available
     */
    public boolean isAvailable();
+
+   /** @return If the subscriber has been destroyed/deleted/removed. */
+   public boolean isRemoved();
+
+   /** @return Total number of received messages for statistic collection. */
+   public long getNumberOfReceivedMessages();
+
+   /** @return Latest received message payload for statistic collection. */
+   public long getCurrentMessageSize();
+
+   /** @return Largest ever received message payload for statistic collection. */
+   public long getLargestMessageSize();
+
+   /** @return Total payload bytes over all received messages for statistic collection and bandwidth calculation. */
+   public long getCumulativePayloadBytes();
 }

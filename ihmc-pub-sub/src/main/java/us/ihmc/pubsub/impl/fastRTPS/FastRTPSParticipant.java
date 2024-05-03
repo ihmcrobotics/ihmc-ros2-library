@@ -38,6 +38,8 @@ class FastRTPSParticipant implements Participant
    private final ArrayList<TopicDataType<?>> types = new ArrayList<>();
    private final ArrayList<FastRTPSPublisher> publishers = new ArrayList<>();
    private final ArrayList<FastRTPSSubscriber> subscribers = new ArrayList<>();
+   private final ArrayList<Publisher> allPublishersForStatistics = new ArrayList<>();
+   private final ArrayList<Subscriber<?>> allSubscribersForStatistics = new ArrayList<>();
 
    private final ParticipantAttributes attributes;
    private final ParticipantListener participantListener;
@@ -48,6 +50,8 @@ class FastRTPSParticipant implements Participant
 
    private PublisherEndpointDiscoveryListener publisherDiscoveryListener = null;
    private SubscriberEndpointDiscoveryListener subscriberDiscoveryListener = null;
+
+   private boolean isRemoved = false;
 
    private class NativeParticipantListenerImpl extends NativeParticipantListener
    {
@@ -96,6 +100,8 @@ class FastRTPSParticipant implements Participant
       }
       impl.delete();
       nativeListener.delete();
+
+      isRemoved = true;
    }
 
    private void getGuid(Guid guid)
@@ -207,6 +213,10 @@ class FastRTPSParticipant implements Participant
 
       FastRTPSPublisher publisher = new FastRTPSPublisher(topicDataType, attrs, listener, impl);
       publishers.add(publisher);
+      synchronized (allPublishersForStatistics)
+      {
+         allPublishersForStatistics.add(publisher);
+      }
       return publisher;
    }
 
@@ -233,6 +243,10 @@ class FastRTPSParticipant implements Participant
 
       FastRTPSSubscriber subscriber = new FastRTPSSubscriber(topicDataType, attrs, listener, impl);
       subscribers.add(subscriber);
+      synchronized (allSubscribersForStatistics)
+      {
+         allSubscribersForStatistics.add(subscriber);
+      }
       return subscriber;
    }
 
@@ -312,5 +326,23 @@ class FastRTPSParticipant implements Participant
    public synchronized boolean isAvailable()
    {
       return impl != null;
+   }
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
+   @Override
+   public ArrayList<Publisher> getAllPublishersForStatistics()
+   {
+      return allPublishersForStatistics;
+   }
+
+   @Override
+   public ArrayList<Subscriber<?>> getAllSubscribersForStatistics()
+   {
+      return allSubscribersForStatistics;
    }
 }
