@@ -17,6 +17,5 @@ ihmc {
 mainDependencies {
    api("org.glassfish:javax.json:1.0.4")
    api("org.python:jython-standalone:2.7.1")
-   api("jakarta.xml.bind:jakarta.xml.bind-api:2.3.2")
-   api("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+   api("com.sun.xml.bind:jaxb-ri:4.0.5")
 }
