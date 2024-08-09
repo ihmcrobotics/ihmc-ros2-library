@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.AddressListType;

@@ -2,7 +2,7 @@ package us.ihmc.pubsub.attributes;
 
 import java.io.IOException;
 
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.LifespanQosPolicyType;
