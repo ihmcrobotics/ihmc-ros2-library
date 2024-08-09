@@ -24,12 +24,15 @@ mainDependencies {
    api("us.ihmc:euclid:0.21.0")
    api("us.ihmc:ihmc-commons:0.32.0")
    api("us.ihmc:log-tools:0.6.3")
-   api("com.sun.xml.bind:jaxb-ri:4.0.5")
+   api("com.sun.xml.bind:jaxb-impl:4.0.5")
 }
 
 testDependencies {
    api("us.ihmc:ihmc-commons-testing:0.32.0")
 }
+
+configurations.create("xjc")
+dependencies { "xjc"("com.sun.xml.bind:jaxb-xjc:4.0.5") }
 
 // Cookie cutter function for defining multiple XJC tasks
 fun addXjcTask(taskName: String, schema: String, pkg: String, dest: String) : Task {
@@ -38,7 +41,7 @@ fun addXjcTask(taskName: String, schema: String, pkg: String, dest: String) : Ta
 
    // The main XJC task, calls XJCFacade which is the entry point of the XJC JAR
    return tasks.create(taskName, JavaExec::class) {
-      classpath = configurations["runtimeClasspath"]
+      classpath = configurations["xjc"]
       mainClass.set("com.sun.tools.xjc.XJCFacade")
 
       // See https://docs.oracle.com/javase/9/tools/xjc.htm#JSWOR741 for full list of args
