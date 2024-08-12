@@ -1,0 +1,33 @@
+name: Run Gradle test (Linux, self-hosted)
+
+on:
+  push:
+    branches: ["develop"]
+  pull_request:
+    branches: ["develop"]
+  workflow_dispatch:
+
+jobs:
+  test-linux:
+    runs-on: [self-hosted, Linux]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: 'false'
+          submodules: 'recursive'
+      - name: LFS checkout
+        run: |
+          git lfs install --local
+          git lfs fetch
+          git lfs pull
+          git lfs ls-files -l
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.5
+      - name: Run tests
+        run: |
+          gradle compositeTask --stacktrace --info -PtaskName=test
