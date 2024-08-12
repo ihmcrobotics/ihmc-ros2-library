@@ -30,7 +30,7 @@ jobs:
           gradle-version: 8.5
       - name: Run tests
         run: |
-          gradle test --info --stacktrace --no-daemon -PrunningOnCIServer=true
+          gradle compositeTask -PtaskName=test --info --stacktrace --no-daemon -PrunningOnCIServer=true
       - name: Publish Test Report - ${{ inputs.test-category }}
         uses: mikepenz/action-junit-report@v4
         if: success() || failure() # always run even if the previous step fails
