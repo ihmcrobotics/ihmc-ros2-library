@@ -28,6 +28,8 @@ import us.ihmc.commons.lists.PreallocatedEnumList;
 import us.ihmc.commons.lists.RecyclingArrayList;
 import us.ihmc.pubsub.TopicDataType;
 
+import java.nio.ByteBuffer;
+
 /**
  * Represents an IDL sequence.
  * 
@@ -114,38 +116,41 @@ public interface IDLSequence
       }
    }
 
-   public static class Byte extends TByteArrayList implements IDLSequence
+   public static class Byte implements IDLSequence
    {
-      private final int maxSize;
+      /**
+       * The backing buffer as a heap array.
+       * We only use the position and capacity. We do not use the limit or mark.
+       * The position is used as the size and capacity is the max message size
+       * and is final after construction.
+       */
+      private final ByteBuffer buffer;
+
       public Byte(int maxSize, String typeCode)
       {
-         super(maxSize);
          if (!typeCode.equals("type_9"))
          {
             throw new NotImplementedException(typeCode + " is not implemented for Sequence");
          }
-         this.maxSize = maxSize;
+         buffer = ByteBuffer.allocate(maxSize);
       }
 
       @Override
       public void readElement(int i, CDR cdr)
       {
-         add(cdr.read_type_9());
+         // unused for faster copy method
       }
 
       @Override
       public void writeElement(int i, CDR cdr)
       {
-         cdr.write_type_9(get(i));
+         // unused for faster copy method
       }
       
       public void set(Byte other)
       {
-         resetQuick();
-         for(int i = 0; i < other.size(); i++)
-         {
-            add(other.get(i));
-         }
+         buffer.position(other.buffer.position());
+         System.arraycopy(other.buffer.array(), 0, buffer.array(), 0, other.size());
       }
       
       @Override
@@ -159,16 +164,106 @@ public interface IDLSequence
             {
                builder.append(", ");
             }
-            builder.append(get(i));           
+            builder.append(buffer.get(i));
          }
          builder.append("]");
          return builder.toString();
       }
 
+      public void add(byte value)
+      {
+         buffer.put(value);
+      }
+
+      public void add(byte[] values)
+      {
+         buffer.put(values);
+      }
+
+      public void add(byte[] src, int offset, int length)
+      {
+         buffer.put(src, offset, length);
+      }
+
+      public void set(int index, byte value)
+      {
+         buffer.put(index, value);
+      }
+
+      public byte get(int i)
+      {
+         return buffer.get(i);
+      }
+
+      /**
+       * For accessing the putDouble, getDouble, etc. fancy methods.
+       * Only use put and get methods. Do not mess with the mark or limit.
+       */
+      public ByteBuffer getBuffer()
+      {
+         return buffer;
+      }
+
+      public byte[] copyArray()
+      {
+         byte[] copy = new byte[size()];
+         System.arraycopy(buffer.array(), 0, copy, 0, copy.length);
+         return copy;
+      }
+
+      public ByteBuffer copyByteBuffer()
+      {
+         return ByteBuffer.wrap(copyArray());
+      }
+
+      @Override
+      public void resetQuick()
+      {
+         buffer.position(0);
+      }
+
+      @Override
+      public int size()
+      {
+         return buffer.position();
+      }
+
       @Override
       public int capacity()
       {
-         return maxSize;
+         return buffer.capacity();
+      }
+
+      public boolean isEmpty()
+      {
+         return size() == 0;
+      }
+
+      @Override
+      public boolean equals(java.lang.Object other)
+      {
+         if (other == this)
+         {
+            return true;
+         }
+         else if (other instanceof IDLSequence.Byte otherSequence)
+         {
+            if (otherSequence.size() != this.size())
+               return false;
+            else
+            {
+               for (int i = size(); i-- > 0; )
+               {
+                  if (buffer.get(i) != otherSequence.buffer.get(i))
+                  {
+                     return false;
+                  }
+               }
+               return true;
+            }
+         }
+         else
+            return false;
       }
    }
 
@@ -841,7 +936,7 @@ public interface IDLSequence
       private final TopicDataType<T> topicDataType;
 
       /**
-       * @deprecated Use {@link #IDLSequence(int, TopicDataType)} instead.
+       * @deprecated Use {@link IDLSequence(int, TopicDataType)} instead.
        * 
        * @param maxSize Maximum size of this sequence
        * @param clazz Class to store

@@ -287,9 +287,19 @@ public class CDR
    {
       int length = read_type_2();
       seq.resetQuick();
-      for (int i = 0; i < length; i++)
+
+      if (seq instanceof IDLSequence.Byte byteSeq) // faster copy
       {
-         seq.readElement(i, this);
+         byteSeq.getBuffer().put(0, buf, buf.position(), length);
+         byteSeq.getBuffer().position(length);
+         buf.position(buf.position() + length);
+      }
+      else
+      {
+         for (int i = 0; i < length; i++)
+         {
+            seq.readElement(i, this);
+         }
       }
    }
 
@@ -297,9 +307,18 @@ public class CDR
    {
       int length = seq.size();
       write_type_2(length);
-      for (int i = 0; i < length; i++)
+
+      if (seq instanceof IDLSequence.Byte byteSeq) // faster copy
       {
-         seq.writeElement(i, this);
+         buf.put(buf.position(), byteSeq.getBuffer(), 0, length);
+         buf.position(buf.position() + length);
+      }
+      else
+      {
+         for (int i = 0; i < length; i++)
+         {
+            seq.writeElement(i, this);
+         }
       }
    }
 
