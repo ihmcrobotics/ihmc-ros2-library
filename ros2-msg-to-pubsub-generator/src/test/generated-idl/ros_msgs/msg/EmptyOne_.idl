@@ -1,0 +1,20 @@
+#ifndef __ros_msgs__msg__EmptyOne__idl__
+#define __ros_msgs__msg__EmptyOne__idl__
+
+module ros_msgs
+{
+  module msg
+  {
+    module dds
+    {
+
+      @TypeCode(type="ros_msgs::msg::dds_::EmptyOne_")
+      struct EmptyOne
+      {
+        boolean unused_placeholder_field;
+      };
+    };
+  };
+};
+
+#endif

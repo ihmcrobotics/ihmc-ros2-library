@@ -1,0 +1,36 @@
+#ifndef __ros_msgs__msg__TwoNum__idl__
+#define __ros_msgs__msg__TwoNum__idl__
+
+#include "ros_msgs/msg/./Num_.idl"
+module ros_msgs
+{
+  module msg
+  {
+    module dds
+    {
+
+      /**
+       * we don't support this
+       * int32[] nums [-200, -100, 0, 100, 200]
+       */
+      @TypeCode(type="ros_msgs::msg::dds_::TwoNum_")
+      struct TwoNum
+      {
+        ros_msgs::msg::dds::Num num1;
+        sequence<ros_msgs::msg::dds::Num> num2;
+        /**
+         * Should be ros_msgs::msg::dds::Num num3[3];
+         */
+        ros_msgs::msg::dds::Num num3[3];
+        sequence<ros_msgs::msg::dds::Num, 3> num4;
+        string str1;
+        string<10> str2;
+        sequence<string, 5> str3;
+        sequence<string<10> > str4;
+        sequence<string<10>, 5> str5;
+      };
+    };
+  };
+};
+
+#endif

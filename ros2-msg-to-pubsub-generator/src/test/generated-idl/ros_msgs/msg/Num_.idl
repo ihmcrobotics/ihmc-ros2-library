@@ -1,0 +1,52 @@
+#ifndef __ros_msgs__msg__Num__idl__
+#define __ros_msgs__msg__Num__idl__
+
+module ros_msgs
+{
+  module msg
+  {
+    module dds
+    {
+      /**
+       * a, b, c
+       * 1, 2, 3
+       * baby
+       * sneaky boi
+       */
+      const long X =
+      123;
+
+      const string CATCH_22 =
+      "No doc, watch out!";
+
+
+      /**
+       * This is the header
+       * Header line 2
+       * This is some dangling comment that will be included in header
+       */
+      @TypeCode(type="ros_msgs::msg::dds_::Num_")
+      struct Num
+      {
+        /**
+         * this num should have default value 5
+         */
+        @defaultValue(value=5)
+        long long num;
+        double double_test;
+        /**
+         * I have some doc not relevant to the next
+         */
+        long long no_default_with_doc;
+        long long no_doc_num;
+        /**
+         * @javadoc I guess javadoc will work okay.
+         * hello
+         */
+        long hello;
+      };
+    };
+  };
+};
+
+#endif
