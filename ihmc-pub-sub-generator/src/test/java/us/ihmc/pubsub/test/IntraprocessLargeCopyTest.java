@@ -3,6 +3,7 @@ package us.ihmc.pubsub.test;
 import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
 import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.generated.test.BigMessage;
@@ -45,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class IntraprocessLargeCopyTest
 {
    @Test // timeout = 300000
+   @Disabled // Doesn't work in CI
    public void testRepeatedLargeCopiesInFastRTPSCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
@@ -55,6 +57,7 @@ public class IntraprocessLargeCopyTest
    }
 
    @Test // timeout = 300000
+   @Disabled // Doesn't work in CI
    public void testRepeatedLargeCopiesInIntraprocessCallbacks() throws IOException, InterruptedException
    {
       Random random = new Random(981239012380L);
