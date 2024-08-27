@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package us.ihmc.pubsub.participant;
 import java.io.IOException;
 import java.util.List;
 
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
@@ -49,7 +49,7 @@ public interface Participant
     * 
     * @return ParticipantAttributes.
     */
-   public ParticipantAttributes getAttributes();
+   public ParticipantProfile getAttributes();
    
    
    /**

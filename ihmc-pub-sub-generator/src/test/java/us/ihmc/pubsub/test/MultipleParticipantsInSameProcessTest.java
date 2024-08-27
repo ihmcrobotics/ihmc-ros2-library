@@ -1,18 +1,17 @@
 package us.ihmc.pubsub.test;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import org.junit.jupiter.api.Test;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.*;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
@@ -28,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MultipleParticipantsInSameProcessTest
 {
@@ -67,20 +66,20 @@ public class MultipleParticipantsInSameProcessTest
          TopicDataType topicDataType = new ChatMessagePubSubType();
 
          PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(topicDataType).topicName("Status")
-                                                                             .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                             .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                              .partitions(Collections.singletonList("us/ihmc"))
-                                                                             .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                             .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(10);
+                                                                             .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                             .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(10);
 
          SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(topicDataType).topicName("Status")
-                                                                         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                         .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                          .partitions(Collections.singletonList("us/ihmc"))
-                                                                         .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+                                                                         .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                         .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_ALL);
 
          List<Participant> participants = IntStream.rangeClosed(1, 100)
-                                                   .mapToObj(i -> ParticipantAttributes.create().domainId(217).discoveryLeaseDuration(Time.Infinite)
-                                                                                       .name("StatusTest" + i).useOnlySharedMemoryTransport())
+                                                   .mapToObj(i -> ParticipantProfile.create().domainId(217).discoveryLeaseDuration(Time.Infinite)
+                                                                                    .name("StatusTest" + i).useOnlySharedMemoryTransport())
                                                    .map(attrs ->
                                                    {
                                                       try

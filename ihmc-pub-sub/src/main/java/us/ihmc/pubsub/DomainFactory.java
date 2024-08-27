@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,10 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class DomainFactory
 {
+   /**
+    * Soon to be removed in favor of only FAST_RTPS mode.
+    */
+   @Deprecated
    public enum PubSubImplementation
    {
       FAST_RTPS, FAST_RTPS_SYSTEM_LIBRARY, INTRAPROCESS;

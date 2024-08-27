@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,15 @@
  */
 package us.ihmc.pubsub.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.ChangeKind;
@@ -59,6 +46,14 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.pubsub.types.ByteBufferPubSubType;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Deprecated
 public class IntraProcessDomainTest
 {
    private void checkMatchingInfo(MatchingStatus expectedStatus, Guid expectedGuid, MatchingInfo info)
@@ -85,10 +80,10 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes genericParticipantAttributes = ParticipantAttributes.create()
-       .domainId(1)
-       .name("participant");
-      Participant participant = domain.createParticipant(genericParticipantAttributes);
+      ParticipantProfile genericParticipantProfile = ParticipantProfile.create()
+                                                                       .domainId(1)
+                                                                       .name("participant");
+      Participant participant = domain.createParticipant(genericParticipantProfile);
 
       try
       {
@@ -119,22 +114,22 @@ public class IntraProcessDomainTest
          PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
           .topicDataType(typeOfTheDay)
           .topicName(topic)
-          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-          .durabilityKind(DurabilityQosKindType.VOLATILE)
+          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+          .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
           .partitions(Collections.singletonList(partition));
 
          SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
           .topicDataType(typeOfTheDay)
           .topicName(topic)
-          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-          .durabilityKind(DurabilityQosKindType.VOLATILE)
+          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+          .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
           .partitions(Collections.singletonList(partition));
 
          SubscriberAttributes subscriberAttributes2 = SubscriberAttributes.create()
           .topicDataType(typeOfTheDay)
           .topicName(topic)
-          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-          .durabilityKind(DurabilityQosKindType.VOLATILE);
+          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+          .durabilityKind(DurabilityQosKindPolicyType.VOLATILE);
 
          Publisher publisher1 = domain.createPublisher(participant, genericPublisherAttributes);
 
@@ -228,11 +223,11 @@ public class IntraProcessDomainTest
       IntraProcessDomain domain = IntraProcessDomain.getInstance();
       domain.setLogLevel(LogLevel.INFO);
       
-      ParticipantAttributes genericParticipantAttributes = ParticipantAttributes.create()
-       .domainId(1)
-       .name("participant");
+      ParticipantProfile genericParticipantProfile = ParticipantProfile.create()
+                                                                       .domainId(1)
+                                                                       .name("participant");
 
-      Participant participant = domain.createParticipant(genericParticipantAttributes, participantListener);
+      Participant participant = domain.createParticipant(genericParticipantProfile, participantListener);
       
       try
       {
@@ -247,13 +242,11 @@ public class IntraProcessDomainTest
          ArrayBlockingQueue<Guid> subscriberEndpointDiscover = new ArrayBlockingQueue<>(1);
 
          PublisherEndpointDiscoveryListener publisherEndpointDiscoveryListener = (boolean isAlive, Guid guid, Guid participantGuid,
-                                                                                  String typeName, String topicName, int userDefinedId, long typeMaxSerialized,
-                                                                                  TopicKindType topicKind) -> {
+                                                                                  String typeName, String topicName, int userDefinedId, long typeMaxSerialized) -> {
             publisherEndpointDiscover.add(guid);
          };
          SubscriberEndpointDiscoveryListener subscriberEndpointDiscoveryListener = (boolean isAlive, Guid guid, boolean expectsInlineQos, Guid participantGuid,
-                                                                                    String typeName, String topicName, int userDefinedId,
-                                                                                    TopicKindType javaTopicKind) -> {
+                                                                                    String typeName, String topicName, int userDefinedId) -> {
             subscriberEndpointDiscover.add(guid);
          };
 
@@ -266,15 +259,15 @@ public class IntraProcessDomainTest
          PublisherAttributes pubAtt = PublisherAttributes.create()
          .topicDataType(typeOfTheDay)
          .topicName(topic)
-         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-         .durabilityKind(DurabilityQosKindType.VOLATILE)
+         .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+         .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
          .partitions(Collections.singletonList(partition));
 
          PublisherAttributes invalidPubAtt = PublisherAttributes.create()
           .topicDataType(typeOfTheDay)
           .topicName(topic+"Invalid")
-          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-          .durabilityKind(DurabilityQosKindType.VOLATILE)
+          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+          .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
           .partitions(Collections.singletonList(partition));
 
          Publisher publisher1 = domain.createPublisher(participant, pubAtt, publisherListener);
@@ -298,7 +291,7 @@ public class IntraProcessDomainTest
          SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
           .topicDataType(typeOfTheDay)
           .topicName(topic)
-          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
           .partitions(Collections.singletonList(partition));
 
          Subscriber subscriber1 = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);
@@ -321,10 +314,10 @@ public class IntraProcessDomainTest
          assertEquals(2, (long) participant.get_no_subscribers(topic));
 
          // Create a new participant, see if original participant listeners get triggered
-         ParticipantAttributes genericParticipantAttributes2 = ParticipantAttributes.create()
-         .domainId(1)
-         .name("participant2");
-         Participant participant2 = domain.createParticipant(genericParticipantAttributes2);
+         ParticipantProfile genericParticipantProfile2 = ParticipantProfile.create()
+                                                                           .domainId(1)
+                                                                           .name("participant2");
+         Participant participant2 = domain.createParticipant(genericParticipantProfile2);
 
          ParticipantDiscoveryInfo participant2info = participantListenerFuture.poll(1, TimeUnit.SECONDS);
          assertNotEquals(null, participant2info);
@@ -345,7 +338,7 @@ public class IntraProcessDomainTest
          SubscriberAttributes subAtt2 = SubscriberAttributes.create()
          .topicDataType(typeOfTheDay)
          .topicName(topic)
-         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+         .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
          .partitions(Collections.singletonList(partition));
          guid = domain.createSubscriber(participant2, subAtt2).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
@@ -361,15 +354,15 @@ public class IntraProcessDomainTest
          PublisherAttributes pubAtt2 = PublisherAttributes.create()
          .topicDataType(typeOfTheDay)
          .topicName(topic)
-         .reliabilityKind(ReliabilityQosKindType.BEST_EFFORT)
-         .durabilityKind(DurabilityQosKindType.VOLATILE)
+         .reliabilityKind(ReliabilityQosKindPolicyType.BEST_EFFORT)
+         .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
          .partitions(Collections.singletonList(partition));
 
          PublisherAttributes pubAtt3 = PublisherAttributes.create()
           .topicDataType(typeOfTheDay)
           .topicName(topic)
-          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-          .durabilityKind(DurabilityQosKindType.VOLATILE);
+          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+          .durabilityKind(DurabilityQosKindPolicyType.VOLATILE);
 
          guid = domain.createPublisher(participant2, pubAtt2).getGuid();
          assertEquals(guid, publisherEndpointDiscover.poll(1, TimeUnit.SECONDS));
@@ -385,8 +378,8 @@ public class IntraProcessDomainTest
          PublisherAttributes newDataPubAtt = PublisherAttributes.create()
           .topicDataType(newDataType)
           .topicName(topic)
-          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-          .durabilityKind(DurabilityQosKindType.VOLATILE)
+          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+          .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
           .partitions(Collections.singletonList(partition));
 
          guid = domain.createPublisher(participant2, newDataPubAtt).getGuid();
@@ -400,7 +393,7 @@ public class IntraProcessDomainTest
          SubscriberAttributes subAtt3 = SubscriberAttributes.create()
          .topicDataType(typeOfTheDay)
          .topicName(topic)
-         .reliabilityKind(ReliabilityQosKindType.BEST_EFFORT);
+         .reliabilityKind(ReliabilityQosKindPolicyType.BEST_EFFORT);
 
          guid = domain.createSubscriber(participant2, subAtt3).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
@@ -408,7 +401,7 @@ public class IntraProcessDomainTest
          SubscriberAttributes subAtt4 = SubscriberAttributes.create()
          .topicDataType(typeOfTheDay)
          .topicName(topic+"Invalid")
-         .reliabilityKind(ReliabilityQosKindType.BEST_EFFORT);
+         .reliabilityKind(ReliabilityQosKindPolicyType.BEST_EFFORT);
 
          guid = domain.createSubscriber(participant2, subAtt4).getGuid();
          assertEquals(guid, subscriberEndpointDiscover.poll(1, TimeUnit.SECONDS));
@@ -416,7 +409,7 @@ public class IntraProcessDomainTest
          SubscriberAttributes subAtt5 = SubscriberAttributes.create()
          .topicDataType(newDataType)
          .topicName(topic)
-         .reliabilityKind(ReliabilityQosKindType.BEST_EFFORT)
+         .reliabilityKind(ReliabilityQosKindPolicyType.BEST_EFFORT)
          .partitions(Collections.singletonList(partition));
 
          guid = domain.createSubscriber(participant2, subAtt5).getGuid();

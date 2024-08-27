@@ -1,15 +1,14 @@
 package us.ihmc.pubsub.test;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
 import us.ihmc.idl.generated.nested.NestedElement;
 import us.ihmc.idl.generated.test.Color;
 import us.ihmc.idl.generated.test.IDLElementTest;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 import us.ihmc.pubsub.common.SerializedPayload;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

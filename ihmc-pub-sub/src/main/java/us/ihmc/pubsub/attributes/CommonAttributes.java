@@ -1,49 +1,34 @@
 package us.ihmc.pubsub.attributes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosPolicyType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosPolicyType;
-import com.eprosima.xmlschemas.fastrtps_profiles.LifespanQosPolicyType;
-import com.eprosima.xmlschemas.fastrtps_profiles.NameVectorType;
-import com.eprosima.xmlschemas.fastrtps_profiles.OwnershipQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PartitionQosPolicyType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosPolicyType;
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicAttributesType;
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.*;
+import com.eprosima.xmlschemas.fastrtps_profiles.PartitionQosPolicyType.Names;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.common.Time;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class CommonAttributes<T extends CommonAttributes<T>>
 {
    private TopicDataType<?> topicDataType;
 
-   protected final TopicAttributesType topicAttributesType = new TopicAttributesType();
+   protected final TopicElementType topicElementType = new TopicElementType();
 
    protected final HistoryQosPolicyType historyQosPolicyType = new HistoryQosPolicyType();
    protected final DurabilityQosPolicyType durabilityQosPolicyType = new DurabilityQosPolicyType();
    protected final ReliabilityQosPolicyType reliabilityQosPolicyType = new ReliabilityQosPolicyType();
 
-   private String humanReadableTopicName = "";
-   private String humanReadableTopicDataTypeName = "";
-
    public CommonAttributes()
    {
-      topicAttributesType.setHistoryQos(historyQosPolicyType);
-
       // Set useful defaults
       historyDepth(10);
-      historyQosPolicyKind(HistoryQosKindType.KEEP_LAST);
-      durabilityKind(DurabilityQosKindType.VOLATILE);
-      reliabilityKind(ReliabilityQosKindType.RELIABLE);
-      topicKind(TopicKindType.NO_KEY);
+      historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST);
+      durabilityKind(DurabilityQosKindPolicyType.VOLATILE);
+      reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE);
+
+      topicElementType.setHistoryQos(historyQosPolicyType);
    }
 
    @SuppressWarnings("unchecked")
@@ -55,11 +40,7 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
    public T topicDataType(TopicDataType<?> topicDataType)
    {
       this.topicDataType = topicDataType;
-      topicAttributesType.setDataType(topicDataType.getName());
-
-      String centerPartReplaced = topicDataType.getName().replaceAll("::msg::dds_::", "/");
-      humanReadableTopicDataTypeName = centerPartReplaced.substring(0, centerPartReplaced.length() - 1); // Remove last underscore
-
+      topicElementType.setDataType(topicDataType.getName());
       return self();
    }
 
@@ -68,71 +49,57 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       return topicDataType;
    }
 
-   public T topicKind(TopicKindType kind)
-   {
-      topicAttributesType.setKind(kind);
-      return self();
-   }
-
-   public TopicKindType getTopicKind()
-   {
-      return topicAttributesType.getKind();
-   }
-
    public T topicName(String name)
    {
-      topicAttributesType.setName(name);
-
-      humanReadableTopicName = topicAttributesType.getName().substring(2); // Remove rt prefix
-
+      topicElementType.setName(name);
       return self();
    }
 
    public String getTopicName()
    {
-      return topicAttributesType.getName();
+      return topicElementType.getName();
    }
 
-   public T historyDepth(int depth)
+   public T historyDepth(long depth)
    {
       historyQosPolicyType.setDepth(depth);
       return self();
    }
 
-   public int getHistoryDepth()
+   public long getHistoryDepth()
    {
       return historyQosPolicyType.getDepth();
    }
 
-   public T historyQosPolicyKind(HistoryQosKindType kind)
+   public T historyQosPolicyKind(HistoryQosKindPolicyType kind)
    {
       historyQosPolicyType.setKind(kind);
       return self();
    }
 
-   public HistoryQosKindType getHistoryQosPolicyKind()
+   public HistoryQosKindPolicyType getHistoryQosPolicyKind()
    {
       return historyQosPolicyType.getKind();
    }
 
-   public T durabilityKind(DurabilityQosKindType kind)
+   public T durabilityKind(DurabilityQosKindPolicyType kind)
    {
       durabilityQosPolicyType.setKind(kind);
       return self();
    }
 
-   public DurabilityQosKindType getDurabilityKind()
+   public DurabilityQosKindPolicyType getDurabilityKind()
    {
       return durabilityQosPolicyType.getKind();
    }
 
-   public T reliabilityKind(ReliabilityQosKindType kind)
+   public T reliabilityKind(ReliabilityQosKindPolicyType kind)
    {
       reliabilityQosPolicyType.setKind(kind);
       return self();
    }
 
-   public ReliabilityQosKindType getReliabilityKind()
+   public ReliabilityQosKindPolicyType getReliabilityKind()
    {
       return reliabilityQosPolicyType.getKind();
    }
@@ -157,9 +124,9 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       if (partitions != null && !partitions.isEmpty())
       {
          PartitionQosPolicyType partitionQosPolicyType = new PartitionQosPolicyType();
-         NameVectorType nameVectorType = new NameVectorType();
-         partitions.forEach(s -> nameVectorType.getName().add(s));
-         partitionQosPolicyType.setNames(nameVectorType);
+         PartitionQosPolicyType.Names names = new Names();
+         names.getName().addAll(partitions);
+         partitionQosPolicyType.setNames(names);
          setPartitionQosPolicyType(partitionQosPolicyType);
       }
 
@@ -178,13 +145,13 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       }
    }
 
-   public T ownershipPolicyKind(OwnershipQosKindType kind)
+   public T ownershipPolicyKind(OwnershipQosKindPolicyType kind)
    {
       LogTools.warn("OwnershipQosPolicy not supported");
       return self();
    }
 
-   public OwnershipQosKindType getOwnerShipPolicyKind()
+   public OwnershipQosKindPolicyType getOwnerShipPolicyKind()
    {
       return null;
    }
@@ -210,15 +177,5 @@ public abstract class CommonAttributes<T extends CommonAttributes<T>>
       {
          return null;
       }
-   }
-
-   public String getHumanReadableTopicName()
-   {
-      return humanReadableTopicName;
-   }
-
-   public String getHumanReadableTopicDataTypeName()
-   {
-      return humanReadableTopicDataTypeName;
    }
 }

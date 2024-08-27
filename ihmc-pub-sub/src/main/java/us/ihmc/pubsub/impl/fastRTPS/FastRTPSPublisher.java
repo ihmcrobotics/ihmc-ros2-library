@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,6 @@
  */
 package us.ihmc.pubsub.impl.fastRTPS;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.UUID;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.Guid;
@@ -31,6 +25,10 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
 import us.ihmc.rtps.impl.fastRTPS.NativePublisherImpl;
 import us.ihmc.rtps.impl.fastRTPS.NativePublisherListener;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 class FastRTPSPublisher implements Publisher
 {
@@ -124,12 +122,9 @@ class FastRTPSPublisher implements Publisher
 
    private void serializeMessage(Object data) throws IOException
    {
-      if (attributes.getTopicKind() == TopicKindType.WITH_KEY)
-      {
-         keyBuffer.clear();
-         topicDataType.getKey(data, keyBuffer);
-      }
-  
+      keyBuffer.clear();
+      topicDataType.getKey(data, keyBuffer);
+
       payload.getData().clear();
       topicDataType.serialize(data, payload);
    }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,8 @@
  */
 package us.ihmc.pubsub;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
@@ -33,6 +27,10 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Class Domain, use to interact with the Publisher Subscriber API of the IHMC Java RTPS API.
@@ -59,7 +57,7 @@ public interface Domain {
     * @return Participant handle
     * @throws IOException If no participant can be made
     */
-   public Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException;
+   public Participant createParticipant(ParticipantProfile att, ParticipantListener participantListener) throws IOException;
 
    /**
     * Create a Participant without a listener.
@@ -69,7 +67,7 @@ public interface Domain {
     * @return Participant handle
     * @throws IOException If no participant can be made
     */
-   default Participant createParticipant(ParticipantAttributes att) throws IOException {
+   default Participant createParticipant(ParticipantProfile att) throws IOException {
       return createParticipant(att, null);
    }
 
@@ -230,9 +228,9 @@ public interface Domain {
     * @param name desired name for these attributes
     * @return ParticipantAttributes with reasonable defaults
     */
-   default ParticipantAttributes createParticipantAttributes(int domainId, String name)
+   default ParticipantProfile createParticipantAttributes(int domainId, String name)
    {
-      ParticipantAttributes attrs = ParticipantAttributes.create().domainId(domainId).discoveryLeaseDuration(Time.Infinite).name(name);
+      ParticipantProfile attrs = ParticipantProfile.create().domainId(domainId).discoveryLeaseDuration(Time.Infinite).name(name);
       
       return attrs;
    }
@@ -256,7 +254,7 @@ public interface Domain {
     *
     * @return Implementation specific version of SubscriberAttributes with reasonable defaults.
     */
-   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityQosKindType reliabilityKind, String... partitions)
+   default SubscriberAttributes createSubscriberAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityQosKindPolicyType reliabilityKind, String... partitions)
    {
       TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
       if(registeredType == null)
@@ -265,7 +263,6 @@ public interface Domain {
       }
 
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
-              .topicKind(topicDataType.isGetKeyDefined() ? TopicKindType.WITH_KEY : TopicKindType.NO_KEY)
               .topicDataType(topicDataType)
               .topicName(topicName)
               .reliabilityKind(reliabilityKind);
@@ -297,7 +294,7 @@ public interface Domain {
     *
     * @return Implementation specific version of PublisherAttributes with reasonable defaults.
     */
-   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityQosKindType reliabilityKind, String... partitions)
+   default PublisherAttributes createPublisherAttributes(Participant participant, TopicDataType<?> topicDataType, String topicName, ReliabilityQosKindPolicyType reliabilityKind, String... partitions)
    {
       TopicDataType<?> registeredType = getRegisteredType(participant, topicDataType.getName());
       if(registeredType == null)
@@ -307,7 +304,6 @@ public interface Domain {
 
       PublisherAttributes publisherAttributes =
               PublisherAttributes.create()
-                      .topicKind(topicDataType.isGetKeyDefined() ? TopicKindType.WITH_KEY : TopicKindType.NO_KEY)
                       .topicDataType(topicDataType)
                       .topicName(topicName)
                       .reliabilityKind(reliabilityKind);

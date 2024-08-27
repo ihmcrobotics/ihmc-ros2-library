@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package us.ihmc.pubsub.participant;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
 import us.ihmc.pubsub.common.Guid;
 
 /**
@@ -29,20 +27,7 @@ public interface SubscriberEndpointDiscoveryListener
 {
    /**
     * Callback for a new topic change event.
-    * 
-    * @param isAlive
-    * @param guid
-    * @param expectsInlineQos
-    * @param unicastLocatorList
-    * @param multicastLocatorList
-    * @param participantGuid
-    * @param typeName
-    * @param topicName
-    * @param userDefinedId
-    * @param javaTopicKind
-    * @param readerQosHolder holds implementation specific version of the ReaderQos attributes. Cast to the implementation specific datatype. Only valid till this method returns.
     */
    void subscriberTopicChange(boolean isAlive, Guid guid, boolean expectsInlineQos, 
-                              Guid participantGuid, String typeName, String topicName, int userDefinedId,
-                              TopicKindType javaTopicKind);
+                              Guid participantGuid, String typeName, String topicName, int userDefinedId);
 }

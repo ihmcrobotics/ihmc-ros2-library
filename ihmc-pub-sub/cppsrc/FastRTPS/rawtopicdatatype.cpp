@@ -3,11 +3,10 @@
 
 using namespace us::ihmc::rtps::impl::fastRTPS;
 
-RawTopicDataType::RawTopicDataType(std::string name, int32_t maximumDataSize, bool hasKey)
+RawTopicDataType::RawTopicDataType(std::string name, int32_t maximumDataSize)
 {
     setName(name.c_str());
     m_typeSize = static_cast<uint32_t>(maximumDataSize);
-    m_isGetKeyDefined = hasKey;
 }
 
 bool RawTopicDataType::serialize(void *data, eprosima::fastrtps::rtps::SerializedPayload_t *payload)

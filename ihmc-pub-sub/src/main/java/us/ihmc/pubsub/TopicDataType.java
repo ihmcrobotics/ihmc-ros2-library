@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,14 +179,5 @@ public interface TopicDataType<T>
     */
    default void getKey(T data, ByteBuffer target)
    {
-   }
-
-   /**
-    * Indicates whether the method to obtain the key has been implemented
-    * @return true when implemented
-    */
-   default boolean isGetKeyDefined()
-   {
-      return false;
    }
 }

@@ -1,18 +1,14 @@
 package us.ihmc.pubsub.test;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -24,6 +20,9 @@ import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+import java.io.IOException;
+import java.util.Collections;
+
 public class CreateSubscriptionUnderLoad
 {
    static int counter;
@@ -34,8 +33,8 @@ public class CreateSubscriptionUnderLoad
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-            .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest");
+      ParticipantProfile attributes = ParticipantProfile.create()
+                                                        .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -44,10 +43,10 @@ public class CreateSubscriptionUnderLoad
 
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
        .topicDataType(dataType)
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
        .partitions(Collections.singletonList("us/ihmc"))
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL)
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_ALL)
+       .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
        .historyDepth(1);
 
       Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
@@ -78,7 +77,7 @@ public class CreateSubscriptionUnderLoad
             counter += data.getMsg().length(); // Make sure it doesn't get optimized out
             
             if (counter % 10000 == 0)
-            System.out.println(data.getSender().toString() + ": " + data.getMsg().toString());
+               System.out.println(data.getSender().toString() + ": " + data.getMsg().toString());
          }
       }
 

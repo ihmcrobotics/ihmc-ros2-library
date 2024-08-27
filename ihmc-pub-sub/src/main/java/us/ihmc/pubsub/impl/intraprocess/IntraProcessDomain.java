@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+@Deprecated
 public class IntraProcessDomain implements Domain
 {
    private LogLevel logLevel = LogLevel.WARNING;
@@ -78,7 +79,7 @@ public class IntraProcessDomain implements Domain
    }
 
    @Override
-   public synchronized Participant createParticipant(ParticipantAttributes att, ParticipantListener participantListener) throws IOException
+   public synchronized Participant createParticipant(ParticipantProfile att, ParticipantListener participantListener) throws IOException
    {
       IntraProcessDomainImpl domain = getOrCreateDomain(att.getDomainId());
       IntraProcessParticipant participant = domain.createParticipant(att, participantListener);

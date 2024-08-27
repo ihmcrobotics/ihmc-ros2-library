@@ -1,33 +1,17 @@
 package us.ihmc.pubsub.test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
 import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.DDSConversionTools;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
@@ -42,11 +26,23 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  *  Create a publisher and subscriber in this thread and send 20 messages with up to 100,000 longs.
  *
  *  Assert to not get any IndexOutOfBoundsExceptions and also to receive at least 9 messages.
  */
+@Deprecated
 public class IntraprocessLargeCopyTest2
 {
    private static final int NUMBER_OF_MESSAGES_TO_SEND = 80;
@@ -110,10 +106,10 @@ public class IntraprocessLargeCopyTest2
       }
    }
 
-   private ParticipantAttributes createParticipantAttributes(String name) throws UnknownHostException
+   private ParticipantProfile createParticipantAttributes(String name) throws UnknownHostException
    {
-      return ParticipantAttributes.create().domainId(216).discoveryLeaseDuration(Time.Infinite).name(name)
-                                  .useOnlySharedMemoryTransport();
+      return ParticipantProfile.create().domainId(216).discoveryLeaseDuration(Time.Infinite).name(name)
+                               .useOnlySharedMemoryTransport();
    }
 
    private Publisher createPublisher(Domain domain, PubSubImplementation impl) throws IOException
@@ -121,7 +117,7 @@ public class IntraprocessLargeCopyTest2
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = createParticipantAttributes("StatusTest");
+      ParticipantProfile attributes = createParticipantAttributes("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -131,12 +127,12 @@ public class IntraprocessLargeCopyTest2
       System.out.println(dataType.getTypeSize());
 
       PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
-                                                                          .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                           .partitions(Collections.singletonList("us/ihmc"))
                                                                           .durabilityKind(impl == PubSubImplementation.INTRAPROCESS
-                                                                                ? DurabilityQosKindType.VOLATILE
-                                                                                : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                          .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(NUMBER_OF_MESSAGES_TO_SEND + 1)
+                                                                                ? DurabilityQosKindPolicyType.VOLATILE
+                                                                                : DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                          .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(NUMBER_OF_MESSAGES_TO_SEND + 1)
                                                                           .maxBlockingTime(DDSConversionTools.createTime(100.0));
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
@@ -147,7 +143,7 @@ public class IntraprocessLargeCopyTest2
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = createParticipantAttributes("StatusTest");
+      ParticipantProfile attributes = createParticipantAttributes("StatusTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -157,11 +153,11 @@ public class IntraprocessLargeCopyTest2
       BigMessagePubSubType dataType2 = new BigMessagePubSubType();
 
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
-                                                                      .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                      .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                       .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ? DurabilityQosKindType.VOLATILE
-                                                                            : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                      .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+                                                                      .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ? DurabilityQosKindPolicyType.VOLATILE
+                                                                            : DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                      .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST)
                                                                       .historyDepth(NUMBER_OF_MESSAGES_TO_SEND + 1);
 
       domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(messagesReceived));

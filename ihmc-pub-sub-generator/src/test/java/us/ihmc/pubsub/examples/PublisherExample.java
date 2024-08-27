@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,16 @@
  */
 package us.ihmc.pubsub.examples;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -38,6 +34,9 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
+
+import java.io.IOException;
+import java.util.Collections;
 
 public class PublisherExample
 {
@@ -70,10 +69,10 @@ public class PublisherExample
       
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes2 = ParticipantAttributes.create()
-      .domainId(1)
-      .name("PublisherExample2")
-      .discoveryLeaseDuration(Time.Infinite);
+      ParticipantProfile attributes2 = ParticipantProfile.create()
+                                                         .domainId(1)
+                                                         .name("PublisherExample2")
+                                                         .discoveryLeaseDuration(Time.Infinite);
       //.discoveryServer("127.0.0.1", 4);
       
       System.out.println(attributes2.marshall("test"));
@@ -87,10 +86,10 @@ public class PublisherExample
       PublisherAttributes attrs = PublisherAttributes.create()
         .topicName("chatter")
         .topicDataType(dataType)
-        .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS)
-        .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-        .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-        .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+        .publishModeKind(PublishModeQosKindPolicyType.ASYNCHRONOUS)
+        .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+        .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+        .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST)
         .historyDepth(50)
         .partitions(Collections.singletonList("us/ihmc"))
         .lifespan(new Time(14, 0))

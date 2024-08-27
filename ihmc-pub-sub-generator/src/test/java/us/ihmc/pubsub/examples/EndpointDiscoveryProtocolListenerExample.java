@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  */
 package us.ihmc.pubsub.examples;
 
-import java.io.IOException;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
@@ -30,6 +26,8 @@ import us.ihmc.pubsub.participant.ParticipantDiscoveryInfo;
 import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.participant.PublisherEndpointDiscoveryListener;
 import us.ihmc.pubsub.participant.SubscriberEndpointDiscoveryListener;
+
+import java.io.IOException;
 
 public class EndpointDiscoveryProtocolListenerExample
 {
@@ -55,8 +53,7 @@ public class EndpointDiscoveryProtocolListenerExample
                                        String typeName,
                                        String topicName,
                                        int userDefinedId,
-                                       long typeMaxSerialized,
-                                       TopicKindType topicKind)
+                                       long typeMaxSerialized)
       {
          System.out.println("New publisher topic change");
          System.out.println("Is alive: " + isAlive);
@@ -77,8 +74,7 @@ public class EndpointDiscoveryProtocolListenerExample
                                         Guid participantGuid,
                                         String typeName,
                                         String topicName,
-                                        int userDefinedId,
-                                        TopicKindType javaTopicKind)
+                                        int userDefinedId)
       {
          System.out.println("New subscriber topic change");
          System.out.println("Is alive: " + isAlive);
@@ -94,10 +90,10 @@ public class EndpointDiscoveryProtocolListenerExample
    {
       Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
       
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-         .domainId(215)
-         .discoveryLeaseDuration(Time.Infinite)
-         .name("EndpointDiscoveryProtocolListenerExample");
+      ParticipantProfile attributes = ParticipantProfile.create()
+                                                        .domainId(215)
+                                                        .discoveryLeaseDuration(Time.Infinite)
+                                                        .name("EndpointDiscoveryProtocolListenerExample");
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
       
       

@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC) Licensed under the Apache
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC) Licensed under the Apache
  * License, Version 2.0 (the "License"); you may not use this file except in compliance with the
  * License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software distributed under the License
@@ -9,14 +9,8 @@
  */
 package us.ihmc.pubsub.impl.fastRTPS;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.UUID;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
@@ -31,6 +25,10 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantListener;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.UUID;
+
 class FastRTPSParticipant implements Participant
 {
    private final NativeParticipantImpl impl;
@@ -41,7 +39,7 @@ class FastRTPSParticipant implements Participant
    private final ArrayList<Publisher> allPublishersForStatistics = new ArrayList<>();
    private final ArrayList<Subscriber<?>> allSubscribersForStatistics = new ArrayList<>();
 
-   private final ParticipantAttributes attributes;
+   private final ParticipantProfile attributes;
    private final ParticipantListener participantListener;
 
    private final Guid guid = new Guid();
@@ -76,7 +74,7 @@ class FastRTPSParticipant implements Participant
       }
    }
 
-   FastRTPSParticipant(ParticipantAttributes attrs, ParticipantListener participantListener) throws IOException, IllegalArgumentException
+   FastRTPSParticipant(ParticipantProfile attrs, ParticipantListener participantListener) throws IOException, IllegalArgumentException
    {
       String profileName = UUID.randomUUID().toString();
       String profileXML = attrs.marshall(profileName);
@@ -116,7 +114,7 @@ class FastRTPSParticipant implements Participant
    }
 
    @Override
-   public ParticipantAttributes getAttributes()
+   public ParticipantProfile getAttributes()
    {
       return attributes;
    }
@@ -171,7 +169,7 @@ class FastRTPSParticipant implements Participant
          }
       }
 
-      impl.registerType(topicDataType.getName(), topicDataType.getTypeSize(), topicDataType.isGetKeyDefined());
+      impl.registerType(topicDataType.getName(), topicDataType.getTypeSize());
 
       types.add(topicDataType);
    }
@@ -195,11 +193,6 @@ class FastRTPSParticipant implements Participant
       if (topicDataType == null)
       {
          throw new IllegalArgumentException("Type: " + attrs.getTopicDataType() + " is not registered");
-      }
-
-      if (attrs.getTopicKind() == TopicKindType.WITH_KEY && !topicDataType.isGetKeyDefined())
-      {
-         throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
       if (this.attributes.isUseStaticDiscovery())
@@ -226,11 +219,6 @@ class FastRTPSParticipant implements Participant
       if (topicDataType == null)
       {
          throw new IllegalArgumentException("Type: " + attrs.getTopicDataType() + " is not registered");
-      }
-
-      if (attrs.getTopicKind() == TopicKindType.WITH_KEY && !topicDataType.isGetKeyDefined())
-      {
-         throw new IllegalArgumentException("Keyed topic needs getKey function");
       }
 
       if (this.attributes.isUseStaticDiscovery())

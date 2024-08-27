@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,8 @@
  */
 package us.ihmc.pubsub.impl.intraprocess;
 
-import java.io.IOException;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
 import org.apache.commons.lang3.NotImplementedException;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.ChangeKind;
@@ -31,6 +27,9 @@ import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 
+import java.io.IOException;
+
+@Deprecated
 class IntraProcessPublisher <T> implements Publisher
 {
    private boolean available = true;
@@ -61,7 +60,7 @@ class IntraProcessPublisher <T> implements Publisher
       this.attr = attr;
       this.listener = listener;
       
-      if(attr.getDurabilityKind() != DurabilityQosKindType.VOLATILE)
+      if(attr.getDurabilityKind() != DurabilityQosKindPolicyType.VOLATILE)
       {
          throw new RuntimeException("Only volatile durability is supported for intraprocess communication");
       }

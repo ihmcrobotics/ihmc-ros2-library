@@ -3,7 +3,7 @@ package us.ihmc.pubsub.impl.fastRTPS;
 import us.ihmc.tools.nativelibraries.NativeLibraryDescription;
 import us.ihmc.tools.nativelibraries.NativeLibraryWithDependencies;
 
-class FastRtpsNativeLibrary implements NativeLibraryDescription
+class FastRTPSNativeLibrary implements NativeLibraryDescription
 {
    /**
     * Get the package name for the library
@@ -26,6 +26,10 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
 
                case LINUX64:
                   archPackage = "Linux.x86_64";
+                  break;
+
+               case MACOSX64:
+                  archPackage = "Darwin.x86_64";
                   break;
 
                default:
@@ -55,7 +59,7 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
             break;
       }
 
-      return "us.ihmc.rtps.impl.fastRTPS." + archPackage;
+      return "ihmc-pub-sub.native." + archPackage;
    }
 
    @Override
@@ -65,11 +69,11 @@ class FastRtpsNativeLibrary implements NativeLibraryDescription
       switch (os)
       {
          case WIN64:
-            return NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll", "fastcdr-1.0.dll", "fastrtps-2.6.dll");
+            return NativeLibraryWithDependencies.fromFilename("FastRTPSWrapper.dll", "fastcdr-2.2.dll", "fastrtps-2.14.dll");
          case LINUX64:
-            return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.6", "libfastcdr.so.1");
+            return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.so", "libfastrtps.so.2.14", "libfastcdr.so.2");
          case MACOSX64:
-            return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.jnilib", "libfastrtps.2.6.dylib", "libfastcdr.1.dylib");
+            return NativeLibraryWithDependencies.fromFilename("libFastRTPSWrapper.jnilib", "libfastcdr.2.dylib", "libfastrtps.2.14.dylib");
          default:
             break;
       }

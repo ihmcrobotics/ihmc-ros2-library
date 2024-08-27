@@ -60,7 +60,7 @@ struct RawDataWrapper
 class RawTopicDataType : public eprosima::fastrtps::TopicDataType
 {
 public:
-    RawTopicDataType(std::string name, int32_t maximumDataSize, bool hasKey);
+    RawTopicDataType(std::string name, int32_t maximumDataSize);
 
     /**
      * Serialize method, it should be implemented by the user, since it is abstract.

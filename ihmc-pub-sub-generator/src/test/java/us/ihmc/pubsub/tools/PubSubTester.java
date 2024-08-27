@@ -1,23 +1,16 @@
 package us.ihmc.pubsub.tools;
 
-import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.function.Supplier;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import us.ihmc.communication.packets.Packet;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
@@ -25,6 +18,12 @@ import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.function.Supplier;
+
+import static us.ihmc.pubsub.tools.PublishSubscribeTools.systemDomain;
 
 public class PubSubTester<P extends Packet>
 {
@@ -45,10 +44,10 @@ public class PubSubTester<P extends Packet>
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create()
-        .domainId(systemDomain())
-        .discoveryLeaseDuration(Time.Infinite)
-        .name("PubSubTester");
+      ParticipantProfile attributes = ParticipantProfile.create()
+                                                        .domainId(systemDomain())
+                                                        .discoveryLeaseDuration(Time.Infinite)
+                                                        .name("PubSubTester");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -58,11 +57,11 @@ public class PubSubTester<P extends Packet>
       PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
        .topicDataType(dataType)
        .topicName("pubsubtest")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+       .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST)
        .historyDepth(1)
-       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
+       .publishModeKind(PublishModeQosKindPolicyType.ASYNCHRONOUS);
 
       P data = msgTypeSupplier.get();
       TopicDataType<P> topicDataType = (TopicDataType<P>) data.getPubSubTypePacket().get();
@@ -70,9 +69,9 @@ public class PubSubTester<P extends Packet>
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
        .topicDataType(topicDataType)
        .topicName("pubsubtest")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+       .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
+       .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_ALL);
 
       subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl(data,callbacks));
 

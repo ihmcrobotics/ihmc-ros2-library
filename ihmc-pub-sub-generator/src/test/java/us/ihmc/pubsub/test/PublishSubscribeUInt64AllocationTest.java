@@ -1,20 +1,11 @@
 package us.ihmc.pubsub.test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
 import us.ihmc.commons.PrintTools;
 import us.ihmc.commons.allocations.AllocationProfiler;
 import us.ihmc.commons.allocations.AllocationRecord;
@@ -24,7 +15,7 @@ import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
@@ -38,6 +29,12 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PublishSubscribeUInt64AllocationTest
 {
@@ -68,7 +65,7 @@ public class PublishSubscribeUInt64AllocationTest
       {
          domain.setLogLevel(LogLevel.INFO);
 
-         ParticipantAttributes attributes = ParticipantAttributes.create().domainId(218).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+         ParticipantProfile attributes = ParticipantProfile.create().domainId(218).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
 
          Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -76,20 +73,20 @@ public class PublishSubscribeUInt64AllocationTest
          domain.registerType(participant, dataType);
 
          PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
-                                                                             .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                             .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                              .partitions(Collections.singletonList("us/ihmc"))
                                                                              .durabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS
-                                                                                   ? DurabilityQosKindType.VOLATILE
-                                                                                   : DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                             .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
+                                                                                   ? DurabilityQosKindPolicyType.VOLATILE
+                                                                                   : DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                             .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(50);
 
          StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
 
          SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
-                                                                         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                         .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                          .partitions(Collections.singletonList("us/ihmc"))
-                                                                         .durabilityKind(DurabilityQosKindType.VOLATILE)
-                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_ALL);
+                                                                         .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
+                                                                         .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_ALL);
 
          SubscriberListenerImpl subscriberListener = new SubscriberListenerImpl();
          Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, subscriberListener);

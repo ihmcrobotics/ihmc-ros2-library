@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,8 @@
  */
 package us.ihmc.pubsub.impl.intraprocess;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
-
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.DiscoveryStatus;
@@ -40,9 +31,17 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+
+@Deprecated
 public class IntraProcessParticipant implements Participant
 {
-   private final ParticipantAttributes attributes;
+   private final ParticipantProfile attributes;
    private final Guid guid = new Guid();
 
    private boolean isAvailable = true;
@@ -63,7 +62,7 @@ public class IntraProcessParticipant implements Participant
    
    private final HashMap<String, TopicDataType<?>> registeredTopicDataTypes = new HashMap<>();
 
-   IntraProcessParticipant(IntraProcessDomainImpl domain, ParticipantAttributes att, ParticipantListener participantListener)
+   IntraProcessParticipant(IntraProcessDomainImpl domain, ParticipantProfile att, ParticipantListener participantListener)
    {
       this.attributes = att;
       this.participantListener = participantListener;
@@ -93,7 +92,7 @@ public class IntraProcessParticipant implements Participant
    }
 
    @Override
-   public ParticipantAttributes getAttributes()
+   public ParticipantProfile getAttributes()
    {
       return attributes;
    }
@@ -195,7 +194,7 @@ public class IntraProcessParticipant implements Participant
       {
          subscriberEndpointDiscoveryListener.subscriberTopicChange(true, subscriber.getGuid(), false, 
                                                                    subscriber.getParticipant().getGuid(), subscriber.getAttributes().getTopicDataType().getName(),
-                                                                   subscriber.getAttributes().getTopicName(), -1, TopicKindType.NO_KEY);
+                                                                   subscriber.getAttributes().getTopicName(), -1);
       }
    }
 
@@ -206,7 +205,7 @@ public class IntraProcessParticipant implements Participant
          publisherEndpointDiscoveryListener.publisherTopicChange(true, publisher.getGuid(),
                                                                  publisher.getParticipant().getGuid(), publisher.getAttributes().getTopicDataType().getName(),
                                                                  publisher.getAttributes().getTopicName(), -1,
-                                                                 publisher.getTopicDataType().getTypeSize(), TopicKindType.NO_KEY);
+                                                                 publisher.getTopicDataType().getTypeSize());
       }
    }
 

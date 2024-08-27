@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,10 +79,10 @@ Participant* NativeParticipantImpl::getParticipant()
     return part;
 }
 
-void NativeParticipantImpl::registerType(std::string name, int32_t maximumDataSize, bool hasKey)
+void NativeParticipantImpl::registerType(std::string name, int32_t maximumDataSize)
 {
     // This functions adds registered types to a vector of shared ptrs, so they get destroyed when this class gets destructed
-    std::shared_ptr<RawTopicDataType> topicDataType = std::make_shared<RawTopicDataType>(name, maximumDataSize, hasKey);
+    std::shared_ptr<RawTopicDataType> topicDataType = std::make_shared<RawTopicDataType>(name, maximumDataSize);
     Domain::registerType(part, topicDataType.get());
     registeredTypes.push_back(topicDataType);
 }

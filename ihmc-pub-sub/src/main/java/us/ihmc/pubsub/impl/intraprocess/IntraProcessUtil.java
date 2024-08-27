@@ -1,11 +1,11 @@
 package us.ihmc.pubsub.impl.intraprocess;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 
+@Deprecated
 public class IntraProcessUtil {
     public static boolean subscriberPublisherMatches(SubscriberAttributes subscriberAttributes, PublisherAttributes publisherAttributes)
     {
@@ -18,11 +18,11 @@ public class IntraProcessUtil {
         if (subscriberAttributes.getOwnerShipPolicyKind() != publisherAttributes.getOwnerShipPolicyKind())
             return false;
 
-        if (publisherAttributes.getReliabilityKind() == ReliabilityQosKindType.BEST_EFFORT && subscriberAttributes.getReliabilityKind() == ReliabilityQosKindType.RELIABLE)
+        if (publisherAttributes.getReliabilityKind() == ReliabilityQosKindPolicyType.BEST_EFFORT && subscriberAttributes.getReliabilityKind() == ReliabilityQosKindPolicyType.RELIABLE)
             return false;
 
-        if (publisherAttributes.getDurabilityKind() == DurabilityQosKindType.TRANSIENT_LOCAL
-                && subscriberAttributes.getDurabilityKind() == DurabilityQosKindType.VOLATILE)
+        if (publisherAttributes.getDurabilityKind() == DurabilityQosKindPolicyType.TRANSIENT_LOCAL
+                && subscriberAttributes.getDurabilityKind() == DurabilityQosKindPolicyType.VOLATILE)
             return false;
 
         if (subscriberAttributes.getPartitions().isEmpty() && publisherAttributes.getPartitions().isEmpty())

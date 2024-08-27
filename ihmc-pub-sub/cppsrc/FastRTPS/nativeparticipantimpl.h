@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ namespace fastRTPS{
         int64_t getGuidLow();
         int64_t getGuidHigh();
         Participant* getParticipant();
-        void registerType(std::string name, int32_t maximumDataSize, bool hasKey);
+        void registerType(std::string name, int32_t maximumDataSize);
         virtual ~NativeParticipantImpl();
 
     private:

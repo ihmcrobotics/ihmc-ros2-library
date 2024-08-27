@@ -30,6 +30,8 @@ jobs:
           gradle-version: 8.5
       - name: Run tests
         run: |
+          gradle compositeTask -PtaskName=compileJava || true
+          gradle compositeTask -PtaskName=compileJava
           gradle compositeTask -PtaskName=test --info --stacktrace --no-daemon -PrunningOnCIServer=true
       - name: Publish Test Report - ${{ inputs.test-category }}
         uses: mikepenz/action-junit-report@v4

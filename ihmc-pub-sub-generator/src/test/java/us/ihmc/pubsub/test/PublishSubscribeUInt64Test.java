@@ -1,21 +1,15 @@
 package us.ihmc.pubsub.test;
 
-import java.io.IOException;
-import java.util.Collections;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import org.junit.jupiter.api.Test;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
 import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.LogLevel;
@@ -30,6 +24,9 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+import java.io.IOException;
+import java.util.Collections;
+
 public class PublishSubscribeUInt64Test
 {
    @Test // timeout = 30000
@@ -41,7 +38,7 @@ public class PublishSubscribeUInt64Test
       {
          domain.setLogLevel(LogLevel.INFO);
 
-         ParticipantAttributes attributes = ParticipantAttributes.create().domainId(219).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+         ParticipantProfile attributes = ParticipantProfile.create().domainId(219).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
 
          Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -49,18 +46,18 @@ public class PublishSubscribeUInt64Test
          domain.registerType(participant, dataType);
 
          PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
-                                                                             .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                             .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                              .partitions(Collections.singletonList("us/ihmc"))
-                                                                             .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                             .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
+                                                                             .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                             .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(50);
 
          StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();
 
          SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
-                                                                         .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+                                                                         .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                          .partitions(Collections.singletonList("us/ihmc"))
-                                                                         .durabilityKind(DurabilityQosKindType.TRANSIENT_LOCAL)
-                                                                         .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST).historyDepth(50);
+                                                                         .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                         .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(50);
 
          Subscriber subscriber = domain.createSubscriber(participant, subscriberAttributes, new SubscriberListenerImpl());
 

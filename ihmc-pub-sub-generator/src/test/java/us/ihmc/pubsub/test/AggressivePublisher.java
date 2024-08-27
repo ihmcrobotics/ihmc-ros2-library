@@ -1,19 +1,15 @@
 package us.ihmc.pubsub.test;
 
-import java.io.IOException;
-import java.util.Collections;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.LogLevel;
 import us.ihmc.pubsub.common.MatchingInfo;
@@ -24,6 +20,9 @@ import us.ihmc.pubsub.participant.ParticipantListener;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.publisher.PublisherListener;
 
+import java.io.IOException;
+import java.util.Collections;
+
 public class AggressivePublisher
 {
    public AggressivePublisher() throws IOException
@@ -32,7 +31,7 @@ public class AggressivePublisher
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantAttributes attributes = ParticipantAttributes.create().domainId(215).discoveryLeaseDuration(Time.Infinite).name("AggressivePublisher");
+      ParticipantProfile attributes = ParticipantProfile.create().domainId(215).discoveryLeaseDuration(Time.Infinite).name("AggressivePublisher");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
@@ -44,12 +43,12 @@ public class AggressivePublisher
       PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
        .topicDataType(dataType)
        .topicName("segfault_trigger")
-       .reliabilityKind(ReliabilityQosKindType.RELIABLE)
+       .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
        .partitions(Collections.singletonList("us/ihmc"))
-       .durabilityKind(DurabilityQosKindType.VOLATILE)
-       .historyQosPolicyKind(HistoryQosKindType.KEEP_LAST)
+       .durabilityKind(DurabilityQosKindPolicyType.VOLATILE)
+       .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST)
        .historyDepth(1)
-       .publishModeKind(PublishModeQosKindType.ASYNCHRONOUS);
+       .publishModeKind(PublishModeQosKindPolicyType.ASYNCHRONOUS);
 
       Publisher publisher = domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
 

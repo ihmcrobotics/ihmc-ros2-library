@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Florida Institute for Human and Machine Cognition (IHMC)
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.DiscoveryStatus;
@@ -39,6 +39,7 @@ import us.ihmc.pubsub.publisher.PublisherListener;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
+@Deprecated
 class IntraProcessDomainImpl
 {
 //   private final Executor threadPool = Executors.newCachedThreadPool(); // give threads a name
@@ -123,7 +124,7 @@ class IntraProcessDomainImpl
       }
    }
 
-   IntraProcessParticipant createParticipant(ParticipantAttributes attributes, ParticipantListener listener)
+   IntraProcessParticipant createParticipant(ParticipantProfile attributes, ParticipantListener listener)
    {
       domainLock.lock();
       try

@@ -15,9 +15,9 @@ else()
 endif()
 message(STATUS "Standalone plugin mode: ${STANDALONE_PLUGIN}")
 
-include(FindOrDownloadJDK)
+find_package(Java 1.8)
+find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
-
 
 SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
 
@@ -35,7 +35,7 @@ if(STANDALONE_PLUGIN)
     
     SET(ARCH_PKG "${CMAKE_SYSTEM_NAME}/${CMAKE_SYSTEM_PROCESSOR}")
     
-    SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/us/ihmc/rtps/impl/fastRTPS/${ARCH_PKG}")
+    SET(LIBRARY_RESOURCES_DIRECTORY "src/main/resources/ihmc-pub-sub/native/${ARCH_PKG}")
     
     
 
@@ -110,30 +110,30 @@ if(STANDALONE_PLUGIN)
     if(WIN32)
     	# Automatic linking is already enabled for FastRTPS
         set(FastRTPS_LIBRARIES)
-        
-        
-    	FILE(GLOB FASTRTPS_DEPENDENCY_LIBRARIES "${FAST_RTPS_INSTALL_PREFIX}/bin/*.dll")
-        INSTALL(FILES ${FASTRTPS_DEPENDENCY_LIBRARIES}
+
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/bin/fastcdr-2.2.dll"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
 
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/bin/fastrtps-2.14.dll"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY})
     elseif(APPLE)
         set(FastRTPS_LIBRARIES fastrtps fastcdr)
 
         # Annoying rename for the install here, because of the version suffix
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.2.6.0.dylib"
-              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.2.6.dylib")
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.2.14.3.dylib"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.2.14.dylib")
 
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.1.0.24.dylib"
-              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.1.dylib")
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.2.2.2.dylib"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.2.dylib")
     else()
         set(FastRTPS_LIBRARIES fastrtps fastcdr)
 
         # Annoying rename for the install here, because of the version suffix
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.so.2.6.0"
-              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.so.2.6")
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.so.2.14.3"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.so.2.14")
             
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.so.1.0.24"
-              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.so.1")
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.so.2.2.2"
+              DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.so.2")
     endif()
     
 else()
