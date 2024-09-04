@@ -3,7 +3,7 @@ package us.ihmc.ros2;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 
 import java.net.InetAddress;
 
@@ -93,7 +93,7 @@ public class ROS2Node extends ROS2NodeBasics
     * @param namespace  Namespace of the ROS 2 node
     * @param attributes ParticipantAttributes for the domain
     */
-   public ROS2Node(Domain domain, String name, String namespace, ParticipantAttributes attributes)
+   public ROS2Node(Domain domain, String name, String namespace, ParticipantProfile attributes)
    {
       super(domain, name, namespace, attributes);
    }

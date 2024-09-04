@@ -1,8 +1,8 @@
 package us.ihmc.ros2;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindType;
-import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindType;
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.HistoryQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import us.ihmc.log.LogTools;
 
 import java.util.Objects;
@@ -44,30 +44,30 @@ public class ROS2QosProfile
    public static ROS2QosProfile RELIABLE()
    {
       int depth = 1;
-      return new ROS2QosProfile(HistoryQosKindType.KEEP_LAST, depth, ReliabilityQosKindType.RELIABLE, DurabilityQosKindType.VOLATILE, false);
+      return new ROS2QosProfile(HistoryQosKindPolicyType.KEEP_LAST, depth, ReliabilityQosKindPolicyType.RELIABLE, DurabilityQosKindPolicyType.VOLATILE, false);
    }
 
    public static ROS2QosProfile KEEP_HISTORY(int depth)
    {
-      return new ROS2QosProfile(HistoryQosKindType.KEEP_LAST, depth, ReliabilityQosKindType.RELIABLE, DurabilityQosKindType.TRANSIENT_LOCAL, false);
+      return new ROS2QosProfile(HistoryQosKindPolicyType.KEEP_LAST, depth, ReliabilityQosKindPolicyType.RELIABLE, DurabilityQosKindPolicyType.TRANSIENT_LOCAL, false);
    }
 
    public static ROS2QosProfile BEST_EFFORT()
    {
       int depth = 1;
-      return new ROS2QosProfile(HistoryQosKindType.KEEP_LAST, depth, ReliabilityQosKindType.BEST_EFFORT, DurabilityQosKindType.VOLATILE, false);
+      return new ROS2QosProfile(HistoryQosKindPolicyType.KEEP_LAST, depth, ReliabilityQosKindPolicyType.BEST_EFFORT, DurabilityQosKindPolicyType.VOLATILE, false);
    }
 
-   private final HistoryQosKindType historyKind;
+   private final HistoryQosKindPolicyType historyKind;
    private final int historyDepth;
-   private final ReliabilityQosKindType reliabilityKind;
-   private final DurabilityQosKindType durabilityKind;
+   private final ReliabilityQosKindPolicyType reliabilityKind;
+   private final DurabilityQosKindPolicyType durabilityKind;
    private final boolean avoidRosNamespaceConventions;
 
-   public ROS2QosProfile(HistoryQosKindType historyKind,
+   public ROS2QosProfile(HistoryQosKindPolicyType historyKind,
                          int historyDepth,
-                         ReliabilityQosKindType reliabilityKind,
-                         DurabilityQosKindType durabilityKind,
+                         ReliabilityQosKindPolicyType reliabilityKind,
+                         DurabilityQosKindPolicyType durabilityKind,
                          boolean avoidRosNamespaceConventions)
    {
       this.historyKind = historyKind;
@@ -77,7 +77,7 @@ public class ROS2QosProfile
       this.avoidRosNamespaceConventions = avoidRosNamespaceConventions;
    }
 
-   public HistoryQosKindType getHistoryKind()
+   public HistoryQosKindPolicyType getHistoryKind()
    {
       return historyKind;
    }
@@ -87,12 +87,12 @@ public class ROS2QosProfile
       return historyDepth;
    }
 
-   public ReliabilityQosKindType getReliabilityKind()
+   public ReliabilityQosKindPolicyType getReliabilityKind()
    {
       return reliabilityKind;
    }
 
-   public DurabilityQosKindType getDurabilityKind()
+   public DurabilityQosKindPolicyType getDurabilityKind()
    {
       return durabilityKind;
    }

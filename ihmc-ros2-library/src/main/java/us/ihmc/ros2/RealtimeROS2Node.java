@@ -4,7 +4,7 @@ import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.util.PeriodicNonRealtimeThreadSchedulerFactory;
@@ -168,7 +168,7 @@ public class RealtimeROS2Node implements ROS2NodeInterface
     * @param namespace     Namespace of the ROS 2 node
     * @param attributes    ParticipantAttributes for the domain
     */
-   public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace, ParticipantAttributes attributes)
+   public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace, ParticipantProfile attributes)
    {
 
       this.node = new ROS2NodeBasics(domain, name, namespace, attributes);

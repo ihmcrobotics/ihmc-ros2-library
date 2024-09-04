@@ -1,10 +1,9 @@
 package us.ihmc.ros2;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.TopicKindType;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Time;
@@ -38,7 +37,7 @@ class ROS2NodeBasics implements ROS2NodeInterface
     * @param namespace  Namespace for the ros node i.e. DDS partition
     * @param attributes Participant attributes to configure the node
     */
-   ROS2NodeBasics(Domain domain, String name, String namespace, ParticipantAttributes attributes)
+   ROS2NodeBasics(Domain domain, String name, String namespace, ParticipantProfile attributes)
    {
       this.domain = domain;
 
@@ -96,7 +95,6 @@ class ROS2NodeBasics implements ROS2NodeInterface
    {
 
       PublisherAttributes publisherAttributes = PublisherAttributes.create()
-                                                                   .topicKind(topicDataType.isGetKeyDefined() ? TopicKindType.WITH_KEY : TopicKindType.NO_KEY)
                                                                    .topicDataType(topicDataType)
                                                                    .reliabilityKind(qosProfile.getReliabilityKind())
                                                                    .heartBeatPeriod(new Time(0, (long) (0.1 * 1e9))) // Approximately 100ms
@@ -132,9 +130,6 @@ class ROS2NodeBasics implements ROS2NodeInterface
    public <T> SubscriberAttributes createSubscriberAttributes(String topicName, TopicDataType<T> topicDataType, ROS2QosProfile qosProfile)
    {
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
-                                                                      .topicKind(topicDataType.isGetKeyDefined() ?
-                                                                                       TopicKindType.WITH_KEY :
-                                                                                       TopicKindType.NO_KEY)
                                                                       .topicDataType(topicDataType)
                                                                       .topicName(topicName)
                                                                       .reliabilityKind(qosProfile.getReliabilityKind())

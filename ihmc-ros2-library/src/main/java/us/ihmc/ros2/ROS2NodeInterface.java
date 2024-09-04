@@ -1,28 +1,30 @@
 package us.ihmc.ros2;
 
-import java.net.InetAddress;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import com.eprosima.xmlschemas.fastrtps_profiles.AddressListType;
-import com.eprosima.xmlschemas.fastrtps_profiles.RtpsTransportDescriptorType;
-
+import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType;
+import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType.InterfaceWhiteList;
+import jakarta.xml.bind.JAXBElement;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.TopicDataType;
-import us.ihmc.pubsub.attributes.ParticipantAttributes;
+import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
+import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 import us.ihmc.pubsub.subscriber.Subscriber;
+
+import javax.xml.namespace.QName;
+import java.net.InetAddress;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public interface ROS2NodeInterface
 {
    int DEFAULT_QUEUE_SIZE = 10;
 
-   static ParticipantAttributes createParticipantAttributes(int domainId, boolean useSharedMemory, InetAddress... addressRestriction)
+   static ParticipantProfile createParticipantAttributes(int domainId, boolean useSharedMemory, InetAddress... addressRestriction)
    {
-      ParticipantAttributes participantAttributes = ParticipantAttributes.create().domainId(domainId).discoveryLeaseDuration(Time.Infinite);
+      ParticipantProfile participantAttributes = ParticipantProfile.create().domainId(domainId).discoveryLeaseDuration(Time.Infinite);
 
       // Always override the transport so we're sure what it is
       participantAttributes.useBuiltinTransports(false);
@@ -35,7 +37,7 @@ public interface ROS2NodeInterface
 
       // Add custom UDPv4 transport
       String transportName = UUID.randomUUID().toString();
-      RtpsTransportDescriptorType transportDescriptor = new RtpsTransportDescriptorType();
+      TransportDescriptorType transportDescriptor = new TransportDescriptorType();
       transportDescriptor.setTransportId(transportName);
       transportDescriptor.setType("UDPv4");
 
@@ -43,11 +45,14 @@ public interface ROS2NodeInterface
       // Check for null on the first element, to make sure passing in null works as usual -> no address restrictions
       if (addressRestriction != null && addressRestriction.length > 0 && addressRestriction[0] != null)
       {
-         AddressListType addressWhitelist = new AddressListType();
-         for (InetAddress address : addressRestriction)
+         TransportDescriptorType.InterfaceWhiteList addressWhitelist = new InterfaceWhiteList();
+
+         for (InetAddress addr : addressRestriction)
          {
-            addressWhitelist.getAddress().add(address.getHostAddress());
+            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"), String.class, addr.getHostAddress());
+            addressWhitelist.getAddressOrInterface().add(addressElement);
          }
+
          transportDescriptor.setInterfaceWhiteList(addressWhitelist);
       }
 

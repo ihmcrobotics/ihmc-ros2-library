@@ -12,7 +12,7 @@ ihmc {
 }
 
 mainDependencies {
-   api("us.ihmc:ihmc-pub-sub:0.19.2")
+   api("us.ihmc:ihmc-pub-sub:0.20.0")
    api("us.ihmc:ihmc-realtime:1.6.0")
    api("us.ihmc:ihmc-commons:0.32.0")
 
