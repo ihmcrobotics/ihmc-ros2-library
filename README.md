@@ -1,4 +1,8 @@
 # IHMC Pub Sub
+![buildstatus](https://github.com/ihmcrobotics/ihmc-pub-sub-group/actions/workflows/build-natives.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/ihmc-pub-sub-group/actions/workflows/run-gradle-test-all-platforms.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/ihmc-pub-sub-group/actions/workflows/run-gradle-test-linux-self-hosted.yml/badge.svg)
+
 Allocation free Java libraries for DDSI-RTPS messaging using eProsima's Fast-DDS.
 
 Fast-DDS release: `2.14.3`
