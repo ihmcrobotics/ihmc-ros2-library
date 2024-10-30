@@ -1,5 +1,14 @@
 # Making a release
 
+#### Step 1: Run cppbuild.sh
+
+Run cppbuild.sh from the repository root directory. This will apply a required patch file to upstream Fast-DDS xsd profiles and attempt to compile the native library.
+This is mainly just for applying that patch file, if there are missing libraries on your system and it doesn't compile, that's fine. The native compilation happens on github runners anyway.
+
+#### Step 2: Make sure compileJava works after running cppbuild.sh
+
+gradle compositeTask -PtaskName=compileJava
+
 #### Step 1: Generate messages (Only if test messages changed. Only affects tests.)
 
 Run `us.ihmc.pubsub.examples.GenerateTestMessages` 
@@ -9,26 +18,9 @@ with `ihmc-pub-sub-generator/src/test` set as the working directory.
 
 Make sure the generated files have LF (Unix) line separators.
 
-#### Step 2: Ensure tests are passing
+#### Step 2: Ensure tests are passing in CI
 
-Use Bamboo or run tests manually.
-
-##### Running tests locally
-
-```
-> cd /path/to/ihmc-pub-sub-group
-> gradle compositeTask -PtaskName=test
-```
-Visit these urls to view test results:
-
-```
-file:///path/to/ihmc-pub-sub-group/ihmc-pub-sub/src/test/build/reports/tests/test/index.html
-file:///path/to/ihmc-pub-sub-group/ihmc-pub-sub-generator/src/test/build/reports/tests/test/index.html
-```
-
-Notes: 
-- Currently execution stops on `IntraprocessLargeCopyTest` and freezes forever. You have to run the tests manually in the IDE. There are a few that require setting up the allocation instrumenter.
-- Currently `IntraprocessLargeCopyTest3` is flaky. Run it in the IDE a few times to see if it passes.
+Go to the GitHub actions and make sure the gradle test workflow is passing on the develop branch
 
 #### Step 3: Update version
 
