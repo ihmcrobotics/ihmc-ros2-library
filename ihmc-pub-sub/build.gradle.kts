@@ -21,7 +21,7 @@ ihmc {
 mainDependencies {
    api("us.ihmc:ihmc-native-library-loader:2.0.3")
    api("net.sf.trove4j:trove4j:3.0.3")
-   api("us.ihmc:euclid:0.21.0")
+   api("us.ihmc:euclid:0.22.2")
    api("us.ihmc:ihmc-commons:0.34.0")
    api("us.ihmc:log-tools:0.6.3")
    api("com.sun.xml.bind:jaxb-impl:4.0.5")
