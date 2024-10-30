@@ -12,15 +12,15 @@ ihmc {
 }
 
 mainDependencies {
-   api("us.ihmc:ihmc-pub-sub:0.20.0")
+   api("us.ihmc:ihmc-pub-sub:0.20.1")
    api("us.ihmc:ihmc-realtime:1.6.0")
-   api("us.ihmc:ihmc-commons:0.32.0")
+   api("us.ihmc:ihmc-commons:0.34.0")
 
    api("us.ihmc:ros2-common-interfaces:source")
 }
 
 testDependencies {
-   api("us.ihmc:ihmc-commons-test:0.32.0")
+   api("us.ihmc:ihmc-commons-test:0.34.0")
    api("us.ihmc:ros2-common-interfaces:source")
    api("us.ihmc:ros2-msg-to-pubsub-generator-test:source")
    api("com.google.guava:guava:18.0")

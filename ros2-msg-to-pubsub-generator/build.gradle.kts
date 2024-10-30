@@ -19,13 +19,13 @@ ihmc {
 
 mainDependencies {
    api(dependencies.gradleApi())
-   api("us.ihmc:ihmc-pub-sub-generator:0.20.0")
+   api("us.ihmc:ihmc-pub-sub-generator:0.20.1")
    api("us.ihmc:ros2-msg-to-idl-generator:source")
 }
 
 testDependencies {
-   api("us.ihmc:ihmc-pub-sub:0.20.0")
-   api("us.ihmc:ihmc-commons:0.32.0")
+   api("us.ihmc:ihmc-pub-sub:0.20.1")
+   api("us.ihmc:ihmc-commons:0.34.0")
 }
 
 // Gradle 7 forces us to do this I guess...
