@@ -6,6 +6,7 @@ import com.eprosima.xmlschemas.fastrtps_profiles.ReliabilityQosKindPolicyType;
 import org.junit.jupiter.api.Test;
 import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.TopicDataType;
@@ -20,12 +21,10 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,62 +76,49 @@ public class MultipleParticipantsInSameProcessTest
                                                                          .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
                                                                          .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_ALL);
 
-         List<Participant> participants = IntStream.rangeClosed(1, 100)
-                                                   .mapToObj(i -> ParticipantProfile.create().domainId(217).discoveryLeaseDuration(Time.Infinite)
-                                                                                    .name("StatusTest" + i).useOnlySharedMemoryTransport())
-                                                   .map(attrs ->
-                                                   {
-                                                      try
-                                                      {
-                                                         return domain.createParticipant(attrs);
-                                                      }
-                                                      catch (IOException e)
-                                                      {
-                                                         e.printStackTrace();
-                                                      }
-                                                      return null;
-                                                   }).filter(Objects::nonNull).collect(Collectors.toList());
-
-         List<Publisher> publishers = participants.stream().map(p ->
+         List<Participant> participants = new ArrayList<>();
+         for (int i = 1; i <= 100; i++)
          {
-            try
-            {
-               return domain.createPublisher(p, genericPublisherAttributes, null);
-            }
-            catch (IOException e)
-            {
-               e.printStackTrace();
-            }
-            return null;
-         }).filter(Objects::nonNull).collect(Collectors.toList());
+            ParticipantProfile participantProfile = ParticipantProfile.create().domainId(217).discoveryLeaseDuration(Time.Infinite).name("StatusTest" + i).useOnlySharedMemoryTransport();
+            Participant participant = domain.createParticipant(participantProfile);
+            LogTools.info("Creating participant #" + i);
+            participants.add(participant);
+         }
+
+         List<Publisher> publishers = new ArrayList<>();
+
+         for (int i = 0; i < participants.size(); i++)
+         {
+            publishers.add(domain.createPublisher(participants.get(i), genericPublisherAttributes, null));
+            LogTools.info("Creating publisher #" + (i + 1));
+         }
 
          Subscriber subscriber = domain.createSubscriber(participants.get(0), subscriberAttributes, new SubscriberListenerImpl(counter));
 
          //publish one message from each publisher in each participant
-         Thread t = new Thread(() ->
+         Thread thread = new Thread(() ->
          {
             AtomicInteger msgCounter = new AtomicInteger();
-            publishers.forEach(p ->
+            for (Publisher publisher : publishers)
             {
                try
                {
                   ChatMessage msg = new ChatMessage();
-                  msg.setMsg("" + msgCounter.get());
-                  p.write(msg);
-                  Thread.sleep(1L); // Sleep a bit so FastDDS can deliver the message.
+                  msg.setMsg(String.valueOf(msgCounter.get()));
+                  publisher.write(msg);
+                  Thread.sleep(5L); // Sleep a bit so FastDDS can deliver the message.
                   msgCounter.incrementAndGet();
                }
                catch (IOException | InterruptedException e)
                {
                   e.printStackTrace();
                }
-            });
+            }
          });
-         t.start();
-         t.join();
+         thread.start();
+         thread.join();
 
          assertEquals(100, counter.get());
-
       }
       finally
       {
