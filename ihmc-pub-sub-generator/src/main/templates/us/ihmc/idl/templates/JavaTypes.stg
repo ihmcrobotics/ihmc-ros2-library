@@ -1,0 +1,66 @@
+group Types;
+
+type_5(package) ::= <<float>>
+
+type_6(package) ::= <<double>>
+
+type_13(package) ::= <<double>>
+
+type_1(package) ::= <<short>>
+
+type_2(package) ::= <<int>>
+
+type_11(package) ::= <<long>>
+
+type_3(package) ::= <<int>>
+
+type_4(package) ::= <<long>>
+
+type_12(package) ::= <<long>>
+
+type_8(package) ::= <<char>>
+
+type_14(package) ::= <<char>>
+
+type_7(package) ::= <<boolean>>
+
+type_9(package) ::= <<byte>>
+
+type_d(package) ::= <<java.lang.StringBuilder>>
+
+type_15(package) ::= <<java.lang.StringBuilder>>
+
+type_f_first(prev) ::= <<wowowo<$prev$>>
+type_f_second(prev, size) ::= <<, $size$>$prev$>>
+type_f(package, firs, secon, type) ::= <<$firs$$type$$secon$>>
+
+type_a(package, name) ::= <<$package$$name$>>
+
+type_b(package, name) ::= <<$package$$name$>>
+
+type_c(package, name) ::= <<$package$$name$>>
+
+type_10(package, name) ::= <<$name$>>
+
+// TODO Para que sirve empty en FastBuffers?
+type_e(package, type, maxsize, empty) ::= <<us.ihmc.idl.IDLSequence$if(type_e_content_types.(type))$$type_e_content_types.(type)$$else$.Object<$type$>$endif$ $empty$>>
+
+type_e_content_types ::= [
+	"boolean":".Boolean",
+	"byte":".Byte",
+	"char":".Char",
+	"short":".Short",
+	"int":".Integer",
+	"long":".Long",
+	"float":".Float",
+	"double":".Double",
+	"java.lang.StringBuilder":".StringBuilderHolder",
+    default:
+]
+
+initialValues ::= [
+    "type_d":"\"\"",
+    "type_15":"\"\"",
+    default: // not basic type.
+]
+

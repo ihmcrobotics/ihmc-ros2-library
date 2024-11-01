@@ -1,0 +1,51 @@
+#include "NestedElement.idl"
+
+module test
+{
+	enum Color
+	{
+		red,
+		green,
+		blue
+	};
+
+	struct IDLElementTest
+	{
+		char charTest;
+		wchar wcharTest;
+		octet octetTest;
+		short shortTest;
+		unsigned short ushortTest;
+		long longTest;
+		unsigned long ulongTest;
+		long long longlongTest;
+		unsigned long long ulonglongTest;
+		float floatTest;
+		double doubleTest;
+		boolean booleanTest;
+		Color colorTest;
+		nested::NestedElement nestedElementTest;
+		string stringTest;
+
+		long longArray[10];
+		nested::NestedElement nestedArray[5][3];
+		string stringArray[4];
+		Color enumArray[6];
+		
+		sequence<char, 25> charSeqTest;
+		sequence<wchar, 25> wcharSeqTest;
+		sequence<octet, 25> octetSeqTest;
+		sequence<short, 25> shortSeqTest;
+		sequence<unsigned short, 25> ushortSeqTest;
+		sequence<long, 25> longSeqTest;
+		sequence<unsigned long, 25> ulongSeqTest;
+		sequence<long long, 25> longlongSeqtest;
+		sequence<unsigned long long, 25> ulonglongSeqTest;
+		sequence<float, 25> floatSeqTest;
+		sequence<double, 25> doubleSeqTest;
+		sequence<boolean, 25> booleanSeqTest;
+		sequence<nested::NestedElement, 25> nestedSeqTest;
+		sequence<Color, 25> enumSeqTest;
+		sequence<string, 25> stringSeqTest;
+	};
+};

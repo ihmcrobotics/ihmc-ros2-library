@@ -1,0 +1,307 @@
+group FastCdrCommon;
+
+paramRetType(typecode) ::= <<
+$if(typecode)$
+$typecode.javaTypename$
+$else$
+void
+$endif$
+>>
+
+paramTypeByValue(typecode) ::= <<
+$if(typecode.primitive)$
+$typecode.pubsubTypename$
+$else$
+const $typecode.javaTypename$&
+$endif$
+>>
+
+paramTypeByRef(typecode) ::= <<
+$typecode.javaTypename$&
+>>
+
+paramDeclarations(params, separatorInicial) ::= <<
+$if(params)$$separatorInicial$$endif$$params : {param | /*$param.comment$*/ $if(param.output)$$paramTypeByRef(typecode=param.typecode)$$else$$paramTypeByValue(typecode=param.typecode)$$endif$ $param.name$}; separator=", "$
+>>
+
+paramDeclarationsByValue(params, separatorInicial) ::= <<
+$if(params)$$separatorInicial$$endif$$params : {param | /*$param.comment$*/ $paramTypeByValue(typecode=param.typecode)$ $param.name$}; separator=", "$
+>>
+
+object_serialization(ctx, object, arg, element) ::= <<
+$if(object.typecode.maxsize)$
+if($element$get$object.javaName$($arg$).$sizeFunction.(object.typecode.stType)$ <= $object.typecode.maxsize$)
+
+$endif$
+$if(object.typecode.isType_c)$cdr.write_$object.typecode.stType$($element$get$object.javaName$($arg$).ordinal());
+$elseif(object.typecode.isType_f)$$array_serialize(ctx=ctx, typecodeArr=object.typecode, data=[element, "get", object.javaName, "(", arg, ")"], loopvar=ctx.newLoopVarName, dimensions=object.typecode.dimensions)$
+$elseif(object.typecode.isType_a)$$object.typecode.pubsubTypename$.write($element$get$object.javaName$($arg$), cdr);
+$else$cdr.write_$object.typecode.stType$($element$get$object.javaName$($arg$));
+$endif$
+$if(object.typecode.maxsize)$
+else
+    throw new RuntimeException("$object.name$ field exceeds the maximum length");
+$endif$
+>>
+
+array_init(ctx, typecodeArr, data, loopvar, elemInit, dimensions) ::= <<
+$if(first(dimensions))$
+for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
+{
+  $array_init(ctx=ctx, typecodeArr=typecodeArr, data=[data, "[", loopvar, "]"], elemInit=elemInit, loopvar=ctx.nextLoopVarName, dimensions=rest(dimensions))$
+}
+$else$
+  $data$ = $elemInit$;
+$endif$
+>>
+
+array_copy(ctx, typecodeArr, data, loopvar, other, dimensions) ::= <<
+$if(first(dimensions))$
+for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
+{
+   $array_copy(ctx=ctx, typecodeArr=typecodeArr, data=[data, "[", loopvar, "]"], other=[other, "[", loopvar, "]"], loopvar=ctx.nextLoopVarName, dimensions=rest(dimensions))$
+}
+$else$
+$if(typecodeArr.contentTypeCode.primitive)$
+   $data$ = $other$;
+$elseif(typecodeArr.contentTypeCode.isType_d)$
+   $data$.setLength(0);
+   $data$.append($other$);
+$elseif(typecodeArr.contentTypeCode.isType_a)$
+   $typecodeArr.contentTypeCode.pubsubTypename$.staticCopy($other$, $data$);
+$else$
+   $other$.set($data$);
+$endif$
+$endif$
+>>
+
+array_equals(ctx, typecodeArr, data, loopvar, other, dimensions) ::= <<
+$if(first(dimensions))$
+for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
+{
+  $array_equals(ctx=ctx, typecodeArr=typecodeArr, data=[data, "[", loopvar, "]"], loopvar=ctx.nextLoopVarName, other=[other, "[", loopvar, "]"], dimensions=rest(dimensions))$
+}
+$else$
+    $if(typecodeArr.contentTypeCode.primitive)$
+        if(this.$data$ != $other$) return false;
+    $elseif(typecodeArr.contentTypeCode.isType_d)$
+        if (!us.ihmc.idl.IDLTools.equals(this.$data$, $other$)) return false;
+    $else$
+        if (!this.$data$.equals($other$)) return false;
+    $endif$
+$endif$
+>>
+
+array_epsilon_equals(ctx, typecodeArr, data, loopvar, other, dimensions, epsilon) ::= <<
+$if(first(dimensions))$
+for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
+{
+  $array_epsilon_equals(ctx=ctx, typecodeArr=typecodeArr, data=[data, "[", loopvar, "]"], loopvar=ctx.nextLoopVarName, other=[other, "[", loopvar, "]"], dimensions=rest(dimensions), epsilon=epsilon)$
+}
+$else$
+    $if(typecodeArr.contentTypeCode.isType_7)$
+        if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.$data$, $other$, epsilon)) return false;
+    $elseif(typecodeArr.contentTypeCode.isType_c)$
+        if (!us.ihmc.idl.IDLTools.epsilonEqualsEnum(this.$data$, $other$, epsilon)) return false;
+    $elseif(typecodeArr.contentTypeCode.primitive)$
+        if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.$data$, $other$, epsilon)) return false;
+    $elseif(typecodeArr.contentTypeCode.isType_d)$
+        if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.$data$, $other$, epsilon)) return false;
+    $else$
+      if (!this.$data$.epsilonEquals($other$, epsilon)) return false;
+    $endif$
+$endif$
+>>
+
+
+array_serialize(ctx, typecodeArr, data, loopvar, dimensions) ::= <<
+$if(first(dimensions))$
+for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
+{
+  $array_serialize(ctx=ctx, typecodeArr=typecodeArr, data=[data, "[", loopvar, "]"], loopvar=ctx.nextLoopVarName, dimensions=rest(dimensions))$
+}
+$else$
+$if(typecodeArr.contentTypeCode.isType_c)$
+    if ($data$ == null)
+	   cdr.write_$typecodeArr.contentTypeCode.stType$(-1);
+    else
+	   cdr.write_$typecodeArr.contentTypeCode.stType$($data$.ordinal());
+$elseif(typecodeArr.contentTypeCode.isType_a)$
+	$typecodeArr.contentTypeCode.pubsubTypename$.write($data$, cdr);	
+$else$
+	cdr.write_$typecodeArr.contentTypeCode.stType$($data$);
+$endif$	
+$endif$
+>>
+
+object_deserialization(ctx, object, arg, argsep, element) ::= <<
+$if(object.typecode.isType_c)$$element$set$object.javaName$($arg$$argsep$$object.typecode.javaTypename$.values[cdr.read_$object.typecode.stType$()]);
+$elseif(object.typecode.isType_f)$$array_deserialize(ctx=ctx, typecodeArr=object.typecode, data=[element, "get", object.javaName, "(", arg, ")"], loopvar=ctx.newLoopVarName, dimensions=object.typecode.dimensions)$
+$elseif(object.typecode.primitive)$$element$set$object.javaName$($arg$$argsep$cdr.read_$object.typecode.stType$());
+$elseif(object.typecode.isType_a)$$object.typecode.pubsubTypename$.read($element$get$object.javaName$($arg$), cdr);
+$else$cdr.read_$object.typecode.stType$($element$get$object.javaName$($arg$));
+$endif$	
+>>
+
+array_deserialize(ctx, typecodeArr, data, loopvar, dimensions) ::= <<
+$if(first(dimensions))$
+for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
+{
+  $array_deserialize(ctx=ctx, typecodeArr=typecodeArr, data=[data, "[", loopvar, "]"], loopvar=ctx.nextLoopVarName, dimensions=rest(dimensions))$
+}
+$else$
+$if(typecodeArr.contentTypeCode.isType_c)$
+   int ordinal = cdr.read_type_c();
+   if (ordinal < 0)
+	  $data$ = null;
+   else
+      $data$ = $typecodeArr.contentTypeCode.javaTypename$.values[ordinal];
+$elseif(typecodeArr.contentTypeCode.primitive)$
+	$data$ = cdr.read_$typecodeArr.contentTypeCode.stType$();
+$elseif(typecodeArr.contentTypeCode.isType_a)$
+	$typecodeArr.contentTypeCode.pubsubTypename$.read($data$, cdr);
+$else$
+	cdr.read_$typecodeArr.contentTypeCode.stType$($data$);
+$endif$	
+$endif$
+>>
+
+
+
+// TODO Todos los tipos. MEJORAR. size of 1 no deberia generar alignment.
+max_serialized_size(ctx, typecode, var) ::= <<
+$if(typecode.primitive)$$var$ += $typecode.size$$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, $typecode.size$)$endif$;$elseif(typecode.isType_d)$$var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$ + $typecode.maxsize$ + 1;$elseif(typecode.isType_e)$$var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$;$sequence_max_serialized_size(ctx=ctx, typecodeSeq=typecode, var=var, loopvar=ctx.newLoopVarName)$$elseif(typecode.isType_f)$$array_max_serialized_size(ctx=ctx, typecodeArr=typecode, var=var, loopvar=ctx.newLoopVarName)$$else$$var$ += $typecode.pubsubTypename$.getMaxCdrSerializedSize($var$);$endif$
+>>
+
+serialized_size_type(ctx, typecode, var) ::= <<
+$if(typecode.primitive)$
+$var$ += $typecode.size$$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, $typecode.size$)$endif$;
+$endif$
+>>
+
+serialized_size(ctx, object, data, var) ::= <<
+$if(object.typecode.primitive)$
+$var$ += $object.typecode.size$$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, $object.typecode.size$)$endif$;
+$elseif(object.typecode.isType_d)$
+$var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$ + $data$.length() + 1;
+$elseif(object.typecode.isType_e)$
+$var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$;
+$sequence_serialized_size(ctx=ctx, typecodeSeq=object.typecode, data=data, var=var, loopvar=ctx.newLoopVarName)$
+$elseif(object.typecode.isType_f)$
+$array_serialized_size(ctx=ctx, typecodeArr=object.typecode, data=data, var=var, loopvar=ctx.newLoopVarName, dimensions=object.typecode.dimensions)$
+$else$
+$var$ += $object.typecode.pubsubTypename$.getCdrSerializedSize($data$, $var$);
+$endif$
+>>
+
+sequence_max_serialized_size(ctx, typecodeSeq, var, loopvar) ::= <<
+$if(typecodeSeq.contentTypeCode.primitive)$
+$var$ += ($typecodeSeq.maxsize$ * $typecodeSeq.contentTypeCode.size$)$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, $typecodeSeq.contentTypeCode.size$)$endif$;
+$elseif(typecodeSeq.contentTypeCode.isType_d)$
+for(int $loopvar$ = 0; $loopvar$ < $typecodeSeq.maxsize$; ++$loopvar$)
+{
+  $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$ + $typecodeSeq.contentTypeCode.maxsize$ + 1;
+}
+$else$
+for(int $loopvar$ = 0; $loopvar$ < $typecodeSeq.maxsize$; ++$loopvar$)
+{
+$if(typecodeSeq.contentTypeCode.isType_e)$
+    $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$;
+    $sequence_max_serialized_size(ctx=ctx, typecodeSeq=typecodeSeq.contentTypeCode, var=var, loopvar=ctx.nextLoopVarName)$
+$elseif(typecodeSeq.contentTypeCode.isType_f)$
+$array_max_serialized_size(ctx=ctx, typecodeArr=typecodeSeq.contentTypeCode, var=var, loopvar=ctx.nextLoopVarName)$
+$else$
+    $var$ += $typecodeSeq.contentTypeCode.pubsubTypename$.getMaxCdrSerializedSize($var$);
+$endif$
+}
+$endif$
+>>
+
+sequence_serialized_size(ctx, typecodeSeq, data, var, loopvar) ::= <<
+$if(typecodeSeq.contentTypeCode.primitive)$
+$var$ += ($data$.size() * $typecodeSeq.contentTypeCode.size$)$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, $typecodeSeq.contentTypeCode.size$)$endif$;
+$elseif(typecodeSeq.contentTypeCode.isType_d)$
+for(int $loopvar$ = 0; $loopvar$ < $data$.size(); ++$loopvar$)
+{
+    $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$ + $data$.get($loopvar$).length() + 1;
+}
+$else$
+for(int $loopvar$ = 0; $loopvar$ < $data$.size(); ++$loopvar$)
+{
+$if(typecodeSeq.contentTypeCode.isType_e)$
+    $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$;
+    $sequence_serialized_size(ctx=ctx, typecodeSeq=typecodeSeq.contentTypeCode, data=[data, ".at(", loopvar, ")"], var=var, loopvar=ctx.nextLoopVarName)$
+$elseif(typecodeSeq.contentTypeCode.isType_f)$
+$array_serialized_size(ctx=ctx, typecodeArr=typecodeSeq.contentTypeCode, data=[data, ".at(", loopvar, ")"], var=var, loopvar=ctx.nextLoopVarName, dimensions=typecodeSeq.contentTypeCode.dimensions)$
+$else$
+    $var$ += $typecodeSeq.contentTypeCode.pubsubTypename$.getCdrSerializedSize($data$.get($loopvar$), $var$);
+$endif$
+}
+$endif$
+>>
+
+array_max_serialized_size(ctx, typecodeArr, var, loopvar) ::= <<
+$if(typecodeArr.contentTypeCode.primitive)$
+$var$ += ($typecodeArr.size$ * $typecodeArr.contentTypeCode.size$)$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, $typecodeArr.contentTypeCode.size$)$endif$;
+$elseif(typecodeArr.contentTypeCode.isType_d)$
+for(int $loopvar$ = 0; $loopvar$ < $typecodeArr.size$; ++$loopvar$)
+{
+    $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$ + $typecodeArr.contentTypeCode.maxsize$ + 1;
+}
+$else$
+for(int $loopvar$ = 0; $loopvar$ < $typecodeArr.size$; ++$loopvar$)
+{
+$if(typecodeArr.contentTypeCode.isType_e)$
+    $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$;
+    $sequence_max_serialized_size(ctx=ctx, typecodeArr=typecodeArr.contentTypeCode, var=var, loopvar=ctx.nextLoopVarName)$
+$elseif(typecodeArr.contentTypeCode.isType_f)$
+$array_max_serialized_size(ctx=ctx, typecodeArr=typecodeArr.contentTypeCode, var=var, loopvar=ctx.nextLoopVarName)$
+$else$
+    $var$ += $typecodeArr.contentTypeCode.pubsubTypename$.getMaxCdrSerializedSize($var$);
+$endif$
+}
+$endif$
+>>
+
+array_serialized_size(ctx, typecodeArr, data, var, loopvar, dimensions) ::= <<
+$if(typecodeArr.contentTypeCode.primitive)$
+$var$ += ($typecodeArr.size$ * $typecodeArr.contentTypeCode.size$)$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, $typecodeArr.contentTypeCode.size$)$endif$;
+$else$
+$if(first(dimensions))$
+for(int $loopvar$ = 0; $loopvar$ < $data$.length; ++$loopvar$)
+{
+    $array_serialized_size(ctx=ctx, typecodeArr=typecodeArr, data=[data, "[", loopvar, "]"], var=var, loopvar=ctx.nextLoopVarName, dimensions=rest(dimensions))$
+}
+$else$
+$if(typecodeArr.contentTypeCode.isType_d)$
+    $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$ + $data$.length() + 1;
+$elseif(typecodeArr.contentTypeCode.isType_e)$
+    $var$ += 4$if(ctx.cdr)$ + us.ihmc.idl.CDR.alignment($var$, 4)$endif$;
+    $sequence_serialized_size(ctx=ctx, typecodeArr=typecodeArr.contentTypeCode, data=[data, "[", loopvar, "]"], var=var, loopvar=ctx.nextLoopVarName)$
+$elseif(typecodeArr.contentTypeCode.isType_f)$
+    $array_serialized_size(ctx=ctx, typecodeArr=typecodeArr.contentTypeCode, data=data, var=var, loopvar=loopvar, dimensions=typecodeArr.contentTypeCode.dimensions)$
+$else$
+    $var$ += $typecodeArr.contentTypeCode.pubsubTypename$.getCdrSerializedSize($data$, $var$);
+$endif$
+$endif$
+$endif$
+>>
+
+serializeCasting(typecode) ::= <<
+$if(typecode.isType_c)$
+(uint32_t)
+$endif$
+>>
+
+deserializeCasting(typecode) ::= <<
+$if(typecode.isType_c)$
+(uint32_t&)
+$endif$
+>>
+
+sizeFunction ::= [
+        "type_e":"size()",
+        "type_d":"length()",
+        "type_15":"length()",
+        default: // not basic type.
+]

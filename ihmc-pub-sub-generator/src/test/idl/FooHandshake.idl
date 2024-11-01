@@ -1,0 +1,96 @@
+module test {
+	struct FooYoRegistryDefinition
+	{
+		unsigned short parent;
+		string name;
+	};
+	
+	enum FooYoType
+	{
+		FooDoubleYoVariable,
+		FooBooleanYoVariable,
+		FooIntegerYoVariable,
+		FooLongYoVariable,
+		FooEnumYoVariable
+	};
+	
+	enum FooJointType
+	{
+		FooSiXDoFJoint,
+		FooOneDoFJoint
+	};
+	
+	enum FooLoadStatus
+	{
+		FooNoParameter,
+		FooUnloaded,
+		FooDefault,
+		FooLoaded
+	};
+	
+	struct FooYoVariableDefinition
+	{
+		string name;
+		string description;
+		FooYoType type;
+		unsigned short registry;
+		unsigned short enumType;
+		boolean allowNullValues;
+		boolean isParameter;
+		double min;
+		double max;
+		FooLoadStatus loadStatus;
+	};
+	
+	struct FooJointDefinition
+	{
+		string name;
+		FooJointType type;
+		
+	};
+	
+	struct FooAppearanceDefinitionMessage
+	{
+		double r;
+		double g;
+		double b;
+		
+		double transparency;
+	};
+	
+	struct FooGraphicObjectMessage
+	{
+		long registrationID;
+		string name;
+		
+		sequence<unsigned short, 1024> yoVariableIndex;
+		sequence<double, 128> constants;
+		FooAppearanceDefinitionMessage appearance;
+		string listName;
+	};
+	
+	struct FooEnumType
+	{
+		string name;
+		sequence<string, 255> enumValues;
+	};
+	
+	
+	struct FooSummary{
+	   	boolean createSummary;
+   	   	string<1024> summaryTriggerVariable;
+   	 	sequence<string<1024>, 128> summarizedVariables;
+	};
+	
+	struct FooHandshake
+	{
+		double dt;
+		sequence<FooYoRegistryDefinition, 1024> registries;
+		sequence<FooYoVariableDefinition, 32767> variables;
+		sequence<FooJointDefinition, 128> joints;
+		sequence<FooGraphicObjectMessage, 2048> graphicObjects;
+		sequence<FooGraphicObjectMessage, 2048> artifacts;
+		sequence<FooEnumType, 1024> enumTypes;
+		FooSummary summary;
+	};
+};

@@ -1,0 +1,369 @@
+group JavaType;
+
+main(ctx, definitions, package) ::= <<
+$fileHeader()$
+$if(package)$
+package $package$;$\n\n$
+$endif$
+$definitions$
+>>
+interface(ctx, parent, interface, exports, extension) ::= <<
+$classdescription(type="interface", name=interface.name, filename=[ctx.filename, ".idl"])$
+public interface $interface.name$
+{
+   $extension$
+   $exports$
+}
+>>
+
+struct_type(ctx, parent, struct, extension, typecode) ::= <<
+import us.ihmc.communication.packets.Packet;
+import us.ihmc.euclid.interfaces.Settable;
+import us.ihmc.euclid.interfaces.EpsilonComparable;
+import java.util.function.Supplier;
+import us.ihmc.pubsub.TopicDataType;
+
+$struct.comments$
+public class $struct.name$ extends Packet<$struct.name$> implements Settable<$struct.name$>, EpsilonComparable<$struct.name$>
+{
+$struct.constants : { constant |
+   $constant.comments$
+$if(constant.typeCode.isType_d)$
+   public static final String $constant.name$ = $constant.value$;
+$elseif(constant.typeCode.isType_9)$
+   public static final $constant.typeCode.javaTypename$ $constant.name$ = (byte) $constant.value$;
+$else$
+   public static final $constant.typeCode.javaTypename$ $constant.name$ = $constant.value$;
+$endif$
+}; separator="\n"$
+$struct.members : { member |
+   $member.comments$
+$if(member.hasDefaultValue)$
+   public $member.typecode.javaTypename$ $member.name$_ = $member.defaultValue$;
+$else$
+   public $member.typecode.javaTypename$ $member.name$_;
+$endif$
+}; separator="\n"$
+
+   public $struct.name$()
+   {
+$struct.members : { member |
+$if(member.typecode.isType_e)$
+$if(member.typecode.ContentTypeCode.isType_c)$
+      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, $member.typecode.ContentTypeCode.javaTypename$.class, $member.typecode.ContentTypeCode.javaTypename$.values);$\n$
+$elseif(member.typecode.ContentTypeCode.primitive)$
+      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, "$member.typecode.ContentTypeCode.stType$");$\n$
+$elseif(member.typecode.ContentTypeCode.isType_d)$
+      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, "$member.typecode.ContentTypeCode.stType$");$\n$
+$else$
+      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, new $member.typecode.ContentTypeCode.pubsubTypename$());$\n$
+$endif$
+$elseif(member.typecode.isType_f)$
+      $member.name$_ = new $member.typecode.ContentTypeCode.JavaTypename$[$member.typecode.Dimensions;separator="]["$];$\n$
+$if(!member.typecode.ContentTypeCode.primitive)$
+      $array_init(ctx=ctx, typecodeArr=member.typecode, data=[member.name, "_"], elemInit=["new ", member.typecode.ContentTypeCode.JavaTypename, "()"], loopvar=ctx.nextLoopVarName, dimensions=member.typecode.dimensions)$$\n$
+$endif$
+$elseif(member.typecode.isType_d)$
+      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$);
+$elseif(!member.typecode.primitive)$
+      $member.name$_ = new $member.typecode.javaTypename$();$\n$
+$endif$
+}; separator=""$
+   }
+
+   public $struct.name$($struct.name$ other)
+   {
+      this();
+      set(other);
+   }
+
+   public void set($struct.name$ other)
+   {
+$struct.members : { member |
+$if(member.typecode.primitive)$
+      $member.name$_ = other.$member.name$_;
+$elseif(member.typecode.isType_d)$
+      $member.name$_.setLength(0);
+      $member.name$_.append(other.$member.name$_);
+$elseif(member.typecode.isType_f)$
+      $array_copy(ctx=ctx, typecodeArr=member.typecode, data=[member.name, "_"], other=["other.", member.name, "_"], loopvar=ctx.nextLoopVarName, dimensions=member.typecode.dimensions)$
+$elseif(member.typecode.isType_a)$
+      $member.typecode.pubsubTypename$.staticCopy(other.$member.name$_, $member.name$_);
+$else$
+      $member.name$_.set(other.$member.name$_);
+$endif$
+}; separator="\n"$
+   }
+
+$struct.members : { member |
+$if(!member.typecode.isType_e)$
+$if(member.typecode.primitive)$
+   $member.comments$
+   public void set$member.javaName$($member.typecode.javaTypename$ $member.name$)
+   {
+      $member.name$_ = $member.name$;
+   }
+$endif$
+$endif$
+$if(member.typecode.isType_d)$
+   $member.comments$
+   public void set$member.javaName$(java.lang.String $member.name$)
+   {
+      $member.name$_.setLength(0);
+      $member.name$_.append($member.name$);
+   }
+
+   $member.comments$
+   public java.lang.String get$member.javaName$AsString()
+   {
+      return get$member.javaName$().toString();
+   }
+$endif$
+
+   $member.comments$
+   public $member.typecode.javaTypename$ get$member.javaName$()
+   {
+      return $member.name$_;
+   }
+}; separator="\n"$
+
+   public static Supplier<$struct.name$PubSubType> getPubSubType()
+   {
+      return $struct.name$PubSubType::new;
+   }
+
+   @Override
+   public Supplier<TopicDataType> getPubSubTypePacket()
+   {
+      return $struct.name$PubSubType::new;
+   }
+
+   @Override
+   public boolean epsilonEquals($struct.name$ other, double epsilon)
+   {
+      if(other == null) return false;
+      if(other == this) return true;
+
+$struct.members : { member |
+$if(member.typecode.isType_7)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isType_c)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsEnum(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.primitive)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isType_d)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isType_f)$
+      $array_epsilon_equals(ctx=ctx, typecodeArr=member.typecode, data=[member.name, "_"], loopvar=ctx.nextLoopVarName, other=["other.", member.name, "_"], dimensions=member.typecode.dimensions)$
+$elseif(member.typecode.isStringBuilderSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilderSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isObjectSequence)$
+      if (this.$member.name$_.size() != other.$member.name$_.size()) { return false; }
+      else
+      {
+         for (int i = 0; i < this.$member.name$_.size(); i++)
+         {  if (!this.$member.name$_.get(i).epsilonEquals(other.$member.name$_.get(i), epsilon)) return false; }
+      }
+$elseif(member.typecode.isBooleanSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsBooleanSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isByteSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsByteSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isCharSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsCharSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isShortSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsShortSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isIntegerSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsIntegerSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isLongSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsLongSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isFloatSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsFloatSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isDoubleSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsDoubleSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isEnumSequence)$
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsEnumSequence(this.$member.name$_, other.$member.name$_, epsilon)) return false;
+$elseif(member.typecode.isIdlSequence)$
+      if (this.$member.name$_.size() != other.$member.name$_.size()) return false;
+      else
+      for (int i = 0; i < this.$member.name$_.size(); i++)
+      {  if (!us.ihmc.idl.IDLTools.epsilonEquals(this.$member.name$_.get(i), other.$member.name$_.get(i), epsilon)) return false; }
+$else$
+      if (!this.$member.name$_.epsilonEquals(other.$member.name$_, epsilon)) return false;
+$endif$
+}; separator="\n"$
+
+      return true;
+   }
+
+   @Override
+   public boolean equals(Object other)
+   {
+      if(other == null) return false;
+      if(other == this) return true;
+      if(!(other instanceof $struct.name$)) return false;
+
+      $struct.name$ otherMyClass = ($struct.name$) other;
+
+$struct.members : { member |
+$if(member.typecode.primitive)$
+      if(this.$member.name$_ != otherMyClass.$member.name$_) return false;
+$elseif(member.typecode.isType_d)$
+      if (!us.ihmc.idl.IDLTools.equals(this.$member.name$_, otherMyClass.$member.name$_)) return false;
+$elseif(member.typecode.isType_f)$
+      $array_equals(ctx=ctx, typecodeArr=member.typecode, data=[member.name, "_"], loopvar=ctx.nextLoopVarName, other=["otherMyClass.", member.name, "_"], dimensions=member.typecode.dimensions)$
+$else$
+      if (!this.$member.name$_.equals(otherMyClass.$member.name$_)) return false;
+$endif$
+}; separator="\n"$
+
+      return true;
+   }
+
+   @Override
+   public java.lang.String toString()
+   {
+      StringBuilder builder = new StringBuilder();
+
+      builder.append("$struct.name$ {");
+$struct.members : { member |
+      builder.append("$member.name$=");
+$if(member.typecode.isType_f)$
+$if(first(rest(member.typecode.dimensions)))$
+      builder.append(java.util.Arrays.deepToString(this.$member.name$_));
+$else$
+      builder.append(java.util.Arrays.toString(this.$member.name$_));
+$endif$
+$else$
+      builder.append(this.$member.name$_);
+$endif$
+}; separator="      builder.append(\", \");\n"$
+      builder.append("}");
+      return builder.toString();
+   }
+$extension$
+}$\n$
+>>
+
+union_type(ctx, parent, union, extension, typecode) ::= <<
+$classdescription(type="union", name=union.name, filename=[ctx.filename, ".idl"])$
+public class $union.name$
+{
+   public $union.name$()
+   {
+      $if(union.javaDefaultvalue)$
+      d__ = $union.javaDefaultvalue$;
+      $else$
+      d__ = $first(first(union.members).javaLabels)$;
+      $endif$
+
+      $union.members : { member |
+      $if(!member.typecode.primitive)$$member.name$_ = new $member.typecode.javaTypename$();$endif$
+      }; separator="\n"$
+   }
+
+   public $union.discriminator.javaTypename$ getDiscriminator()
+   {
+      return d__;
+   }
+
+   $union.members : { member |
+   $if(!member.typecode.isType_e)$
+   public void set$member.javaName$($member.typecode.javaTypename$ $member.name$)
+   {
+      $member.name$_ = $member.name$;
+
+      $if(member.default)$
+          d__ = $union.javaDefaultvalue$;
+      $else$
+          d__ = $first(member.javaLabels)$;
+      $endif$
+   }
+
+   public void set$member.javaName$($union.discriminator.javaTypename$ discriminator, $member.typecode.javaTypename$ $member.name$)
+      throws Exception
+   {
+      $if(member.default)$
+      if($[union.javaDefaultvalue, member.javaLabels] : {label | discriminator == $label$}; separator=" || "$)
+      $else$
+      if($member.javaLabels : {label | discriminator == $label$}; separator=" || "$)
+      $endif$
+      {
+         $member.name$_ = $member.name$;
+         d__ = discriminator;
+         return;
+      }
+
+      throw new Exception("Given discriminator is not a valid value for member $member.name$");
+   }
+   $endif$
+
+   public $member.typecode.javaTypename$ get$member.javaName$()
+      throws Exception
+   {
+      $if(member.default)$
+      if($[union.javaDefaultvalue, member.javaLabels] : {label | d__ == $label$}; separator=" || "$)
+      $else$
+      if($member.javaLabels : {label | d__ == $label$}; separator=" || "$)
+      $endif$
+         return $member.name$_;
+
+      throw new Exception("Union member not selected by discriminator");
+   }
+
+   }; separator="\n"$
+
+   @Override
+   public boolean equals(Object other)
+   {
+      if(other == null) return false;
+      if(other == this) return true;
+      if(!(other instanceof $union.name$)) return false;
+      $union.name$ otherMyClass = ($union.name$)other;
+
+      if(this.d__ == otherMyClass.d__)
+      {
+         $union.members : { member |
+            $if(member.default)$
+            if($[union.javaDefaultvalue, member.javaLabels] : {label | d__ == $label$}; separator=" || "$)
+            $else$
+            if($member.javaLabels : {label | d__ == $label$}; separator=" || "$)
+            $endif$
+            {
+               if(this.$member.name$_ == otherMyClass.$member.name$_)
+                  return true;
+               else
+                  return false;
+            }
+      }; separator="\n"$
+      }
+
+      return false;
+   }
+
+   $union.discriminator.javaTypename$ d__;
+
+   $union.members : { member |private $member.typecode.javaTypename$ $member.name$_; }; separator="\n"$
+
+   $extension$
+}
+>>
+
+enum_type(ctx, parent, enum, extension, typecode) ::= <<
+$classdescription(type="enum", name=enum.name, filename=[ctx.filename, ".idl"])$
+import us.ihmc.idl.IDLTools;
+
+public enum $enum.name$
+{
+   $enum.members:{ member |
+      $member.name$,
+   }; separator="\n"$
+   ;
+   public static $enum.name$[] values = values();
+
+   public boolean epsilonEquals($enum.name$ other, double epsilon)
+   {
+      return IDLTools.epsilonEqualsEnum(this, other, epsilon);
+   }
+   $extension$
+}
+>>
