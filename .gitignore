@@ -3,6 +3,8 @@
 .settings
 bin
 build
+out
+build/
 build-java
 classes
 .gradle
@@ -23,3 +25,5 @@ swig/FastRTPS/generated/us/ihmc/rtps/impl/fastRTPS/FastRTPSJAVA_wrap.cxx
 **/*.pyc
 .vscode/
 **/rebel.xml
+**/pit-reports
+IDLElementTest.idl.preprocessed

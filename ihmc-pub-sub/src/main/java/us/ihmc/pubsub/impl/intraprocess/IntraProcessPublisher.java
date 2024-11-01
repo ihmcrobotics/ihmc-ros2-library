@@ -1,0 +1,186 @@
+/*
+ * Copyright 2024 Florida Institute for Human and Machine Cognition (IHMC)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *     
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
+ */
+package us.ihmc.pubsub.impl.intraprocess;
+
+import com.eprosima.xmlschemas.fastrtps_profiles.DurabilityQosKindPolicyType;
+import org.apache.commons.lang3.NotImplementedException;
+import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.pubsub.common.ChangeKind;
+import us.ihmc.pubsub.common.Guid;
+import us.ihmc.pubsub.common.MatchingInfo;
+import us.ihmc.pubsub.common.MatchingInfo.MatchingStatus;
+import us.ihmc.pubsub.common.SampleInfo;
+import us.ihmc.pubsub.publisher.Publisher;
+import us.ihmc.pubsub.publisher.PublisherListener;
+
+import java.io.IOException;
+
+@Deprecated
+class IntraProcessPublisher <T> implements Publisher
+{
+   private boolean available = true;
+   private final TopicDataType<T> topicDataType;
+   private final Guid guid;
+   private final PublisherAttributes attr;
+   private IntraProcessDomainImpl domain;
+   private IntraProcessParticipant participant;
+   private PublisherListener listener;
+
+   private long sequence = 0;
+   private boolean isRemoved = false;
+
+   public IntraProcessPublisher(Guid guid, IntraProcessDomainImpl domainImpl, IntraProcessParticipant participant, PublisherAttributes attr,
+                                PublisherListener listener)
+         throws IOException
+   {
+      @SuppressWarnings("unchecked")
+      TopicDataType<T> topicDataType = (TopicDataType<T>) participant.getTopicDataType(attr.getTopicDataType().getName());
+      if (topicDataType == null)
+      {
+         throw new IOException("Cannot registered publisher with topic " + attr.getTopicDataType() + ". Topic data type is not registered.");
+      }
+      this.topicDataType = topicDataType.newInstance();
+      this.guid = guid;
+      this.domain = domainImpl;
+      this.participant = participant;
+      this.attr = attr;
+      this.listener = listener;
+      
+      if(attr.getDurabilityKind() != DurabilityQosKindPolicyType.VOLATILE)
+      {
+         throw new RuntimeException("Only volatile durability is supported for intraprocess communication");
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public void write(Object data) throws IOException
+   {
+      SampleInfo newInfo = new SampleInfo();
+      newInfo.setDataLength(topicDataType.getTypeSize());
+      newInfo.setSampleKind(ChangeKind.ALIVE);
+      newInfo.getSourceTimestamp().set(System.nanoTime());
+      newInfo.getSampleIdentity().getGuid().set(guid);
+      newInfo.getSampleIdentity().getSequenceNumber().set(sequence);
+
+      domain.write(attr, topicDataType, (T) data, newInfo);
+
+      sequence++;
+   }
+
+   @Override
+   public void dispose(Object data) throws IOException
+   {
+      throw new NotImplementedException("Dispose not implemented for intraprocess communication");
+   }
+
+   @Override
+   public void unregister(Object data) throws IOException
+   {
+      throw new NotImplementedException("Unregister not implemented for intraprocess communication");
+   }
+
+   @Override
+   public void dispose_and_unregister(Object data) throws IOException
+   {
+      throw new NotImplementedException("Dispose and unregister not implemented for intraprocess communication");
+   }
+
+   @Override
+   public int removeAllChange() throws IOException
+   {
+      throw new NotImplementedException("Remove all change not implemented for intraprocess communication");
+   }
+
+   @Override
+   public Guid getGuid()
+   {
+      return guid;
+   }
+
+   @Override
+   public PublisherAttributes getAttributes()
+   {
+      return attr;
+   }
+
+   @Override
+   public boolean isAvailable()
+   {
+      return available;
+   }
+
+   void notifyPublisherListener(IntraProcessSubscriber subscriber, MatchingStatus matchedMatching)
+   {
+      if (listener != null)
+      {
+         MatchingInfo info = new MatchingInfo();
+         info.setStatus(matchedMatching);
+         info.getGuid().set(subscriber.getGuid());
+         listener.onPublicationMatched(this, info);
+      }
+   }
+
+   public TopicDataType<?> getTopicDataType()
+   {
+      return topicDataType;
+   }
+
+   IntraProcessParticipant getParticipant()
+   {
+      return participant;
+   }
+
+   void destroy()
+   {
+      available = false;
+      isRemoved = true;
+      domain = null;
+      participant = null;
+      listener = null;
+   }
+
+   @Override
+   public boolean isRemoved()
+   {
+      return isRemoved;
+   }
+
+   @Override
+   public long getNumberOfPublications()
+   {
+      return sequence;
+   }
+
+   @Override
+   public long getCurrentMessageSize()
+   {
+      return 0;
+   }
+
+   @Override
+   public long getLargestMessageSize()
+   {
+      return 0;
+   }
+
+   @Override
+   public long getCumulativePayloadBytes()
+   {
+      return 0;
+   }
+}

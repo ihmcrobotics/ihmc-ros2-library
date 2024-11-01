@@ -1,0 +1,16 @@
+module chat
+{
+    // Define a ChatMessage
+    struct ChatMessage
+    {
+        @Key
+        long key;
+        /*
+        * This is the sender
+        */
+        string sender;
+
+        // This is the message
+        string msg;
+    };
+};

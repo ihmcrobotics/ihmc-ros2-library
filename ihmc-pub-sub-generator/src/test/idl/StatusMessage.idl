@@ -1,0 +1,17 @@
+#ifndef __test__StatusMessage__
+#define __test__StatusMessage__
+
+module test
+{
+  /**
+   * This message is to test sending uint32_t.
+   */
+  struct StatusMessage
+  {
+    unsigned long long sequence_id;
+
+    boolean pause;
+  };
+};
+
+#endif

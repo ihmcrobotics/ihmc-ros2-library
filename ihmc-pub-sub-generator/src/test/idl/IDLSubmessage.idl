@@ -1,0 +1,45 @@
+#ifndef __test__IDLSubMessage__
+#define __test__IDLSubMessage__
+
+module test
+{
+  /**
+   * a, b, c
+   * 1, 2, 3
+   * baby
+   * sneaky boi
+   */
+  const long Y =
+  123;
+
+  const string CATCH_23 =
+  "No doc, watch out!";
+
+
+  /**
+   * This is the header
+   * Header line 2
+   * This is some dangling comment that will be included in header
+   */
+  @TypeCode(type="test::IDLSubmessage")
+  struct IDLSubmessage
+  {
+    /**
+     * this num should have default value 5
+     */
+    @defaultValue(value=5)
+    long long num;
+    /**
+     * I have some doc not relevant to the next
+     */
+    long long no_default_with_doc;
+    long long no_doc_num;
+    /**
+     * @javadoc I guess javadoc will work okay.
+     * hello
+     */
+    long hello;
+  };
+};
+
+#endif

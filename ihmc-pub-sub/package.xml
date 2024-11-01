@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ihmc-pub-sub</name>
+  <version>0.12.0</version>
+  <description>This is the IHMC Pub Sub library. This is provided as a ROS2 package to allow loading the controller as plugin within the same process as other ROS2 nodes.</description>
+
+  <author email="jesper@halodi.com">Jesper Smith</author>
+  <maintainer email="jesper@halodi.com">Jesper Smith</maintainer>
+
+  <url type="website">https://github.com/ihmcrobotics/ihmc-pub-sub-group</url>
+
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>fastrtps_cmake_module</buildtool_depend>
+
+  <buildtool_export_depend>ament_cmake</buildtool_export_depend>
+  
+  <build_depend>fastcdr</build_depend>
+  <build_depend>fastrtps</build_depend>
+  <build_depend>fastrtps_cmake_module</build_depend>
+  <build_export_depend>fastcdr</build_export_depend>
+  <build_export_depend>fastrtps</build_export_depend>
+  <build_export_depend>fastrtps_cmake_module</build_export_depend>
+
+  <exec_depend>fastcdr</exec_depend>
+  <exec_depend>fastrtps</exec_depend>  
+  
+  
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
+</package>

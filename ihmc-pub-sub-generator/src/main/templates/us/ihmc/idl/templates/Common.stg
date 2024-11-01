@@ -1,0 +1,27 @@
+group Common;
+
+fileHeader() ::= <<
+>>
+
+
+classdescription(type, name, filename) ::= <<
+/**
+* 
+* Definition of the $type$ "$name$" defined in $filename$. 
+*
+* This file was automatically generated from $filename$ by us.ihmc.idl.generator.IDLGenerator. 
+* Do not update this file directly, edit $filename$ instead.
+*
+*/
+>>
+
+javadocpubsub(type, name, filename) ::= <<
+/**
+* 
+* Topic data type of the $type$ "$name$" defined in "$filename$". Use this class to provide the TopicDataType to a Participant. 
+*
+* This file was automatically generated from $filename$ by us.ihmc.idl.generator.IDLGenerator. 
+* Do not update this file directly, edit $filename$ instead.
+*
+*/
+>>
