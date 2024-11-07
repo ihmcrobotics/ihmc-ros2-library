@@ -1,0 +1,12 @@
+.classpath
+.project
+.settings
+bin
+build
+build-java
+classes
+.gradle
+CMakeLists.txt.user
+hs_err_*
+*.swp
+*.autosave

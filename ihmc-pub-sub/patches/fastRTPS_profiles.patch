@@ -1,0 +1,276 @@
+--- fastRTPS_profiles_2.14.3.xsd	2024-07-31 10:36:05.240043469 -0500
++++ fastRTPS_profiles.xsd	2024-07-31 09:42:02.103997964 -0500
+@@ -333,6 +333,10 @@
+             └ extra_samples            [uint32] -->
+     <xs:complexType name="topicElementType">
+         <xs:all>
++            <!-- ihmc-pub-sub start -->
++            <xs:element name="name" type="string" minOccurs="0"/>
++            <xs:element name="dataType" type="string" minOccurs="0"/>
++            <!-- ihmc-pub-sub end -->
+             <xs:element name="historyQos" type="historyQosPolicyType" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="resourceLimitsQos" minOccurs="0" maxOccurs="1">
+                 <xs:complexType>
+@@ -692,73 +696,79 @@
+         └ static_edp_xml_config     [0~*] [string] -->
+     <!-- TODO:  How to ensure that simpleEDP is defined only when EDP is set as "SIMPLE"?
+                 How to ensure that static_edp_xml_config is defined only when EDP is set as "STATIC"? -->
+-    <xs:complexType name="discoverySettingsType">
+-        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+-            <xs:choice minOccurs="1">
+-                <xs:element name="discoveryProtocol" minOccurs="0" maxOccurs="1">
+-                    <xs:simpleType>
+-                        <xs:restriction base="xs:string">
+-                            <xs:enumeration value="SIMPLE"/>
+-                            <xs:enumeration value="CLIENT"/>
+-                            <xs:enumeration value="SERVER"/>
+-                            <xs:enumeration value="BACKUP"/>
+-                            <xs:enumeration value="NONE"/>
+-                        </xs:restriction>
+-                    </xs:simpleType>
+-                </xs:element>
+-                <xs:element name="discoveryServersList" minOccurs="0" maxOccurs="1">
+-                    <xs:complexType>
+-                        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+-                            <xs:element name="RemoteServer" minOccurs="1" maxOccurs="unbounded">
+-                                <xs:complexType>
+-                                    <xs:all>
+-                                        <xs:element name="metatrafficUnicastLocatorList" type="locatorListType" minOccurs="0" maxOccurs="1"/>
+-                                        <xs:element name="metatrafficMulticastLocatorList" type="locatorListType" minOccurs="0" maxOccurs="1"/>
+-                                    </xs:all>
+-                                    <xs:attribute name="prefix" type="prefixType" use="required"/>
+-                                </xs:complexType>
+-                            </xs:element>
+-                        </xs:sequence>
+-                    </xs:complexType>
+-                </xs:element>
+-                <xs:element name="ignoreParticipantFlags" minOccurs="0" maxOccurs="1">
+-                    <xs:simpleType>
+-                        <xs:restriction base="xs:string">
+-                            <xs:pattern value="((FILTER_DIFFERENT_HOST|FILTER_DIFFERENT_PROCESS|FILTER_SAME_PROCESS|NO_FILTER)(\||\s)*)*" />
+-                        </xs:restriction>
+-                    </xs:simpleType>
+-                </xs:element>
+-                <xs:element name="EDP" minOccurs="0" maxOccurs="1">
+-                    <xs:simpleType>
+-                        <xs:restriction base="xs:string">
+-                            <xs:enumeration value="SIMPLE"/>
+-                            <xs:enumeration value="STATIC"/>
+-                        </xs:restriction>
+-                    </xs:simpleType>
+-                </xs:element>
+-                <xs:element name="simpleEDP" minOccurs="0" maxOccurs="1">
+-                    <xs:complexType>
+-                        <xs:all>
+-                            <xs:element name="PUBWRITER_SUBREADER" type="boolean" minOccurs="0" maxOccurs="1"/>
+-                            <xs:element name="PUBREADER_SUBWRITER" type="boolean" minOccurs="0" maxOccurs="1"/>
+-                        </xs:all>
+-                    </xs:complexType>
+-                </xs:element>
+-                <xs:element name="leaseDuration" type="durationType" minOccurs="0" maxOccurs="1"/>
+-                <xs:element name="leaseAnnouncement" type="durationType" minOccurs="0" maxOccurs="1"/>
+-                <xs:element name="initialAnnouncements" minOccurs="0" maxOccurs="1">
+-                    <xs:complexType>
+-                        <xs:all>
+-                            <xs:element name="count" type="uint32" minOccurs="0" maxOccurs="1"/>
+-                            <xs:element name="period" type="durationType" minOccurs="0" maxOccurs="1"/>
+-                        </xs:all>
+-                    </xs:complexType>
+-                </xs:element>
+-                <xs:element name="clientAnnouncementPeriod" type="durationType" minOccurs="0" maxOccurs="1"/>
+-                <xs:element name="static_edp_xml_config" type="string" minOccurs="0" maxOccurs="unbounded"/>
+-            </xs:choice>
++    <!-- ihmc-pub-sub start -->
++    <xs:simpleType name="discoveryProtocolType">
++        <xs:restriction base="xs:string">
++            <xs:enumeration value="NONE"/>
++            <xs:enumeration value="SIMPLE"/>
++            <xs:enumeration value="CLIENT"/>
++            <xs:enumeration value="SERVER"/>
++            <xs:enumeration value="BACKUP"/>
++            <xs:enumeration value="SUPER_CLIENT"/>
++        </xs:restriction>
++    </xs:simpleType>
++    <xs:simpleType name="guid">
++        <xs:restriction base="xs:string">
++          <xs:pattern value="([0-9a-fA-F]{1,2}\.){11}[0-9a-fA-F]{1,2}" />
++      <xs:whiteSpace value='collapse'/>
++        </xs:restriction>
++    </xs:simpleType>
++    <xs:complexType name="remoteServerAttributesType">
++        <xs:choice>
++            <xs:sequence>
++                <xs:element name="metatrafficUnicastLocatorList" type="locatorListType" minOccurs="1" />
++                <xs:element name="metatrafficMulticastLocatorList" type="locatorListType" minOccurs="0" />
++            </xs:sequence>
++            <xs:sequence>
++                <xs:element name="metatrafficMulticastLocatorList" type="locatorListType" minOccurs="1" />
++                <xs:element name="metatrafficUnicastLocatorList" type="locatorListType" minOccurs="0" />
++            </xs:sequence>
++        </xs:choice>
++        <xs:attribute name="prefix" type="guid" use="required"/>
++    </xs:complexType>
++    <xs:complexType name="discoveryServersListType">
++        <xs:sequence>
++            <xs:element name="remoteServer" type="remoteServerAttributesType" minOccurs="1" maxOccurs="unbounded"/>
+         </xs:sequence>
+     </xs:complexType>
++    <xs:simpleType name="participantFlagsType">
++        <xs:restriction base="xs:string">
++            <xs:pattern value="((FILTER_DIFFERENT_HOST|FILTER_DIFFERENT_PROCESS|FILTER_SAME_PROCESS|NO_FILTER)(\||\s)*)*" />
++        </xs:restriction>
++    </xs:simpleType>
++   <xs:simpleType name="EDPType">
++        <xs:restriction base="xs:string">
++            <xs:enumeration value="SIMPLE"/>
++            <xs:enumeration value="STATIC"/>
++        </xs:restriction>
++    </xs:simpleType>
++    <xs:complexType name="simpleEDPType">
++        <xs:all minOccurs="0">
++            <xs:element name="PUBWRITER_SUBREADER" type="boolean"/>
++            <xs:element name="PUBREADER_SUBWRITER" type="boolean"/>
++        </xs:all>
++    </xs:complexType>
++    <xs:complexType name="initialAnnouncementsType">
++        <xs:all minOccurs="0">
++            <xs:element name="count" type="uint32" minOccurs="0"/>
++            <xs:element name="period" type="durationType" minOccurs="0"/>
++        </xs:all>
++    </xs:complexType>
++    <xs:complexType name="discoverySettingsType">
++        <xs:all minOccurs="0">
++            <xs:element name="discoveryProtocol" type="discoveryProtocolType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="discoveryServersList" type="discoveryServersListType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="ignoreParticipantFlags" type="participantFlagsType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="EDP" type="EDPType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="simpleEDP" type="simpleEDPType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="leaseDuration" type="durationType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="leaseAnnouncement" type="durationType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="initialAnnouncements" type="initialAnnouncementsType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="clientAnnouncementPeriod" type="durationType" minOccurs="0" maxOccurs="1"/>
++            <xs:element name="static_edp_xml_config" type="string" minOccurs="0" maxOccurs="1"/>
++        </xs:all>
++    </xs:complexType>
++    <!-- ihmc-pub-sub end -->
+ 
+     <!--builtin TypeLookup Configuration:
+         ├ use_client    [bool],
+@@ -1537,20 +1547,22 @@
+ 
+     <!--QoS Durability:
+         └ kind [string] ("VOLATILE", "TRANSIENT_LOCAL", "TRANSIENT", "PERSISTENT") -->
++    <!-- ihmc-pub-sub start -->
++    <xs:simpleType name="durabilityQosKindPolicyType">
++        <xs:restriction base="xs:string">
++            <xs:enumeration value="VOLATILE"/>
++            <xs:enumeration value="TRANSIENT_LOCAL"/>
++            <xs:enumeration value="TRANSIENT"/>
++            <xs:enumeration value="PERSISTENT"/>
++        </xs:restriction>
++    </xs:simpleType>
++
+     <xs:complexType name="durabilityQosPolicyType">
+         <xs:all>
+-            <xs:element name="kind" minOccurs="0" maxOccurs="1">
+-                <xs:simpleType>
+-                    <xs:restriction base="xs:string">
+-                        <xs:enumeration value="VOLATILE"/>
+-                        <xs:enumeration value="TRANSIENT_LOCAL"/>
+-                        <xs:enumeration value="TRANSIENT"/>
+-                        <xs:enumeration value="PERSISTENT"/>
+-                    </xs:restriction>
+-                </xs:simpleType>
+-            </xs:element>
++            <xs:element name="kind" type="durabilityQosKindPolicyType"/>
+         </xs:all>
+     </xs:complexType>
++    <!-- ihmc-pub-sub end -->
+ 
+     <!--QoS Durability Service:
+         ├ service_cleanup_delay    [durationType],
+@@ -1635,18 +1647,20 @@
+ 
+     <!--QoS Ownership:
+         └ kind [string] ("SHARED", "EXCLUSIVE") -->
++    <!-- ihmc-pub-sub start -->
++    <xs:simpleType name="ownershipQosKindPolicyType">
++        <xs:restriction base="xs:string">
++            <xs:enumeration value="SHARED"/>
++            <xs:enumeration value="EXCLUSIVE"/>
++        </xs:restriction>
++    </xs:simpleType>
++
+     <xs:complexType name="ownershipQosPolicyType">
+         <xs:all>
+-            <xs:element name="kind" minOccurs="0" maxOccurs="1">
+-                <xs:simpleType>
+-                    <xs:restriction base="xs:string">
+-                        <xs:enumeration value="SHARED"/>
+-                        <xs:enumeration value="EXCLUSIVE"/>
+-                    </xs:restriction>
+-                </xs:simpleType>
+-            </xs:element>
++            <xs:element name="kind" type="ownershipQosKindPolicyType"/>
+         </xs:all>
+     </xs:complexType>
++    <!-- ihmc-pub-sub end -->
+ 
+     <!--QoS Ownership Strength:
+         └ value [uint32] -->
+@@ -1694,36 +1708,39 @@
+     <!--QoS Publish Mode:
+         ├ kind [string] ("ASYNCHRONOUS", "SYNCHRONOUS")
+         └ flow_controller_name [string] -->
++    <!-- ihmc-pub-sub start -->
++    <xs:simpleType name="publishModeQosKindPolicyType">
++        <xs:restriction base="xs:string">
++            <xs:enumeration value="SYNCHRONOUS"/>
++            <xs:enumeration value="ASYNCHRONOUS"/>
++        </xs:restriction>
++    </xs:simpleType>
+     <xs:complexType name="publishModeQosPolicyType">
+         <xs:all>
+-            <xs:element name="kind" minOccurs="0" maxOccurs="1">
+-                <xs:simpleType>
+-                    <xs:restriction base="xs:string">
+-                        <xs:enumeration value="SYNCHRONOUS"/>
+-                        <xs:enumeration value="ASYNCHRONOUS"/>
+-                    </xs:restriction>
+-                </xs:simpleType>
+-            </xs:element>
++            <xs:element name="kind" type="publishModeQosKindPolicyType"/>
+             <xs:element name="flow_controller_name" type="string" minOccurs="0" maxOccurs="1"/>
+         </xs:all>
+     </xs:complexType>
++    <!-- ihmc-pub-sub end -->
+ 
+     <!--QoS Reliability:
+         ├ kind              [string] ("BEST_EFFORT", "RELIABLE")
+         └ max_blocking_time [durationType], -->
++    <!-- ihmc-pub-sub start -->
++    <xs:simpleType name="reliabilityQosKindPolicyType">
++        <xs:restriction base="xs:string">
++            <xs:enumeration value="BEST_EFFORT"/>
++            <xs:enumeration value="RELIABLE"/>
++        </xs:restriction>
++    </xs:simpleType>
++
+     <xs:complexType name="reliabilityQosPolicyType">
+         <xs:all>
+-            <xs:element name="kind" minOccurs="0" maxOccurs="1">
+-                <xs:simpleType>
+-                    <xs:restriction base="xs:string">
+-                        <xs:enumeration value="BEST_EFFORT"/>
+-                        <xs:enumeration value="RELIABLE"/>
+-                    </xs:restriction>
+-                </xs:simpleType>
+-            </xs:element>
++            <xs:element name="kind" type="reliabilityQosKindPolicyType" minOccurs="0"/>
+             <xs:element name="max_blocking_time" type="durationType" minOccurs="0" maxOccurs="1"/>
+         </xs:all>
+     </xs:complexType>
++    <!-- ihmc-pub-sub end -->
+ 
+     <!--QoS TimeBasedFilter:
+         └ minimum_separation [durationType], -->

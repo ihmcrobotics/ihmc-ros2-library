@@ -1,0 +1,8 @@
+module nested
+{
+	struct NestedElement
+	{
+		string stringTest;
+		long longTest;
+	};
+};
