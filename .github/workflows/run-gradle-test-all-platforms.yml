@@ -11,12 +11,6 @@ jobs:
         with:
           lfs: 'false'
           submodules: 'recursive'
-      - name: LFS checkout
-        run: |
-          git lfs install --local
-          git lfs fetch
-          git lfs pull
-          git lfs ls-files -l
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -35,12 +29,6 @@ jobs:
         with:
           lfs: 'false'
           submodules: 'recursive'
-      - name: LFS checkout
-        run: |
-          git lfs install --local
-          git lfs fetch
-          git lfs pull
-          git lfs ls-files -l
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -59,12 +47,6 @@ jobs:
         with:
           lfs: 'false'
           submodules: 'recursive'
-      - name: LFS checkout
-        run: |
-          git lfs install --local
-          git lfs fetch
-          git lfs pull
-          git lfs ls-files -l
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -83,12 +65,6 @@ jobs:
         with:
           lfs: 'false'
           submodules: 'recursive'
-      - name: LFS checkout
-        run: |
-          git lfs install --local
-          git lfs fetch
-          git lfs pull
-          git lfs ls-files -l
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
