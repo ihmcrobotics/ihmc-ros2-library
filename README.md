@@ -1,12 +1,8 @@
-# IHMC Java ROS 2 Communication
+# IHMC ROS2 Library
 
-[![Java CI with Gradle](https://github.com/ihmcrobotics/ihmc-java-ros2-communication/actions/workflows/gradle.yml/badge.svg)](https://github.com/ihmcrobotics/ihmc-java-ros2-communication/actions/workflows/gradle.yml)
+[![Java CI with Gradle](https://github.com/ihmcrobotics/ihmc-ros2-library/actions/workflows/gradle.yml/badge.svg)](https://github.com/ihmcrobotics/ihmc-ros2-library/actions/workflows/gradle.yml)
 
-ROS2 messaging for Java.
-
-## Introduction
-
-This library builds on [IHMC Pub Sub Group](https://github.com/ihmcrobotics/ihmc-pub-sub-group), an allocation free Java library for DDSI-RTPS messaging. It uses modified versions of [rosidl utilities](https://github.com/ros2/rosidl) to convert .msg files into Java types.
+ROS2 messaging for Java. Implements a ROS2 compatible layer with a Java JNI layer on top of Fast-DDS.
 
 ## Features
 
