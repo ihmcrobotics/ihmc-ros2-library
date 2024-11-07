@@ -2,8 +2,7 @@
 .project
 .settings
 bin
-out
-build/
+build
 build-java
 classes
 .gradle
@@ -13,9 +12,14 @@ hs_err_*
 *.autosave
 Win32
 .idea/
+**/out
 **/*.iml
 cmake-build-debug/
 swig/FastRTPS/generated/us/ihmc/rtps/impl/fastRTPS/FastRTPSJAVA_wrap.cxx
-**/pit-reports
+**/__pycache__
+**/*.kate-swp
+**/*\$py.class
+**/target
+**/*.pyc
+.vscode/
 **/rebel.xml
-IDLElementTest.idl.preprocessed
