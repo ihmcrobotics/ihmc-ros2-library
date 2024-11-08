@@ -7,6 +7,9 @@ module rcl_interfaces
   {
     module dds
     {
+      /**
+       * Default value, which implies this is not a valid parameter.
+       */
       const octet PARAMETER_NOT_SET =
       0;
 
@@ -38,6 +41,9 @@ module rcl_interfaces
       9;
 
 
+      /**
+       * These types correspond to the value that is set in the ParameterValue message.
+       */
       @TypeCode(type="rcl_interfaces::msg::dds_::ParameterType_")
       struct ParameterType
       {

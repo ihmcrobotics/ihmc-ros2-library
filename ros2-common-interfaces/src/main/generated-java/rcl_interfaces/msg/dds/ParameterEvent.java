@@ -8,18 +8,30 @@ import us.ihmc.pubsub.TopicDataType;
 
 /**
        * This message contains a parameter event.
-       * It was an atomic update.
-       * A specific parameter name can only be in one of the three sets.
+       * Because the parameter event was an atomic update, a specific parameter name
+       * can only be in one of the three sets.
        */
 public class ParameterEvent extends Packet<ParameterEvent> implements Settable<ParameterEvent>, EpsilonComparable<ParameterEvent>
 {
+   /**
+            * The time stamp when this parameter event occurred.
+            */
    public builtin_interfaces.msg.dds.Time stamp_;
    /**
-            * Fully qualified ROS path to node
+            * Fully qualified ROS path to node.
             */
    public java.lang.StringBuilder node_;
+   /**
+            * New parameters that have been set for this node.
+            */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.Parameter>  new_parameters_;
+   /**
+            * Parameters that have been changed during this event.
+            */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.Parameter>  changed_parameters_;
+   /**
+            * Parameters that have been deleted during this event.
+            */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.Parameter>  deleted_parameters_;
 
    public ParameterEvent()
@@ -50,13 +62,16 @@ public class ParameterEvent extends Packet<ParameterEvent> implements Settable<P
    }
 
 
+   /**
+            * The time stamp when this parameter event occurred.
+            */
    public builtin_interfaces.msg.dds.Time getStamp()
    {
       return stamp_;
    }
 
    /**
-            * Fully qualified ROS path to node
+            * Fully qualified ROS path to node.
             */
    public void setNode(java.lang.String node)
    {
@@ -65,14 +80,14 @@ public class ParameterEvent extends Packet<ParameterEvent> implements Settable<P
    }
 
    /**
-            * Fully qualified ROS path to node
+            * Fully qualified ROS path to node.
             */
    public java.lang.String getNodeAsString()
    {
       return getNode().toString();
    }
    /**
-            * Fully qualified ROS path to node
+            * Fully qualified ROS path to node.
             */
    public java.lang.StringBuilder getNode()
    {
@@ -80,18 +95,27 @@ public class ParameterEvent extends Packet<ParameterEvent> implements Settable<P
    }
 
 
+   /**
+            * New parameters that have been set for this node.
+            */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.Parameter>  getNewParameters()
    {
       return new_parameters_;
    }
 
 
+   /**
+            * Parameters that have been changed during this event.
+            */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.Parameter>  getChangedParameters()
    {
       return changed_parameters_;
    }
 
 
+   /**
+            * Parameters that have been deleted during this event.
+            */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.Parameter>  getDeletedParameters()
    {
       return deleted_parameters_;

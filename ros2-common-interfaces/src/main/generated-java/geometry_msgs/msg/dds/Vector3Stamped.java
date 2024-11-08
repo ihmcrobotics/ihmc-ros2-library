@@ -8,6 +8,8 @@ import us.ihmc.pubsub.TopicDataType;
 
 /**
        * This represents a Vector3 with reference coordinate frame and timestamp
+       * Note that this follows vector semantics with it always anchored at the origin,
+       * so the rotational elements of a transform are the only parts applied when transforming.
        */
 public class Vector3Stamped extends Packet<Vector3Stamped> implements Settable<Vector3Stamped>, EpsilonComparable<Vector3Stamped>
 {

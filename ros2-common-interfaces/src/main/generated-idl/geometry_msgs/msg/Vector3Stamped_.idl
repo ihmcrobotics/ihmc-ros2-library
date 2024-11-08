@@ -12,6 +12,8 @@ module geometry_msgs
 
       /**
        * This represents a Vector3 with reference coordinate frame and timestamp
+       * Note that this follows vector semantics with it always anchored at the origin,
+       * so the rotational elements of a transform are the only parts applied when transforming.
        */
       @TypeCode(type="geometry_msgs::msg::dds_::Vector3Stamped_")
       struct Vector3Stamped

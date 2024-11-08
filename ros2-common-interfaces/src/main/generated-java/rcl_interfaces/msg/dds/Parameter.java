@@ -7,12 +7,19 @@ import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
-       * This is the message to communicate a parameter.
-       * It is an open struct with an enum in the descriptor to select which value is active.
+       * This is the message to communicate a parameter. It is an open struct with an enum in
+       * the descriptor to select which value is active.
        */
 public class Parameter extends Packet<Parameter> implements Settable<Parameter>, EpsilonComparable<Parameter>
 {
+   /**
+            * The full name of the parameter.
+            */
    public java.lang.StringBuilder name_;
+   /**
+            * The parameter's value which can be one of several types, see
+            * `ParameterValue.msg` and `ParameterType.msg`.
+            */
    public rcl_interfaces.msg.dds.ParameterValue value_;
 
    public Parameter()
@@ -35,22 +42,35 @@ public class Parameter extends Packet<Parameter> implements Settable<Parameter>,
       rcl_interfaces.msg.dds.ParameterValuePubSubType.staticCopy(other.value_, value_);
    }
 
+   /**
+            * The full name of the parameter.
+            */
    public void setName(java.lang.String name)
    {
       name_.setLength(0);
       name_.append(name);
    }
 
+   /**
+            * The full name of the parameter.
+            */
    public java.lang.String getNameAsString()
    {
       return getName().toString();
    }
+   /**
+            * The full name of the parameter.
+            */
    public java.lang.StringBuilder getName()
    {
       return name_;
    }
 
 
+   /**
+            * The parameter's value which can be one of several types, see
+            * `ParameterValue.msg` and `ParameterType.msg`.
+            */
    public rcl_interfaces.msg.dds.ParameterValue getValue()
    {
       return value_;

@@ -1,0 +1,54 @@
+#ifndef __statistics_msgs__msg__StatisticDataType__idl__
+#define __statistics_msgs__msg__StatisticDataType__idl__
+
+module statistics_msgs
+{
+  module msg
+  {
+    module dds
+    {
+      /**
+       * Constant for uninitialized
+       */
+      const octet STATISTICS_DATA_TYPE_UNINITIALIZED =
+      0;
+
+      /**
+       * Allowed values
+       */
+      const octet STATISTICS_DATA_TYPE_AVERAGE =
+      1;
+
+      const octet STATISTICS_DATA_TYPE_MINIMUM =
+      2;
+
+      const octet STATISTICS_DATA_TYPE_MAXIMUM =
+      3;
+
+      const octet STATISTICS_DATA_TYPE_STDDEV =
+      4;
+
+      const octet STATISTICS_DATA_TYPE_SAMPLE_COUNT =
+      5;
+
+
+      /**
+       * ############################################
+       * This file contains the commonly used constants for the statistics data type.
+       * 
+       * The value 0 is reserved for unitialized statistic message data type.
+       * Range of values: [0, 255].
+       * Unallowed values: any value that is not specified in this file.
+       * 
+       * ############################################
+       */
+      @TypeCode(type="statistics_msgs::msg::dds_::StatisticDataType_")
+      struct StatisticDataType
+      {
+        boolean unused_placeholder_field;
+      };
+    };
+  };
+};
+
+#endif

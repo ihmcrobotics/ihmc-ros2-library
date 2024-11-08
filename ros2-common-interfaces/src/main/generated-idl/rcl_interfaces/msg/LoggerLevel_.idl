@@ -1,0 +1,48 @@
+#ifndef __rcl_interfaces__msg__LoggerLevel__idl__
+#define __rcl_interfaces__msg__LoggerLevel__idl__
+
+module rcl_interfaces
+{
+  module msg
+  {
+    module dds
+    {
+      const octet LOG_LEVEL_UNKNOWN =
+      0;
+
+      const octet LOG_LEVEL_DEBUG =
+      10;
+
+      const octet LOG_LEVEL_INFO =
+      20;
+
+      const octet LOG_LEVEL_WARN =
+      30;
+
+      const octet LOG_LEVEL_ERROR =
+      40;
+
+      const octet LOG_LEVEL_FATAL =
+      50;
+
+
+      /**
+       * All available logger levels; these correspond to the enum in rcutils/logger.h
+       */
+      @TypeCode(type="rcl_interfaces::msg::dds_::LoggerLevel_")
+      struct LoggerLevel
+      {
+        /**
+         * The logger name.
+         */
+        string name;
+        /**
+         * The logger level
+         */
+        unsigned long level;
+      };
+    };
+  };
+};
+
+#endif

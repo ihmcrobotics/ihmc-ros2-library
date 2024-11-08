@@ -8,9 +8,21 @@ import us.ihmc.pubsub.TopicDataType;
 
 public class TransitionEvent extends Packet<TransitionEvent> implements Settable<TransitionEvent>, EpsilonComparable<TransitionEvent>
 {
+   /**
+            * The time point at which this event occurred.
+            */
    public long timestamp_;
+   /**
+            * The id and label of this transition event.
+            */
    public lifecycle_msgs.msg.dds.Transition transition_;
+   /**
+            * The starting state from which this event transitioned.
+            */
    public lifecycle_msgs.msg.dds.State start_state_;
+   /**
+            * The end state of this transition event.
+            */
    public lifecycle_msgs.msg.dds.State goal_state_;
 
    public TransitionEvent()
@@ -35,28 +47,43 @@ public class TransitionEvent extends Packet<TransitionEvent> implements Settable
       lifecycle_msgs.msg.dds.StatePubSubType.staticCopy(other.goal_state_, goal_state_);
    }
 
+   /**
+            * The time point at which this event occurred.
+            */
    public void setTimestamp(long timestamp)
    {
       timestamp_ = timestamp;
    }
+   /**
+            * The time point at which this event occurred.
+            */
    public long getTimestamp()
    {
       return timestamp_;
    }
 
 
+   /**
+            * The id and label of this transition event.
+            */
    public lifecycle_msgs.msg.dds.Transition getTransition()
    {
       return transition_;
    }
 
 
+   /**
+            * The starting state from which this event transitioned.
+            */
    public lifecycle_msgs.msg.dds.State getStartState()
    {
       return start_state_;
    }
 
 
+   /**
+            * The end state of this transition event.
+            */
    public lifecycle_msgs.msg.dds.State getGoalState()
    {
       return goal_state_;

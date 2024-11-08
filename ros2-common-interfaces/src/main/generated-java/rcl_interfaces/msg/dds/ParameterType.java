@@ -6,8 +6,14 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
+/**
+       * These types correspond to the value that is set in the ParameterValue message.
+       */
 public class ParameterType extends Packet<ParameterType> implements Settable<ParameterType>, EpsilonComparable<ParameterType>
 {
+   /**
+          * Default value, which implies this is not a valid parameter.
+          */
    public static final byte PARAMETER_NOT_SET = (byte) 0;
    public static final byte PARAMETER_BOOL = (byte) 1;
    public static final byte PARAMETER_INTEGER = (byte) 2;

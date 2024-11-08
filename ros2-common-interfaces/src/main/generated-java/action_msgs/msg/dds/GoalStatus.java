@@ -6,25 +6,49 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
+/**
+       * An action goal can be in one of these states after it is accepted by an action
+       * server.
+       * 
+       * For more information, see http://design.ros2.org/articles/actions.html
+       */
 public class GoalStatus extends Packet<GoalStatus> implements Settable<GoalStatus>, EpsilonComparable<GoalStatus>
 {
    /**
-          * An action goal can be in one of these states after it is accepted by an action server.
-          * For more information, see http://design.ros2.org/articles/actions.html
+          * Indicates status has not been properly set.
           */
    public static final byte STATUS_UNKNOWN = (byte) 0;
+   /**
+          * The goal has been accepted and is awaiting execution.
+          */
    public static final byte STATUS_ACCEPTED = (byte) 1;
+   /**
+          * The goal is currently being executed by the action server.
+          */
    public static final byte STATUS_EXECUTING = (byte) 2;
+   /**
+          * The client has requested that the goal be canceled and the action server has
+          * accepted the cancel request.
+          */
    public static final byte STATUS_CANCELING = (byte) 3;
+   /**
+          * The goal was achieved successfully by the action server.
+          */
    public static final byte STATUS_SUCCEEDED = (byte) 4;
+   /**
+          * The goal was canceled after an external request from an action client.
+          */
    public static final byte STATUS_CANCELED = (byte) 5;
+   /**
+          * The goal was terminated by the action server without an external request.
+          */
    public static final byte STATUS_ABORTED = (byte) 6;
    /**
-            * Goal info (contains ID and timestamp)
+            * Goal info (contains ID and timestamp).
             */
    public action_msgs.msg.dds.GoalInfo goal_info_;
    /**
-            * Goal status
+            * Action goal state-machine status.
             */
    public byte status_;
 
@@ -48,7 +72,7 @@ public class GoalStatus extends Packet<GoalStatus> implements Settable<GoalStatu
 
 
    /**
-            * Goal info (contains ID and timestamp)
+            * Goal info (contains ID and timestamp).
             */
    public action_msgs.msg.dds.GoalInfo getGoalInfo()
    {
@@ -56,14 +80,14 @@ public class GoalStatus extends Packet<GoalStatus> implements Settable<GoalStatu
    }
 
    /**
-            * Goal status
+            * Action goal state-machine status.
             */
    public void setStatus(byte status)
    {
       status_ = status;
    }
    /**
-            * Goal status
+            * Action goal state-machine status.
             */
    public byte getStatus()
    {

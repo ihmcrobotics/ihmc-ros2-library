@@ -11,25 +11,25 @@ module visualization_msgs
   {
     module dds
     {
-      const octet CIRCLE =
+      const long CIRCLE =
       0;
 
-      const octet LINE_STRIP =
+      const long LINE_STRIP =
       1;
 
-      const octet LINE_LIST =
+      const long LINE_LIST =
       2;
 
-      const octet POLYGON =
+      const long POLYGON =
       3;
 
-      const octet POINTS =
+      const long POINTS =
       4;
 
-      const octet ADD =
+      const long ADD =
       0;
 
-      const octet REMOVE =
+      const long REMOVE =
       1;
 
 

@@ -19,9 +19,21 @@ module nav_msgs
       @TypeCode(type="nav_msgs::msg::dds_::Odometry_")
       struct Odometry
       {
+        /**
+         * Includes the frame id of the pose parent.
+         */
         std_msgs::msg::dds::Header header;
+        /**
+         * Frame id the pose points to. The twist is in this coordinate frame.
+         */
         string child_frame_id;
+        /**
+         * Estimated pose that is typically relative to a fixed world frame.
+         */
         geometry_msgs::msg::dds::PoseWithCovariance pose;
+        /**
+         * Estimated linear and angular velocity relative to child_frame_id.
+         */
         geometry_msgs::msg::dds::TwistWithCovariance twist;
       };
     };

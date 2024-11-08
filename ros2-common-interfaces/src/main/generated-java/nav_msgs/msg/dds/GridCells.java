@@ -12,8 +12,17 @@ import us.ihmc.pubsub.TopicDataType;
 public class GridCells extends Packet<GridCells> implements Settable<GridCells>, EpsilonComparable<GridCells>
 {
    public std_msgs.msg.dds.Header header_;
+   /**
+            * Width of each cell
+            */
    public float cell_width_;
+   /**
+            * Height of each cell
+            */
    public float cell_height_;
+   /**
+            * Each cell is represented by the Point at the center of the cell
+            */
    public us.ihmc.idl.IDLSequence.Object<us.ihmc.euclid.tuple3D.Point3D>  cells_;
 
    public GridCells()
@@ -45,25 +54,40 @@ public class GridCells extends Packet<GridCells> implements Settable<GridCells>,
       return header_;
    }
 
+   /**
+            * Width of each cell
+            */
    public void setCellWidth(float cell_width)
    {
       cell_width_ = cell_width;
    }
+   /**
+            * Width of each cell
+            */
    public float getCellWidth()
    {
       return cell_width_;
    }
 
+   /**
+            * Height of each cell
+            */
    public void setCellHeight(float cell_height)
    {
       cell_height_ = cell_height;
    }
+   /**
+            * Height of each cell
+            */
    public float getCellHeight()
    {
       return cell_height_;
    }
 
 
+   /**
+            * Each cell is represented by the Point at the center of the cell
+            */
    public us.ihmc.idl.IDLSequence.Object<us.ihmc.euclid.tuple3D.Point3D>  getCells()
    {
       return cells_;

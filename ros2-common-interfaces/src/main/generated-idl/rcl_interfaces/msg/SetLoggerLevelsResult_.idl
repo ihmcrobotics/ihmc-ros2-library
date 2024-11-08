@@ -1,0 +1,27 @@
+#ifndef __rcl_interfaces__msg__SetLoggerLevelsResult__idl__
+#define __rcl_interfaces__msg__SetLoggerLevelsResult__idl__
+
+module rcl_interfaces
+{
+  module msg
+  {
+    module dds
+    {
+
+      @TypeCode(type="rcl_interfaces::msg::dds_::SetLoggerLevelsResult_")
+      struct SetLoggerLevelsResult
+      {
+        /**
+         * True when succeed, false when failed.
+         */
+        boolean successful;
+        /**
+         * Reason why the setting was either successful or a failure.
+         */
+        string reason;
+      };
+    };
+  };
+};
+
+#endif

@@ -6,9 +6,20 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
+/**
+       * Duration defines a period between two time points.
+       * Messages of this datatype are of ROS Time following this design:
+       * https://design.ros2.org/articles/clock_and_time.html
+       */
 public class Duration extends Packet<Duration> implements Settable<Duration>, EpsilonComparable<Duration>
 {
+   /**
+            * Seconds component, range is valid over any possible int32 value.
+            */
    public int sec_;
+   /**
+            * Nanoseconds component in the range of [0, 1e9).
+            */
    public long nanosec_;
 
    public Duration()
@@ -29,19 +40,31 @@ public class Duration extends Packet<Duration> implements Settable<Duration>, Ep
 
    }
 
+   /**
+            * Seconds component, range is valid over any possible int32 value.
+            */
    public void setSec(int sec)
    {
       sec_ = sec;
    }
+   /**
+            * Seconds component, range is valid over any possible int32 value.
+            */
    public int getSec()
    {
       return sec_;
    }
 
+   /**
+            * Nanoseconds component in the range of [0, 1e9).
+            */
    public void setNanosec(long nanosec)
    {
       nanosec_ = nanosec;
    }
+   /**
+            * Nanoseconds component in the range of [0, 1e9).
+            */
    public long getNanosec()
    {
       return nanosec_;

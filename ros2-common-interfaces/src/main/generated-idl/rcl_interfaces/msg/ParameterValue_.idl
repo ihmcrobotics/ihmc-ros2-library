@@ -12,23 +12,53 @@ module rcl_interfaces
        * Used to determine which of the next *_value fields are set.
        * ParameterType.PARAMETER_NOT_SET indicates that the parameter was not set
        * (if gotten) or is uninitialized.
-       * Values are enumerated in ParameterType.msg
+       * Values are enumerated in `ParameterType.msg`.
+       * "Variant" style storage of the parameter value. Only the value corresponding
+       * the type field will have valid information.
        */
       @TypeCode(type="rcl_interfaces::msg::dds_::ParameterValue_")
       struct ParameterValue
       {
+        /**
+         * The type of this parameter, which corresponds to the appropriate field below.
+         */
         octet type;
         /**
-         * "Variant" style storage of the parameter value.
+         * Boolean value, can be either true or false.
          */
         boolean bool_value;
+        /**
+         * Integer value ranging from -9,223,372,036,854,775,808 to
+         * 9,223,372,036,854,775,807.
+         */
         long long integer_value;
+        /**
+         * A double precision floating point value following IEEE 754.
+         */
         double double_value;
+        /**
+         * A textual value with no practical length limit.
+         */
         string string_value;
+        /**
+         * An array of bytes, used for non-textual information.
+         */
         sequence<octet> byte_array_value;
+        /**
+         * An array of boolean values.
+         */
         sequence<boolean> bool_array_value;
+        /**
+         * An array of 64-bit integer values.
+         */
         sequence<long long> integer_array_value;
+        /**
+         * An array of 64-bit floating point values.
+         */
         sequence<double> double_array_value;
+        /**
+         * An array of string values.
+         */
         sequence<string> string_array_value;
       };
     };

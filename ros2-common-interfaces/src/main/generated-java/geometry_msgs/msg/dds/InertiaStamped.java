@@ -6,6 +6,9 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
+/**
+       * An Inertia with a time stamp and reference frame.
+       */
 public class InertiaStamped extends Packet<InertiaStamped> implements Settable<InertiaStamped>, EpsilonComparable<InertiaStamped>
 {
    public std_msgs.msg.dds.Header header_;

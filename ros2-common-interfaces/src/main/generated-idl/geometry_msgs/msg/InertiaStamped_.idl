@@ -10,6 +10,9 @@ module geometry_msgs
     module dds
     {
 
+      /**
+       * An Inertia with a time stamp and reference frame.
+       */
       @TypeCode(type="geometry_msgs::msg::dds_::InertiaStamped_")
       struct InertiaStamped
       {

@@ -16,7 +16,13 @@ module nav_msgs
       @TypeCode(type="nav_msgs::msg::dds_::Path_")
       struct Path
       {
+        /**
+         * Indicates the frame_id of the path.
+         */
         std_msgs::msg::dds::Header header;
+        /**
+         * Array of poses to follow.
+         */
         sequence<geometry_msgs::msg::dds::PoseStamped> poses;
       };
     };

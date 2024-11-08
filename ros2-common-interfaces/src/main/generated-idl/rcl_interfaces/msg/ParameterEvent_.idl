@@ -12,19 +12,31 @@ module rcl_interfaces
 
       /**
        * This message contains a parameter event.
-       * It was an atomic update.
-       * A specific parameter name can only be in one of the three sets.
+       * Because the parameter event was an atomic update, a specific parameter name
+       * can only be in one of the three sets.
        */
       @TypeCode(type="rcl_interfaces::msg::dds_::ParameterEvent_")
       struct ParameterEvent
       {
+        /**
+         * The time stamp when this parameter event occurred.
+         */
         builtin_interfaces::msg::dds::Time stamp;
         /**
-         * Fully qualified ROS path to node
+         * Fully qualified ROS path to node.
          */
         string node;
+        /**
+         * New parameters that have been set for this node.
+         */
         sequence<rcl_interfaces::msg::dds::Parameter> new_parameters;
+        /**
+         * Parameters that have been changed during this event.
+         */
         sequence<rcl_interfaces::msg::dds::Parameter> changed_parameters;
+        /**
+         * Parameters that have been deleted during this event.
+         */
         sequence<rcl_interfaces::msg::dds::Parameter> deleted_parameters;
       };
     };

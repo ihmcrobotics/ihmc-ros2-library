@@ -13,7 +13,7 @@ module action_msgs
       struct GoalStatusArray
       {
         /**
-         * An array of goal statuses
+         * An array of goal statuses.
          */
         sequence<action_msgs::msg::dds::GoalStatus> status_list;
       };

@@ -9,40 +9,64 @@ module action_msgs
     module dds
     {
       /**
-       * An action goal can be in one of these states after it is accepted by an action server.
-       * For more information, see http://design.ros2.org/articles/actions.html
+       * Indicates status has not been properly set.
        */
       const octet STATUS_UNKNOWN =
       0;
 
+      /**
+       * The goal has been accepted and is awaiting execution.
+       */
       const octet STATUS_ACCEPTED =
       1;
 
+      /**
+       * The goal is currently being executed by the action server.
+       */
       const octet STATUS_EXECUTING =
       2;
 
+      /**
+       * The client has requested that the goal be canceled and the action server has
+       * accepted the cancel request.
+       */
       const octet STATUS_CANCELING =
       3;
 
+      /**
+       * The goal was achieved successfully by the action server.
+       */
       const octet STATUS_SUCCEEDED =
       4;
 
+      /**
+       * The goal was canceled after an external request from an action client.
+       */
       const octet STATUS_CANCELED =
       5;
 
+      /**
+       * The goal was terminated by the action server without an external request.
+       */
       const octet STATUS_ABORTED =
       6;
 
 
+      /**
+       * An action goal can be in one of these states after it is accepted by an action
+       * server.
+       * 
+       * For more information, see http://design.ros2.org/articles/actions.html
+       */
       @TypeCode(type="action_msgs::msg::dds_::GoalStatus_")
       struct GoalStatus
       {
         /**
-         * Goal info (contains ID and timestamp)
+         * Goal info (contains ID and timestamp).
          */
         action_msgs::msg::dds::GoalInfo goal_info;
         /**
-         * Goal status
+         * Action goal state-machine status.
          */
         octet status;
       };

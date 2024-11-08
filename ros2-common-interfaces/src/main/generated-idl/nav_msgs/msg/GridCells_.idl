@@ -17,8 +17,17 @@ module nav_msgs
       struct GridCells
       {
         std_msgs::msg::dds::Header header;
+        /**
+         * Width of each cell
+         */
         float cell_width;
+        /**
+         * Height of each cell
+         */
         float cell_height;
+        /**
+         * Each cell is represented by the Point at the center of the cell
+         */
         sequence<geometry_msgs::msg::dds::Point> cells;
       };
     };

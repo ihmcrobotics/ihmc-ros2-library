@@ -21,6 +21,7 @@ public class PointField extends Packet<PointField> implements Settable<PointFiel
    public static final byte FLOAT32 = (byte) 7;
    public static final byte FLOAT64 = (byte) 8;
    /**
+            * Common PointField names are x, y, z, intensity, rgb, rgba
             * Name of field
             */
    public java.lang.StringBuilder name_;
@@ -62,6 +63,7 @@ public class PointField extends Packet<PointField> implements Settable<PointFiel
    }
 
    /**
+            * Common PointField names are x, y, z, intensity, rgb, rgba
             * Name of field
             */
    public void setName(java.lang.String name)
@@ -71,6 +73,7 @@ public class PointField extends Packet<PointField> implements Settable<PointFiel
    }
 
    /**
+            * Common PointField names are x, y, z, intensity, rgb, rgba
             * Name of field
             */
    public java.lang.String getNameAsString()
@@ -78,6 +81,7 @@ public class PointField extends Packet<PointField> implements Settable<PointFiel
       return getName().toString();
    }
    /**
+            * Common PointField names are x, y, z, intensity, rgb, rgba
             * Name of field
             */
    public java.lang.StringBuilder getName()

@@ -13,9 +13,21 @@ module lifecycle_msgs
       @TypeCode(type="lifecycle_msgs::msg::dds_::TransitionEvent_")
       struct TransitionEvent
       {
+        /**
+         * The time point at which this event occurred.
+         */
         unsigned long long timestamp;
+        /**
+         * The id and label of this transition event.
+         */
         lifecycle_msgs::msg::dds::Transition transition;
+        /**
+         * The starting state from which this event transitioned.
+         */
         lifecycle_msgs::msg::dds::State start_state;
+        /**
+         * The end state of this transition event.
+         */
         lifecycle_msgs::msg::dds::State goal_state;
       };
     };

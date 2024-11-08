@@ -8,8 +8,17 @@ import us.ihmc.pubsub.TopicDataType;
 
 public class TransitionDescription extends Packet<TransitionDescription> implements Settable<TransitionDescription>, EpsilonComparable<TransitionDescription>
 {
+   /**
+            * The transition id and label of this description.
+            */
    public lifecycle_msgs.msg.dds.Transition transition_;
+   /**
+            * The current state from which this transition transitions.
+            */
    public lifecycle_msgs.msg.dds.State start_state_;
+   /**
+            * The desired target state of this transition.
+            */
    public lifecycle_msgs.msg.dds.State goal_state_;
 
    public TransitionDescription()
@@ -33,18 +42,27 @@ public class TransitionDescription extends Packet<TransitionDescription> impleme
    }
 
 
+   /**
+            * The transition id and label of this description.
+            */
    public lifecycle_msgs.msg.dds.Transition getTransition()
    {
       return transition_;
    }
 
 
+   /**
+            * The current state from which this transition transitions.
+            */
    public lifecycle_msgs.msg.dds.State getStartState()
    {
       return start_state_;
    }
 
 
+   /**
+            * The desired target state of this transition.
+            */
    public lifecycle_msgs.msg.dds.State getGoalState()
    {
       return goal_state_;

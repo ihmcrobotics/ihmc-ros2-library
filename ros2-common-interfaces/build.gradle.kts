@@ -15,14 +15,14 @@ val rclInterfacesPath = "src/main/vendor/rcl_interfaces"
 val rclInterfacesUrl = "https://github.com/ros2/rcl_interfaces.git"
 val commonInterfacesPath = "src/main/vendor/common_interfaces"
 val commonInterfacesUrl = "https://github.com/ros2/common_interfaces.git"
-val ros2Release = "0.8.0"
+val ros2Release = "2.2.0"
 val geometry2Path = "src/main/vendor/geometry2"
 val tf2Path = "src/main/vendor/geometry2/tf2_msgs"
 val geometry2Url = "https://github.com/ros2/geometry2.git"
-val geomtry2Release = "0.12.0"
+val geomtry2Release = "0.39.1"
 val uuidPath = "src/main/vendor/unique_identifier_msgs"
 val uuidUrl = "https://github.com/ros2/unique_identifier_msgs.git"
-val uuidRelease = "2.1.0"
+val uuidRelease = "2.7.0"
 
 ihmc {
    loadProductProperties("../group.gradle.properties")

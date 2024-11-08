@@ -15,22 +15,22 @@ import us.ihmc.pubsub.TopicDataType;
        */
 public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonComparable<Marker>
 {
-   public static final byte ARROW = (byte) 0;
-   public static final byte CUBE = (byte) 1;
-   public static final byte SPHERE = (byte) 2;
-   public static final byte CYLINDER = (byte) 3;
-   public static final byte LINE_STRIP = (byte) 4;
-   public static final byte LINE_LIST = (byte) 5;
-   public static final byte CUBE_LIST = (byte) 6;
-   public static final byte SPHERE_LIST = (byte) 7;
-   public static final byte POINTS = (byte) 8;
-   public static final byte TEXT_VIEW_FACING = (byte) 9;
-   public static final byte MESH_RESOURCE = (byte) 10;
-   public static final byte TRIANGLE_LIST = (byte) 11;
-   public static final byte ADD = (byte) 0;
-   public static final byte MODIFY = (byte) 0;
-   public static final byte DELETE = (byte) 2;
-   public static final byte DELETEALL = (byte) 3;
+   public static final int ARROW = 0;
+   public static final int CUBE = 1;
+   public static final int SPHERE = 2;
+   public static final int CYLINDER = 3;
+   public static final int LINE_STRIP = 4;
+   public static final int LINE_LIST = 5;
+   public static final int CUBE_LIST = 6;
+   public static final int SPHERE_LIST = 7;
+   public static final int POINTS = 8;
+   public static final int TEXT_VIEW_FACING = 9;
+   public static final int MESH_RESOURCE = 10;
+   public static final int TRIANGLE_LIST = 11;
+   public static final int ADD = 0;
+   public static final int MODIFY = 0;
+   public static final int DELETE = 2;
+   public static final int DELETEALL = 3;
    /**
             * Header for timestamp and frame id.
             */

@@ -1,0 +1,53 @@
+#ifndef __service_msgs__msg__ServiceEventInfo__idl__
+#define __service_msgs__msg__ServiceEventInfo__idl__
+
+#include "builtin_interfaces/msg/./Time_.idl"
+module service_msgs
+{
+  module msg
+  {
+    module dds
+    {
+      const octet REQUEST_SENT =
+      0;
+
+      const octet REQUEST_RECEIVED =
+      1;
+
+      const octet RESPONSE_SENT =
+      2;
+
+      const octet RESPONSE_RECEIVED =
+      3;
+
+
+      @TypeCode(type="service_msgs::msg::dds_::ServiceEventInfo_")
+      struct ServiceEventInfo
+      {
+        /**
+         * The type of event this message represents
+         */
+        octet event_type;
+        /**
+         * Timestamp for when the event occurred (sent or received time)
+         */
+        builtin_interfaces::msg::dds::Time stamp;
+        /**
+         * Unique identifier for the client that sent the service request
+         * Note, this is only unique for the current session.
+         * The size here has to match the size of rmw_dds_common/msg/Gid,
+         * but unfortunately we cannot use that message directly due to a
+         * circular dependency.
+         */
+        char client_gid[16];
+        /**
+         * Sequence number for the request
+         * Combined with the client ID, this creates a unique ID for the service transaction
+         */
+        long long sequence_number;
+      };
+    };
+  };
+};
+
+#endif

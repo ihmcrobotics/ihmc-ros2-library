@@ -15,7 +15,7 @@ ihmc {
 }
 
 mainDependencies {
-   api("org.glassfish:javax.json:1.0.4")
+   api("org.glassfish:javax.json:1.1.4")
    api("org.python:jython-standalone:2.7.1")
    api("com.sun.xml.bind:jaxb-impl:4.0.5")
 }

@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
-       * This hold basic information about the characterists of the OccupancyGrid
+       * This hold basic information about the characteristics of the OccupancyGrid
        */
 public class MapMetaData extends Packet<MapMetaData> implements Settable<MapMetaData>, EpsilonComparable<MapMetaData>
 {
@@ -29,7 +29,7 @@ public class MapMetaData extends Packet<MapMetaData> implements Settable<MapMeta
    public long height_;
    /**
             * The origin of the map [m, m, rad].  This is the real-world pose of the
-            * cell (0,0) in the map.
+            * bottom left corner of cell (0,0) in the map.
             */
    public us.ihmc.euclid.geometry.Pose3D origin_;
 
@@ -114,7 +114,7 @@ public class MapMetaData extends Packet<MapMetaData> implements Settable<MapMeta
 
    /**
             * The origin of the map [m, m, rad].  This is the real-world pose of the
-            * cell (0,0) in the map.
+            * bottom left corner of cell (0,0) in the map.
             */
    public us.ihmc.euclid.geometry.Pose3D getOrigin()
    {

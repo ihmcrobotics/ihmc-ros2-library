@@ -15,7 +15,7 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "0ba89abfd0b4563ffa4e28e58e39205ad6155e74820d864e2f95e224515d9685";
+   		return "376a27a22789587188d03dc275c6964eac008f399bdc7dd3e70a8820ee849b23";
    }
    
    @Override
