@@ -11,7 +11,13 @@ import us.ihmc.pubsub.TopicDataType;
        */
 public class Path extends Packet<Path> implements Settable<Path>, EpsilonComparable<Path>
 {
+   /**
+            * Indicates the frame_id of the path.
+            */
    public std_msgs.msg.dds.Header header_;
+   /**
+            * Array of poses to follow.
+            */
    public us.ihmc.idl.IDLSequence.Object<geometry_msgs.msg.dds.PoseStamped>  poses_;
 
    public Path()
@@ -34,12 +40,18 @@ public class Path extends Packet<Path> implements Settable<Path>, EpsilonCompara
    }
 
 
+   /**
+            * Indicates the frame_id of the path.
+            */
    public std_msgs.msg.dds.Header getHeader()
    {
       return header_;
    }
 
 
+   /**
+            * Array of poses to follow.
+            */
    public us.ihmc.idl.IDLSequence.Object<geometry_msgs.msg.dds.PoseStamped>  getPoses()
    {
       return poses_;

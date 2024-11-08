@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
+       * # THIS MESSAGE IS DEPRECATED AS OF FOXY
+       * # Please use sensor_msgs/PointCloud2
        * This message holds a collection of 3d points, plus optional additional
        * information about each point.
        */

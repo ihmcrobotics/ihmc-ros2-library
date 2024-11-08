@@ -8,13 +8,13 @@ import us.ihmc.pubsub.TopicDataType;
 
 public class ImageMarker extends Packet<ImageMarker> implements Settable<ImageMarker>, EpsilonComparable<ImageMarker>
 {
-   public static final byte CIRCLE = (byte) 0;
-   public static final byte LINE_STRIP = (byte) 1;
-   public static final byte LINE_LIST = (byte) 2;
-   public static final byte POLYGON = (byte) 3;
-   public static final byte POINTS = (byte) 4;
-   public static final byte ADD = (byte) 0;
-   public static final byte REMOVE = (byte) 1;
+   public static final int CIRCLE = 0;
+   public static final int LINE_STRIP = 1;
+   public static final int LINE_LIST = 2;
+   public static final int POLYGON = 3;
+   public static final int POINTS = 4;
+   public static final int ADD = 0;
+   public static final int REMOVE = 1;
    public std_msgs.msg.dds.Header header_;
    /**
             * Namespace which is used with the id to form a unique id.

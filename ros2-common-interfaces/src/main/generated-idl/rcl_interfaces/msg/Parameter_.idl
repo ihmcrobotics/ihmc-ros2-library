@@ -10,13 +10,20 @@ module rcl_interfaces
     {
 
       /**
-       * This is the message to communicate a parameter.
-       * It is an open struct with an enum in the descriptor to select which value is active.
+       * This is the message to communicate a parameter. It is an open struct with an enum in
+       * the descriptor to select which value is active.
        */
       @TypeCode(type="rcl_interfaces::msg::dds_::Parameter_")
       struct Parameter
       {
+        /**
+         * The full name of the parameter.
+         */
         string name;
+        /**
+         * The parameter's value which can be one of several types, see
+         * `ParameterValue.msg` and `ParameterType.msg`.
+         */
         rcl_interfaces::msg::dds::ParameterValue value;
       };
     };

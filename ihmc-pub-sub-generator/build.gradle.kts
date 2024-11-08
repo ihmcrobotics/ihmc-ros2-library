@@ -2,7 +2,6 @@ plugins {
    id("us.ihmc.ihmc-build")
    id("us.ihmc.ihmc-ci") version "8.3"
    id("us.ihmc.ihmc-cd") version "1.26"
-   id("com.github.hierynomus.license") version "0.14.0"
 }
 
 ihmc {
@@ -20,7 +19,7 @@ app.entrypoint("IDLGenerator", "us.ihmc.idl.generator.IDLGenerator")
 mainDependencies {
    api(dependencies.gradleApi())
    api("us.ihmc:eprosima-idl-parser:source")
-   api("org.anarres:jcpp:1.4.12")
+   api("org.anarres:jcpp:1.4.14")
    api("us.ihmc:euclid:0.22.2")
    api("commons-codec:commons-codec:1.15")
 }

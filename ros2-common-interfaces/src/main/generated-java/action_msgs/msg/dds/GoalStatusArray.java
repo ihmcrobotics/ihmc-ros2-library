@@ -9,7 +9,7 @@ import us.ihmc.pubsub.TopicDataType;
 public class GoalStatusArray extends Packet<GoalStatusArray> implements Settable<GoalStatusArray>, EpsilonComparable<GoalStatusArray>
 {
    /**
-            * An array of goal statuses
+            * An array of goal statuses.
             */
    public us.ihmc.idl.IDLSequence.Object<action_msgs.msg.dds.GoalStatus>  status_list_;
 
@@ -32,7 +32,7 @@ public class GoalStatusArray extends Packet<GoalStatusArray> implements Settable
 
 
    /**
-            * An array of goal statuses
+            * An array of goal statuses.
             */
    public us.ihmc.idl.IDLSequence.Object<action_msgs.msg.dds.GoalStatus>  getStatusList()
    {

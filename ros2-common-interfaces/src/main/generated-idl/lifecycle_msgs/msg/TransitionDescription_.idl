@@ -13,8 +13,17 @@ module lifecycle_msgs
       @TypeCode(type="lifecycle_msgs::msg::dds_::TransitionDescription_")
       struct TransitionDescription
       {
+        /**
+         * The transition id and label of this description.
+         */
         lifecycle_msgs::msg::dds::Transition transition;
+        /**
+         * The current state from which this transition transitions.
+         */
         lifecycle_msgs::msg::dds::State start_state;
+        /**
+         * The desired target state of this transition.
+         */
         lifecycle_msgs::msg::dds::State goal_state;
       };
     };

@@ -9,13 +9,13 @@ import us.ihmc.pubsub.TopicDataType;
 public class SetParametersResult extends Packet<SetParametersResult> implements Settable<SetParametersResult>, EpsilonComparable<SetParametersResult>
 {
    /**
-            * A true value of the same index indicates that the parameter was set successfully.
-            * A false value indicates the change was rejected.
+            * A true value of the same index indicates that the parameter was set
+            * successfully. A false value indicates the change was rejected.
             */
    public boolean successful_;
    /**
-            * Reason why the setting was either successful or a failure.
-            * Should only be used for logging and user interfaces.
+            * Reason why the setting was a failure. On success, the contents of this field
+            * are undefined.  This should only be used for logging and user interfaces.
             */
    public java.lang.StringBuilder reason_;
 
@@ -40,16 +40,16 @@ public class SetParametersResult extends Packet<SetParametersResult> implements 
    }
 
    /**
-            * A true value of the same index indicates that the parameter was set successfully.
-            * A false value indicates the change was rejected.
+            * A true value of the same index indicates that the parameter was set
+            * successfully. A false value indicates the change was rejected.
             */
    public void setSuccessful(boolean successful)
    {
       successful_ = successful;
    }
    /**
-            * A true value of the same index indicates that the parameter was set successfully.
-            * A false value indicates the change was rejected.
+            * A true value of the same index indicates that the parameter was set
+            * successfully. A false value indicates the change was rejected.
             */
    public boolean getSuccessful()
    {
@@ -57,8 +57,8 @@ public class SetParametersResult extends Packet<SetParametersResult> implements 
    }
 
    /**
-            * Reason why the setting was either successful or a failure.
-            * Should only be used for logging and user interfaces.
+            * Reason why the setting was a failure. On success, the contents of this field
+            * are undefined.  This should only be used for logging and user interfaces.
             */
    public void setReason(java.lang.String reason)
    {
@@ -67,16 +67,16 @@ public class SetParametersResult extends Packet<SetParametersResult> implements 
    }
 
    /**
-            * Reason why the setting was either successful or a failure.
-            * Should only be used for logging and user interfaces.
+            * Reason why the setting was a failure. On success, the contents of this field
+            * are undefined.  This should only be used for logging and user interfaces.
             */
    public java.lang.String getReasonAsString()
    {
       return getReason().toString();
    }
    /**
-            * Reason why the setting was either successful or a failure.
-            * Should only be used for logging and user interfaces.
+            * Reason why the setting was a failure. On success, the contents of this field
+            * are undefined.  This should only be used for logging and user interfaces.
             */
    public java.lang.StringBuilder getReason()
    {

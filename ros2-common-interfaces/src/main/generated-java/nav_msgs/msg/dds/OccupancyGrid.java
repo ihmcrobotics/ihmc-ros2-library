@@ -6,19 +6,23 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
-/**
-       * This represents a 2-D grid map, in which each cell represents the probability of occupancy.
-       */
 public class OccupancyGrid extends Packet<OccupancyGrid> implements Settable<OccupancyGrid>, EpsilonComparable<OccupancyGrid>
 {
+   /**
+            * This represents a 2-D grid map
+            */
    public std_msgs.msg.dds.Header header_;
    /**
             * MetaData for the map
             */
    public nav_msgs.msg.dds.MapMetaData info_;
    /**
-            * The map data, in row-major order, starting with (0,0).  Occupancy
-            * probabilities are in the range [0,100].  Unknown is -1.
+            * The map data, in row-major order, starting with (0,0).
+            * Cell (1, 0) will be listed second, representing the next cell in the x direction.
+            * Cell (0, 1) will be at the index equal to info.width, followed by (1, 1).
+            * The values inside are application dependent, but frequently,
+            * 0 represents unoccupied, 1 represents definitely occupied, and
+            * -1 represents unknown.
             */
    public us.ihmc.idl.IDLSequence.Byte  data_;
 
@@ -44,6 +48,9 @@ public class OccupancyGrid extends Packet<OccupancyGrid> implements Settable<Occ
    }
 
 
+   /**
+            * This represents a 2-D grid map
+            */
    public std_msgs.msg.dds.Header getHeader()
    {
       return header_;
@@ -60,8 +67,12 @@ public class OccupancyGrid extends Packet<OccupancyGrid> implements Settable<Occ
 
 
    /**
-            * The map data, in row-major order, starting with (0,0).  Occupancy
-            * probabilities are in the range [0,100].  Unknown is -1.
+            * The map data, in row-major order, starting with (0,0).
+            * Cell (1, 0) will be listed second, representing the next cell in the x direction.
+            * Cell (0, 1) will be at the index equal to info.width, followed by (1, 1).
+            * The values inside are application dependent, but frequently,
+            * 0 represents unoccupied, 1 represents definitely occupied, and
+            * -1 represents unknown.
             */
    public us.ihmc.idl.IDLSequence.Byte  getData()
    {

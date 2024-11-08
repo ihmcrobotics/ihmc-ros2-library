@@ -1,0 +1,36 @@
+#ifndef __type_description_interfaces__msg__Field__idl__
+#define __type_description_interfaces__msg__Field__idl__
+
+#include "type_description_interfaces/msg/./FieldType_.idl"
+module type_description_interfaces
+{
+  module msg
+  {
+    module dds
+    {
+
+      /**
+       * Represents a single field in a type.
+       */
+      @TypeCode(type="type_description_interfaces::msg::dds_::Field_")
+      struct Field
+      {
+        /**
+         * Name of the field.
+         */
+        string name;
+        /**
+         * Type of the field, including details about the type like length, nested name, etc.
+         */
+        type_description_interfaces::msg::dds::FieldType type;
+        /**
+         * Literal default value of the field as a string, as it appeared in the original
+         * message description file, whether that be .msg/.srv/.action or .idl.
+         */
+        string default_value;
+      };
+    };
+  };
+};
+
+#endif

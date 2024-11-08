@@ -26,6 +26,9 @@ module trajectory_msgs
          * There can be an acceleration specified for the origin of the joint.
          */
         sequence<geometry_msgs::msg::dds::Twist> accelerations;
+        /**
+         * Desired time from the trajectory start to arrive at this trajectory point.
+         */
         builtin_interfaces::msg::dds::Duration time_from_start;
       };
     };

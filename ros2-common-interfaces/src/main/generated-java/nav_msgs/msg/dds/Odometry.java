@@ -13,9 +13,21 @@ import us.ihmc.pubsub.TopicDataType;
        */
 public class Odometry extends Packet<Odometry> implements Settable<Odometry>, EpsilonComparable<Odometry>
 {
+   /**
+            * Includes the frame id of the pose parent.
+            */
    public std_msgs.msg.dds.Header header_;
+   /**
+            * Frame id the pose points to. The twist is in this coordinate frame.
+            */
    public java.lang.StringBuilder child_frame_id_;
+   /**
+            * Estimated pose that is typically relative to a fixed world frame.
+            */
    public geometry_msgs.msg.dds.PoseWithCovariance pose_;
+   /**
+            * Estimated linear and angular velocity relative to child_frame_id.
+            */
    public geometry_msgs.msg.dds.TwistWithCovariance twist_;
 
    public Odometry()
@@ -43,33 +55,51 @@ public class Odometry extends Packet<Odometry> implements Settable<Odometry>, Ep
    }
 
 
+   /**
+            * Includes the frame id of the pose parent.
+            */
    public std_msgs.msg.dds.Header getHeader()
    {
       return header_;
    }
 
+   /**
+            * Frame id the pose points to. The twist is in this coordinate frame.
+            */
    public void setChildFrameId(java.lang.String child_frame_id)
    {
       child_frame_id_.setLength(0);
       child_frame_id_.append(child_frame_id);
    }
 
+   /**
+            * Frame id the pose points to. The twist is in this coordinate frame.
+            */
    public java.lang.String getChildFrameIdAsString()
    {
       return getChildFrameId().toString();
    }
+   /**
+            * Frame id the pose points to. The twist is in this coordinate frame.
+            */
    public java.lang.StringBuilder getChildFrameId()
    {
       return child_frame_id_;
    }
 
 
+   /**
+            * Estimated pose that is typically relative to a fixed world frame.
+            */
    public geometry_msgs.msg.dds.PoseWithCovariance getPose()
    {
       return pose_;
    }
 
 
+   /**
+            * Estimated linear and angular velocity relative to child_frame_id.
+            */
    public geometry_msgs.msg.dds.TwistWithCovariance getTwist()
    {
       return twist_;

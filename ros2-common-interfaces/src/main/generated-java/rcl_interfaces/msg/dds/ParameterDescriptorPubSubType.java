@@ -15,7 +15,7 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "513ec27b4110e4ce5aab7736dacb3c0b608a47f1bacc1fdb890e318cd971978a";
+   		return "40e3e6da784b1a95c192ff618ab503f974684098008b1c8bfbf210b89d6e0546";
    }
    
    @Override
@@ -59,6 +59,8 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
+      current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 1; ++i0)
       {
           current_alignment += rcl_interfaces.msg.dds.FloatingPointRangePubSubType.getMaxCdrSerializedSize(current_alignment);}
@@ -86,6 +88,9 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getDescription().length() + 1;
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getAdditionalConstraints().length() + 1;
+
+      current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+
 
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
@@ -122,6 +127,8 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
 
       cdr.write_type_7(data.getReadOnly());
 
+      cdr.write_type_7(data.getDynamicTyping());
+
       if(data.getFloatingPointRange().size() <= 1)
       cdr.write_type_e(data.getFloatingPointRange());else
           throw new RuntimeException("floating_point_range field exceeds the maximum length");
@@ -141,6 +148,8 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
       cdr.read_type_d(data.getAdditionalConstraints());	
       data.setReadOnly(cdr.read_type_7());
       	
+      data.setDynamicTyping(cdr.read_type_7());
+      	
       cdr.read_type_e(data.getFloatingPointRange());	
       cdr.read_type_e(data.getIntegerRange());	
 
@@ -154,6 +163,7 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
       ser.write_type_d("description", data.getDescription());
       ser.write_type_d("additional_constraints", data.getAdditionalConstraints());
       ser.write_type_7("read_only", data.getReadOnly());
+      ser.write_type_7("dynamic_typing", data.getDynamicTyping());
       ser.write_type_e("floating_point_range", data.getFloatingPointRange());
       ser.write_type_e("integer_range", data.getIntegerRange());
    }
@@ -166,6 +176,7 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
       ser.read_type_d("description", data.getDescription());
       ser.read_type_d("additional_constraints", data.getAdditionalConstraints());
       data.setReadOnly(ser.read_type_7("read_only"));
+      data.setDynamicTyping(ser.read_type_7("dynamic_typing"));
       ser.read_type_e("floating_point_range", data.getFloatingPointRange());
       ser.read_type_e("integer_range", data.getIntegerRange());
    }

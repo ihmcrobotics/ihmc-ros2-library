@@ -13,10 +13,33 @@ import us.ihmc.pubsub.TopicDataType;
        */
 public class JointTrajectoryPoint extends Packet<JointTrajectoryPoint> implements Settable<JointTrajectoryPoint>, EpsilonComparable<JointTrajectoryPoint>
 {
+   /**
+            * Single DOF joint positions for each joint relative to their "0" position.
+            * The units depend on the specific joint type: radians for revolute or
+            * continuous joints, and meters for prismatic joints.
+            */
    public us.ihmc.idl.IDLSequence.Double  positions_;
+   /**
+            * The rate of change in position of each joint. Units are joint type dependent.
+            * Radians/second for revolute or continuous joints, and meters/second for
+            * prismatic joints.
+            */
    public us.ihmc.idl.IDLSequence.Double  velocities_;
+   /**
+            * Rate of change in velocity of each joint. Units are joint type dependent.
+            * Radians/second^2 for revolute or continuous joints, and meters/second^2 for
+            * prismatic joints.
+            */
    public us.ihmc.idl.IDLSequence.Double  accelerations_;
+   /**
+            * The torque or the force to be applied at each joint. For revolute/continuous
+            * joints effort denotes a torque in newton-meters. For prismatic joints, effort
+            * denotes a force in newtons.
+            */
    public us.ihmc.idl.IDLSequence.Double  effort_;
+   /**
+            * Desired time from the trajectory start to arrive at this trajectory point.
+            */
    public builtin_interfaces.msg.dds.Duration time_from_start_;
 
    public JointTrajectoryPoint()
@@ -48,30 +71,53 @@ public class JointTrajectoryPoint extends Packet<JointTrajectoryPoint> implement
    }
 
 
+   /**
+            * Single DOF joint positions for each joint relative to their "0" position.
+            * The units depend on the specific joint type: radians for revolute or
+            * continuous joints, and meters for prismatic joints.
+            */
    public us.ihmc.idl.IDLSequence.Double  getPositions()
    {
       return positions_;
    }
 
 
+   /**
+            * The rate of change in position of each joint. Units are joint type dependent.
+            * Radians/second for revolute or continuous joints, and meters/second for
+            * prismatic joints.
+            */
    public us.ihmc.idl.IDLSequence.Double  getVelocities()
    {
       return velocities_;
    }
 
 
+   /**
+            * Rate of change in velocity of each joint. Units are joint type dependent.
+            * Radians/second^2 for revolute or continuous joints, and meters/second^2 for
+            * prismatic joints.
+            */
    public us.ihmc.idl.IDLSequence.Double  getAccelerations()
    {
       return accelerations_;
    }
 
 
+   /**
+            * The torque or the force to be applied at each joint. For revolute/continuous
+            * joints effort denotes a torque in newton-meters. For prismatic joints, effort
+            * denotes a force in newtons.
+            */
    public us.ihmc.idl.IDLSequence.Double  getEffort()
    {
       return effort_;
    }
 
 
+   /**
+            * Desired time from the trajectory start to arrive at this trajectory point.
+            */
    public builtin_interfaces.msg.dds.Duration getTimeFromStart()
    {
       return time_from_start_;

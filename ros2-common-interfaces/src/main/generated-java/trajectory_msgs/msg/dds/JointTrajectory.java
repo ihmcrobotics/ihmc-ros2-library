@@ -8,8 +8,20 @@ import us.ihmc.pubsub.TopicDataType;
 
 public class JointTrajectory extends Packet<JointTrajectory> implements Settable<JointTrajectory>, EpsilonComparable<JointTrajectory>
 {
+   /**
+            * The header is used to specify the coordinate frame and the reference time for
+            * the trajectory durations
+            */
    public std_msgs.msg.dds.Header header_;
+   /**
+            * The names of the active joints in each trajectory point. These names are
+            * ordered and must correspond to the values in each trajectory point.
+            */
    public us.ihmc.idl.IDLSequence.StringBuilderHolder  joint_names_;
+   /**
+            * Array of trajectory points, which describe the positions, velocities,
+            * accelerations and/or efforts of the joints at each time point.
+            */
    public us.ihmc.idl.IDLSequence.Object<trajectory_msgs.msg.dds.JointTrajectoryPoint>  points_;
 
    public JointTrajectory()
@@ -34,18 +46,30 @@ public class JointTrajectory extends Packet<JointTrajectory> implements Settable
    }
 
 
+   /**
+            * The header is used to specify the coordinate frame and the reference time for
+            * the trajectory durations
+            */
    public std_msgs.msg.dds.Header getHeader()
    {
       return header_;
    }
 
 
+   /**
+            * The names of the active joints in each trajectory point. These names are
+            * ordered and must correspond to the values in each trajectory point.
+            */
    public us.ihmc.idl.IDLSequence.StringBuilderHolder  getJointNames()
    {
       return joint_names_;
    }
 
 
+   /**
+            * Array of trajectory points, which describe the positions, velocities,
+            * accelerations and/or efforts of the joints at each time point.
+            */
    public us.ihmc.idl.IDLSequence.Object<trajectory_msgs.msg.dds.JointTrajectoryPoint>  getPoints()
    {
       return points_;

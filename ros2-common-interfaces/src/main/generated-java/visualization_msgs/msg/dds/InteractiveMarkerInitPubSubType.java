@@ -15,7 +15,7 @@ public class InteractiveMarkerInitPubSubType implements us.ihmc.pubsub.TopicData
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "00235deb2031d5c2a0577080346ffee4e64d9e042fb6ced419081d80e9385c17";
+   		return "0a93a184965d6aa56f1470715dd1a1a8ceec5e8a10ec0b1d3634062979e6b806";
    }
    
    @Override

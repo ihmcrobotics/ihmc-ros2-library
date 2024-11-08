@@ -11,9 +11,14 @@ import us.ihmc.pubsub.TopicDataType;
        * Parameter constraints
        * If any of the following sequences are not empty, then the constraint inside of
        * them apply to this parameter.
+       * 
+       * FloatingPointRange and IntegerRange are mutually exclusive.
        */
 public class ParameterDescriptor extends Packet<ParameterDescriptor> implements Settable<ParameterDescriptor>, EpsilonComparable<ParameterDescriptor>
 {
+   /**
+            * The name of the parameter.
+            */
    public java.lang.StringBuilder name_;
    /**
             * Enum values are defined in the `ParameterType.msg` message.
@@ -26,6 +31,7 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
    /**
             * Plain English description of additional constraints which cannot be expressed
             * with the available constraints, e.g. "only prime numbers".
+            * 
             * By convention, this should only be used to clarify constraints which cannot
             * be completely expressed with the parameter constraints below.
             */
@@ -35,13 +41,15 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
             */
    public boolean read_only_;
    /**
+            * If true, the parameter is allowed to change type.
+            */
+   public boolean dynamic_typing_;
+   /**
             * FloatingPointRange consists of a from_value, a to_value, and a step.
-            * FloatingPointRange and IntegerRange are mutually exclusive.
             */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.FloatingPointRange>  floating_point_range_;
    /**
             * IntegerRange consists of a from_value, a to_value, and a step.
-            * FloatingPointRange and IntegerRange are mutually exclusive.
             */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.IntegerRange>  integer_range_;
 
@@ -76,20 +84,31 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
 
       read_only_ = other.read_only_;
 
+      dynamic_typing_ = other.dynamic_typing_;
+
       floating_point_range_.set(other.floating_point_range_);
       integer_range_.set(other.integer_range_);
    }
 
+   /**
+            * The name of the parameter.
+            */
    public void setName(java.lang.String name)
    {
       name_.setLength(0);
       name_.append(name);
    }
 
+   /**
+            * The name of the parameter.
+            */
    public java.lang.String getNameAsString()
    {
       return getName().toString();
    }
+   /**
+            * The name of the parameter.
+            */
    public java.lang.StringBuilder getName()
    {
       return name_;
@@ -137,6 +156,7 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
    /**
             * Plain English description of additional constraints which cannot be expressed
             * with the available constraints, e.g. "only prime numbers".
+            * 
             * By convention, this should only be used to clarify constraints which cannot
             * be completely expressed with the parameter constraints below.
             */
@@ -149,6 +169,7 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
    /**
             * Plain English description of additional constraints which cannot be expressed
             * with the available constraints, e.g. "only prime numbers".
+            * 
             * By convention, this should only be used to clarify constraints which cannot
             * be completely expressed with the parameter constraints below.
             */
@@ -159,6 +180,7 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
    /**
             * Plain English description of additional constraints which cannot be expressed
             * with the available constraints, e.g. "only prime numbers".
+            * 
             * By convention, this should only be used to clarify constraints which cannot
             * be completely expressed with the parameter constraints below.
             */
@@ -182,10 +204,24 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
       return read_only_;
    }
 
+   /**
+            * If true, the parameter is allowed to change type.
+            */
+   public void setDynamicTyping(boolean dynamic_typing)
+   {
+      dynamic_typing_ = dynamic_typing;
+   }
+   /**
+            * If true, the parameter is allowed to change type.
+            */
+   public boolean getDynamicTyping()
+   {
+      return dynamic_typing_;
+   }
+
 
    /**
             * FloatingPointRange consists of a from_value, a to_value, and a step.
-            * FloatingPointRange and IntegerRange are mutually exclusive.
             */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.FloatingPointRange>  getFloatingPointRange()
    {
@@ -195,7 +231,6 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
 
    /**
             * IntegerRange consists of a from_value, a to_value, and a step.
-            * FloatingPointRange and IntegerRange are mutually exclusive.
             */
    public us.ihmc.idl.IDLSequence.Object<rcl_interfaces.msg.dds.IntegerRange>  getIntegerRange()
    {
@@ -229,6 +264,8 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.additional_constraints_, other.additional_constraints_, epsilon)) return false;
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.read_only_, other.read_only_, epsilon)) return false;
+
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.dynamic_typing_, other.dynamic_typing_, epsilon)) return false;
 
       if (this.floating_point_range_.size() != other.floating_point_range_.size()) { return false; }
       else
@@ -267,6 +304,8 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
 
       if(this.read_only_ != otherMyClass.read_only_) return false;
 
+      if(this.dynamic_typing_ != otherMyClass.dynamic_typing_) return false;
+
       if (!this.floating_point_range_.equals(otherMyClass.floating_point_range_)) return false;
       if (!this.integer_range_.equals(otherMyClass.integer_range_)) return false;
 
@@ -289,6 +328,8 @@ public class ParameterDescriptor extends Packet<ParameterDescriptor> implements 
       builder.append(this.additional_constraints_);      builder.append(", ");
       builder.append("read_only=");
       builder.append(this.read_only_);      builder.append(", ");
+      builder.append("dynamic_typing=");
+      builder.append(this.dynamic_typing_);      builder.append(", ");
       builder.append("floating_point_range=");
       builder.append(this.floating_point_range_);      builder.append(", ");
       builder.append("integer_range=");

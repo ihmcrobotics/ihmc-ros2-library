@@ -20,6 +20,9 @@ public class MultiDOFJointTrajectoryPoint extends Packet<MultiDOFJointTrajectory
             * There can be an acceleration specified for the origin of the joint.
             */
    public us.ihmc.idl.IDLSequence.Object<geometry_msgs.msg.dds.Twist>  accelerations_;
+   /**
+            * Desired time from the trajectory start to arrive at this trajectory point.
+            */
    public builtin_interfaces.msg.dds.Duration time_from_start_;
 
    public MultiDOFJointTrajectoryPoint()
@@ -73,6 +76,9 @@ public class MultiDOFJointTrajectoryPoint extends Packet<MultiDOFJointTrajectory
    }
 
 
+   /**
+            * Desired time from the trajectory start to arrive at this trajectory point.
+            */
    public builtin_interfaces.msg.dds.Duration getTimeFromStart()
    {
       return time_from_start_;

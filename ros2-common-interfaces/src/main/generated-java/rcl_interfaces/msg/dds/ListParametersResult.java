@@ -9,11 +9,11 @@ import us.ihmc.pubsub.TopicDataType;
 public class ListParametersResult extends Packet<ListParametersResult> implements Settable<ListParametersResult>, EpsilonComparable<ListParametersResult>
 {
    /**
-            * All parameters under the given prefixes.
+            * The resulting parameters under the given prefixes.
             */
    public us.ihmc.idl.IDLSequence.StringBuilderHolder  names_;
    /**
-            * All prefixes under the given prefixes.
+            * The resulting prefixes under the given prefixes.
             * TODO(wjwwood): link to prefix definition and rules.
             */
    public us.ihmc.idl.IDLSequence.StringBuilderHolder  prefixes_;
@@ -38,7 +38,7 @@ public class ListParametersResult extends Packet<ListParametersResult> implement
 
 
    /**
-            * All parameters under the given prefixes.
+            * The resulting parameters under the given prefixes.
             */
    public us.ihmc.idl.IDLSequence.StringBuilderHolder  getNames()
    {
@@ -47,7 +47,7 @@ public class ListParametersResult extends Packet<ListParametersResult> implement
 
 
    /**
-            * All prefixes under the given prefixes.
+            * The resulting prefixes under the given prefixes.
             * TODO(wjwwood): link to prefix definition and rules.
             */
    public us.ihmc.idl.IDLSequence.StringBuilderHolder  getPrefixes()

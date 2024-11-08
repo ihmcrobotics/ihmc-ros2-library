@@ -6,6 +6,12 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
+/**
+       * This was originally provided as an example message.
+       * It is deprecated as of Foxy
+       * It is recommended to create your own semantically meaningful message.
+       * However if you would like to continue using this please use the equivalent in example_msgs.
+       */
 public class UInt8 extends Packet<UInt8> implements Settable<UInt8>, EpsilonComparable<UInt8>
 {
    public byte data_;

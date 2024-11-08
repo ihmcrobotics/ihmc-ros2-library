@@ -13,52 +13,52 @@ module visualization_msgs
   {
     module dds
     {
-      const octet ARROW =
+      const long ARROW =
       0;
 
-      const octet CUBE =
+      const long CUBE =
       1;
 
-      const octet SPHERE =
+      const long SPHERE =
       2;
 
-      const octet CYLINDER =
+      const long CYLINDER =
       3;
 
-      const octet LINE_STRIP =
+      const long LINE_STRIP =
       4;
 
-      const octet LINE_LIST =
+      const long LINE_LIST =
       5;
 
-      const octet CUBE_LIST =
+      const long CUBE_LIST =
       6;
 
-      const octet SPHERE_LIST =
+      const long SPHERE_LIST =
       7;
 
-      const octet POINTS =
+      const long POINTS =
       8;
 
-      const octet TEXT_VIEW_FACING =
+      const long TEXT_VIEW_FACING =
       9;
 
-      const octet MESH_RESOURCE =
+      const long MESH_RESOURCE =
       10;
 
-      const octet TRIANGLE_LIST =
+      const long TRIANGLE_LIST =
       11;
 
-      const octet ADD =
+      const long ADD =
       0;
 
-      const octet MODIFY =
+      const long MODIFY =
       0;
 
-      const octet DELETE =
+      const long DELETE =
       2;
 
-      const octet DELETEALL =
+      const long DELETEALL =
       3;
 
 

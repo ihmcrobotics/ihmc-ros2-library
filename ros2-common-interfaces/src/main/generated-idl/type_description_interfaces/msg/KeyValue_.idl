@@ -1,0 +1,24 @@
+#ifndef __type_description_interfaces__msg__KeyValue__idl__
+#define __type_description_interfaces__msg__KeyValue__idl__
+
+module type_description_interfaces
+{
+  module msg
+  {
+    module dds
+    {
+
+      /**
+       * Represents an arbitrary key-value pair for application-specific information.
+       */
+      @TypeCode(type="type_description_interfaces::msg::dds_::KeyValue_")
+      struct KeyValue
+      {
+        string key;
+        string value;
+      };
+    };
+  };
+};
+
+#endif

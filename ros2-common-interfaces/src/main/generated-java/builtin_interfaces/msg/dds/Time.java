@@ -6,9 +6,19 @@ import us.ihmc.euclid.interfaces.EpsilonComparable;
 import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
+/**
+       * This message communicates ROS Time defined here:
+       * https://design.ros2.org/articles/clock_and_time.html
+       */
 public class Time extends Packet<Time> implements Settable<Time>, EpsilonComparable<Time>
 {
+   /**
+            * The seconds component, valid over all int32 values.
+            */
    public int sec_;
+   /**
+            * The nanoseconds component, valid in the range [0, 1e9).
+            */
    public long nanosec_;
 
    public Time()
@@ -29,19 +39,31 @@ public class Time extends Packet<Time> implements Settable<Time>, EpsilonCompara
 
    }
 
+   /**
+            * The seconds component, valid over all int32 values.
+            */
    public void setSec(int sec)
    {
       sec_ = sec;
    }
+   /**
+            * The seconds component, valid over all int32 values.
+            */
    public int getSec()
    {
       return sec_;
    }
 
+   /**
+            * The nanoseconds component, valid in the range [0, 1e9).
+            */
    public void setNanosec(long nanosec)
    {
       nanosec_ = nanosec;
    }
+   /**
+            * The nanoseconds component, valid in the range [0, 1e9).
+            */
    public long getNanosec()
    {
       return nanosec_;
