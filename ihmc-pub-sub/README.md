@@ -13,7 +13,7 @@ Fast-DDS release: `2.14.3`
 The eProsima Fast-DDS documentation can be useful as a reference guide on more advanced features and the inner working of the RTPS layer [https://fast-dds.docs.eprosima.com/en/v2.14.3/](https://fast-dds.docs.eprosima.com/en/v2.14.3/).
 
 #### Java type generator
-The IHMC Pub Sub generator creates Java classes from OMG DDS IDL formatted files. The resulting classes can be used in conjunction with [IHMC Pub Sub](https://github.com/ihmcrobotics/ihmc-pub-sub) to serialize and deserialize to the Common Data Representation(CDR) format.
+The IHMC Pub Sub generator creates Java classes from OMG DDS IDL formatted files. The resulting classes can be used to serialize and deserialize to the Common Data Representation (CDR) format.
 
 ##### Features
 - Pure Java serialization/deserialization. Allows message generation without having to compile native libraries.
@@ -22,7 +22,7 @@ The IHMC Pub Sub generator creates Java classes from OMG DDS IDL formatted files
 - Support for wchar and wstring to map directly to Java's UTF-16.
 - Automatically generated equals() and toString() methods for testing and debugging.
 - Support for #include directives and other C preprocessor directives. The include search path is the current directory and the parent directory of the .idl file.
-- Optional (using [IHMC Pub Sub serializers extra](https://github.com/ihmcrobotics/ihmc-pub-sub) ) serialization and deserialization to JSON/BSON/YAML and XML.
+- Optional serialization and deserialization to JSON/BSON/YAML and XML (ihmc-pub-sub-serializers-extra).
 - @Abstract(type="[fully qualified class name]") annotation to generate an abstract Pub Sub type. This allows reusing exisiting Java data objects in combination with IDL specified data without marshalling. Use [Name]PubSubType.setImplementation() to implement.
 
 ##### Limitations
