@@ -1,7 +1,5 @@
 # IHMC ROS2 Library
 
-[![Java CI with Gradle](https://github.com/ihmcrobotics/ihmc-ros2-library/actions/workflows/gradle.yml/badge.svg)](https://github.com/ihmcrobotics/ihmc-ros2-library/actions/workflows/gradle.yml)
-
 ROS2 messaging for Java. Implements a ROS2 compatible layer with a Java JNI layer on top of Fast-DDS.
 
 ## Features
@@ -20,8 +18,8 @@ In your `build.gradle.kts`:
 
 Publish/subscribe API:
 
-`api("us.ihmc:ihmc-ros2-library:<version>")` Latest:
-[ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ihmc-ros2-library)
+`api("us.ihmc:ros2-library:<version>")` Latest:
+[ ![ihmc-ros2-library](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-library/badge.svg?style=plastic) ](https://maven-badges.herokuapp.com/maven-central/us.ihmc/ros2-library)
 
 Generator for `.msg` -> `.java`:
 
