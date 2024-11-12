@@ -1,6 +1,10 @@
 package us.ihmc.ros2;
 
 import us.ihmc.commons.thread.TypedNotification;
+import us.ihmc.log.LogTools;
+import us.ihmc.pubsub.TopicDataType;
+import us.ihmc.pubsub.common.MatchingInfo;
+import us.ihmc.pubsub.subscriber.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +21,6 @@ public class ROS2Input<T>
    private final AtomicReference<T> atomicReference;
    private final MessageFilter<T> messageFilter;
    private boolean hasReceivedFirstMessage = false;
-   private final ROS2Callback<T> ros2Callback;
    private final TypedNotification<T> messageNotification = new TypedNotification<>();
    private final List<Consumer<T>> userCallbacks = new ArrayList<>();
 
@@ -55,7 +58,29 @@ public class ROS2Input<T>
    {
       atomicReference = new AtomicReference<>(initialValue);
       this.messageFilter = messageFilter;
-      ros2Callback = new ROS2Callback<>(ros2Node, messageType, topicName, qosProfile, this::messageReceivedCallback);
+      TopicDataType<T> topicDataType = ROS2TopicNameTools.newMessageTopicDataTypeInstance(messageType);
+      ros2Node.createSubscription(topicDataType, new NewMessageListener<T>()
+      {
+         @Override
+         public void onNewDataMessage(Subscriber<T> subscriber)
+         {
+            T incomingData = subscriber.takeNextData();
+            if (incomingData != null)
+            {
+               messageReceivedCallback(incomingData);
+            }
+            else
+            {
+               LogTools.warn("Received null from takeNextData()");
+            }
+         }
+
+         @Override
+         public void onSubscriptionMatched(Subscriber<T> subscriber, MatchingInfo info)
+         {
+            // Do nothing
+         }
+      }, topicName, qosProfile);
    }
 
    public interface MessageFilter<T>
@@ -95,10 +120,5 @@ public class ROS2Input<T>
    public void addCallback(Consumer<T> messageReceivedCallback)
    {
       userCallbacks.add(messageReceivedCallback);
-   }
-
-   public void destroy()
-   {
-      ros2Callback.destroy();
    }
 }
