@@ -53,17 +53,9 @@ var generateFastRTPSProfiles = addXjcTask(
    "build/generated/sources/xjc/java/main"
 )
 
-tasks.create<Exec>("applyPatches") {
-   isIgnoreExitValue = true
-   commandLine("patch", "-N", "thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd", "patches/fastRTPS_profiles.patch")
-}
-
 tasks.create<Exec>("updateSubmodules") {
-   commandLine("git", "submodule", "update", "--init", "--recursive")
-}
-
-tasks.named("updateSubmodules") {
-   dependsOn("applyPatches")
+   environment("JUST_CLONE_AND_PATCH", "1")
+   commandLine("${projectDir.absolutePath}/../cppbuild.bash", "${projectDir.absolutePath}/..")
 }
 
 tasks.getByPath("compileJava").dependsOn("updateSubmodules")

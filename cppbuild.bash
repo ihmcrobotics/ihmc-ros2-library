@@ -1,7 +1,12 @@
 #!/bin/bash
 # This build script is designed to work on Linux and Windows. For Windows, run from a bash shell launched with launchBashWindows.bat
 
-REPO_ROOT=$(pwd)
+if [ -z "$1" ]; then
+  REPO_ROOT=$(pwd)
+else
+  REPO_ROOT=$1
+fi
+
 BUILD_ROOT=$REPO_ROOT/ihmc-pub-sub/buildc
 
 rm -rf $BUILD_ROOT # Optional clean
@@ -15,6 +20,10 @@ cd $REPO_ROOT
 
 #### Apply patches ####
 patch $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd $REPO_ROOT/ihmc-pub-sub/patches/fastRTPS_profiles.patch
+
+if [ "$JUST_CLONE_AND_PATCH" == "1" ]; then
+  exit
+fi
 
 #### Building FastDDS, ihmc-pub-sub natives ####
 cd $BUILD_ROOT
