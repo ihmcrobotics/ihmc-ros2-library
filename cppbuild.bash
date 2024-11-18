@@ -31,6 +31,8 @@ if command -v xjc &> /dev/null; then
 
     # Delete the Generated on: line so we don't constantly have new vcs changes to these files
     sed -i '/\/\/ Generated on:/d' "$file"
+
+    dos2unix "$file"
   done
 else
     echo "Not generated Java from eprosima XML. xjc not found."

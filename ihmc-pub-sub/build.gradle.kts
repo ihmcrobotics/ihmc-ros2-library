@@ -34,7 +34,10 @@ xjcDependencies {
 }
 
 fun runScript(scriptPath: String, envVars: Map<String, String> = emptyMap(), vararg args: String) {
-   val command = listOf("bash", scriptPath) + args.toList()
+   val isWindows = System.getProperty("os.name").lowercase().contains("win")
+   val bashCommand = if (isWindows) "C:\\Program Files\\Git\\git-bash.exe" else "bash"
+
+   val command = listOf(bashCommand, scriptPath) + args.toList()
    val processBuilder = ProcessBuilder(command)
 
    val environment = processBuilder.environment()
