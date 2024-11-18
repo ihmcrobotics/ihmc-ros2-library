@@ -16,6 +16,31 @@ cd $REPO_ROOT
 #### Apply patches ####
 patch $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd $REPO_ROOT/ihmc-pub-sub/patches/fastRTPS_profiles.patch
 
+# Generate Java from eprosima XML
+if command -v xjc &> /dev/null; then
+  xjc -no-header -p com.eprosima.xmlschemas.fastrtps_profiles -d $REPO_ROOT/ihmc-pub-sub/src/xjc/java $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
+
+  find "$REPO_ROOT/ihmc-pub-sub/src/xjc/java" -type f -name "*.java" -print0 | while IFS= read -r -d '' file; do
+    # Replace javax.xml.* with jakarta.xml.*, but ignore javax.xml.namespace.QName
+    # Replace @javax.xml.bind.annotation.* with @jakarta.xml.bind.annotation.*
+    sed -i '
+        /import javax\.xml\.namespace\.QName/!s/import javax\.xml\./import jakarta.xml./g
+        s/@javax\.xml\.bind\.annotation\./@jakarta.xml.bind.annotation./g
+        s/javax\.xml\.bind\.annotation\.XmlNsForm/jakarta.xml.bind.annotation.XmlNsForm/g
+    ' "$file"
+
+    if command -v dos2unix &> /dev/null; then
+      dos2unix "$file"
+    fi
+  done
+else
+    echo "Not generated Java from eprosima XML. xjc not found."
+fi
+
+if [ "$ONLY_CLONE_AND_PATCH" == "1" ]; then
+  exit 0
+fi
+
 #### Building FastDDS, ihmc-pub-sub natives ####
 cd $BUILD_ROOT
 if [ "$MAC_CROSS_COMPILE_ARM" == "1" ]; then

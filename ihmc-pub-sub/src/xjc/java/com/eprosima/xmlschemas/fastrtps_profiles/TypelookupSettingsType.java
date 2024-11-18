@@ -1,0 +1,89 @@
+
+package com.eprosima.xmlschemas.fastrtps_profiles;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Java class for typelookupSettingsType complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="typelookupSettingsType">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;all minOccurs="0">
+ *         &lt;element name="use_client" type="{http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles}boolean"/>
+ *         &lt;element name="use_server" type="{http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles}boolean"/>
+ *       &lt;/all>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "typelookupSettingsType", propOrder = {
+
+})
+public class TypelookupSettingsType {
+
+    @XmlElement(name = "use_client")
+    protected Boolean useClient;
+    @XmlElement(name = "use_server")
+    protected Boolean useServer;
+
+    /**
+     * Gets the value of the useClient property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isUseClient() {
+        return useClient;
+    }
+
+    /**
+     * Sets the value of the useClient property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setUseClient(Boolean value) {
+        this.useClient = value;
+    }
+
+    /**
+     * Gets the value of the useServer property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isUseServer() {
+        return useServer;
+    }
+
+    /**
+     * Sets the value of the useServer property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setUseServer(Boolean value) {
+        this.useServer = value;
+    }
+
+}

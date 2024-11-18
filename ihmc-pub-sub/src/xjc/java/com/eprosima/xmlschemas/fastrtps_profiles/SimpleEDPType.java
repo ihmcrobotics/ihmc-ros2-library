@@ -1,0 +1,89 @@
+
+package com.eprosima.xmlschemas.fastrtps_profiles;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Java class for simpleEDPType complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="simpleEDPType">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;all minOccurs="0">
+ *         &lt;element name="PUBWRITER_SUBREADER" type="{http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles}boolean"/>
+ *         &lt;element name="PUBREADER_SUBWRITER" type="{http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles}boolean"/>
+ *       &lt;/all>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "simpleEDPType", propOrder = {
+
+})
+public class SimpleEDPType {
+
+    @XmlElement(name = "PUBWRITER_SUBREADER")
+    protected Boolean pubwritersubreader;
+    @XmlElement(name = "PUBREADER_SUBWRITER")
+    protected Boolean pubreadersubwriter;
+
+    /**
+     * Gets the value of the pubwritersubreader property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isPUBWRITERSUBREADER() {
+        return pubwritersubreader;
+    }
+
+    /**
+     * Sets the value of the pubwritersubreader property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setPUBWRITERSUBREADER(Boolean value) {
+        this.pubwritersubreader = value;
+    }
+
+    /**
+     * Gets the value of the pubreadersubwriter property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isPUBREADERSUBWRITER() {
+        return pubreadersubwriter;
+    }
+
+    /**
+     * Sets the value of the pubreadersubwriter property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setPUBREADERSUBWRITER(Boolean value) {
+        this.pubreadersubwriter = value;
+    }
+
+}

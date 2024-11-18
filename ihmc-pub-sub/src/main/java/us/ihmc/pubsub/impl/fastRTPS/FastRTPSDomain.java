@@ -11,6 +11,9 @@ package us.ihmc.pubsub.impl.fastRTPS;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.Dds;
 import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import org.apache.commons.lang3.SystemUtils;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.pubsub.Domain;
@@ -28,9 +31,6 @@ import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.FastRTPSJNI;
 import us.ihmc.tools.nativelibraries.NativeLibraryLoader;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;

@@ -1,0 +1,64 @@
+
+package com.eprosima.xmlschemas.fastrtps_profiles;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlSchemaType;
+import jakarta.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Java class for durabilityQosPolicyType complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="durabilityQosPolicyType">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;all>
+ *         &lt;element name="kind" type="{http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles}durabilityQosKindPolicyType"/>
+ *       &lt;/all>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "durabilityQosPolicyType", propOrder = {
+
+})
+public class DurabilityQosPolicyType {
+
+    @XmlElement(required = true)
+    @XmlSchemaType(name = "string")
+    protected DurabilityQosKindPolicyType kind;
+
+    /**
+     * Gets the value of the kind property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link DurabilityQosKindPolicyType }
+     *     
+     */
+    public DurabilityQosKindPolicyType getKind() {
+        return kind;
+    }
+
+    /**
+     * Sets the value of the kind property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link DurabilityQosKindPolicyType }
+     *     
+     */
+    public void setKind(DurabilityQosKindPolicyType value) {
+        this.kind = value;
+    }
+
+}

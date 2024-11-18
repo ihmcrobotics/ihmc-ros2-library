@@ -1,3 +1,6 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 plugins {
    idea
    id("us.ihmc.ihmc-build")
@@ -8,12 +11,8 @@ ihmc {
 
    configureDependencyResolution()
    javaDirectory("main", "../../swig/FastRTPS/generated")
-   javaDirectory("main", "../../build/generated/sources/xjc/java/main")
    configurePublications()
 }
-
-// For swig builds
-//buildDir = 'build-java'
 
 mainDependencies {
    api("us.ihmc:ihmc-native-library-loader:2.0.3")
@@ -21,54 +20,55 @@ mainDependencies {
    api("us.ihmc:euclid:0.22.2")
    api("us.ihmc:ihmc-commons:0.34.0")
    api("us.ihmc:log-tools:0.6.4")
-   api("com.sun.xml.bind:jaxb-impl:4.0.5")
+
+   api(ihmc.sourceSetProject("xjc"))
 }
 
 testDependencies {
    api("us.ihmc:ihmc-commons-testing:0.34.0")
 }
 
-configurations.create("xjc")
-dependencies { "xjc"("com.sun.xml.bind:jaxb-xjc:4.0.5") }
+xjcDependencies {
+   api("com.sun.xml.bind:jaxb-impl:4.0.5") // Match this version with YoVariables
+}
 
-// Cookie cutter function for defining multiple XJC tasks
-fun addXjcTask(taskName: String, schema: String, pkg: String, dest: String) : Task {
-   // If you haven't already, create the generated output dir before running XJC or it will fail
-   file(dest).mkdirs()
+fun runScript(scriptPath: String, envVars: Map<String, String> = emptyMap(), vararg args: String) {
+   val isWindows = System.getProperty("os.name").lowercase().contains("win")
+   val bashCommand = if (isWindows) "C:\\Program Files\\Git\\git-bash.exe" else "bash"
 
-   // The main XJC task, calls XJCFacade which is the entry point of the XJC JAR
-   return tasks.create(taskName, JavaExec::class) {
-      classpath = configurations["xjc"]
-      mainClass.set("com.sun.tools.xjc.XJCFacade")
+   val command = listOf(bashCommand, scriptPath) + args.toList()
+   val processBuilder = ProcessBuilder(command)
 
-      // See https://docs.oracle.com/javase/9/tools/xjc.htm#JSWOR741 for full list of args
-      args(schema, "-p", pkg, "-d", dest, "-no-header", "-quiet")
+   val environment = processBuilder.environment()
+   environment.putAll(envVars)
+
+   try {
+      val process = processBuilder.start()
+
+      val reader = BufferedReader(InputStreamReader(process.inputStream))
+      val errorReader = BufferedReader(InputStreamReader(process.errorStream))
+
+      Thread {
+         var line: String?
+         while (errorReader.readLine().also { line = it } != null) {
+            System.err.println(line)
+         }
+      }.start()
+
+      var line: String?
+      while (reader.readLine().also { line = it } != null) {
+         println(line)
+      }
+
+      val exitCode = process.waitFor()
+      println("Script exited with code: $exitCode")
+
+   } catch (e: Exception) {
+      e.printStackTrace()
    }
 }
 
-var generateFastRTPSProfiles = addXjcTask(
-   "generateFastRTPSProfiles",
-   "thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd",
-   "com.eprosima.xmlschemas.fastrtps_profiles",
-   "build/generated/sources/xjc/java/main"
+val envVars = mapOf(
+   "ONLY_CLONE_AND_PATCH" to "1"
 )
-
-tasks.create<Exec>("applyPatches") {
-   isIgnoreExitValue = true
-   commandLine("patch", "-N", "thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd", "patches/fastRTPS_profiles.patch")
-}
-
-tasks.create<Exec>("updateSubmodules") {
-   commandLine("git", "submodule", "update", "--init", "--recursive")
-}
-
-tasks.named("updateSubmodules") {
-   dependsOn("applyPatches")
-}
-
-tasks.getByPath("compileJava").dependsOn("updateSubmodules")
-
-tasks {
-   compileJava.configure { dependsOn.add(generateFastRTPSProfiles) }
-   named("sourceJar").configure { dependsOn.add(generateFastRTPSProfiles) }
-}
+runScript(projectDir.absolutePath + "/../cppbuild.bash", envVars)

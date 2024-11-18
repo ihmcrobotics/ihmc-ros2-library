@@ -1,0 +1,46 @@
+
+package com.eprosima.xmlschemas.fastrtps_profiles;
+
+import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Java class for discoveryProtocolType.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * <pre>
+ * &lt;simpleType name="discoveryProtocolType">
+ *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *     &lt;enumeration value="NONE"/>
+ *     &lt;enumeration value="SIMPLE"/>
+ *     &lt;enumeration value="CLIENT"/>
+ *     &lt;enumeration value="SERVER"/>
+ *     &lt;enumeration value="BACKUP"/>
+ *     &lt;enumeration value="SUPER_CLIENT"/>
+ *   &lt;/restriction>
+ * &lt;/simpleType>
+ * </pre>
+ * 
+ */
+@XmlType(name = "discoveryProtocolType")
+@XmlEnum
+public enum DiscoveryProtocolType {
+
+    NONE,
+    SIMPLE,
+    CLIENT,
+    SERVER,
+    BACKUP,
+    SUPER_CLIENT;
+
+    public String value() {
+        return name();
+    }
+
+    public static DiscoveryProtocolType fromValue(String v) {
+        return valueOf(v);
+    }
+
+}

@@ -1,13 +1,24 @@
 package us.ihmc.pubsub.attributes;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.*;
+import com.eprosima.xmlschemas.fastrtps_profiles.BuiltinAttributesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryProtocolType;
+import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryServersListType;
+import com.eprosima.xmlschemas.fastrtps_profiles.DiscoverySettingsType;
+import com.eprosima.xmlschemas.fastrtps_profiles.EDPType;
+import com.eprosima.xmlschemas.fastrtps_profiles.LocatorListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.LocatorListType.Locator;
+import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType.Rtps;
+import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.RemoteServerAttributesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorListType;
+import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType;
 import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType.InterfaceWhiteList;
+import com.eprosima.xmlschemas.fastrtps_profiles.Udpv4LocatorType;
+import jakarta.xml.bind.JAXBElement;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
-import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.net.InetAddress;
