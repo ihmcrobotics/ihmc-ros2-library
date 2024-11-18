@@ -1,16 +1,16 @@
 #!/bin/bash
 # This build script is designed to work on Linux and Windows. For Windows, run from a bash shell launched with launchBashWindows.bat
 
-REPO_ROOT=$(pwd)
+REPO_ROOT=$(realpath "$(dirname "$0")")
 BUILD_ROOT=$REPO_ROOT/ihmc-pub-sub/buildc
 
 rm -rf $BUILD_ROOT # Optional clean
 mkdir -p $BUILD_ROOT
 
 #### Update git submodules ####
+cd $REPO_ROOT
 git submodule update --init --recursive
 cd $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS
-git reset --hard
 cd $REPO_ROOT
 
 #### Apply patches ####
