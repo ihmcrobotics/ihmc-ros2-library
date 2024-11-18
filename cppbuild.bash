@@ -17,17 +17,24 @@ cd $REPO_ROOT
 patch $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd $REPO_ROOT/ihmc-pub-sub/patches/fastRTPS_profiles.patch
 
 # Generate Java from eprosima XML
-xjc -p com.eprosima.xmlschemas.fastrtps_profiles -d $REPO_ROOT/ihmc-pub-sub/src/xjc/java $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
+if command -v xjc &> /dev/null; then
+  xjc -p com.eprosima.xmlschemas.fastrtps_profiles -d $REPO_ROOT/ihmc-pub-sub/src/xjc/java $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
 
-find "$REPO_ROOT/ihmc-pub-sub/src/xjc/java" -type f -name "*.java" -print0 | while IFS= read -r -d '' file; do
-  # Replace javax.xml.* with jakarta.xml.*, but ignore javax.xml.namespace.QName
-  # Replace @javax.xml.bind.annotation.* with @jakarta.xml.bind.annotation.*
-  sed -i '
-      /import javax\.xml\.namespace\.QName/!s/import javax\.xml\./import jakarta.xml./g
-      s/@javax\.xml\.bind\.annotation\./@jakarta.xml.bind.annotation./g
-      s/javax\.xml\.bind\.annotation\.XmlNsForm/jakarta.xml.bind.annotation.XmlNsForm/g
-  ' "$file"
-done
+  find "$REPO_ROOT/ihmc-pub-sub/src/xjc/java" -type f -name "*.java" -print0 | while IFS= read -r -d '' file; do
+    # Replace javax.xml.* with jakarta.xml.*, but ignore javax.xml.namespace.QName
+    # Replace @javax.xml.bind.annotation.* with @jakarta.xml.bind.annotation.*
+    sed -i '
+        /import javax\.xml\.namespace\.QName/!s/import javax\.xml\./import jakarta.xml./g
+        s/@javax\.xml\.bind\.annotation\./@jakarta.xml.bind.annotation./g
+        s/javax\.xml\.bind\.annotation\.XmlNsForm/jakarta.xml.bind.annotation.XmlNsForm/g
+    ' "$file"
+
+    # Delete the Generated on: line so we don't constantly have new vcs changes to these files
+    sed -i '/\/\/ Generated on:/d' "$file"
+  done
+else
+    echo "Not generated Java from eprosima XML. xjc not found."
+fi
 
 if [ "$ONLY_CLONE_AND_PATCH" == "1" ]; then
   exit 0

@@ -15,9 +15,6 @@ ihmc {
    configurePublications()
 }
 
-// For swig builds
-//buildDir = 'build-java'
-
 mainDependencies {
    api("us.ihmc:ihmc-native-library-loader:2.0.3")
    api("net.sf.trove4j:trove4j:3.0.3")
@@ -33,7 +30,7 @@ testDependencies {
 }
 
 xjcDependencies {
-   api("com.sun.xml.bind:jaxb-impl:4.0.5")
+   api("com.sun.xml.bind:jaxb-impl:4.0.5") // Match this version with YoVariables
 }
 
 fun runScript(scriptPath: String, envVars: Map<String, String> = emptyMap(), vararg args: String) {
