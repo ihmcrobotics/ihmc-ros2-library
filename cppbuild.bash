@@ -18,7 +18,7 @@ patch $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profil
 
 # Generate Java from eprosima XML
 if command -v xjc &> /dev/null; then
-  xjc -p com.eprosima.xmlschemas.fastrtps_profiles -d $REPO_ROOT/ihmc-pub-sub/src/xjc/java $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
+  xjc -no-header -p com.eprosima.xmlschemas.fastrtps_profiles -d $REPO_ROOT/ihmc-pub-sub/src/xjc/java $REPO_ROOT/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
 
   find "$REPO_ROOT/ihmc-pub-sub/src/xjc/java" -type f -name "*.java" -print0 | while IFS= read -r -d '' file; do
     # Replace javax.xml.* with jakarta.xml.*, but ignore javax.xml.namespace.QName
@@ -28,9 +28,6 @@ if command -v xjc &> /dev/null; then
         s/@javax\.xml\.bind\.annotation\./@jakarta.xml.bind.annotation./g
         s/javax\.xml\.bind\.annotation\.XmlNsForm/jakarta.xml.bind.annotation.XmlNsForm/g
     ' "$file"
-
-    # Delete the Generated on: line so we don't constantly have new vcs changes to these files
-    sed -i '/\/\/ Generated on:/d' "$file"
 
     if command -v dos2unix &> /dev/null; then
       dos2unix "$file"
