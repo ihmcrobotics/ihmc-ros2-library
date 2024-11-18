@@ -35,10 +35,10 @@ public class ObjectFactory {
     private final static QName _Profiles_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "profiles");
     private final static QName _Log_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "log");
     private final static QName _Types_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "types");
-    private final static QName _DurationTypeNanosec_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "nanosec");
-    private final static QName _DurationTypeSec_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "sec");
     private final static QName _RemoteServerAttributesTypeMetatrafficMulticastLocatorList_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "metatrafficMulticastLocatorList");
     private final static QName _RemoteServerAttributesTypeMetatrafficUnicastLocatorList_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "metatrafficUnicastLocatorList");
+    private final static QName _DurationTypeNanosec_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "nanosec");
+    private final static QName _DurationTypeSec_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "sec");
     private final static QName _TransportDescriptorTypeInterfaceWhiteListInterface_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "interface");
     private final static QName _TransportDescriptorTypeInterfaceWhiteListAddress_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "address");
 
@@ -910,24 +910,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "nanosec", scope = DurationType.class)
-    public JAXBElement<String> createDurationTypeNanosec(String value) {
-        return new JAXBElement<String>(_DurationTypeNanosec_QNAME, String.class, DurationType.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "sec", scope = DurationType.class)
-    public JAXBElement<String> createDurationTypeSec(String value) {
-        return new JAXBElement<String>(_DurationTypeSec_QNAME, String.class, DurationType.class, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link LocatorListType }{@code >}}
      * 
      */
@@ -943,6 +925,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "metatrafficUnicastLocatorList", scope = RemoteServerAttributesType.class)
     public JAXBElement<LocatorListType> createRemoteServerAttributesTypeMetatrafficUnicastLocatorList(LocatorListType value) {
         return new JAXBElement<LocatorListType>(_RemoteServerAttributesTypeMetatrafficUnicastLocatorList_QNAME, LocatorListType.class, RemoteServerAttributesType.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "nanosec", scope = DurationType.class)
+    public JAXBElement<String> createDurationTypeNanosec(String value) {
+        return new JAXBElement<String>(_DurationTypeNanosec_QNAME, String.class, DurationType.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "sec", scope = DurationType.class)
+    public JAXBElement<String> createDurationTypeSec(String value) {
+        return new JAXBElement<String>(_DurationTypeSec_QNAME, String.class, DurationType.class, value);
     }
 
     /**
