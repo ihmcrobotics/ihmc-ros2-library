@@ -11,7 +11,6 @@ ihmc {
 
    configureDependencyResolution()
    javaDirectory("main", "../../swig/FastRTPS/generated")
-   javaDirectory("xjc", "../xjc/java")
    configurePublications()
 }
 
