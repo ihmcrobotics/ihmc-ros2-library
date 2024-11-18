@@ -1,10 +1,10 @@
 package us.ihmc.pubsub.attributes;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.DurationType;
+import jakarta.xml.bind.JAXBElement;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
-import jakarta.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 /**
