@@ -15,12 +15,13 @@
  */
 package us.ihmc.ros2.example;
 
-import java.io.IOException;
-
+import std_msgs.msg.dds.String;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.ROS2Node;
-import us.ihmc.ros2.ROS2PublisherBasics;
+import us.ihmc.ros2.ROS2Publisher;
+
+import java.io.IOException;
 
 /**
  * Java version of the ROS2 demo listener.
@@ -38,7 +39,7 @@ public class NonRealtimeROS2TalkerExample
    {
       ROS2Node node = new ROS2Node(DomainFactory.getDomain(PubSubImplementation.FAST_RTPS), "NonRealtimeROS2ChatterExample", "/us/ihmc", 112);
 
-      ROS2PublisherBasics<std_msgs.msg.dds.String> publisher = node.createPublisher(new std_msgs.msg.dds.StringPubSubType(), "/chatter");
+      ROS2Publisher<String> publisher = node.createPublisher(new std_msgs.msg.dds.StringPubSubType(), "/chatter");
       std_msgs.msg.dds.String message = new std_msgs.msg.dds.String();
       for (int i = 0; i < 1000000000; i++)
       {

@@ -16,14 +16,13 @@
 package us.ihmc.ros2.example;
 
 import org.apache.commons.lang3.SystemUtils;
-
 import std_msgs.msg.dds.Int64;
 import std_msgs.msg.dds.Int64PubSubType;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.QueuedROS2Subscription;
-import us.ihmc.ros2.ROS2PublisherBasics;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2QosProfile;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.util.PeriodicNonRealtimeThreadSchedulerFactory;
@@ -41,7 +40,7 @@ import us.ihmc.util.PeriodicThreadSchedulerFactory;
  */
 public class RealtimeROS2PublishSubscribeExample
 {
-   private ROS2PublisherBasics<Int64> publisher;
+   private ROS2Publisher<Int64> publisher;
    private QueuedROS2Subscription<Int64> subscription;
 
    public RealtimeROS2PublishSubscribeExample()

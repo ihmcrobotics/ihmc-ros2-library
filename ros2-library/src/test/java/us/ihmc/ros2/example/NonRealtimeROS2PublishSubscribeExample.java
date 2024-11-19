@@ -15,13 +15,13 @@
  */
 package us.ihmc.ros2.example;
 
-import java.io.IOException;
-
 import std_msgs.msg.dds.Int64;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.ROS2Node;
-import us.ihmc.ros2.ROS2PublisherBasics;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2Topic;
+
+import java.io.IOException;
 
 /**
  * Java version of the ROS2 demo listener.
@@ -41,7 +41,7 @@ public class NonRealtimeROS2PublishSubscribeExample
       ROS2Topic<Int64> topic = new ROS2Topic<>().withType(Int64.class).withSuffix("example");
       node.createSubscription2(topic, message -> System.out.println(message.getData()));
 
-      ROS2PublisherBasics<Int64> publisher = node.createPublisher(topic);
+      ROS2Publisher<Int64> publisher = node.createPublisher(topic);
       Int64 message = new Int64();
       for (int i = 0; i < 10; i++)
       {
