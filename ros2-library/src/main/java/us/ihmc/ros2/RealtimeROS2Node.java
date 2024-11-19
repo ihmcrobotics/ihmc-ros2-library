@@ -56,7 +56,7 @@ public class RealtimeROS2Node extends ROS2Node
     */
    public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace)
    {
-      this(domain, threadFactory, name, namespace, ROS2NodeInterface.domainFromEnvironment(), ROS2NodeInterface.useSHMFromEnvironment());
+      this(domain, threadFactory, name, namespace, domainFromEnvironment(), useSHMFromEnvironment());
    }
 
    /**
@@ -82,7 +82,7 @@ public class RealtimeROS2Node extends ROS2Node
                            boolean useSharedMemory,
                            InetAddress... addressRestriction)
    {
-      this(domain, threadFactory, name, namespace, ROS2NodeInterface.createParticipantAttributes(domainId, useSharedMemory, addressRestriction));
+      this(domain, threadFactory, name, namespace, createParticipantAttributes(domainId, useSharedMemory, addressRestriction));
    }
 
    /**
