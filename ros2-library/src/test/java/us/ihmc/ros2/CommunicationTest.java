@@ -51,7 +51,7 @@ public class CommunicationTest
             String name = "ROS2CommunicationTest";
             ROS2Node node = new ROS2Node(domain, name);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
-            ROS2PublisherBasics<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
+            ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
             messagesReceived.setValue(0);
 
@@ -96,7 +96,7 @@ public class CommunicationTest
             Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
             ROS2Node node = new ROS2Node(domain, "ROS2CommunicationTest");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
-            ROS2PublisherBasics<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
+            ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
             messagesReceived.setValue(0);
 
@@ -145,7 +145,7 @@ public class CommunicationTest
             Domain domain = DomainFactory.getDomain(PubSubImplementation.INTRAPROCESS);
             RealtimeROS2Node node = new RealtimeROS2Node(domain, PeriodicNonRealtimeThreadScheduler::new, "ROS2CommunicationTest", "/us/ihmc");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
-            ROS2PublisherBasics<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
+            ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
             messagesReceived.setValue(0);
 

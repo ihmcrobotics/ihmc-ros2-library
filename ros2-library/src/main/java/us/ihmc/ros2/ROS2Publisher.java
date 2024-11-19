@@ -9,7 +9,7 @@ import us.ihmc.pubsub.publisher.Publisher;
  *
  * @param <T> the data type
  */
-public class ROS2Publisher<T> implements ROS2PublisherBasics<T>
+public class ROS2Publisher<T>
 {
    private static final int NUMBER_OF_EXCEPTIONS_TO_PRINT = 5;
    private int numberOfExceptions = 0;
@@ -23,7 +23,6 @@ public class ROS2Publisher<T> implements ROS2PublisherBasics<T>
       this.publisher = publisher;
    }
 
-   @Override
    public synchronized boolean publish(T data)
    {
       try
@@ -54,7 +53,6 @@ public class ROS2Publisher<T> implements ROS2PublisherBasics<T>
       }
    }
 
-   @Override
    public void remove()
    {
       domain.removePublisher(publisher);

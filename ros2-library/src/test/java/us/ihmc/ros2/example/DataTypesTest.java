@@ -9,9 +9,9 @@ import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.common.SampleInfo;
 import us.ihmc.ros2.ROS2Node;
-import us.ihmc.ros2.ROS2PublisherBasics;
+import us.ihmc.ros2.ROS2Publisher;
 
-import static us.ihmc.robotics.Assert.*;
+import static us.ihmc.robotics.Assert.assertEquals;
 
 public class DataTypesTest
 {
@@ -25,7 +25,7 @@ public class DataTypesTest
       {
          ROS2Node node = new ROS2Node(DomainFactory.getDomain(PubSubImplementation.INTRAPROCESS), "ROS2CommunicationTest");
          NumPubSubType topicDataType = new NumPubSubType();
-         ROS2PublisherBasics<Num> publisher = node.createPublisher(topicDataType, "/chatter");
+         ROS2Publisher<Num> publisher = node.createPublisher(topicDataType, "/chatter");
 
          messagesReceived.setValue(0);
 

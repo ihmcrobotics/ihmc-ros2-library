@@ -170,7 +170,7 @@ public class ROS2Node
     * @param topic topic
     * @return a ROS 2 publisher
     */
-   public <T> ROS2PublisherBasics<T> createPublisher(ROS2Topic<T> topic)
+   public <T> ROS2Publisher<T> createPublisher(ROS2Topic<T> topic)
    {
       return createPublisher(topic.getType(), topic.getName(), topic.getQoS());
    }
@@ -183,7 +183,7 @@ public class ROS2Node
     * @param topicName     Name for the topic
     * @return a ROS 2 publisher
     */
-   public <T> ROS2PublisherBasics<T> createPublisher(TopicDataType<T> topicDataType, String topicName)
+   public <T> ROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, String topicName)
    {
       return createPublisher(topicDataType, topicName, ROS2QosProfile.DEFAULT());
    }
@@ -195,7 +195,7 @@ public class ROS2Node
     * @param topicName     Name for the topic
     * @return a ROS 2 publisher
     */
-   public <T> ROS2PublisherBasics<T> createPublisher(Class<T> messageType, String topicName)
+   public <T> ROS2Publisher<T> createPublisher(Class<T> messageType, String topicName)
    {
       return createPublisher(messageType, topicName, ROS2QosProfile.DEFAULT());
    }
@@ -208,7 +208,7 @@ public class ROS2Node
     * @param qosProfile    ROS 2 qos profile
     * @return a ROS 2 publisher
     */
-   public <T> ROS2PublisherBasics<T> createPublisher(Class<T> messageType, String topicName, ROS2QosProfile qosProfile)
+   public <T> ROS2Publisher<T> createPublisher(Class<T> messageType, String topicName, ROS2QosProfile qosProfile)
    {
       TopicDataType<T> topicDataType = ROS2TopicNameTools.newMessageTopicDataTypeInstance(messageType);
       return createPublisher(topicDataType, createPublisherAttributes(topicDataType, topicName, qosProfile));
@@ -222,7 +222,7 @@ public class ROS2Node
     * @param qosProfile    ROS 2 qos profile
     * @return a ROS 2 publisher
     */
-   public <T> ROS2PublisherBasics<T> createPublisher(TopicDataType<T> topicDataType, String topicName, ROS2QosProfile qosProfile)
+   public <T> ROS2Publisher<T> createPublisher(TopicDataType<T> topicDataType, String topicName, ROS2QosProfile qosProfile)
    {
       return createPublisher(topicDataType, createPublisherAttributes(topicDataType, topicName, qosProfile));
    }
