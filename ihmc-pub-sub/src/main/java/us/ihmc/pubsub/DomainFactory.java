@@ -15,37 +15,12 @@
  */
 package us.ihmc.pubsub;
 
-import us.ihmc.pubsub.impl.intraprocess.IntraProcessDomain;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class DomainFactory
 {
-   /**
-    * Soon to be removed in favor of only FAST_RTPS mode.
-    */
-   @Deprecated
-   public enum PubSubImplementation
+   public static synchronized Domain getDomain()
    {
-      FAST_RTPS, FAST_RTPS_SYSTEM_LIBRARY, INTRAPROCESS;
-   }
-   
-   public static synchronized Domain getDefaultDomain()
-   {
-      return getDomain(PubSubImplementation.FAST_RTPS);
-   }
-   
-   public static synchronized Domain getDomain(PubSubImplementation impl)
-   {
-      switch(impl)
-      {
-      case FAST_RTPS:
-         return FastRTPSDomain.getInstance(false);
-      case FAST_RTPS_SYSTEM_LIBRARY:
-         return FastRTPSDomain.getInstance(true);
-      case INTRAPROCESS:
-         return IntraProcessDomain.getInstance();
-      default:
-         throw new RuntimeException("Invalid implementation specified");
-      }
+      return FastRTPSDomain.getInstance(false);
    }
 }

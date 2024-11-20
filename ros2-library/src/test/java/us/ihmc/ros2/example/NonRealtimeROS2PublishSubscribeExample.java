@@ -16,7 +16,6 @@
 package us.ihmc.ros2.example;
 
 import std_msgs.msg.dds.Int64;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2Topic;
@@ -37,7 +36,7 @@ public class NonRealtimeROS2PublishSubscribeExample
 {
    public static void main(String[] args) throws IOException, InterruptedException
    {
-      ROS2Node node = new ROS2Node(PubSubImplementation.FAST_RTPS, "NonRealtimeROS2PublishSubscribeExample");
+      ROS2Node node = new ROS2Node("NonRealtimeROS2PublishSubscribeExample");
       ROS2Topic<Int64> topic = new ROS2Topic<>().withType(Int64.class).withSuffix("example");
       node.createSubscription2(topic, message -> System.out.println(message.getData()));
 

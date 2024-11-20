@@ -14,7 +14,6 @@ import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -44,7 +43,7 @@ public class PublishSubscribeUInt64AllocationTest
    @Test// timeout = 30000
    public void testPublishSubscribeUInt32AllocationsFastRTPS() throws IOException
    {
-      runAllocationTest(PubSubImplementation.FAST_RTPS);
+      runAllocationTest();
    }
 
    @Disabled // intraprocess does not need to be allocation-free for now - @dcalvert
@@ -52,14 +51,14 @@ public class PublishSubscribeUInt64AllocationTest
    @Test// timeout = 30000
    public void testPublishSubscribeUInt32AllocationsIntraprocess() throws IOException
    {
-      runAllocationTest(PubSubImplementation.INTRAPROCESS);
+      runAllocationTest();
    }
 
-   public void runAllocationTest(PubSubImplementation pubSubImplementation) throws IOException
+   public void runAllocationTest() throws IOException
    {
       AllocationProfiler allocationProfiler = new AllocationProfiler();
 
-      Domain domain = DomainFactory.getDomain(pubSubImplementation);
+      Domain domain = DomainFactory.getDomain();
 
       try
       {
@@ -75,9 +74,7 @@ public class PublishSubscribeUInt64AllocationTest
          PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
                                                                              .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                              .partitions(Collections.singletonList("us/ihmc"))
-                                                                             .durabilityKind(pubSubImplementation == PubSubImplementation.INTRAPROCESS
-                                                                                   ? DurabilityQosKindPolicyType.VOLATILE
-                                                                                   : DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                             .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
                                                                              .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(50);
 
          StatusMessagePubSubType dataType2 = new StatusMessagePubSubType();

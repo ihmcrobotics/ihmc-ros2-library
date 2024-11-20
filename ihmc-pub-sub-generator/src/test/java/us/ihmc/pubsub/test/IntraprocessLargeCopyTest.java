@@ -11,7 +11,6 @@ import us.ihmc.idl.generated.test.BigMessagePubSubType;
 import us.ihmc.idl.generated.test.IDLSubmessage;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -51,9 +50,7 @@ public class IntraprocessLargeCopyTest
    {
       Random random = new Random(981239012380L);
 
-      PubSubImplementation impl = PubSubImplementation.FAST_RTPS;
-
-      performCopyTest(random, impl);
+      performCopyTest(random);
    }
 
    @Test // timeout = 300000
@@ -62,17 +59,15 @@ public class IntraprocessLargeCopyTest
    {
       Random random = new Random(981239012380L);
 
-      PubSubImplementation impl = PubSubImplementation.INTRAPROCESS;
-
-      performCopyTest(random, impl);
+      performCopyTest(random);
    }
 
-   private void performCopyTest(Random random, PubSubImplementation impl) throws InterruptedException, IOException
+   private void performCopyTest(Random random) throws InterruptedException, IOException
    {
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
       PrintStream systemErr = System.err;
-      Domain domain = DomainFactory.getDomain(impl);
+      Domain domain = DomainFactory.getDomain();
       try
       {
 

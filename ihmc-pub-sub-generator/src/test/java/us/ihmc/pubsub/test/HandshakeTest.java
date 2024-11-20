@@ -26,7 +26,6 @@ import us.ihmc.idl.generated.test.FooYoVariableDefinition;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -61,14 +60,12 @@ public class HandshakeTest
    @Test // timeout = 30000
    public void testPublishSubscribeFooHandshake() throws IOException
    {
-      PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;
-
       AllocationProfiler allocationProfiler = new AllocationProfiler();
       allocationProfiler.excludeAllocationsInsideMethod("java.lang.ThreadGroup.add");
 
       Random random = new Random(29103902183L);
 
-      Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain();
       try
       {
 

@@ -58,7 +58,7 @@ public class MultipleParticipantsInSameProcessTest
    {
       AtomicInteger counter = new AtomicInteger(0);
 
-      Domain domain = DomainFactory.getDomain(DomainFactory.PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain();
 
       try
       {

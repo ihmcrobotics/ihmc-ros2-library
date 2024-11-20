@@ -3,7 +3,6 @@ package us.ihmc.ros2;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
@@ -67,12 +66,11 @@ public class ROS2Node
 
    /**
     * Create a ROS2Node with the default namespace
-    * @param pubSubImplementation  The implementation to use.
     * @param name                   Name of the ROS 2 node
     */
-   public ROS2Node(PubSubImplementation pubSubImplementation, String name)
+   public ROS2Node(String name)
    {
-      this(DomainFactory.getDomain(pubSubImplementation), name);
+      this(DomainFactory.getDomain(), name);
    }
 
    /**
@@ -84,9 +82,9 @@ public class ROS2Node
     *                               should describe one of the addresses of the computer hosting this node.
     *                               Optional.
     */
-   public ROS2Node(PubSubImplementation pubSubImplementation, String name, int domainId, InetAddress... addressRestriction)
+   public ROS2Node(String name, int domainId, InetAddress... addressRestriction)
    {
-      this(DomainFactory.getDomain(pubSubImplementation), name, DEFAULT_NAMESPACE, domainId, addressRestriction);
+      this(DomainFactory.getDomain(), name, DEFAULT_NAMESPACE, domainId, addressRestriction);
    }
 
    /**

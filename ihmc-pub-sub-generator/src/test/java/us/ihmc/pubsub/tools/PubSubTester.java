@@ -8,7 +8,6 @@ import us.ihmc.communication.packets.Packet;
 import us.ihmc.idl.generated.test.IDLElementTestPubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
@@ -35,12 +34,7 @@ public class PubSubTester<P extends Packet>
 
    public PubSubTester(Supplier<P> msgTypeSupplier) throws IOException
    {
-      this(PubSubImplementation.FAST_RTPS, msgTypeSupplier);
-   }
-
-   public PubSubTester(PubSubImplementation pubSubImplementation, Supplier<P> msgTypeSupplier) throws IOException
-   {
-      domain = DomainFactory.getDomain(pubSubImplementation);
+      domain = DomainFactory.getDomain();
 
       domain.setLogLevel(LogLevel.INFO);
 

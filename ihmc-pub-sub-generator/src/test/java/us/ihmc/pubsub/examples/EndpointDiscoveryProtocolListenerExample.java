@@ -17,7 +17,6 @@ package us.ihmc.pubsub.examples;
 
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.Time;
@@ -88,7 +87,7 @@ public class EndpointDiscoveryProtocolListenerExample
    
    public EndpointDiscoveryProtocolListenerExample() throws IOException
    {
-      Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain();
       
       ParticipantProfile attributes = ParticipantProfile.create()
                                                         .domainId(215)

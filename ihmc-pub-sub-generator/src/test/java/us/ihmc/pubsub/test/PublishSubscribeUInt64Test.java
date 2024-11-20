@@ -8,7 +8,6 @@ import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -32,7 +31,7 @@ public class PublishSubscribeUInt64Test
    @Test // timeout = 30000
    public void testPublishSubscribeUInt32() throws IOException
    {
-      Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain();
 
       try
       {

@@ -10,7 +10,6 @@ import us.ihmc.idl.generated.test.BigMessage;
 import us.ihmc.idl.generated.test.BigMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.DDSConversionTools;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
@@ -55,9 +54,7 @@ public class IntraprocessLargeCopyTest2
    {
       Random random = new Random(981239012380L);
 
-      PubSubImplementation impl = PubSubImplementation.FAST_RTPS;
-
-      performCopyTest(random, impl);
+      performCopyTest(random);
    }
 
    @Test // timeout = 10000
@@ -67,17 +64,15 @@ public class IntraprocessLargeCopyTest2
    {
       Random random = new Random(981239012380L);
 
-      PubSubImplementation impl = PubSubImplementation.INTRAPROCESS;
-
-      performCopyTest(random, impl);
+      performCopyTest(random);
    }
 
-   private void performCopyTest(Random random, PubSubImplementation impl) throws InterruptedException, IOException
+   private void performCopyTest(Random random) throws InterruptedException, IOException
    {
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
       PrintStream systemErr = System.err;
-      Domain domain = DomainFactory.getDomain(impl);
+      Domain domain = DomainFactory.getDomain();
 
       try
       {
@@ -85,10 +80,10 @@ public class IntraprocessLargeCopyTest2
 
          // create one subscriber
          CountDownLatch messagesReceived = new CountDownLatch(NUMBER_OF_MESSAGES_TO_SEND);
-         createSubscriber(domain, impl, messagesReceived);
+         createSubscriber(domain, messagesReceived);
 
          // create one publisher
-         Publisher publisher = createPublisher(domain, impl);
+         Publisher publisher = createPublisher(domain);
          publishABunch(publisher, random);
 
          System.err.flush();
@@ -115,7 +110,7 @@ public class IntraprocessLargeCopyTest2
                                .useOnlySharedMemoryTransport();
    }
 
-   private Publisher createPublisher(Domain domain, PubSubImplementation impl) throws IOException
+   private Publisher createPublisher(Domain domain) throws IOException
    {
 
       domain.setLogLevel(LogLevel.INFO);
@@ -132,16 +127,14 @@ public class IntraprocessLargeCopyTest2
       PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(dataType).topicName("Status")
                                                                           .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                           .partitions(Collections.singletonList("us/ihmc"))
-                                                                          .durabilityKind(impl == PubSubImplementation.INTRAPROCESS
-                                                                                ? DurabilityQosKindPolicyType.VOLATILE
-                                                                                : DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                          .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
                                                                           .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(NUMBER_OF_MESSAGES_TO_SEND + 1)
                                                                           .maxBlockingTime(DDSConversionTools.createTime(100.0));
 
       return domain.createPublisher(participant, genericPublisherAttributes, new PublisherListenerImpl());
    }
 
-   private void createSubscriber(Domain domain, PubSubImplementation impl, CountDownLatch messagesReceived) throws IOException
+   private void createSubscriber(Domain domain, CountDownLatch messagesReceived) throws IOException
    {
 
       domain.setLogLevel(LogLevel.INFO);
@@ -158,8 +151,7 @@ public class IntraprocessLargeCopyTest2
       SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(dataType2).topicName("Status")
                                                                       .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                       .partitions(Collections.singletonList("us/ihmc"))
-                                                                      .durabilityKind(impl == PubSubImplementation.INTRAPROCESS ? DurabilityQosKindPolicyType.VOLATILE
-                                                                            : DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
+                                                                      .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
                                                                       .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST)
                                                                       .historyDepth(NUMBER_OF_MESSAGES_TO_SEND + 1);
 
