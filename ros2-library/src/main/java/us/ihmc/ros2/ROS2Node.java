@@ -75,7 +75,6 @@ public class ROS2Node
 
    /**
     * Create a ROS2Node with the default namespace
-    * @param pubSubImplementation   The implementation to use.
     * @param name                   Name of the ROS 2 node
     * @param domainId               Desired ROS domain ID
     * @param addressRestriction     Restrict network traffic to the given addresses. When provided, it
