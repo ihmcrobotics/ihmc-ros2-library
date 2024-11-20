@@ -9,6 +9,7 @@ import com.eprosima.xmlschemas.fastrtps_profiles.LocatorListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.LocatorListType.Locator;
 import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType;
 import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType.Rtps;
+import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType.Rtps.UserTransports;
 import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
 import com.eprosima.xmlschemas.fastrtps_profiles.RemoteServerAttributesType;
 import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorListType;
@@ -22,7 +23,6 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.List;
 import java.util.UUID;
 
 public class ParticipantProfile
@@ -35,10 +35,10 @@ public class ParticipantProfile
       // Create default elements for participant profile
       BuiltinAttributesType builtin = new BuiltinAttributesType();
       DiscoverySettingsType discoverySettingsType = new DiscoverySettingsType();
+      builtin.setDiscoveryConfig(discoverySettingsType);
 
       profileType.setRtps(new Rtps());
       profileType.getRtps().setBuiltin(builtin);
-      builtin.setDiscoveryConfig(discoverySettingsType);
 
       // Set default discovery duration
       discoveryLeaseDuration(Time.Infinite);
@@ -136,85 +136,120 @@ public class ParticipantProfile
    }
 
    /**
-    * Bind this participant to only the addresses in bindToAddressRestrictions
-    * 
-    * Functionality, this will create a new UDPv4 transport with the whitelist set to "bindToAddressRestrictions". Optionally, a shared memory transport will be added as well.
-    * useBuiltinTransports will be set to false 
-    * 
-    * @param addSharedMemoryTransport Enabled shared memory communication by adding a shared memory transport to this participant.
-    * @param bindToAddressRestrictions Limit the scope of this participant to the list of hosts. If null or empty, the participant will not be able to communicate.
-    * @return
-    */
-   public ParticipantProfile bindToAddressRestrictions(boolean addSharedMemoryTransport, List<InetAddress> bindToAddressRestrictions)
-   {
-      useBuiltinTransports(false);
-
-      if (addSharedMemoryTransport)
-      {
-         addSharedMemoryTransport();  
-      }
-      
-      if (bindToAddressRestrictions != null && !bindToAddressRestrictions.isEmpty())
-      {
-         // Create a new UDP transport,
-         String transportName = UUID.randomUUID().toString();
-         TransportDescriptorType transportDescriptor = new TransportDescriptorType();
-         transportDescriptor.setTransportId(transportName);
-         transportDescriptor.setType("UDPv4");
-
-         TransportDescriptorType.InterfaceWhiteList addressWhitelist = new InterfaceWhiteList();
-
-         for (InetAddress addr : bindToAddressRestrictions)
-         {
-            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"), String.class, addr.getHostAddress());
-            addressWhitelist.getAddressOrInterface().add(addressElement);
-         }
-         
-         transportDescriptor.setInterfaceWhiteList(addressWhitelist);
-         addTransport(transportDescriptor);
-      }
-      
-      return this;
-   }
-
-   /**
-    * Add a transport to use with this participant and register it to this participant
-    * 
-    * @param transport
-    * @return
+    * Add transport to use with this participant and register it to this participant
     */
    public ParticipantProfile addTransport(TransportDescriptorType transport)
    {
-      transportDescriptors.getTransportDescriptor().add(transport);
-      
-      if(profileType.getRtps().getUserTransports() == null)
+      // Add to transport_descriptors if it doesn't exist
       {
-         profileType.getRtps().setUserTransports(new ParticipantProfileType.Rtps.UserTransports());
+         boolean existsInTransportDescriptors = false;
+         for (TransportDescriptorType transportDescriptorType : transportDescriptors.getTransportDescriptor())
+         {
+            if (transportDescriptorType.getTransportId().equals(transport.getTransportId()))
+            {
+               existsInTransportDescriptors = true;
+               break;
+            }
+         }
+         if (!existsInTransportDescriptors)
+            transportDescriptors.getTransportDescriptor().add(transport);
       }
-      profileType.getRtps().getUserTransports().getTransportId().add(transport.getTransportId());
-      
+
+      // Create userTransports if it doesn't exist
+      if (profileType.getRtps().getUserTransports() == null)
+         profileType.getRtps().setUserTransports(new UserTransports());
+
+      // Add to userTransports if it doesn't exist
+      {
+         boolean existsInUserTransports = false;
+         for (String transportId : profileType.getRtps().getUserTransports().getTransportId())
+         {
+            if (transportId.equals(transport.getTransportId()))
+            {
+               existsInUserTransports = true;
+               break;
+            }
+         }
+         if (!existsInUserTransports)
+            profileType.getRtps().getUserTransports().getTransportId().add(transport.getTransportId());
+      }
+
       return this;
    }
    
    /**
     * Add a shared memory transport to this participant.
-    * 
     * By setting useBuiltinTransports to false, you can use only a shared memory transport
-    *  
-    * @return
     */
    public ParticipantProfile addSharedMemoryTransport()
    {
-      String transportName = UUID.randomUUID().toString();
       TransportDescriptorType transportDescriptor = new TransportDescriptorType();
-      transportDescriptor.setTransportId(transportName);
+      transportDescriptor.setTransportId(UUID.randomUUID().toString());
       transportDescriptor.setType("SHM");
-      
+
       addTransport(transportDescriptor);
-      
+
       return this;
    }
-   
+
+   public ParticipantProfile addUDPv4Transport(InetAddress... addressRestriction)
+   {
+      TransportDescriptorType udp4Transport = new TransportDescriptorType();
+      udp4Transport.setTransportId(UUID.randomUUID().toString());
+      udp4Transport.setType("UDPv4");
+
+      // Apply address restrictions
+      // Check for null on the first element, to make sure passing in null works as usual -> no address restrictions
+      if (addressRestriction != null && addressRestriction.length > 0 && addressRestriction[0] != null)
+      {
+         TransportDescriptorType.InterfaceWhiteList addressWhitelist = new InterfaceWhiteList();
+
+         for (InetAddress addr : addressRestriction)
+         {
+            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"), String.class, addr.getHostAddress());
+            addressWhitelist.getAddressOrInterface().add(addressElement);
+         }
+
+         udp4Transport.setInterfaceWhiteList(addressWhitelist);
+      }
+
+      addTransport(udp4Transport);
+
+      return this;
+   }
+
+   /**
+    * Helper function to disable all transports and use only the shared memory transport
+    * Discovery will not work between nodes that have other transports enabled. Only use this with exclusively
+    * shm-only nodes.
+    */
+   public ParticipantProfile useOnlySharedMemoryTransport()
+   {
+      useBuiltinTransports(false);
+
+      if (profileType.getRtps().getUserTransports() == null)
+         profileType.getRtps().setUserTransports(new UserTransports());
+
+      profileType.getRtps().getUserTransports().getTransportId().clear();
+
+      // Find the SHM transport
+      boolean shmTransportFound = false;
+      for (TransportDescriptorType transportDescriptorType : transportDescriptors.getTransportDescriptor())
+      {
+         if (transportDescriptorType.getType().equals("SHM"))
+         {
+            addTransport(transportDescriptorType);
+            shmTransportFound = true;
+            break;
+         }
+      }
+
+      if (!shmTransportFound)
+         addSharedMemoryTransport();
+
+      return this;
+   }
+
    public ParticipantProfile useBuiltinTransports(boolean useBuiltinTransports)
    {
       profileType.getRtps().setUseBuiltinTransports(useBuiltinTransports);
@@ -225,23 +260,12 @@ public class ParticipantProfile
    {
       return profileType.getRtps().isUseBuiltinTransports();
    }
-   
-   /**
-    * Helper function to disable all transports and use only the shared memory transport
-    * @return
-    */
-   public ParticipantProfile useOnlySharedMemoryTransport()
-   {
-      useBuiltinTransports(false);
-      addSharedMemoryTransport();
-      return this;
-   }
 
    public boolean isUseStaticDiscovery()
    {
       return profileType.getRtps().getBuiltin().getDiscoveryConfig().getEDP() == EDPType.STATIC;
    }
-   
+
    public ParticipantProfile useStaticDiscovery(boolean useStaticDiscovery)
    {
       profileType.getRtps().getBuiltin().getDiscoveryConfig().setEDP(useStaticDiscovery ? EDPType.STATIC : EDPType.SIMPLE);
