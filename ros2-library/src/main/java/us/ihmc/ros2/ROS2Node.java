@@ -1,8 +1,5 @@
 package us.ihmc.ros2;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType;
-import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType.InterfaceWhiteList;
-import jakarta.xml.bind.JAXBElement;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
@@ -13,15 +10,12 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
-import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 import us.ihmc.pubsub.participant.Participant;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
 
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -609,53 +603,27 @@ public class ROS2Node
       participant = null;
    }
 
-   static ParticipantProfile createParticipantAttributes(int domainId, boolean useSharedMemory, InetAddress... addressRestriction)
+   public static ParticipantProfile createParticipantAttributes(int domainId, boolean useSharedMemory, InetAddress... addressRestriction)
    {
-      ParticipantProfile participantAttributes = ParticipantProfile.create().domainId(domainId).discoveryLeaseDuration(Time.Infinite);
+      ParticipantProfile participantAttributes = ParticipantProfile.create().domainId(domainId);
 
-      // Always override the transport so we're sure what it is
       participantAttributes.useBuiltinTransports(false);
 
-      // If this is false then shared memory will be disabled
       if (useSharedMemory)
       {
          participantAttributes.addSharedMemoryTransport();
       }
 
-      // Add custom UDPv4 transport
-      String transportName = UUID.randomUUID().toString();
-      TransportDescriptorType transportDescriptor = new TransportDescriptorType();
-      transportDescriptor.setTransportId(transportName);
-      transportDescriptor.setType("UDPv4");
-
-      // Apply address restrictions
-      // Check for null on the first element, to make sure passing in null works as usual -> no address restrictions
-      if (addressRestriction != null && addressRestriction.length > 0 && addressRestriction[0] != null)
-      {
-         TransportDescriptorType.InterfaceWhiteList addressWhitelist = new InterfaceWhiteList();
-
-         for (InetAddress addr : addressRestriction)
-         {
-            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"), String.class, addr.getHostAddress());
-            addressWhitelist.getAddressOrInterface().add(addressElement);
-         }
-
-         transportDescriptor.setInterfaceWhiteList(addressWhitelist);
-      }
-
-      participantAttributes.addTransport(transportDescriptor);
+      participantAttributes.addUDPv4Transport(addressRestriction);
 
       return participantAttributes;
    }
 
-   static boolean useSHMFromEnvironment()
+   public static boolean useSHMFromEnvironment()
    {
       String disableSharedMemoryTransportEnv = System.getenv("ROS_DISABLE_SHARED_MEMORY_TRANSPORT");
-      if (disableSharedMemoryTransportEnv == null)
-      {
-         return false;
-      }
-      else if (disableSharedMemoryTransportEnv.equalsIgnoreCase("true"))
+      if (disableSharedMemoryTransportEnv != null && (disableSharedMemoryTransportEnv.equalsIgnoreCase("true")
+                                                      || disableSharedMemoryTransportEnv.equals("1")))
       {
          LogTools.info("Shared memory transport is disabled via environment variable ROS_DISABLE_SHARED_MEMORY_TRANSPORT");
          return false;
@@ -666,7 +634,7 @@ public class ROS2Node
       }
    }
 
-   static int domainFromEnvironment()
+   public static int domainFromEnvironment()
    {
       String rosDomainId = System.getenv("ROS_DOMAIN_ID");
 
