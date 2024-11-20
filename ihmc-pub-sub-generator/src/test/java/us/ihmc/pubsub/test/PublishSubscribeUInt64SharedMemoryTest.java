@@ -8,7 +8,6 @@ import us.ihmc.idl.generated.test.StatusMessage;
 import us.ihmc.idl.generated.test.StatusMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -32,16 +31,17 @@ public class PublishSubscribeUInt64SharedMemoryTest
    @Test // timeout = 30000
    public void testPublishSubscribeUInt32SharedMemory() throws IOException
    {
-      Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain();
 
       try
       {
          domain.setLogLevel(LogLevel.INFO);
 
-         ParticipantProfile attributes = ParticipantProfile.create().domainId(219).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
-
-         // Use only shared memory (SHM) transport
-         attributes.useOnlySharedMemoryTransport();
+         ParticipantProfile attributes = ParticipantProfile.create()
+                                                           .domainId(219)
+                                                           .discoveryLeaseDuration(Time.Infinite)
+                                                           .useOnlySharedMemoryTransport()
+                                                           .name("StatusTest");
 
          Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 

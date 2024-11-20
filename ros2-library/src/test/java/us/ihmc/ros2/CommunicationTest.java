@@ -9,7 +9,6 @@ import ros_msgs.msg.dds.TwoNumPubSubType;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.util.PeriodicNonRealtimeThreadScheduler;
 
 import java.time.Duration;
@@ -19,35 +18,35 @@ public class CommunicationTest
    @Test// timeout = 5000
    public void testSimpleIntraProcessCommunication()
    {
-      testSimpleCommunication(PubSubImplementation.INTRAPROCESS);
+      testSimpleCommunication();
    }
 
    @Test// timeout = 5000
    public void testSimpleRealRTPSCommunicationDefaultRosVersion()
    {
-      testSimpleCommunication(PubSubImplementation.FAST_RTPS);
+      testSimpleCommunication();
    }
 
    @Test// timeout = 5000
    public void testSimpleRealRTPSCommunicationArdent()
    {
-      testSimpleCommunication(PubSubImplementation.FAST_RTPS);
+      testSimpleCommunication();
    }
 
    @Test// timeout = 5000
    public void testSimpleRealRTPSCommunicationBouncy()
    {
-      testSimpleCommunication(PubSubImplementation.FAST_RTPS);
+      testSimpleCommunication();
    }
 
-   private void testSimpleCommunication(PubSubImplementation pubSubImplementation)
+   private void testSimpleCommunication()
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain(pubSubImplementation);
+            Domain domain = DomainFactory.getDomain();
             String name = "ROS2CommunicationTest";
             ROS2Node node = new ROS2Node(domain, name);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
@@ -93,7 +92,7 @@ public class CommunicationTest
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
+            Domain domain = DomainFactory.getDomain();
             ROS2Node node = new ROS2Node(domain, "ROS2CommunicationTest");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
@@ -142,7 +141,7 @@ public class CommunicationTest
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain(PubSubImplementation.INTRAPROCESS);
+            Domain domain = DomainFactory.getDomain();
             RealtimeROS2Node node = new RealtimeROS2Node(domain, PeriodicNonRealtimeThreadScheduler::new, "ROS2CommunicationTest", "/us/ihmc");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");

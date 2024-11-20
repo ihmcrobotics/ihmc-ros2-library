@@ -58,7 +58,7 @@ public class MultipleParticipantsInSameProcessTest
    {
       AtomicInteger counter = new AtomicInteger(0);
 
-      Domain domain = DomainFactory.getDomain(DomainFactory.PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain();
 
       try
       {
@@ -79,7 +79,11 @@ public class MultipleParticipantsInSameProcessTest
          List<Participant> participants = new ArrayList<>();
          for (int i = 1; i <= 100; i++)
          {
-            ParticipantProfile participantProfile = ParticipantProfile.create().domainId(217).discoveryLeaseDuration(Time.Infinite).name("StatusTest" + i).useOnlySharedMemoryTransport();
+            ParticipantProfile participantProfile = ParticipantProfile.create()
+                                                                      .domainId(217)
+                                                                      .discoveryLeaseDuration(Time.Infinite)
+                                                                      .useOnlySharedMemoryTransport()
+                                                                      .name("StatusTest" + i);
             Participant participant = domain.createParticipant(participantProfile);
             LogTools.info("Creating participant #" + i);
             participants.add(participant);

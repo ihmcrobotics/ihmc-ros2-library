@@ -8,7 +8,6 @@ import us.ihmc.idl.generated.chat.ChatMessage;
 import us.ihmc.idl.generated.chat.ChatMessagePubSubType;
 import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.LogLevel;
@@ -27,11 +26,15 @@ public class AggressivePublisher
 {
    public AggressivePublisher() throws IOException
    {
-      Domain domain = DomainFactory.getDomain(PubSubImplementation.FAST_RTPS);
+      Domain domain = DomainFactory.getDomain();
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantProfile attributes = ParticipantProfile.create().domainId(215).discoveryLeaseDuration(Time.Infinite).name("AggressivePublisher");
+      ParticipantProfile attributes = ParticipantProfile.create()
+                                                        .domainId(215)
+                                                        .discoveryLeaseDuration(Time.Infinite)
+                                                        .useOnlySharedMemoryTransport()
+                                                        .name("AggressivePublisher");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
