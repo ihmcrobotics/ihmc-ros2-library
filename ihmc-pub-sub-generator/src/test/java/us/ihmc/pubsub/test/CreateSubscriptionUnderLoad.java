@@ -34,6 +34,7 @@ public class CreateSubscriptionUnderLoad
 
       ParticipantProfile attributes = ParticipantProfile.create()
                                                         .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest");
+      attributes.useOnlySharedMemoryTransport();
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 

@@ -38,6 +38,7 @@ public class PublishSubscribeUInt64SharedMemoryTest
          domain.setLogLevel(LogLevel.INFO);
 
          ParticipantProfile attributes = ParticipantProfile.create().domainId(219).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+         attributes.useOnlySharedMemoryTransport();
 
          // Use only shared memory (SHM) transport
          attributes.useOnlySharedMemoryTransport();

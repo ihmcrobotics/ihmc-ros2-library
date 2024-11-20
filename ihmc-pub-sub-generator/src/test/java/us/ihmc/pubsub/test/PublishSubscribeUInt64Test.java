@@ -38,6 +38,7 @@ public class PublishSubscribeUInt64Test
          domain.setLogLevel(LogLevel.INFO);
 
          ParticipantProfile attributes = ParticipantProfile.create().domainId(219).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
+         attributes.useOnlySharedMemoryTransport();
 
          Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
