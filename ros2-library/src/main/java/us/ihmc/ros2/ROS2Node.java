@@ -619,7 +619,7 @@ public class ROS2Node
       return participantAttributes;
    }
 
-   static boolean useSHMFromEnvironment()
+   public static boolean useSHMFromEnvironment()
    {
       String disableSharedMemoryTransportEnv = System.getenv("ROS_DISABLE_SHARED_MEMORY_TRANSPORT");
       if (disableSharedMemoryTransportEnv != null && (disableSharedMemoryTransportEnv.equalsIgnoreCase("true")
