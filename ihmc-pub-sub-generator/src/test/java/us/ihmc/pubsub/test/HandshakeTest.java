@@ -71,8 +71,11 @@ public class HandshakeTest
 
          domain.setLogLevel(LogLevel.INFO);
 
-         ParticipantProfile attributes = ParticipantProfile.create().domainId(220).discoveryLeaseDuration(Time.Infinite).name("StatusTest");
-         attributes.useOnlySharedMemoryTransport();
+         ParticipantProfile attributes = ParticipantProfile.create()
+                                                           .domainId(220)
+                                                           .discoveryLeaseDuration(Time.Infinite)
+                                                           .useOnlySharedMemoryTransport()
+                                                           .name("StatusTest");
 
          Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 

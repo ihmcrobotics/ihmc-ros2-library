@@ -30,8 +30,11 @@ public class AggressivePublisher
 
       domain.setLogLevel(LogLevel.INFO);
 
-      ParticipantProfile attributes = ParticipantProfile.create().domainId(215).discoveryLeaseDuration(Time.Infinite).name("AggressivePublisher");
-      attributes.useOnlySharedMemoryTransport();
+      ParticipantProfile attributes = ParticipantProfile.create()
+                                                        .domainId(215)
+                                                        .discoveryLeaseDuration(Time.Infinite)
+                                                        .useOnlySharedMemoryTransport()
+                                                        .name("AggressivePublisher");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 

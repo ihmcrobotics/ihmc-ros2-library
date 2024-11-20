@@ -33,8 +33,10 @@ public class CreateSubscriptionUnderLoad
       domain.setLogLevel(LogLevel.INFO);
 
       ParticipantProfile attributes = ParticipantProfile.create()
-                                                        .domainId(215).discoveryLeaseDuration(Time.Infinite).name("CreateSubscriptionProcessDuringAggressivePublishTest");
-      attributes.useOnlySharedMemoryTransport();
+                                                        .domainId(215)
+                                                        .discoveryLeaseDuration(Time.Infinite)
+                                                        .useOnlySharedMemoryTransport()
+                                                        .name("CreateSubscriptionProcessDuringAggressivePublishTest");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());
 
