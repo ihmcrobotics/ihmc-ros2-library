@@ -208,7 +208,7 @@ public class ROS2NodeBuilder
 
          if (domainIDValid(domainID))
          {
-            LogTools.info("Found ROS Domain ID from IHMCNetworkParameters.ini {}", domainID);
+            LogTools.info("Found ROS Domain ID from IHMCNetworkParameters.ini: {}", domainID);
             return domainID;
          }
       }
