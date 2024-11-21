@@ -25,7 +25,7 @@ import java.util.Properties;
  */
 public class ROS2NodeBuilder
 {
-   public enum TransportSpecial
+   public enum SpecialTransportMode
    {
       SHARED_MEMORY_ONLY, LOOPBACK_ADDRESS_ONLY, UDPV4_ONLY
    }
@@ -42,7 +42,7 @@ public class ROS2NodeBuilder
    private boolean parseNetworkParametersConfig = true;
 
    @Nullable
-   private TransportSpecial transportSpecial;
+   private SpecialTransportMode specialTransportMode;
 
    public ROS2NodeBuilder domainId(int domainId)
    {
@@ -86,9 +86,9 @@ public class ROS2NodeBuilder
       return this;
    }
 
-   public ROS2NodeBuilder transportSpecial(@Nullable TransportSpecial transportSpecial)
+   public ROS2NodeBuilder transportSpecial(@Nullable SpecialTransportMode specialTransportMode)
    {
-      this.transportSpecial = transportSpecial;
+      this.specialTransportMode = specialTransportMode;
       return this;
    }
 
@@ -131,9 +131,9 @@ public class ROS2NodeBuilder
 
          profile.addUDPv4Transport(addressRestriction);
 
-         if (transportSpecial != null)
+         if (specialTransportMode != null)
          {
-            switch (transportSpecial)
+            switch (specialTransportMode)
             {
                case SHARED_MEMORY_ONLY ->
                {
