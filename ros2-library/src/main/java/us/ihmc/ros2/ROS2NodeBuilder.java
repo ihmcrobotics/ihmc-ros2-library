@@ -12,6 +12,17 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Properties;
 
+/**
+ * A builder to construct {@link ROS2Node}, {@link RealtimeROS2Node}.
+ * <p>
+ * Basic usage:
+ *
+ * <pre>{@code
+ *    ROS2Node node = new ROS2Builder().build("Node");
+ *    RealtimeROS2Node realtimeSHMOnlyNode = new ROS2NodeBuilder().transportSpecial(TransportSpecial.SHARED_MEMORY_ONLY).buildRealtime("SHMNode");
+ * }</pre>
+ * </p>
+ */
 public class ROS2NodeBuilder
 {
    public enum TransportSpecial

@@ -28,6 +28,12 @@ public class RealtimeROS2Node extends ROS2Node
    private TimeUnit threadPeriodUnit = TimeUnit.MICROSECONDS;
    private long threadPeriod = DEFAULT_THREAD_PERIOD_MICROSECONDS;
 
+   /**
+    * Use {@link ROS2NodeBuilder} to construct
+    * <pre>{@code
+    *    RealtimeROS2Node realtimeNode = new ROS2NodeBuilder().buildRealtime("RealtimeNode");
+    * }</pre>
+    */
    protected RealtimeROS2Node(String name, String namespace, ParticipantProfile attributes, PeriodicThreadSchedulerFactory threadFactory)
    {
       super(name, namespace, attributes);

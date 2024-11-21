@@ -33,6 +33,12 @@ public class ROS2Node
    private final String nodeName;
    private final String namespace;
 
+   /**
+    * Use {@link ROS2NodeBuilder} to construct
+    * <pre>{@code
+    *    ROS2Node node = new ROS2NodeBuilder().build("Node");
+    * }</pre>
+    */
    protected ROS2Node(String name, String namespace, ParticipantProfile attributes)
    {
       this.domain = DomainFactory.getDomain();
