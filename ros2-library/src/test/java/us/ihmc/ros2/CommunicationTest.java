@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import ros_msgs.msg.dds.TwoNum;
 import ros_msgs.msg.dds.TwoNumPubSubType;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.pubsub.Domain;
-import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.util.PeriodicNonRealtimeThreadScheduler;
 
 import java.time.Duration;
@@ -46,9 +44,8 @@ public class CommunicationTest
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain();
             String name = "ROS2CommunicationTest";
-            ROS2Node node = new ROS2Node(domain, name);
+            ROS2Node node = new ROS2NodeBuilder().build(name);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -92,8 +89,7 @@ public class CommunicationTest
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain();
-            ROS2Node node = new ROS2Node(domain, "ROS2CommunicationTest");
+            ROS2Node node = new ROS2NodeBuilder().build("ROS2CommunicationTest");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -141,8 +137,7 @@ public class CommunicationTest
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain();
-            RealtimeROS2Node node = new RealtimeROS2Node(domain, PeriodicNonRealtimeThreadScheduler::new, "ROS2CommunicationTest", "/us/ihmc");
+            RealtimeROS2Node node = new ROS2NodeBuilder().namespace("/us/ihmc").buildRealtime("ROS2CommunicationTest", PeriodicNonRealtimeThreadScheduler::new);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 

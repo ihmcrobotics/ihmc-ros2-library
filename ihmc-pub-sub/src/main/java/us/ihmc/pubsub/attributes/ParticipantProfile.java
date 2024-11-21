@@ -250,6 +250,33 @@ public class ParticipantProfile
       return this;
    }
 
+   public ParticipantProfile useOnlyUDPv4Transport(InetAddress... addressRestriction)
+   {
+      useBuiltinTransports(false);
+
+      if (profileType.getRtps().getUserTransports() == null)
+         profileType.getRtps().setUserTransports(new UserTransports());
+
+      profileType.getRtps().getUserTransports().getTransportId().clear();
+
+      // Find the UDPv4 transport
+      boolean udpv4TransportFound = false;
+      for (TransportDescriptorType transportDescriptorType : transportDescriptors.getTransportDescriptor())
+      {
+         if (transportDescriptorType.getType().equals("UDPv4"))
+         {
+            addTransport(transportDescriptorType);
+            udpv4TransportFound = true;
+            break;
+         }
+      }
+
+      if (!udpv4TransportFound)
+         addUDPv4Transport(addressRestriction);
+
+      return this;
+   }
+
    public ParticipantProfile useBuiltinTransports(boolean useBuiltinTransports)
    {
       profileType.getRtps().setUseBuiltinTransports(useBuiltinTransports);

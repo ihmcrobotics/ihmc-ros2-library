@@ -14,7 +14,6 @@ import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.function.Consumer;
 
 /**
@@ -28,24 +27,15 @@ public class ROS2Node
 {
    static int DEFAULT_QUEUE_SIZE = 10;
 
-   public static final String DEFAULT_NAMESPACE = "/us/ihmc";
-
    private Domain domain;
    private Participant participant;
 
    private final String nodeName;
    private final String namespace;
 
-   /**
-    * Create a ROS2Node
-    * @param domain                 DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param name                   Name of the ROS 2 node
-    * @param namespace              Namespace of the ROS 2 node
-    * @param attributes             ParticipantAttributes for the domain
-    */
-   public ROS2Node(Domain domain, String name, String namespace, ParticipantProfile attributes)
+   protected ROS2Node(String name, String namespace, ParticipantProfile attributes)
    {
-      this.domain = domain;
+      this.domain = DomainFactory.getDomain();
 
       ROS2TopicNameTools.checkNodename(name);
       ROS2TopicNameTools.checkNamespace(namespace);
@@ -62,69 +52,6 @@ public class ROS2Node
       {
          throw new RuntimeException(ioException);
       }
-   }
-
-   /**
-    * Create a ROS2Node with the default namespace
-    * @param name                   Name of the ROS 2 node
-    */
-   public ROS2Node(String name)
-   {
-      this(DomainFactory.getDomain(), name);
-   }
-
-   /**
-    * Create a ROS2Node with the default namespace
-    * @param name                   Name of the ROS 2 node
-    * @param domainId               Desired ROS domain ID
-    * @param addressRestriction     Restrict network traffic to the given addresses. When provided, it
-    *                               should describe one of the addresses of the computer hosting this node.
-    *                               Optional.
-    */
-   public ROS2Node(String name, int domainId, InetAddress... addressRestriction)
-   {
-      this(DomainFactory.getDomain(), name, DEFAULT_NAMESPACE, domainId, addressRestriction);
-   }
-
-   /**
-    * Create a ROS2Node with the default namespace
-    * @param domain                 DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param name                   Name of the ROS 2 node
-    */
-   public ROS2Node(Domain domain, String name)
-   {
-      this(domain, name, "", domainFromEnvironment(), useSHMFromEnvironment());
-   }
-
-   /**
-    * Create a ROS2Node
-    * @param domain                 DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param name                   Name of the ROS 2 node
-    * @param namespace              Namespace of the ROS 2 node
-    * @param domainId               Desired ROS domain ID
-    * @param addressRestriction     Restrict network traffic to the given addresses. When provided, it
-    *                               should describe one of the addresses of the computer hosting this node.
-    *                               Optional.
-    */
-   public ROS2Node(Domain domain, String name, String namespace, int domainId, InetAddress... addressRestriction)
-   {
-      this(domain, name, namespace, domainId, useSHMFromEnvironment(), addressRestriction);
-   }
-
-   /**
-    * Create a ROS2Node
-    * @param domain                 DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param name                   Name of the ROS 2 node
-    * @param namespace              Namespace of the ROS 2 node
-    * @param domainId               Desired ROS domain ID
-    * @param useSharedMemory    Enable shared memory transport if true
-    * @param addressRestriction     Restrict network traffic to the given addresses. When provided, it
-    *                               should describe one of the addresses of the computer hosting this node.
-    *                               Optional.
-    */
-   public ROS2Node(Domain domain, String name, String namespace, int domainId, boolean useSharedMemory, InetAddress... addressRestriction)
-   {
-      this(domain, name, namespace, createParticipantAttributes(domainId, useSharedMemory, addressRestriction));
    }
 
    /**
@@ -598,61 +525,5 @@ public class ROS2Node
       }
 
       participant = null;
-   }
-
-   public static ParticipantProfile createParticipantAttributes(int domainId, boolean useSharedMemory, InetAddress... addressRestriction)
-   {
-      ParticipantProfile participantAttributes = ParticipantProfile.create().domainId(domainId);
-
-      participantAttributes.useBuiltinTransports(false);
-
-      if (useSharedMemory)
-      {
-         participantAttributes.addSharedMemoryTransport();
-      }
-
-      participantAttributes.addUDPv4Transport(addressRestriction);
-
-      return participantAttributes;
-   }
-
-   public static boolean useSHMFromEnvironment()
-   {
-      String disableSharedMemoryTransportEnv = System.getenv("ROS_DISABLE_SHARED_MEMORY_TRANSPORT");
-      if (disableSharedMemoryTransportEnv != null && (disableSharedMemoryTransportEnv.equalsIgnoreCase("true")
-                                                      || disableSharedMemoryTransportEnv.equals("1")))
-      {
-         LogTools.info("Shared memory transport is disabled via environment variable ROS_DISABLE_SHARED_MEMORY_TRANSPORT");
-         return false;
-      }
-      else
-      {
-         return true;
-      }
-   }
-
-   public static int domainFromEnvironment()
-   {
-      String rosDomainId = System.getenv("ROS_DOMAIN_ID");
-
-      int rosDomainIdAsInteger = 0; // default to 0
-
-      if (rosDomainId != null)
-      {
-         rosDomainId = rosDomainId.trim();
-         try
-         {
-            rosDomainIdAsInteger = Integer.parseInt(rosDomainId);
-         }
-         catch (NumberFormatException e)
-         {
-            LogTools.warn("Environment variable ROS_DOMAIN_ID cannot be parsed as an integer: {}", rosDomainId);
-         }
-      }
-
-      LogTools.info("ROS_DOMAIN_ID environment variable is {}.", rosDomainIdAsInteger);
-      LogTools.info("Nodes created without a specified domain ID will use ROS_DOMAIN_ID.");
-
-      return rosDomainIdAsInteger;
    }
 }
