@@ -21,7 +21,7 @@ public class ROS2NodeBuilder
 
    private static final int UNSET_DOMAIN_ID = -1;
 
-   private int domainId = 0;
+   private int domainId = UNSET_DOMAIN_ID;
    private String namespace = "/us/ihmc";
    private boolean useSharedMemory = true;
    private InetAddress[] addressRestriction;
