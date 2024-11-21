@@ -208,7 +208,7 @@ public class ROS2NodeBuilder
                }
                catch (NumberFormatException e)
                {
-                  // Ignore
+                  LogTools.error("Unable to parse RTPSDomainID from {}", networkParametersFile.getAbsolutePath());
                }
             }
          }
@@ -229,13 +229,16 @@ public class ROS2NodeBuilder
       {
          String domainIDProperty = System.getProperty("ros.domain.id");
 
-         try
+         if (domainIDProperty != null)
          {
-            domainID = Integer.parseInt(domainIDProperty);
-         }
-         catch (NumberFormatException e)
-         {
-            // Ignore
+            try
+            {
+               domainID = Integer.parseInt(domainIDProperty);
+            }
+            catch (NumberFormatException e)
+            {
+               LogTools.error("Unable to parse ros.domain.id system property");
+            }
          }
 
          if (domainIDValid(domainID))
@@ -250,13 +253,16 @@ public class ROS2NodeBuilder
       {
          String domainIDEnv = System.getenv("ROS_DOMAIN_ID");
 
-         try
+         if (domainIDEnv != null)
          {
-            domainID = Integer.parseInt(domainIDEnv);
-         }
-         catch (NumberFormatException e)
-         {
-            // Ignore
+            try
+            {
+               domainID = Integer.parseInt(domainIDEnv);
+            }
+            catch (NumberFormatException e)
+            {
+               LogTools.error("Unable to parse ROS_DOMAIN_ID environment variable");
+            }
          }
 
          if (domainIDValid(domainID))
