@@ -86,7 +86,7 @@ public class ROS2NodeBuilder
       return this;
    }
 
-   public ROS2NodeBuilder transportSpecial(@Nullable SpecialTransportMode specialTransportMode)
+   public ROS2NodeBuilder specialTransportMode(@Nullable SpecialTransportMode specialTransportMode)
    {
       this.specialTransportMode = specialTransportMode;
       return this;
