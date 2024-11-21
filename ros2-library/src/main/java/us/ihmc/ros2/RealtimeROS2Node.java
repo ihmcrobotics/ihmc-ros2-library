@@ -130,9 +130,4 @@ public class RealtimeROS2Node extends ROS2Node
          stopSpinning();
       super.destroy();
    }
-
-   public static RealtimeROS2Node create(String name)
-   {
-      return null;
-   }
 }
