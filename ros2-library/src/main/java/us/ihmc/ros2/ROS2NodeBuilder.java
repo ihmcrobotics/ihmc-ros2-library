@@ -115,7 +115,7 @@ public class ROS2NodeBuilder
                LogTools.warn("Unable to find any ROS Domain ID");
                LogTools.warn(
                      "You can set a ROS Domain ID via: system property (ros.domain.id), environment variable (ROS_DOMAIN_ID), RTPSDomainID in IHMCNetworkParameters.ini");
-               LogTools.warn("Using a default ROS Domain ID of {}", domainId);
+               LogTools.warn("Using a default ROS Domain ID: {}", domainId);
             }
          }
 
