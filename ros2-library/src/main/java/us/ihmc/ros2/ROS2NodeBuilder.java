@@ -19,7 +19,7 @@ import java.util.Properties;
  *
  * <pre>{@code
  *    ROS2Node node = new ROS2Builder().build("Node");
- *    RealtimeROS2Node realtimeSHMOnlyNode = new ROS2NodeBuilder().transportSpecial(TransportSpecial.SHARED_MEMORY_ONLY).buildRealtime("SHMNode");
+ *    RealtimeROS2Node realtimeSHMOnlyNode = new ROS2NodeBuilder().specialTransportMode(TransportSpecial.SHARED_MEMORY_ONLY).buildRealtime("SHMNode");
  * }</pre>
  * </p>
  */
