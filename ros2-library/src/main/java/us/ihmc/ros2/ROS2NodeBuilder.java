@@ -227,7 +227,7 @@ public class ROS2NodeBuilder
       // Find domain ID from properties
       if (parseProperties)
       {
-         String domainIDProperty = System.getProperty("ROS_DOMAIN_ID");
+         String domainIDProperty = System.getProperty("ros.domain.id");
 
          try
          {
