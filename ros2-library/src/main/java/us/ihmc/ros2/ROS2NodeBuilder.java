@@ -229,7 +229,7 @@ public class ROS2NodeBuilder
 
          if (domainIDValid(domainID))
          {
-            LogTools.info("Found ROS Domain ID from system parameters {}", domainID);
+            LogTools.info("Found ROS Domain ID from system parameters ROS_DOMAIN_ID: {}", domainID);
             return domainID;
          }
       }
@@ -250,7 +250,7 @@ public class ROS2NodeBuilder
 
          if (domainIDValid(domainID))
          {
-            LogTools.info("Found ROS Domain ID from environment {}", domainID);
+            LogTools.info("Found ROS Domain ID from environment ROS_DOMAIN_ID:{}", domainID);
             return domainID;
          }
       }
