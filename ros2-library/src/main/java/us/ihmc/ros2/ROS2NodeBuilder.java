@@ -75,7 +75,7 @@ public class ROS2NodeBuilder
       return this;
    }
 
-   public ROS2NodeBuilder transportSpecial(TransportSpecial transportSpecial)
+   public ROS2NodeBuilder transportSpecial(@Nullable TransportSpecial transportSpecial)
    {
       this.transportSpecial = transportSpecial;
       return this;
