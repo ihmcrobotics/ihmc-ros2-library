@@ -261,7 +261,7 @@ public class ROS2NodeBuilder
 
          if (domainIDValid(domainID))
          {
-            LogTools.info("Found ROS Domain ID from environment ROS_DOMAIN_ID:{}", domainID);
+            LogTools.info("Found ROS Domain ID from environment ROS_DOMAIN_ID: {}", domainID);
             return domainID;
          }
       }
