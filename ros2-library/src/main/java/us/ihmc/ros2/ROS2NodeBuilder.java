@@ -231,8 +231,6 @@ public class ROS2NodeBuilder
             }
             catch (IOException e)
             {
-               LogTools.error("Unable to read {}", networkParametersFile.getAbsolutePath());
-
                if (!(e instanceof FileNotFoundException))
                   LogTools.error(e);
             }
