@@ -59,7 +59,7 @@ public class ROS2NodeBuilder
        */
       UDPV4_ONLY,
       /**
-       * INTRAPROCESS_ONLY attempts to force Publishers to directly call reception functions of Subscriber.
+       * INTRAPROCESS_ONLY attempts to force Publishers to directly call reception functions of Subscribers.
        * This mode still enables a shared memory (SHM) transport, as there has to be one fallback transport on a Participant.
        * This mode is especially useful for unit testing and single-process applications.
        * This mode does not bind to any network address, ever.
