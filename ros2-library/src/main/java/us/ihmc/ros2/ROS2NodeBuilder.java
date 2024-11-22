@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -149,6 +150,15 @@ public class ROS2NodeBuilder
          if (useSharedMemory)
             profile.addSharedMemoryTransport();
 
+         if (addressRestriction != null)
+         {
+            // TODO:
+         }
+         else
+         {
+            addressRestriction = findAddressRestriction();
+         }
+
          profile.addUDPv4Transport(addressRestriction);
 
          if (specialTransportMode != null)
@@ -221,7 +231,7 @@ public class ROS2NodeBuilder
             printout.add(possibleValue.getKey() + "=" + possibleValue.getValue());
          }
 
-         LogTools.info("ROS Domain ID: {}", printout.toString());
+         LogTools.info("Found ROS2 property: {}", printout.toString());
       }
 
       return !possibleValues.isEmpty() ? possibleValues.peek().getValue() : null;
@@ -237,7 +247,7 @@ public class ROS2NodeBuilder
       {
          try
          {
-            domainID = Integer.parseInt(valueForField);
+            domainID = Integer.parseInt(valueForField.trim());
          }
          catch (NumberFormatException e)
          {
@@ -250,18 +260,34 @@ public class ROS2NodeBuilder
 
    private InetAddress[] findAddressRestriction()
    {
-      String valueForField = findValueForField("ROS_USE_SHARED_MEMORY", "ros.use.shared.memory", "");
+      String valueForField = findValueForField("ROS_ADDRESS_RESTRICTION", "ros.address.restriction", "RTPSSubnet");
 
-      if (valueForField != null)
-      {
-
-      }
-
-      return null;
+      return convertToInetAddressArray(valueForField != null ? valueForField : "");
    }
 
    protected static boolean domainIDValid(int domainID)
    {
       return domainID >= 0 && domainID <= 232;
+   }
+
+   protected static InetAddress[] convertToInetAddressArray(String ipList)
+   {
+      String[] ipStrings = ipList.split(",\\s*");
+      InetAddress[] inetAddresses = new InetAddress[ipStrings.length];
+
+      for (int i = 0; i < ipStrings.length; i++)
+      {
+         String ip = ipStrings[i].split("/")[0].trim();
+         try
+         {
+            inetAddresses[i] = InetAddress.getByName(ip);
+         }
+         catch (UnknownHostException e)
+         {
+            throw new RuntimeException(e);
+         }
+      }
+
+      return inetAddresses;
    }
 }
