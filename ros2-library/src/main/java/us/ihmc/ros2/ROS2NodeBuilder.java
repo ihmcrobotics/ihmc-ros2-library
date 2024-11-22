@@ -239,7 +239,7 @@ public class ROS2NodeBuilder
 
       if (!possibleValues.empty())
       {
-         StringJoiner printout = new StringJoiner(" -> ");
+         StringJoiner printout = new StringJoiner(" <- ");
          for (int i = possibleValues.size() - 1; i >= 0; i--)
          {
             Entry<String, String> possibleValue = possibleValues.get(i);
