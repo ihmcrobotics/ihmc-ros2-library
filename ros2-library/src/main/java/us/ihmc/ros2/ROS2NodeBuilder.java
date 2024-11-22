@@ -10,11 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,23 +37,9 @@ public class ROS2NodeBuilder
       SHARED_MEMORY_ONLY, LOOPBACK_ADDRESS_ONLY, UDPV4_ONLY
    }
 
-   @Retention(RetentionPolicy.RUNTIME)
-   @Target(ElementType.FIELD)
-   public @interface FieldKeys
-   {
-      String environmentKey();
-
-      String propertiesKey();
-
-      String networkParametersKey();
-   }
-
-   @FieldKeys(environmentKey = "ROS_DOMAIN_ID", propertiesKey = "ros.domain.id", networkParametersKey = "RTPSDomainID")
    private int domainId = UNSET_DOMAIN_ID;
    private String namespace = "/us/ihmc";
-   @FieldKeys(environmentKey = "ROS_USE_SHARED_MEMORY", propertiesKey = "ros.use.shared.memory", networkParametersKey = "")
    private boolean useSharedMemory = true;
-   @FieldKeys(environmentKey = "ROS_ADDRESS_RESTRICTION", propertiesKey = "ros.address.restriction", networkParametersKey = "RTPSSubnet")
    private InetAddress[] addressRestriction = null;
 
    private boolean parseEnvironment = true;
@@ -191,49 +172,43 @@ public class ROS2NodeBuilder
       return profile;
    }
 
-   private String findValueForField(Field field)
+   private String findValueForField(String environmentKey, String propertiesKey, String networkParametersKey)
    {
       Stack<Map.Entry<String, String>> possibleValues = new Stack<>();
 
-      if (field.getAnnotationsByType(FieldKeys.class).length > 0)
+      if (parseEnvironment && !environmentKey.isEmpty())
       {
-         FieldKeys fieldKeys = field.getAnnotation(FieldKeys.class);
-
-         if (parseEnvironment && !fieldKeys.environmentKey().isEmpty())
+         if (System.getenv(environmentKey) != null)
          {
-            if (System.getenv(fieldKeys.environmentKey()) != null)
+            possibleValues.push(Map.entry(environmentKey, System.getenv(environmentKey)));
+         }
+      }
+
+      if (parseProperties && !propertiesKey.isEmpty())
+      {
+         if (System.getProperty(propertiesKey) != null)
+         {
+            possibleValues.push(Map.entry("-D" + propertiesKey, System.getProperty(propertiesKey)));
+         }
+      }
+
+      if (parseNetworkParametersConfig && !networkParametersKey.isEmpty())
+      {
+         File networkParametersFile = new File(System.getProperty("user.home"), ".ihmc/IHMCNetworkParameters.ini");
+         Properties properties = new Properties();
+         try (FileInputStream inputStream = new FileInputStream(networkParametersFile))
+         {
+            properties.load(inputStream);
+
+            if (properties.getProperty(networkParametersKey) != null)
             {
-               possibleValues.push(Map.entry(fieldKeys.environmentKey(), System.getenv(fieldKeys.environmentKey())));
+               possibleValues.push(Map.entry("(IHMCNetworkParameters.ini) " + networkParametersKey, properties.getProperty(networkParametersKey)));
             }
          }
-
-         if (parseProperties && !fieldKeys.propertiesKey().isEmpty())
+         catch (IOException e)
          {
-            if (System.getProperty(fieldKeys.propertiesKey()) != null)
-            {
-               possibleValues.push(Map.entry("-D" + fieldKeys.propertiesKey(), System.getProperty(fieldKeys.propertiesKey())));
-            }
-         }
-
-         if (parseNetworkParametersConfig && !fieldKeys.networkParametersKey().isEmpty())
-         {
-            File networkParametersFile = new File(System.getProperty("user.home"), ".ihmc/IHMCNetworkParameters.ini");
-            Properties properties = new Properties();
-            try (FileInputStream inputStream = new FileInputStream(networkParametersFile))
-            {
-               properties.load(inputStream);
-
-               if (properties.getProperty(fieldKeys.networkParametersKey()) != null)
-               {
-                  possibleValues.push(Map.entry("(IHMCNetworkParameters.ini) " + fieldKeys.networkParametersKey(),
-                                                properties.getProperty(fieldKeys.networkParametersKey())));
-               }
-            }
-            catch (IOException e)
-            {
-               if (!(e instanceof FileNotFoundException))
-                  LogTools.error(e);
-            }
+            if (!(e instanceof FileNotFoundException))
+               LogTools.error(e);
          }
       }
 
@@ -256,15 +231,7 @@ public class ROS2NodeBuilder
    {
       int domainID = UNSET_DOMAIN_ID;
 
-      String valueForField = null;
-      try
-      {
-         valueForField = findValueForField(getClass().getDeclaredField("domainId"));
-      }
-      catch (NoSuchFieldException e)
-      {
-         LogTools.error(e);
-      }
+      String valueForField = findValueForField("ROS_DOMAIN_ID", "ros.domain.id", "RTPSDomainID");
 
       if (valueForField == null)
          return domainID;
