@@ -230,7 +230,8 @@ public class ROS2NodeBuilder
 
                if (properties.getProperty(fieldKeys.networkParametersKey()) != null)
                {
-                  possibleValues.push(Map.entry(fieldKeys.networkParametersKey(), properties.getProperty(fieldKeys.networkParametersKey())));
+                  possibleValues.push(Map.entry("(IHMCNetworkParameters.ini) " + fieldKeys.networkParametersKey(),
+                                                properties.getProperty(fieldKeys.networkParametersKey())));
                }
             }
             catch (IOException e)
