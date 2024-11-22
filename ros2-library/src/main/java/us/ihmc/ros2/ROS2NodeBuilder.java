@@ -233,16 +233,16 @@ public class ROS2NodeBuilder
 
       String valueForField = findValueForField("ROS_DOMAIN_ID", "ros.domain.id", "RTPSDomainID");
 
-      if (valueForField == null)
-         return domainID;
-
-      try
+      if (valueForField != null)
       {
-         domainID = Integer.parseInt(valueForField);
-      }
-      catch (NumberFormatException e)
-      {
-         LogTools.error("Unable to parse ROS Domain ID");
+         try
+         {
+            domainID = Integer.parseInt(valueForField);
+         }
+         catch (NumberFormatException e)
+         {
+            LogTools.error("Unable to parse ROS Domain ID");
+         }
       }
 
       return domainID;
@@ -250,6 +250,12 @@ public class ROS2NodeBuilder
 
    private InetAddress[] findAddressRestriction()
    {
+      String valueForField = findValueForField("ROS_USE_SHARED_MEMORY", "ros.use.shared.memory", "");
+
+      if (valueForField != null)
+      {
+
+      }
 
       return null;
    }
