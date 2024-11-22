@@ -352,10 +352,6 @@ public class ParticipantProfile
       dds.setLibrarySettings(librarySettings);
 
       String profileXML = FastRTPSDomain.marshallProfile(dds);
-      for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-         System.out.println(ste);
-      }
-
       // profileXML = Pattern.compile("<id>(.*)<\\/id>").matcher(profileXML).replaceAll("<transport_id>$1<\\/transport_id>");
 
       return profileXML;
