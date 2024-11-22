@@ -130,11 +130,6 @@ public class ROS2NodeBuilder
       return new RealtimeROS2Node(name, namespace, buildProfile(), threadFactory);
    }
 
-   protected static boolean domainIDValid(int domainID)
-   {
-      return domainID >= 0 && domainID <= 232;
-   }
-
    private ParticipantProfile buildProfile()
    {
       ParticipantProfile profile = ParticipantProfile.create();
@@ -291,5 +286,10 @@ public class ROS2NodeBuilder
    {
 
       return null;
+   }
+
+   protected static boolean domainIDValid(int domainID)
+   {
+      return domainID >= 0 && domainID <= 232;
    }
 }
