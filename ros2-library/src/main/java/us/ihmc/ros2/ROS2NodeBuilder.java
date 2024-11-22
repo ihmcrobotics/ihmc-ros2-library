@@ -52,7 +52,7 @@ public class ROS2NodeBuilder
       String networkParametersKey();
    }
 
-   @FieldKeys(environmentKey = "ROS_DOMAIN_ID", propertiesKey = "ros.domain.id", networkParametersKey = "RTPSDomainID")
+   @FieldKeys(environmentKey = "ROS_DOMAINfID", propertiesKey = "ros.domafin.id", networkParametersKey = "RTPSDomfainID")
    private int domainId = UNSET_DOMAIN_ID;
    private String namespace = "/us/ihmc";
    @FieldKeys(environmentKey = "ROS_USE_SHARED_MEMORY", propertiesKey = "ros.use.shared.memory", networkParametersKey = "")
@@ -155,10 +155,10 @@ public class ROS2NodeBuilder
             {
                domainId = 0;
 
-               LogTools.warn("Unable to find any ROS Domain ID");
-               LogTools.warn(
+               LogTools.error("Unable to find any ROS Domain ID");
+               LogTools.error(
                      "You can set a ROS Domain ID via: system property (ros.domain.id), environment variable (ROS_DOMAIN_ID), RTPSDomainID in IHMCNetworkParameters.ini");
-               LogTools.warn("Using a default ROS Domain ID: {}", domainId);
+               LogTools.error("Using a default ROS Domain ID: {}", domainId);
             }
          }
 
@@ -250,16 +250,17 @@ public class ROS2NodeBuilder
       for (Entry<String, String> possibleValue : possibleValues)
          printout.add(possibleValue.getKey() + "=" + possibleValue.getValue());
 
-      LogTools.info("ROS Domain ID: {}", printout.toString());
+      if (!possibleValues.empty())
+         LogTools.info("ROS Domain ID: {}", printout.toString());
 
-      return possibleValues.peek().getValue();
+      return !possibleValues.isEmpty() ? possibleValues.peek().getValue() : null;
    }
 
    private int findDomainID()
    {
       int domainID = UNSET_DOMAIN_ID;
 
-      String valueForField;
+      String valueForField = null;
       try
       {
          valueForField = findValueForField(getClass().getDeclaredField("domainId"));
@@ -267,8 +268,10 @@ public class ROS2NodeBuilder
       catch (NoSuchFieldException e)
       {
          LogTools.error(e);
-         return domainID;
       }
+
+      if (valueForField == null)
+         return domainID;
 
       try
       {
@@ -284,7 +287,6 @@ public class ROS2NodeBuilder
 
    private InetAddress[] findAddressRestriction()
    {
-
 
       return null;
    }
