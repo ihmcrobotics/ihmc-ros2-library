@@ -33,9 +33,40 @@ public class ROS2NodeBuilder
 {
    private static final int UNSET_DOMAIN_ID = -1;
 
+   /**
+    * Used to denote that a ROS2Node should be set-up with a special mode of transport.
+    * These are custom use-case specific modes.
+    */
    public enum SpecialTransportMode
    {
-      SHARED_MEMORY_ONLY, LOOPBACK_ADDRESS_ONLY, UDPV4_ONLY, INTRAPROCESS_ONLY
+      /**
+       * SHARED_MEMORY_ONLY enables only the Shared Memory Transport. Participants communicate directly through memory on the host system.
+       * Temporary files are written to disk (on Linux in /dev/shm, on Windows in %APPDATA%\Local\Temp) to assist with facilitating this mode of transport.
+       * This mode is NOT compatible with mixed-transports, e.g. a participant with SHM and UDPv4 transports.
+       * Documentation: <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/shared_memory/shared_memory.html">Shared Memory Transport</a>
+       */
+      SHARED_MEMORY_ONLY,
+      /**
+       * UDPV4_LOOPBACK_ADDRESS_ONLY enables only the UDP Transport on the loopback address. Useful for mixed-DDS implementations where you only want local
+       * communication, e.g. CycloneDDS and FastDDS communicating only locally.
+       * Documentation <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/udp/udp.html">UDP Transport</a>
+       */
+      UDPV4_LOOPBACK_ADDRESS_ONLY,
+      /**
+       * UDPV4_ONLY enables only the UDP Transport with no special address restrictions. Useful for debugging or testing, not super practical in most
+       * applications.
+       * Documentation <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/udp/udp.html">UDP Transport</a>
+       */
+      UDPV4_ONLY,
+      /**
+       * INTRAPROCESS_ONLY attempts to force Publishers to directly call reception functions of Subscriber.
+       * This mode still enables a shared memory (SHM) transport, as there has to be one fallback transport on a Participant.
+       * This mode is especially useful for unit testing and single-process applications.
+       * This mode does not bind to any network address, ever.
+       * Documentation: <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/intraprocess.html#intraprocess-delivery">Intra-process
+       * delivery</a>
+       */
+      INTRAPROCESS_ONLY
    }
 
    private int domainId = UNSET_DOMAIN_ID;
@@ -166,7 +197,7 @@ public class ROS2NodeBuilder
             switch (specialTransportMode)
             {
                case SHARED_MEMORY_ONLY -> profile.useOnlySharedMemoryTransport();
-               case LOOPBACK_ADDRESS_ONLY ->
+               case UDPV4_LOOPBACK_ADDRESS_ONLY ->
                {
                   InetAddress loopbackAddress = InetAddress.getLoopbackAddress();
 

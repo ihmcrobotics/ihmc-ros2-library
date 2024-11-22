@@ -233,6 +233,7 @@ public class ParticipantProfile
    public ParticipantProfile useOnlySharedMemoryTransport()
    {
       useBuiltinTransports(false);
+      useIntraProcessDelivery(false);
 
       if (participantProfile.getRtps().getUserTransports() == null)
          participantProfile.getRtps().setUserTransports(new UserTransports());
@@ -260,6 +261,7 @@ public class ParticipantProfile
    public ParticipantProfile useOnlyUDPv4Transport(InetAddress... addressRestriction)
    {
       useBuiltinTransports(false);
+      useIntraProcessDelivery(false);
 
       if (participantProfile.getRtps().getUserTransports() == null)
          participantProfile.getRtps().setUserTransports(new UserTransports());
@@ -287,6 +289,7 @@ public class ParticipantProfile
    public ParticipantProfile useOnlyIntraProcessDelivery()
    {
       useBuiltinTransports(false);
+      useIntraProcessDelivery(true);
 
       if (participantProfile.getRtps().getUserTransports() == null)
          participantProfile.getRtps().setUserTransports(new UserTransports());
@@ -296,8 +299,6 @@ public class ParticipantProfile
       // Intra-process delivery requires at least 1 transport.
       // Use shared memory to not bind to any network interface.
       addSharedMemoryTransport();
-
-      useIntraProcessDelivery(true);
 
       return this;
    }
