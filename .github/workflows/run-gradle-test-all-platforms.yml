@@ -4,8 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-linux:
-    runs-on: [ubuntu-20.04]
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-12, macos-14]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -17,62 +20,13 @@ jobs:
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.5
+          gradle-version: 8.11.1
       - name: Run tests
         run: |
-          patch ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd ihmc-pub-sub/patches/fastRTPS_profiles.patch
           gradle compositeTask --stacktrace --info -PtaskName=test
-  test-windows:
-    runs-on: [windows-2019]
-    steps:
-      - uses: actions/checkout@v4
+      - name: Publish Test Report - ${{ inputs.test-category }}
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure() # always run even if the previous step fails
         with:
-          lfs: 'false'
-          submodules: 'recursive'
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 8.5
-      - name: Run tests
-        run: |
-          patch ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd ihmc-pub-sub/patches/fastRTPS_profiles.patch
-          gradle compositeTask --stacktrace --info -PtaskName=test
-  test-macos-intel:
-    runs-on: [macos-12] # macos-12 is exclusively x86_64 intel
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: 'false'
-          submodules: 'recursive'
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 8.5
-      - name: Run tests
-        run: |
-          patch ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd ihmc-pub-sub/patches/fastRTPS_profiles.patch
-          gradle compositeTask --stacktrace --info -PtaskName=test
-  test-macos-arm:
-    runs-on: [macos-14] # macos-14 runner is exclusively arm64
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: 'false'
-          submodules: 'recursive'
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 8.5
-      - name: Run tests
-        run: |
-          patch ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd ihmc-pub-sub/patches/fastRTPS_profiles.patch
-          gradle compositeTask --stacktrace --info -PtaskName=test
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+          detailed_summary: true
