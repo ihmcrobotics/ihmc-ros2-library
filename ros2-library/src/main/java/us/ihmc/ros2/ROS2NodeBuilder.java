@@ -9,8 +9,17 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Stack;
+import java.util.StringJoiner;
 
 /**
  * A builder to construct {@link ROS2Node}, {@link RealtimeROS2Node}.
@@ -25,20 +34,34 @@ import java.util.Properties;
  */
 public class ROS2NodeBuilder
 {
+   private static final int UNSET_DOMAIN_ID = -1;
+
    public enum SpecialTransportMode
    {
       SHARED_MEMORY_ONLY, LOOPBACK_ADDRESS_ONLY, UDPV4_ONLY
    }
 
-   private static final int UNSET_DOMAIN_ID = -1;
+   @Retention(RetentionPolicy.RUNTIME)
+   @Target(ElementType.FIELD)
+   public @interface FieldKeys
+   {
+      String environmentKey();
 
+      String propertiesKey();
+
+      String networkParametersKey();
+   }
+
+   @FieldKeys(environmentKey = "ROS_DOMAIN_ID", propertiesKey = "ros.domain.id", networkParametersKey = "RTPSDomainID")
    private int domainId = UNSET_DOMAIN_ID;
    private String namespace = "/us/ihmc";
+   @FieldKeys(environmentKey = "ROS_USE_SHARED_MEMORY", propertiesKey = "ros.use.shared.memory", networkParametersKey = "")
    private boolean useSharedMemory = true;
-   private InetAddress[] addressRestriction;
+   @FieldKeys(environmentKey = "ROS_ADDRESS_RESTRICTION", propertiesKey = "ros.address.restriction", networkParametersKey = "RTPSSubnet")
+   private InetAddress[] addressRestriction = null;
 
-   private boolean parseProperties = true;
    private boolean parseEnvironment = true;
+   private boolean parseProperties = true;
    private boolean parseNetworkParametersConfig = true;
 
    @Nullable
@@ -68,15 +91,15 @@ public class ROS2NodeBuilder
       return this;
    }
 
-   public ROS2NodeBuilder parseProperties(boolean parseProperties)
-   {
-      this.parseProperties = parseProperties;
-      return this;
-   }
-
    public ROS2NodeBuilder parseEnvironment(boolean parseEnvironment)
    {
       this.parseEnvironment = parseEnvironment;
+      return this;
+   }
+
+   public ROS2NodeBuilder parseProperties(boolean parseProperties)
+   {
+      this.parseProperties = parseProperties;
       return this;
    }
 
@@ -92,6 +115,26 @@ public class ROS2NodeBuilder
       return this;
    }
 
+   public ROS2Node build(String name)
+   {
+      return new ROS2Node(name, namespace, buildProfile());
+   }
+
+   public RealtimeROS2Node buildRealtime(String name)
+   {
+      return buildRealtime(name, new PeriodicNonRealtimeThreadSchedulerFactory());
+   }
+
+   public RealtimeROS2Node buildRealtime(String name, PeriodicThreadSchedulerFactory threadFactory)
+   {
+      return new RealtimeROS2Node(name, namespace, buildProfile(), threadFactory);
+   }
+
+   protected static boolean domainIDValid(int domainID)
+   {
+      return domainID >= 0 && domainID <= 232;
+   }
+
    private ParticipantProfile buildProfile()
    {
       ParticipantProfile profile = ParticipantProfile.create();
@@ -105,7 +148,7 @@ public class ROS2NodeBuilder
          else
          {
             // Try to find a ROS Domain ID
-            domainId = findDomainID(parseNetworkParametersConfig, parseProperties, parseEnvironment);
+            domainId = findDomainID();
 
             // If a valid domain ID was not found automatically
             if (!domainIDValid(domainId))
@@ -158,120 +201,91 @@ public class ROS2NodeBuilder
       return profile;
    }
 
-   public ROS2Node build(String name)
+   private String findValueForField(Field field)
    {
-      return new ROS2Node(name, namespace, buildProfile());
+      Stack<Map.Entry<String, String>> possibleValues = new Stack<>();
+
+      if (field.getAnnotationsByType(FieldKeys.class).length > 0)
+      {
+         FieldKeys fieldKeys = field.getAnnotation(FieldKeys.class);
+
+         if (parseEnvironment && !fieldKeys.environmentKey().isEmpty())
+         {
+            if (System.getenv(fieldKeys.environmentKey()) != null)
+            {
+               possibleValues.push(Map.entry(fieldKeys.environmentKey(), System.getenv(fieldKeys.environmentKey())));
+            }
+         }
+
+         if (parseProperties && !fieldKeys.propertiesKey().isEmpty())
+         {
+            if (System.getProperty(fieldKeys.propertiesKey()) != null)
+            {
+               possibleValues.push(Map.entry("-D" + fieldKeys.propertiesKey(), System.getProperty(fieldKeys.propertiesKey())));
+            }
+         }
+
+         if (parseNetworkParametersConfig && !fieldKeys.networkParametersKey().isEmpty())
+         {
+            File networkParametersFile = new File(System.getProperty("user.home"), ".ihmc/IHMCNetworkParameters.ini");
+            Properties properties = new Properties();
+            try (FileInputStream inputStream = new FileInputStream(networkParametersFile))
+            {
+               properties.load(inputStream);
+
+               if (properties.getProperty(fieldKeys.networkParametersKey()) != null)
+               {
+                  possibleValues.push(Map.entry(fieldKeys.networkParametersKey(), properties.getProperty(fieldKeys.networkParametersKey())));
+               }
+            }
+            catch (IOException e)
+            {
+               LogTools.error("Unable to read {}", networkParametersFile.getAbsolutePath());
+               LogTools.error(e);
+            }
+         }
+      }
+
+      StringJoiner printout = new StringJoiner(" -> ");
+      for (Entry<String, String> possibleValue : possibleValues)
+         printout.add(possibleValue.getKey() + "=" + possibleValue.getValue());
+
+      LogTools.info("ROS Domain ID: {}", printout.toString());
+
+      return possibleValues.peek().getValue();
    }
 
-   public RealtimeROS2Node buildRealtime(String name)
-   {
-      return buildRealtime(name, new PeriodicNonRealtimeThreadSchedulerFactory());
-   }
-
-   public RealtimeROS2Node buildRealtime(String name, PeriodicThreadSchedulerFactory threadFactory)
-   {
-      return new RealtimeROS2Node(name, namespace, buildProfile(), threadFactory);
-   }
-
-   protected static boolean domainIDValid(int domainID)
-   {
-      return domainID >= 0 && domainID <= 232;
-   }
-
-   /**
-    * Find the ROS Domain ID from either:
-    *    - IHMCNetworkParameters.ini
-    *    - System property
-    *    - Environment variable
-    * prioritized in that order
-    */
-   protected static int findDomainID(boolean parseNetworkParametersConfig, boolean parseProperties, boolean parseEnvironment)
+   private int findDomainID()
    {
       int domainID = UNSET_DOMAIN_ID;
 
-      // Find domain ID from IHMCNetworkParameters.ini
-      if (parseNetworkParametersConfig)
+      String valueForField;
+      try
       {
-         File networkParametersFile = new File(System.getProperty("user.home"), ".ihmc/IHMCNetworkParameters.ini");
-         Properties properties = new Properties();
-         try (FileInputStream inputStream = new FileInputStream(networkParametersFile))
-         {
-            properties.load(inputStream);
-
-            String domainIDProperty = properties.getProperty("RTPSDomainID");
-
-            if (domainIDProperty != null)
-            {
-               try
-               {
-                  domainID = Integer.parseInt(domainIDProperty);
-               }
-               catch (NumberFormatException e)
-               {
-                  LogTools.error("Unable to parse RTPSDomainID from {}", networkParametersFile.getAbsolutePath());
-               }
-            }
-         }
-         catch (IOException e)
-         {
-            // Ignore
-         }
-
-         if (domainIDValid(domainID))
-         {
-            LogTools.info("Found ROS Domain ID from IHMCNetworkParameters.ini: {}", domainID);
-            return domainID;
-         }
+         valueForField = findValueForField(getClass().getDeclaredField("domainId"));
+      }
+      catch (NoSuchFieldException e)
+      {
+         LogTools.error(e);
+         return domainID;
       }
 
-      // Find domain ID from properties
-      if (parseProperties)
+      try
       {
-         String domainIDProperty = System.getProperty("ros.domain.id");
-
-         if (domainIDProperty != null)
-         {
-            try
-            {
-               domainID = Integer.parseInt(domainIDProperty);
-            }
-            catch (NumberFormatException e)
-            {
-               LogTools.error("Unable to parse ros.domain.id system property");
-            }
-         }
-
-         if (domainIDValid(domainID))
-         {
-            LogTools.info("Found ROS Domain ID from system parameters ROS_DOMAIN_ID: {}", domainID);
-            return domainID;
-         }
+         domainID = Integer.parseInt(valueForField);
       }
-
-      // Find domain ID from environment
-      if (parseEnvironment)
+      catch (NumberFormatException e)
       {
-         String domainIDEnv = System.getenv("ROS_DOMAIN_ID");
-
-         if (domainIDEnv != null)
-         {
-            try
-            {
-               domainID = Integer.parseInt(domainIDEnv);
-            }
-            catch (NumberFormatException e)
-            {
-               LogTools.error("Unable to parse ROS_DOMAIN_ID environment variable");
-            }
-         }
-
-         if (domainIDValid(domainID))
-         {
-            LogTools.info("Found ROS Domain ID from environment ROS_DOMAIN_ID: {}", domainID);
-            return domainID;
-         }
+         LogTools.error("Unable to parse ROS Domain ID");
       }
 
       return domainID;
+   }
+
+   private InetAddress[] findAddressRestriction()
+   {
+
+
+      return null;
    }
 }
