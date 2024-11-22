@@ -35,7 +35,7 @@ public class ROS2NodeBuilder
 
    public enum SpecialTransportMode
    {
-      SHARED_MEMORY_ONLY, LOOPBACK_ADDRESS_ONLY, UDPV4_ONLY
+      SHARED_MEMORY_ONLY, LOOPBACK_ADDRESS_ONLY, UDPV4_ONLY, INTRAPROCESS_ONLY
    }
 
    private int domainId = UNSET_DOMAIN_ID;
@@ -173,6 +173,7 @@ public class ROS2NodeBuilder
                   addressRestriction = new InetAddress[] {loopbackAddress};
                }
                case UDPV4_ONLY -> profile.useOnlyUDPv4Transport(addressRestriction);
+               case INTRAPROCESS_ONLY -> profile.useOnlyIntraProcessDelivery();
             }
          }
       }
