@@ -289,7 +289,7 @@ public class ROS2NodeBuilder
             printout.add(possibleValue.getKey() + "=" + possibleValue.getValue());
          }
 
-         LogTools.info("Found ROS2 property: {}", printout.toString());
+         LogTools.info("Found ROS 2 property: {}", printout.toString());
       }
 
       return !possibleValues.isEmpty() ? possibleValues.peek().getValue() : null;
