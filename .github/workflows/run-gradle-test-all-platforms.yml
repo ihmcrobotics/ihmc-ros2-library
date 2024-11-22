@@ -2,6 +2,10 @@ name: Run Gradle test (all platforms)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - develop
+  pull_request:
 
 jobs:
   test:
