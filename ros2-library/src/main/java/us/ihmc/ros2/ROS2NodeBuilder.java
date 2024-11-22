@@ -8,6 +8,7 @@ import us.ihmc.util.PeriodicThreadSchedulerFactory;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -231,7 +232,9 @@ public class ROS2NodeBuilder
             catch (IOException e)
             {
                LogTools.error("Unable to read {}", networkParametersFile.getAbsolutePath());
-               LogTools.error(e);
+
+               if (!(e instanceof FileNotFoundException))
+                  LogTools.error(e);
             }
          }
       }
