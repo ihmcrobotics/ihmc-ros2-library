@@ -39,8 +39,8 @@ public class PublishSubscribeUInt64Test
 
          ParticipantProfile attributes = ParticipantProfile.create()
                                                            .domainId(219)
+                                                           .useOnlyIntraProcessDelivery()
                                                            .discoveryLeaseDuration(Time.Infinite)
-                                                           .useOnlySharedMemoryTransport()
                                                            .name("StatusTest");
 
          Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());

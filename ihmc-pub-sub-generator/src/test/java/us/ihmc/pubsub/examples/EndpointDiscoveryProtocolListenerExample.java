@@ -88,9 +88,10 @@ public class EndpointDiscoveryProtocolListenerExample
    public EndpointDiscoveryProtocolListenerExample() throws IOException
    {
       Domain domain = DomainFactory.getDomain();
-      
+
       ParticipantProfile attributes = ParticipantProfile.create()
                                                         .domainId(215)
+                                                        .useOnlyIntraProcessDelivery()
                                                         .discoveryLeaseDuration(Time.Infinite)
                                                         .name("EndpointDiscoveryProtocolListenerExample");
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());

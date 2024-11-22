@@ -70,6 +70,7 @@ public class PublisherExample
 
       ParticipantProfile attributes2 = ParticipantProfile.create()
                                                          .domainId(1)
+                                                         .useOnlyIntraProcessDelivery()
                                                          .name("PublisherExample2")
                                                          .discoveryLeaseDuration(Time.Infinite);
       //.discoveryServer("127.0.0.1", 4);

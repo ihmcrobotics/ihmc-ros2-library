@@ -73,8 +73,8 @@ public class HandshakeTest
 
          ParticipantProfile attributes = ParticipantProfile.create()
                                                            .domainId(220)
+                                                           .useOnlyIntraProcessDelivery()
                                                            .discoveryLeaseDuration(Time.Infinite)
-                                                           .useOnlySharedMemoryTransport()
                                                            .name("StatusTest");
 
          Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());

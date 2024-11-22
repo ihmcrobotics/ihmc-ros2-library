@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import ros_msgs.msg.dds.TwoNum;
 import ros_msgs.msg.dds.TwoNumPubSubType;
 import us.ihmc.commons.thread.ThreadTools;
+import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 import us.ihmc.util.PeriodicNonRealtimeThreadScheduler;
 
 import java.time.Duration;
@@ -45,7 +46,7 @@ public class CommunicationTest
          try
          {
             String name = "ROS2CommunicationTest";
-            ROS2Node node = new ROS2NodeBuilder().build(name);
+            ROS2Node node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY).build(name);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -137,7 +138,9 @@ public class CommunicationTest
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            RealtimeROS2Node node = new ROS2NodeBuilder().namespace("/us/ihmc").buildRealtime("ROS2CommunicationTest", PeriodicNonRealtimeThreadScheduler::new);
+            RealtimeROS2Node node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY)
+                                                         .namespace("/us/ihmc")
+                                                         .buildRealtime("ROS2CommunicationTest", PeriodicNonRealtimeThreadScheduler::new);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 

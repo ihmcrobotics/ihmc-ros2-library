@@ -81,8 +81,8 @@ public class MultipleParticipantsInSameProcessTest
          {
             ParticipantProfile participantProfile = ParticipantProfile.create()
                                                                       .domainId(217)
+                                                                      .useOnlyIntraProcessDelivery()
                                                                       .discoveryLeaseDuration(Time.Infinite)
-                                                                      .useOnlySharedMemoryTransport()
                                                                       .name("StatusTest" + i);
             Participant participant = domain.createParticipant(participantProfile);
             LogTools.info("Creating participant #" + i);

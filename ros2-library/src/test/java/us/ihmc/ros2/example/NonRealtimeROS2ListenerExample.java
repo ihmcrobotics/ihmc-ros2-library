@@ -17,6 +17,7 @@ package us.ihmc.ros2.example;
 
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
+import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 
 import java.io.IOException;
 
@@ -34,7 +35,10 @@ public class NonRealtimeROS2ListenerExample
 {
    public static void main(String[] args) throws IOException, InterruptedException
    {
-      ROS2Node node = new ROS2NodeBuilder().domainId(112).namespace("/us/ihmc").build("NonRealtimeROS2ChatterExample");
+      ROS2Node node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY)
+                                           .domainId(112)
+                                           .namespace("/us/ihmc")
+                                           .build("NonRealtimeROS2ChatterExample");
       node.createSubscription(new std_msgs.msg.dds.StringPubSubType(), subscriber -> {
          std_msgs.msg.dds.String message = new std_msgs.msg.dds.String();
          if (subscriber.takeNextData(message, null))
