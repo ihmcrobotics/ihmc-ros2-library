@@ -173,20 +173,14 @@ public class ROS2NodeBuilder
          {
             switch (specialTransportMode)
             {
-               case SHARED_MEMORY_ONLY ->
-               {
-                  profile.useOnlySharedMemoryTransport();
-               }
+               case SHARED_MEMORY_ONLY -> profile.useOnlySharedMemoryTransport();
                case LOOPBACK_ADDRESS_ONLY ->
                {
                   InetAddress loopbackAddress = InetAddress.getLoopbackAddress();
 
                   addressRestriction = new InetAddress[] {loopbackAddress};
                }
-               case UDPV4_ONLY ->
-               {
-                  profile.useOnlyUDPv4Transport(addressRestriction);
-               }
+               case UDPV4_ONLY -> profile.useOnlyUDPv4Transport(addressRestriction);
             }
          }
       }
