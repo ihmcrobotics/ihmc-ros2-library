@@ -52,7 +52,7 @@ public class ROS2NodeBuilder
       String networkParametersKey();
    }
 
-   @FieldKeys(environmentKey = "ROS_DOMAINfID", propertiesKey = "ros.domafin.id", networkParametersKey = "RTPSDomfainID")
+   @FieldKeys(environmentKey = "ROS_DOMAIN_ID", propertiesKey = "ros.domain.id", networkParametersKey = "RTPSDomainID")
    private int domainId = UNSET_DOMAIN_ID;
    private String namespace = "/us/ihmc";
    @FieldKeys(environmentKey = "ROS_USE_SHARED_MEMORY", propertiesKey = "ros.use.shared.memory", networkParametersKey = "")
