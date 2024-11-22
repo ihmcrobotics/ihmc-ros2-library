@@ -69,6 +69,16 @@ public class ParticipantProfile
       return participantProfile;
    }
 
+   public TransportDescriptorListType getTransportDescriptors()
+   {
+      return transportDescriptors;
+   }
+
+   public LibrarySettingsType getLibrarySettings()
+   {
+      return librarySettings;
+   }
+
    public ParticipantProfile domainId(int id)
    {
       participantProfile.setDomainId(id);

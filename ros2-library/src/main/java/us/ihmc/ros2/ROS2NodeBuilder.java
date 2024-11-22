@@ -1,5 +1,7 @@
 package us.ihmc.ros2;
 
+import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType.Rtps.UserTransports;
+import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.util.PeriodicNonRealtimeThreadSchedulerFactory;
@@ -132,6 +134,7 @@ public class ROS2NodeBuilder
 
    public ROS2Node build(String name)
    {
+      LogTools.info("Building ROS2Node: {}", name);
       return new ROS2Node(name, namespace, buildProfile());
    }
 
@@ -142,6 +145,7 @@ public class ROS2NodeBuilder
 
    public RealtimeROS2Node buildRealtime(String name, PeriodicThreadSchedulerFactory threadFactory)
    {
+      LogTools.info("Building RealtimeROS2Node: {}", name);
       return new RealtimeROS2Node(name, namespace, buildProfile(), threadFactory);
    }
 
@@ -210,7 +214,28 @@ public class ROS2NodeBuilder
          }
       }
 
-      // Print the current transports
+      // Print the current transports and delivery methods
+      StringBuilder printout = new StringBuilder();
+
+      StringJoiner transportsString = new StringJoiner(", ");
+      UserTransports transports = profile.getProfile().getRtps().getUserTransports();
+      if (transports != null)
+         for (TransportDescriptorType transportDescriptorType : profile.getTransportDescriptors().getTransportDescriptor())
+            if (transports.getTransportId().contains(transportDescriptorType.getTransportId()))
+               transportsString.add(transportDescriptorType.getType());
+
+      printout.append("Enabled transports: ");
+      printout.append(transportsString);
+
+      if (profile.getLibrarySettings().getIntraprocessDelivery() != null)
+      {
+         printout.append(" ");
+         printout.append("(intra-process delivery mode: ");
+         printout.append(profile.getLibrarySettings().getIntraprocessDelivery());
+         printout.append(")");
+      }
+
+      LogTools.info(printout.toString());
 
       return profile;
    }
