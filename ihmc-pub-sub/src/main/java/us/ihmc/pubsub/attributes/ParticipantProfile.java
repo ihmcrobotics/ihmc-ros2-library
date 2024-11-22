@@ -43,20 +43,20 @@ public class ParticipantProfile
       // Set default discovery duration
       discoveryLeaseDuration(Time.Infinite);
    }
-   
+
    /**
     * Helper function to use a builder-like approach
-    * 
+    *
     * @return new intance of ParticipantAttributes
     */
    public static ParticipantProfile create()
    {
       return new ParticipantProfile();
    }
-   
+
    /**
     * Direct access to the participant profile. This allows the user to access all settings
-    * 
+    *
     * @return Participant profile XML structure
     */
    public ParticipantProfileType getProfile()
@@ -91,7 +91,7 @@ public class ParticipantProfile
       profileType.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(DDSConversionTools.timeToDurationType(discoveryLeaseDuration));
       return this;
    }
-   
+
    public ParticipantProfile discoveryServer(String discoveryServerAddress, int discoveryServerId)
    {
       return discoveryServer(discoveryServerAddress, discoveryServerId, FastRTPSDomain.DEFAULT_DISCOVERY_SERVER_PORT);
@@ -108,7 +108,7 @@ public class ParticipantProfile
       {
          throw new RuntimeException("Invalid discovery server port");
       }
-      
+
       DiscoverySettingsType discoverySettingsType = profileType.getRtps().getBuiltin().getDiscoveryConfig();
       discoverySettingsType.setDiscoveryProtocol(DiscoveryProtocolType.CLIENT);
 
@@ -176,7 +176,7 @@ public class ParticipantProfile
 
       return this;
    }
-   
+
    /**
     * Add a shared memory transport to this participant.
     * By setting useBuiltinTransports to false, you can use only a shared memory transport
@@ -206,7 +206,9 @@ public class ParticipantProfile
 
          for (InetAddress addr : addressRestriction)
          {
-            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"), String.class, addr.getHostAddress());
+            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"),
+                                                                   String.class,
+                                                                   addr.getHostAddress());
             addressWhitelist.getAddressOrInterface().add(addressElement);
          }
 
@@ -282,7 +284,7 @@ public class ParticipantProfile
       profileType.getRtps().setUseBuiltinTransports(useBuiltinTransports);
       return this;
    }
-   
+
    public boolean isUseBuiltinTransports()
    {
       return profileType.getRtps().isUseBuiltinTransports();
@@ -301,10 +303,10 @@ public class ParticipantProfile
 
    /**
     * Marshall this profile to a XML structure
-    * 
+    *
     * @param profileName Unique name for this profile
     * @return XML representation of this profile
-    * @throws IOException 
+    * @throws IOException
     */
    public String marshall(String profileName) throws IOException
    {
@@ -314,8 +316,8 @@ public class ParticipantProfile
       profilesType.getDomainparticipantFactoryOrParticipantOrDataWriter().add(transportDescriptors);
       profilesType.getDomainparticipantFactoryOrParticipantOrDataWriter().add(profileType);
 
-      String profileXML =FastRTPSDomain.marshalProfile(profilesType);
-//      profileXML = Pattern.compile("<id>(.*)<\\/id>").matcher(profileXML).replaceAll("<transport_id>$1<\\/transport_id>");
+      String profileXML = FastRTPSDomain.marshalProfile(profilesType);
+      // profileXML = Pattern.compile("<id>(.*)<\\/id>").matcher(profileXML).replaceAll("<transport_id>$1<\\/transport_id>");
 
       return profileXML;
    }
