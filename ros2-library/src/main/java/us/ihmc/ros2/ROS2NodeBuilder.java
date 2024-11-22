@@ -244,8 +244,11 @@ public class ROS2NodeBuilder
       if (!possibleValues.empty())
       {
          StringJoiner printout = new StringJoiner(" -> ");
-         for (Entry<String, String> possibleValue : possibleValues)
+         for (int i = possibleValues.size() - 1; i >= 0; i--)
+         {
+            Entry<String, String> possibleValue = possibleValues.get(i);
             printout.add(possibleValue.getKey() + "=" + possibleValue.getValue());
+         }
 
          LogTools.info("ROS Domain ID: {}", printout.toString());
       }
