@@ -356,6 +356,7 @@ public class ROS2NodeBuilder
     */
    protected static InetAddress[] convertToInetAddressArray(String ipList)
    {
+      // TODO: handle subnet
       String[] ipStrings = ipList.split(",\\s*");
       InetAddress[] inetAddresses = new InetAddress[ipStrings.length];
 
