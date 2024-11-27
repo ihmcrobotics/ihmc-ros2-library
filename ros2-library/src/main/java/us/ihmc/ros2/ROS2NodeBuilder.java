@@ -243,6 +243,15 @@ public class ROS2NodeBuilder
       return profile;
    }
 
+   /**
+    * Find a value from the environment from several different places, where the places have some priority.
+    * Priority order: IHMCNetworkParameters.ini, Java System Property, system environment
+    *
+    * @param environmentKey Key from system environment
+    * @param propertiesKey Key from Java System Properties
+    * @param networkParametersKey Key from ~/.ihmc/IHMCNetworkParameters.ini properties file
+    * @return the value found for the most-prioritized key
+    */
    private String findValueForField(String environmentKey, String propertiesKey, String networkParametersKey)
    {
       Stack<Map.Entry<String, String>> possibleValues = new Stack<>();
