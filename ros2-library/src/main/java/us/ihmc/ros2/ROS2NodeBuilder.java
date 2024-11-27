@@ -216,27 +216,29 @@ public class ROS2NodeBuilder
       }
 
       // Print the current transports and delivery methods
-      StringBuilder printout = new StringBuilder();
-
-      StringJoiner transportsString = new StringJoiner(", ");
-      UserTransports transports = profile.getProfile().getRtps().getUserTransports();
-      if (transports != null)
-         for (TransportDescriptorType transportDescriptorType : profile.getTransportDescriptors().getTransportDescriptor())
-            if (transports.getTransportId().contains(transportDescriptorType.getTransportId()))
-               transportsString.add(transportDescriptorType.getType());
-
-      printout.append("Enabled transports: ");
-      printout.append(transportsString);
-
-      if (profile.getLibrarySettings().getIntraprocessDelivery() != null)
       {
-         printout.append(" ");
-         printout.append("(intra-process delivery mode: ");
-         printout.append(profile.getLibrarySettings().getIntraprocessDelivery());
-         printout.append(")");
-      }
+         StringBuilder printout = new StringBuilder();
 
-      buildPrintout.add(printout.toString());
+         StringJoiner transportsString = new StringJoiner(", ");
+         UserTransports transports = profile.getProfile().getRtps().getUserTransports();
+         if (transports != null)
+            for (TransportDescriptorType transportDescriptorType : profile.getTransportDescriptors().getTransportDescriptor())
+               if (transports.getTransportId().contains(transportDescriptorType.getTransportId()))
+                  transportsString.add(transportDescriptorType.getType());
+
+         printout.append("Enabled transports: ");
+         printout.append(transportsString);
+
+         if (profile.getLibrarySettings().getIntraprocessDelivery() != null)
+         {
+            printout.append(" ");
+            printout.append("(intra-process delivery mode: ");
+            printout.append(profile.getLibrarySettings().getIntraprocessDelivery());
+            printout.append(")");
+         }
+
+         buildPrintout.add(printout.toString());
+      }
 
       LogTools.info(buildPrintout.toString());
 
@@ -247,8 +249,8 @@ public class ROS2NodeBuilder
     * Find a value from the environment from several different places, where the places have some priority.
     * Priority order: IHMCNetworkParameters.ini, Java System Property, system environment
     *
-    * @param environmentKey Key from system environment
-    * @param propertiesKey Key from Java System Properties
+    * @param environmentKey       Key from system environment
+    * @param propertiesKey        Key from Java System Properties
     * @param networkParametersKey Key from ~/.ihmc/IHMCNetworkParameters.ini properties file
     * @return the value found for the most-prioritized key
     */
