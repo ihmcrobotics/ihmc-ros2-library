@@ -84,6 +84,8 @@ public class ROS2NodeBuilder
    @Nullable
    private SpecialTransportMode specialTransportMode;
 
+   private final transient StringJoiner buildPrintout = new StringJoiner("\n\t\t");
+
    public ROS2NodeBuilder domainId(int domainId)
    {
       this.domainId = domainId;
@@ -134,7 +136,7 @@ public class ROS2NodeBuilder
 
    public ROS2Node build(String name)
    {
-      LogTools.info("Building ROS2Node: {}", name);
+      buildPrintout.add("Building ROS2Node: " + name);
       return new ROS2Node(name, namespace, buildProfile());
    }
 
@@ -145,7 +147,7 @@ public class ROS2NodeBuilder
 
    public RealtimeROS2Node buildRealtime(String name, PeriodicThreadSchedulerFactory threadFactory)
    {
-      LogTools.info("Building RealtimeROS2Node: {}", name);
+      buildPrintout.add("Building RealtimeROS2Node: " + name);
       return new RealtimeROS2Node(name, namespace, buildProfile(), threadFactory);
    }
 
@@ -157,7 +159,7 @@ public class ROS2NodeBuilder
       {
          if (domainIDValid(domainId))
          {
-            LogTools.info("Using a programmatically set ROS Domain ID: {}", domainId);
+            buildPrintout.add("Using a programmatically set ROS Domain ID: " + domainId);
          }
          else
          {
@@ -169,10 +171,10 @@ public class ROS2NodeBuilder
             {
                domainId = 0;
 
-               LogTools.error("Unable to find any ROS Domain ID");
-               LogTools.error(
+               buildPrintout.add("Unable to find any ROS Domain ID");
+               buildPrintout.add(
                      "You can set a ROS Domain ID via: system property (ros.domain.id), environment variable (ROS_DOMAIN_ID), RTPSDomainID in IHMCNetworkParameters.ini");
-               LogTools.error("Using a default ROS Domain ID: {}", domainId);
+               buildPrintout.add("Using a default ROS Domain ID: " + domainId);
             }
          }
 
@@ -188,7 +190,8 @@ public class ROS2NodeBuilder
 
          if (addressRestriction != null)
          {
-            // TODO:
+            buildPrintout.add("Using a programmatically set address restriction");
+            // TODO: print the address restriction
          }
          else
          {
@@ -235,7 +238,9 @@ public class ROS2NodeBuilder
          printout.append(")");
       }
 
-      LogTools.info(printout.toString());
+      buildPrintout.add(printout.toString());
+
+      LogTools.info(buildPrintout.toString());
 
       return profile;
    }
@@ -289,7 +294,7 @@ public class ROS2NodeBuilder
             printout.add(possibleValue.getKey() + "=" + possibleValue.getValue());
          }
 
-         LogTools.info("Found ROS 2 property: {}", printout.toString());
+         buildPrintout.add("Found ROS 2 property: " + printout.toString());
       }
 
       return !possibleValues.isEmpty() ? possibleValues.peek().getValue() : null;
