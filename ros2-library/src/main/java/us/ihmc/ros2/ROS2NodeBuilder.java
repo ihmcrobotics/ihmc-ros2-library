@@ -76,11 +76,9 @@ public class ROS2NodeBuilder
    private String namespace = "/us/ihmc";
    private boolean useSharedMemory = true;
    private InetAddress[] addressRestriction = null;
-
    private boolean parseEnvironment = true;
    private boolean parseProperties = true;
    private boolean parseNetworkParametersConfig = true;
-
    @Nullable
    private SpecialTransportMode specialTransportMode;
 
