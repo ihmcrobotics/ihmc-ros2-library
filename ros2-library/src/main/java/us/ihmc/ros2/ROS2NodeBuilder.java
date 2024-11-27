@@ -333,6 +333,12 @@ public class ROS2NodeBuilder
       return domainID >= 0 && domainID <= 232;
    }
 
+   /**
+    * Convert IP address CSV to InetAddress array
+    *
+    * @param ipList A list of IP addresses separated by comma in CIDR format. E.g. "127.0.0.1/8, 0.0.0.0/24"
+    * @return The array of InetAddresses representing the CSV list
+    */
    protected static InetAddress[] convertToInetAddressArray(String ipList)
    {
       String[] ipStrings = ipList.split(",\\s*");
