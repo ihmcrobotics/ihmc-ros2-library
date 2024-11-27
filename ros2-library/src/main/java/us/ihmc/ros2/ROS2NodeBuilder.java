@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -189,7 +191,6 @@ public class ROS2NodeBuilder
          if (addressRestriction != null)
          {
             buildPrintout.add("Using a programmatically set address restriction");
-            // TODO: print the address restriction
          }
          else
          {
@@ -213,6 +214,11 @@ public class ROS2NodeBuilder
                case INTRAPROCESS_ONLY -> profile.useOnlyIntraProcessDelivery();
             }
          }
+
+         List<String> addresses = new ArrayList<>();
+         for (InetAddress inetAddress : addressRestriction)
+            addresses.add(inetAddress.getHostAddress());
+         buildPrintout.add("Address restriction: " + String.join(", ", addresses));
       }
 
       // Print the current transports and delivery methods
