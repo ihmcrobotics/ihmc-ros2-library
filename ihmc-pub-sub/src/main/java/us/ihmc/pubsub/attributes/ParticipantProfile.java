@@ -19,10 +19,12 @@ import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType;
 import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType.InterfaceWhiteList;
 import com.eprosima.xmlschemas.fastrtps_profiles.Udpv4LocatorType;
 import jakarta.xml.bind.JAXBElement;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.UUID;
@@ -198,6 +200,9 @@ public class ParticipantProfile
     */
    public ParticipantProfile addSharedMemoryTransport()
    {
+      if (System.getProperty("os.name").toLowerCase().contains("win") && !fastrtpsSHMAvailableOnWindows())
+         LogTools.error("Shared Memory Transport (SHM) is not available (Could not write to C:\\ProgramData\\eprosima\\fastrtps_interprocess)");
+
       TransportDescriptorType transportDescriptor = new TransportDescriptorType();
       transportDescriptor.setTransportId(UUID.randomUUID().toString());
       transportDescriptor.setType("SHM");
@@ -307,8 +312,11 @@ public class ParticipantProfile
       participantProfile.getRtps().getUserTransports().getTransportId().clear();
 
       // Intra-process delivery requires at least 1 transport.
-      // Use shared memory to not bind to any network interface.
-      addSharedMemoryTransport();
+      // Use shared memory to not bind to any network interface or UDPv4 bound to the loopback address if that is not available
+      if (System.getProperty("os.name").toLowerCase().contains("win") && !fastrtpsSHMAvailableOnWindows())
+         addUDPv4Transport(InetAddress.getLoopbackAddress());
+      else
+         addSharedMemoryTransport();
 
       return this;
    }
@@ -367,5 +375,21 @@ public class ParticipantProfile
       // profileXML = Pattern.compile("<id>(.*)<\\/id>").matcher(profileXML).replaceAll("<transport_id>$1<\\/transport_id>");
 
       return profileXML;
+   }
+
+
+   private static boolean fastrtpsSHMAvailableOnWindows() {
+      String filePath = "C:\\ProgramData\\eprosima\\fastrtps_interprocess\\test";
+      File file = new File(filePath);
+
+      try {
+         if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+         }
+
+         return file.createNewFile();
+      } catch (IOException e) {
+         return false;
+      }
    }
 }
