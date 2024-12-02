@@ -200,9 +200,6 @@ public class ParticipantProfile
     */
    public ParticipantProfile addSharedMemoryTransport()
    {
-      if (System.getProperty("os.name").toLowerCase().contains("win") && !fastrtpsSHMAvailableOnWindows())
-         LogTools.error("Shared Memory Transport (SHM) is not available (Could not write to C:\\ProgramData\\eprosima\\fastrtps_interprocess)");
-
       TransportDescriptorType transportDescriptor = new TransportDescriptorType();
       transportDescriptor.setTransportId(UUID.randomUUID().toString());
       transportDescriptor.setType("SHM");
@@ -314,9 +311,16 @@ public class ParticipantProfile
       // Intra-process delivery requires at least 1 transport.
       // Use shared memory to not bind to any network interface or UDPv4 bound to the loopback address if that is not available
       if (System.getProperty("os.name").toLowerCase().contains("win") && !fastrtpsSHMAvailableOnWindows())
+      {
+         LogTools.error("Shared Memory Transport (SHM) is not available (Could not write to C:\\ProgramData\\eprosima\\fastrtps_interprocess)."
+                        + " Falling back to UDPv4 transport on the loopback address.");
+
          addUDPv4Transport(InetAddress.getLoopbackAddress());
+      }
       else
+      {
          addSharedMemoryTransport();
+      }
 
       return this;
    }

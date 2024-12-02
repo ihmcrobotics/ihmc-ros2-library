@@ -75,7 +75,7 @@ public class ROS2NodeBuilder
        * INTRAPROCESS_ONLY attempts to force Publishers to directly call reception functions of Subscribers.
        * This mode still enables a shared memory (SHM) transport, as there has to be one fallback transport on a Participant.
        * This mode is especially useful for unit testing and single-process applications.
-       * This mode does not bind to any network address, ever.
+       * This mode does not bind to any network address, unless SHM transport was unable to initialize.
        * This mode is NOT compatible with mixed-transports, e.g. a participant with SHM and UDPv4 transports.
        * Documentation: <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/intraprocess.html#intraprocess-delivery">Intra-process
        * delivery</a>
