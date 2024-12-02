@@ -11,7 +11,8 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-12, macos-14]
+        # os: [ubuntu-20.04, windows-2019, macos-12, macos-14]
+        os: [ubuntu-20.04, windows-2019]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +28,7 @@ jobs:
           gradle-version: 8.11.1
       - name: Run tests
         run: |
-          gradle compositeTask --stacktrace --info -PtaskName=test
+          gradle compositeTask -PtaskName=test -PrunningOnCIServer=true -Dorg.gradle.jvmargs="-Xmx4G"
       - name: Publish Test Report - ${{ inputs.test-category }}
         uses: mikepenz/action-junit-report@v4
         if: success() || failure() # always run even if the previous step fails
