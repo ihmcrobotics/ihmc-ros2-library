@@ -14,31 +14,8 @@ import java.time.Duration;
 
 public class CommunicationTest
 {
-   @Test// timeout = 5000
-   public void testSimpleIntraProcessCommunication()
-   {
-      testSimpleCommunication();
-   }
-
-   @Test// timeout = 5000
-   public void testSimpleRealRTPSCommunicationDefaultRosVersion()
-   {
-      testSimpleCommunication();
-   }
-
-   @Test// timeout = 5000
-   public void testSimpleRealRTPSCommunicationArdent()
-   {
-      testSimpleCommunication();
-   }
-
-   @Test// timeout = 5000
-   public void testSimpleRealRTPSCommunicationBouncy()
-   {
-      testSimpleCommunication();
-   }
-
-   private void testSimpleCommunication()
+   @Test // timeout = 5000
+   public void testSimpleCommunication()
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
