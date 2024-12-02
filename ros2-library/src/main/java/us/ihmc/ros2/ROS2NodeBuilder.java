@@ -48,7 +48,7 @@ public class ROS2NodeBuilder
 
    /**
     * Used to denote that a ROS2Node should be set-up with a special mode of transport.
-    * These are custom use-case specific modes.
+    * These are custom use case specific modes.
     */
    public enum SpecialTransportMode
    {
