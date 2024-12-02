@@ -56,21 +56,26 @@ public class MultipleParticipantsInSameProcessTest
    @Test
    public void testMulitpleParticipantsInSameProcess() throws IOException, InterruptedException
    {
-      AtomicInteger counter = new AtomicInteger(0);
+      AtomicInteger counter = new AtomicInteger();
 
       Domain domain = DomainFactory.getDomain();
 
       try
       {
-         TopicDataType topicDataType = new ChatMessagePubSubType();
+         TopicDataType<ChatMessage> topicDataType = new ChatMessagePubSubType();
 
-         PublisherAttributes genericPublisherAttributes = PublisherAttributes.create().topicDataType(topicDataType).topicName("Status")
+         PublisherAttributes genericPublisherAttributes = PublisherAttributes.create()
+                                                                             .topicDataType(topicDataType)
+                                                                             .topicName("Status")
                                                                              .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                              .partitions(Collections.singletonList("us/ihmc"))
                                                                              .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
-                                                                             .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST).historyDepth(10);
+                                                                             .historyQosPolicyKind(HistoryQosKindPolicyType.KEEP_LAST)
+                                                                             .historyDepth(10);
 
-         SubscriberAttributes subscriberAttributes = SubscriberAttributes.create().topicDataType(topicDataType).topicName("Status")
+         SubscriberAttributes subscriberAttributes = SubscriberAttributes.create()
+                                                                         .topicDataType(topicDataType)
+                                                                         .topicName("Status")
                                                                          .reliabilityKind(ReliabilityQosKindPolicyType.RELIABLE)
                                                                          .partitions(Collections.singletonList("us/ihmc"))
                                                                          .durabilityKind(DurabilityQosKindPolicyType.TRANSIENT_LOCAL)
@@ -85,21 +90,18 @@ public class MultipleParticipantsInSameProcessTest
                                                                       .discoveryLeaseDuration(Time.Infinite)
                                                                       .name("StatusTest" + i);
             Participant participant = domain.createParticipant(participantProfile);
-            LogTools.info("Creating participant #" + i);
             participants.add(participant);
          }
+         LogTools.info("Created {} participants", participants.size());
 
          List<Publisher> publishers = new ArrayList<>();
-
-         for (int i = 0; i < participants.size(); i++)
-         {
-            publishers.add(domain.createPublisher(participants.get(i), genericPublisherAttributes, null));
-            LogTools.info("Creating publisher #" + (i + 1));
-         }
+         for (Participant participant : participants)
+            publishers.add(domain.createPublisher(participant, genericPublisherAttributes, null));
+         LogTools.info("Created {} publishers", publishers.size());
 
          Subscriber subscriber = domain.createSubscriber(participants.get(0), subscriberAttributes, new SubscriberListenerImpl(counter));
 
-         //publish one message from each publisher in each participant
+         // Publish one message from each publisher in each participant
          Thread thread = new Thread(() ->
          {
             AtomicInteger msgCounter = new AtomicInteger();
@@ -108,10 +110,9 @@ public class MultipleParticipantsInSameProcessTest
                try
                {
                   ChatMessage msg = new ChatMessage();
-                  msg.setMsg(String.valueOf(msgCounter.get()));
+                  msg.setMsg(String.valueOf(msgCounter.getAndIncrement()));
                   publisher.write(msg);
-                  Thread.sleep(5L); // Sleep a bit so FastDDS can deliver the message.
-                  msgCounter.incrementAndGet();
+                  Thread.sleep(20L); // Sleep a bit so Fast-DDS can deliver the message.
                }
                catch (IOException | InterruptedException e)
                {
