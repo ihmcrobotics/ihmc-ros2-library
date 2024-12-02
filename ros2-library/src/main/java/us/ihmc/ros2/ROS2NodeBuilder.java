@@ -369,7 +369,7 @@ public class ROS2NodeBuilder
    {
       String valueForField = findValueForField("ROS_ADDRESS_RESTRICTION", "ros.address.restriction", "RTPSSubnet");
 
-      return convertToInetAddressArray(valueForField != null ? valueForField : "");
+      return convertToInetAddressArray(valueForField != null ? valueForField : "127.0.0.1/8");
    }
 
    protected static boolean domainIDValid(int domainID)
