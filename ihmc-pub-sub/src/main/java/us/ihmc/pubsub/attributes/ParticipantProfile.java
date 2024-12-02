@@ -377,17 +377,26 @@ public class ParticipantProfile
       return profileXML;
    }
 
-   private static boolean fastrtpsSHMAvailableOnWindows() {
+   private static boolean fastrtpsSHMAvailableOnWindows()
+   {
       File file = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess\\test");
 
-      try {
-         if (file.getParentFile() != null) {
+      try
+      {
+         if (file.getParentFile() != null)
+         {
             file.getParentFile().mkdirs();
          }
 
          return file.createNewFile();
-      } catch (IOException e) {
+      }
+      catch (IOException e)
+      {
          return false;
+      }
+      finally
+      {
+         file.delete();
       }
    }
 }
