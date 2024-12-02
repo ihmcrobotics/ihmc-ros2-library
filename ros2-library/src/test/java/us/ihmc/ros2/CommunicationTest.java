@@ -98,8 +98,6 @@ public class CommunicationTest
             }
 
             ThreadTools.sleepSeconds(1.0);
-
-            node.destroy();
          }
          catch (Exception e)
          {
