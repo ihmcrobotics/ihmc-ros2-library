@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * @author <rwinston@apache.org>
  * @since 2.0
  */
-public class SubnetUtils {
+class SubnetUtils {
 
    private static final String IP_ADDRESS = "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})";
    private static final String SLASH_FORMAT = IP_ADDRESS + "/(\\d{1,3})";
@@ -48,7 +48,7 @@ public class SubnetUtils {
     * @throws IllegalArgumentException if the parameter is invalid,
     * i.e. does not match n.n.n.n/m where n=1-3 decimal digits, m = 1-3 decimal digits in range 1-32
     */
-   public SubnetUtils(String cidrNotation) {
+   SubnetUtils(String cidrNotation) {
       calculate(cidrNotation);
    }
 
@@ -59,7 +59,7 @@ public class SubnetUtils {
     * @throws IllegalArgumentException if the address or mask is invalid,
     * i.e. does not match n.n.n.n where n=1-3 decimal digits and the mask is not all zeros
     */
-   public SubnetUtils(String address, String mask) {
+   SubnetUtils(String address, String mask) {
       calculate(toCidrNotation(address, mask));
    }
 
