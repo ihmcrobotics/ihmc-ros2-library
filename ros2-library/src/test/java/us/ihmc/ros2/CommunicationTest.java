@@ -43,7 +43,7 @@ public class CommunicationTest
             for (int i = 0; i < 11; i++)
             {
                TwoNum message = new TwoNum();
-               message.getStr1().append("Hello world: " + i);
+               message.getStr1().append("Hello world: ").append(i);
                System.out.println("Publishing: " + message.getStr1());
                publisher.publish(message);
                System.out.println("Published: " + message.getStr1());
@@ -91,7 +91,7 @@ public class CommunicationTest
             for (int i = 0; i < 11; i++)
             {
                TwoNum message = new TwoNum();
-               message.getStr1().append("Hello world: " + i);
+               message.getStr1().append("Hello world: ").append(i);
                System.out.println("Publishing: " + message.getStr1());
                publisher.publish(message);
                System.out.println("Published: " + message.getStr1());
@@ -137,7 +137,7 @@ public class CommunicationTest
             for (int i = 0; i < 11; i++)
             {
                TwoNum message = new TwoNum();
-               message.getStr1().append("Hello world: " + i);
+               message.getStr1().append("Hello world: ").append(i);
                System.out.println("Publishing: " + message.getStr1());
                boolean success = publisher.publish(message);
                System.out.println("Published: success: " + success + " content: " + message.getStr1());
