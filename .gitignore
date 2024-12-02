@@ -23,3 +23,4 @@ swig/FastRTPS/generated/us/ihmc/rtps/impl/fastRTPS/FastRTPSJAVA_wrap.cxx
 **/*.pyc
 .vscode/
 **/rebel.xml
+ihmc-pub-sub/src/xjc/java/com/eprosima/xmlschemas/fastrtps_profiles/*.java
