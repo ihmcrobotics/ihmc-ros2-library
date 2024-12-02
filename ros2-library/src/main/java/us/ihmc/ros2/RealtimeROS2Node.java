@@ -3,9 +3,11 @@ package us.ihmc.ros2;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
+import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 import us.ihmc.util.PeriodicThreadScheduler;
 import us.ihmc.util.PeriodicThreadSchedulerFactory;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -34,12 +36,16 @@ public class RealtimeROS2Node extends ROS2Node
     *    RealtimeROS2Node realtimeNode = new ROS2NodeBuilder().buildRealtime("RealtimeNode");
     * }</pre>
     */
-   protected RealtimeROS2Node(String name, String namespace, ParticipantProfile attributes, PeriodicThreadSchedulerFactory threadFactory)
+   protected RealtimeROS2Node(String name,
+                              String namespace,
+                              ParticipantProfile attributes,
+                              @Nullable SpecialTransportMode specialTransportMode,
+                              PeriodicThreadSchedulerFactory threadFactory)
    {
-      super(name, namespace, attributes);
+      super(name, namespace, attributes, specialTransportMode);
       this.scheduler = threadFactory.createPeriodicThreadScheduler("RealtimeNode_" + namespace + "/" + name);
    }
-   
+
    /**
     * Adjust the desired thread period from the default (1000 microseconds)
     * This could be useful if a faster response is desired, or to reduce load on the CPU.
@@ -49,11 +55,11 @@ public class RealtimeROS2Node extends ROS2Node
       startupLock.lock();
       try
       {
-         if(spinning)
+         if (spinning)
          {
             throw new RuntimeException("Cannot set the thread period while the node is spinning.");
          }
-         
+
          this.threadPeriod = period;
          this.threadPeriodUnit = unit;
       }

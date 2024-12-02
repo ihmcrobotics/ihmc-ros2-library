@@ -1,7 +1,6 @@
 package us.ihmc.ros2;
 
 import us.ihmc.log.LogTools;
-import us.ihmc.pubsub.Domain;
 import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
@@ -9,10 +8,13 @@ import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.MatchingInfo;
 import us.ihmc.pubsub.common.Time;
-import us.ihmc.pubsub.participant.Participant;
+import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
+import us.ihmc.pubsub.impl.fastRTPS.FastRTPSParticipant;
 import us.ihmc.pubsub.publisher.Publisher;
 import us.ihmc.pubsub.subscriber.Subscriber;
+import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -27,11 +29,14 @@ public class ROS2Node
 {
    static int DEFAULT_QUEUE_SIZE = 10;
 
-   private Domain domain;
-   private Participant participant;
+   private FastRTPSDomain domain;
+   private FastRTPSParticipant participant;
 
    private final String nodeName;
    private final String namespace;
+   private final ParticipantProfile profile;
+   @Nullable
+   private final SpecialTransportMode specialTransportMode;
 
    /**
     * Use {@link ROS2NodeBuilder} to construct
@@ -39,7 +44,7 @@ public class ROS2Node
     *    ROS2Node node = new ROS2NodeBuilder().build("Node");
     * }</pre>
     */
-   protected ROS2Node(String name, String namespace, ParticipantProfile attributes)
+   protected ROS2Node(String name, String namespace, ParticipantProfile profile, @Nullable SpecialTransportMode specialTransportMode)
    {
       this.domain = DomainFactory.getDomain();
 
@@ -48,11 +53,13 @@ public class ROS2Node
 
       this.nodeName = name;
       this.namespace = namespace;
+      this.profile = profile;
+      this.specialTransportMode = specialTransportMode;
 
-      attributes.name(name);
+      profile.name(name);
       try
       {
-         participant = domain.createParticipant(attributes);
+         participant = (FastRTPSParticipant) domain.createParticipant(profile);
       }
       catch (IOException ioException)
       {
@@ -115,8 +122,8 @@ public class ROS2Node
    /**
     * Create a new ROS 2 compatible publisher in this node.
     *
-    * @param messageType   The type of the message
-    * @param topicName     Name for the topic
+    * @param messageType The type of the message
+    * @param topicName   Name for the topic
     * @return a ROS 2 publisher
     */
    public <T> ROS2Publisher<T> createPublisher(Class<T> messageType, String topicName)
@@ -127,9 +134,9 @@ public class ROS2Node
    /**
     * Create a new ROS 2 compatible publisher in this node.
     *
-    * @param messageType   The type of the message
-    * @param topicName     Name for the topic
-    * @param qosProfile    ROS 2 qos profile
+    * @param messageType The type of the message
+    * @param topicName   Name for the topic
+    * @param qosProfile  ROS 2 qos profile
     * @return a ROS 2 publisher
     */
    public <T> ROS2Publisher<T> createPublisher(Class<T> messageType, String topicName, ROS2QosProfile qosProfile)
@@ -217,8 +224,8 @@ public class ROS2Node
     * and can be polled by the realtime thread. The queueSize should weigh memory requirements of the
     * message vs the chance to lose incoming messages because the queue is full.
     *
-    * @param topic topic
-    * @param queueSize     Depth of the subscription queue (10 would be a good size for small messages)
+    * @param topic     topic
+    * @param queueSize Depth of the subscription queue (10 would be a good size for small messages)
     * @return a realtime-safe ROS 2 subscriber
     */
    public <T> QueuedROS2Subscription<T> createQueuedSubscription(ROS2Topic<T> topic, int queueSize)
@@ -231,10 +238,10 @@ public class ROS2Node
     * and can be polled by the realtime thread. The queueSize should weigh memory requirements of the
     * message vs the chance to lose incoming messages because the queue is full.
     *
-    * @param messageType   The type of the message
-    * @param topicName     Topic name
-    * @param qosProfile    Desired ros qos profile
-    * @param queueSize     Depth of the subscription queue (10 would be a good size for small messages)
+    * @param messageType The type of the message
+    * @param topicName   Topic name
+    * @param qosProfile  Desired ros qos profile
+    * @param queueSize   Depth of the subscription queue (10 would be a good size for small messages)
     * @return a realtime-safe ROS 2 subscriber
     */
    public <T> QueuedROS2Subscription<T> createQueuedSubscription(Class<T> messageType, String topicName, ROS2QosProfile qosProfile, int queueSize)
@@ -338,9 +345,9 @@ public class ROS2Node
     * @return a ROS 2 subscription
     */
    public <T> ROS2Subscription<T> createSubscription(TopicDataType<T> topicDataType,
-                                                      NewMessageListener<T> newMessageListener,
-                                                      String topicName,
-                                                      ROS2QosProfile qosProfile)
+                                                     NewMessageListener<T> newMessageListener,
+                                                     String topicName,
+                                                     ROS2QosProfile qosProfile)
    {
       return createSubscription(topicDataType, newMessageListener, createSubscriberAttributes(topicName, topicDataType, qosProfile));
    }
@@ -350,8 +357,8 @@ public class ROS2Node
     * default qos profile.
     * Note: This method generates garbage!
     *
-    * @param topic                       The topic
-    * @param messageCallback             Message listener that gives the taken message directly
+    * @param topic           The topic
+    * @param messageCallback Message listener that gives the taken message directly
     * @return a ROS 2 subscription
     */
    public <T> ROS2Subscription<T> createSubscription2(ROS2Topic<T> topic, Consumer<T> messageCallback)
@@ -385,12 +392,11 @@ public class ROS2Node
     * Create a new ROS 2 compatible subscription. This call can be used to make a ROS 2 topic with the
     * default qos profile.
     *
-    * @param topic                       The topic
-    * @param newMessageListener          New message listener
+    * @param topic              The topic
+    * @param newMessageListener New message listener
     * @return a ROS 2 subscription
     */
-   public <T> ROS2Subscription<T> createSubscription(ROS2Topic<T> topic,
-                                                      NewMessageListener<T> newMessageListener)
+   public <T> ROS2Subscription<T> createSubscription(ROS2Topic<T> topic, NewMessageListener<T> newMessageListener)
    {
       return createSubscription(topic.getType(), newMessageListener, topic.getName(), topic.getQoS());
    }
@@ -405,8 +411,8 @@ public class ROS2Node
     * @return a ROS 2 subscription
     */
    public <T> ROS2Subscription<T> createSubscription(ROS2Topic<T> topic,
-                                                      NewMessageListener<T> newMessageListener,
-                                                      SubscriptionMatchedListener<T> subscriptionMatchedListener)
+                                                     NewMessageListener<T> newMessageListener,
+                                                     SubscriptionMatchedListener<T> subscriptionMatchedListener)
    {
       return createSubscription(topic.getType(), newMessageListener, subscriptionMatchedListener, topic.getName(), topic.getQoS());
    }
@@ -415,13 +421,11 @@ public class ROS2Node
     * Create a new ROS 2 compatible subscription. This call can be used to make a ROS 2 topic with the
     * default qos profile.
     *
-    * @param messageType                 The type of the message
-    * @param newMessageListener          New message listener
+    * @param messageType        The type of the message
+    * @param newMessageListener New message listener
     * @return a ROS 2 subscription
     */
-   public <T> ROS2Subscription<T> createSubscription(Class<T> messageType,
-                                                      NewMessageListener<T> newMessageListener,
-                                                      String topicName)
+   public <T> ROS2Subscription<T> createSubscription(Class<T> messageType, NewMessageListener<T> newMessageListener, String topicName)
    {
       return createSubscription(messageType, newMessageListener, topicName, ROS2QosProfile.DEFAULT());
    }
@@ -430,14 +434,14 @@ public class ROS2Node
     * Create a new ROS 2 compatible subscription. This call can be used to make a ROS 2 topic with the
     * default qos profile.
     *
-    * @param messageType                 The type of the message
-    * @param newMessageListener          New message listener
+    * @param messageType        The type of the message
+    * @param newMessageListener New message listener
     * @return a ROS 2 subscription
     */
    public <T> ROS2Subscription<T> createSubscription(Class<T> messageType,
-                                                      NewMessageListener<T> newMessageListener,
-                                                      String topicName,
-                                                      ROS2QosProfile qosProfile)
+                                                     NewMessageListener<T> newMessageListener,
+                                                     String topicName,
+                                                     ROS2QosProfile qosProfile)
    {
       TopicDataType<T> topicDataType = ROS2TopicNameTools.newMessageTopicDataTypeInstance(messageType);
       return createSubscription(topicDataType, newMessageListener, topicName, qosProfile);
@@ -453,10 +457,10 @@ public class ROS2Node
     * @return a ROS 2 subscription
     */
    public <T> ROS2Subscription<T> createSubscription(Class<T> messageType,
-                                                      NewMessageListener<T> newMessageListener,
-                                                      SubscriptionMatchedListener<T> subscriptionMatchedListener,
-                                                      String topicName,
-                                                      ROS2QosProfile qosProfile)
+                                                     NewMessageListener<T> newMessageListener,
+                                                     SubscriptionMatchedListener<T> subscriptionMatchedListener,
+                                                     String topicName,
+                                                     ROS2QosProfile qosProfile)
    {
       TopicDataType<T> topicDataType = ROS2TopicNameTools.newMessageTopicDataTypeInstance(messageType);
       return createSubscription(topicDataType, newMessageListener, subscriptionMatchedListener, topicName, qosProfile);
@@ -474,10 +478,10 @@ public class ROS2Node
     * @return a ROS 2 subscription
     */
    public <T> ROS2Subscription<T> createSubscription(TopicDataType<T> topicDataType,
-                                                      NewMessageListener<T> newMessageListener,
-                                                      SubscriptionMatchedListener<T> subscriptionMatchedListener,
-                                                      String topicName,
-                                                      ROS2QosProfile qosProfile)
+                                                     NewMessageListener<T> newMessageListener,
+                                                     SubscriptionMatchedListener<T> subscriptionMatchedListener,
+                                                     String topicName,
+                                                     ROS2QosProfile qosProfile)
    {
       return createSubscription(topicDataType, new NewMessageListener<T>()
       {
@@ -503,6 +507,26 @@ public class ROS2Node
    public String getNamespace()
    {
       return namespace;
+   }
+
+   /**
+    * Get the underlying {@link ParticipantProfile} which was used to create the Fast-DDS Domain Participant for this ROS2Node.
+    * Should effectively be treated as read-only. Changing properties in the ParticipantProfile from here will have no effect.
+    */
+   public ParticipantProfile getProfile()
+   {
+      return profile;
+   }
+
+   /**
+    * Get the {@link SpecialTransportMode} used when building this ROS2Node. Will be null if no SpecialTransportMode was used.
+    *
+    * @return the SpecialTransportMode or null if unset
+    */
+   @Nullable
+   public SpecialTransportMode getSpecialTransportMode()
+   {
+      return specialTransportMode;
    }
 
    /**

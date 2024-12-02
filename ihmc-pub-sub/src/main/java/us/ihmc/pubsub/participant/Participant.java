@@ -25,10 +25,13 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 
 /**
  * Class Participant used to group Publishers and Subscribers into a single working unit
- * 
+ *
+ * Deprecated - use {@link us.ihmc.pubsub.impl.fastRTPS.FastRTPSParticipant} directly
+ *
  * @author Jesper Smith
  *
  */
+@Deprecated
 public interface Participant
 {
    /**

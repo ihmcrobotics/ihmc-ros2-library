@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-class FastRTPSPublisher implements Publisher
+public class FastRTPSPublisher implements Publisher
 {
    private final Object destructorLock = new Object(); 
 

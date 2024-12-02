@@ -23,9 +23,12 @@ import us.ihmc.pubsub.common.Guid;
 /**
  * Class Publisher, used to send data to associated subscribers.
  *
+ * Deprecated - use {@link us.ihmc.pubsub.impl.fastRTPS.FastRTPSPublisher} directly
+ *
  * @author Jesper Smith
  *
  */
+@Deprecated
 public interface Publisher
 {
    /**

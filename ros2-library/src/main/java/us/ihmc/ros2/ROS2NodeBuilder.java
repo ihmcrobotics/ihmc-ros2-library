@@ -4,6 +4,7 @@ import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType.Rtps.Use
 import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
+import us.ihmc.ros2.SubnetUtils.SubnetInfo;
 import us.ihmc.util.PeriodicNonRealtimeThreadSchedulerFactory;
 import us.ihmc.util.PeriodicThreadSchedulerFactory;
 
@@ -12,15 +13,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Stack;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * A builder to construct {@link ROS2Node}, {@link RealtimeROS2Node}.
@@ -36,6 +44,7 @@ import java.util.StringJoiner;
 public class ROS2NodeBuilder
 {
    private static final int UNSET_DOMAIN_ID = -1;
+   private static final String DEFAULT_NAMESPACE = "/us/ihmc";
 
    /**
     * Used to denote that a ROS2Node should be set-up with a special mode of transport.
@@ -75,7 +84,7 @@ public class ROS2NodeBuilder
    }
 
    private int domainId = UNSET_DOMAIN_ID;
-   private String namespace = "/us/ihmc";
+   private String namespace = DEFAULT_NAMESPACE;
    private boolean useSharedMemory = true;
    private InetAddress[] addressRestriction = null;
    private boolean parseEnvironment = true;
@@ -137,7 +146,7 @@ public class ROS2NodeBuilder
    public ROS2Node build(String name)
    {
       buildPrintout.add("Building ROS2Node: " + name);
-      return new ROS2Node(name, namespace, buildProfile());
+      return new ROS2Node(name, namespace, buildProfile(), specialTransportMode);
    }
 
    public RealtimeROS2Node buildRealtime(String name)
@@ -148,7 +157,7 @@ public class ROS2NodeBuilder
    public RealtimeROS2Node buildRealtime(String name, PeriodicThreadSchedulerFactory threadFactory)
    {
       buildPrintout.add("Building RealtimeROS2Node: " + name);
-      return new RealtimeROS2Node(name, namespace, buildProfile(), threadFactory);
+      return new RealtimeROS2Node(name, namespace, buildProfile(), specialTransportMode, threadFactory);
    }
 
    private ParticipantProfile buildProfile()
@@ -179,6 +188,14 @@ public class ROS2NodeBuilder
          }
 
          profile.domainId(domainId);
+      }
+
+      // Check namespace and print if it was changed
+      {
+         if (!namespace.equals(DEFAULT_NAMESPACE))
+         {
+            buildPrintout.add("Namespace: " + namespace);
+         }
       }
 
       // Set up transports
@@ -223,6 +240,11 @@ public class ROS2NodeBuilder
 
       // Print the current transports and delivery methods
       {
+         if (specialTransportMode != null)
+         {
+            buildPrintout.add("Special transport mode: " + specialTransportMode.name());
+         }
+
          StringBuilder printout = new StringBuilder();
 
          StringJoiner transportsString = new StringJoiner(", ");
@@ -235,15 +257,13 @@ public class ROS2NodeBuilder
          printout.append("Enabled transports: ");
          printout.append(transportsString);
 
+         buildPrintout.add(printout.toString());
+
          if (profile.getLibrarySettings().getIntraprocessDelivery() != null)
          {
-            printout.append(" ");
-            printout.append("(intra-process delivery mode: ");
-            printout.append(profile.getLibrarySettings().getIntraprocessDelivery());
-            printout.append(")");
+            String intraProcessMode = profile.getLibrarySettings().getIntraprocessDelivery();
+            buildPrintout.add("Intra-process delivery mode: " + intraProcessMode);
          }
-
-         buildPrintout.add(printout.toString());
       }
 
       LogTools.info(buildPrintout.toString());
@@ -351,28 +371,64 @@ public class ROS2NodeBuilder
    /**
     * Convert IP address CSV to InetAddress array
     *
-    * @param ipList A list of IP addresses separated by comma in CIDR format. E.g. "127.0.0.1/8, 0.0.0.0/24"
+    * @param restrictionHostString A list of IP addresses separated by comma in CIDR format. E.g. "127.0.0.1/8, 0.0.0.0/24"
     * @return The array of InetAddresses representing the CSV list
     */
-   protected static InetAddress[] convertToInetAddressArray(String ipList)
+   protected static InetAddress[] convertToInetAddressArray(String restrictionHostString)
    {
-      // TODO: handle subnet
-      String[] ipStrings = ipList.split(",\\s*");
-      InetAddress[] inetAddresses = new InetAddress[ipStrings.length];
+      Set<InetAddress> foundAddressRestrictions = new HashSet<>();
 
-      for (int i = 0; i < ipStrings.length; i++)
+      String[] restrictionHostList = restrictionHostString.split("\\s*,\\s*");
+
+      List<InterfaceAddress> interfaceAddresses;
+      try
       {
-         String ip = ipStrings[i].split("/")[0].trim();
-         try
+         interfaceAddresses = Collections.list(NetworkInterface.getNetworkInterfaces())
+                                         .stream()
+                                         .flatMap(networkInterface -> networkInterface.getInterfaceAddresses().stream())
+                                         .collect(Collectors.toList());
+      }
+      catch (SocketException e)
+      {
+         throw new RuntimeException(e);
+      }
+
+      for (String restrictionHost : restrictionHostList)
+      {
+         SubnetInfo restrictionSubnetInfo = new SubnetUtils(restrictionHost.trim()).getInfo();
+
+         for (InterfaceAddress interfaceAddress : interfaceAddresses)
          {
-            inetAddresses[i] = InetAddress.getByName(ip);
-         }
-         catch (UnknownHostException e)
-         {
-            throw new RuntimeException(e);
+            InetAddress address = interfaceAddress.getAddress();
+
+            if (address instanceof Inet4Address)
+            {
+               short netmaskAsShort = interfaceAddress.getNetworkPrefixLength();
+
+               String interfaceHost = address.getHostAddress();
+               SubnetInfo interfaceSubnetInfo = new SubnetUtils(interfaceHost + "/" + netmaskAsShort).getInfo();
+
+               boolean inRange;
+               if (System.getProperty("os.name").toLowerCase().contains("win"))
+               {
+                  inRange = interfaceSubnetInfo.isInRange(restrictionSubnetInfo.getAddress()); // This worked on Windows, but not Linux: Doug
+               }
+               else // Linux and others
+               {
+                  // This works on Linux. Does not work on Windows. Not tested on Mac.
+                  inRange = restrictionSubnetInfo.isInRange(interfaceSubnetInfo.getAddress());
+               }
+
+               if (inRange)
+               {
+                  foundAddressRestrictions.add(address);
+               }
+            }
          }
       }
 
-      return inetAddresses;
+      InetAddress[] addressRestrictions = new InetAddress[foundAddressRestrictions.size()];
+
+      return foundAddressRestrictions.toArray(addressRestrictions);
    }
 }
