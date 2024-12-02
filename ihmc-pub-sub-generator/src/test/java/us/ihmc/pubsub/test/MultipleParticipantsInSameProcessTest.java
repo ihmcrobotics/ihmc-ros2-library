@@ -54,7 +54,7 @@ public class MultipleParticipantsInSameProcessTest
    }
 
    @Test
-   public void TestMulitpleParticipantsInSameProcess() throws IOException, InterruptedException
+   public void testMulitpleParticipantsInSameProcess() throws IOException, InterruptedException
    {
       AtomicInteger counter = new AtomicInteger(0);
 
