@@ -8,7 +8,6 @@ import ros_msgs.msg.dds.TwoNum;
 import ros_msgs.msg.dds.TwoNumPubSubType;
 import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
-import us.ihmc.util.PeriodicNonRealtimeThreadScheduler;
 
 import java.time.Duration;
 
@@ -19,11 +18,12 @@ public class CommunicationTest
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
+         ROS2Node node = null;
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
             String name = "ROS2CommunicationTest";
-            ROS2Node node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY).build(name);
+            node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY).build(name);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -56,6 +56,9 @@ public class CommunicationTest
 
          while (messagesReceived.getValue() < 5)
             Thread.yield();
+
+         if (node != null)
+            node.destroy();
       });
    }
 
@@ -65,9 +68,10 @@ public class CommunicationTest
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
+         ROS2Node node = null;
          try
          {
-            ROS2Node node = new ROS2NodeBuilder().build("ROS2CommunicationTest");
+            node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY).build("ROS2CommunicationTest");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -104,6 +108,9 @@ public class CommunicationTest
 
          while (messagesReceived.getValue() < 5)
             Thread.yield();
+
+         if (node != null)
+            node.destroy();
       });
    }
 
@@ -112,12 +119,14 @@ public class CommunicationTest
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
+         RealtimeROS2Node node = null;
+
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            RealtimeROS2Node node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY)
-                                                         .namespace("/us/ihmc")
-                                                         .buildRealtime("ROS2CommunicationTest", PeriodicNonRealtimeThreadScheduler::new);
+            node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY)
+                                        .namespace("/us/ihmc")
+                                        .buildRealtime("ROS2CommunicationTest");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -160,6 +169,9 @@ public class CommunicationTest
          {
             e.printStackTrace();
          }
+
+         if (node != null)
+            node.destroy();
       });
    }
 }
