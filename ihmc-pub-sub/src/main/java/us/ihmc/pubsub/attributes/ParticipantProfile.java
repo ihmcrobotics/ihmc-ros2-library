@@ -377,10 +377,8 @@ public class ParticipantProfile
       return profileXML;
    }
 
-
    private static boolean fastrtpsSHMAvailableOnWindows() {
-      String filePath = "C:\\ProgramData\\eprosima\\fastrtps_interprocess\\test";
-      File file = new File(filePath);
+      File file = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess\\test");
 
       try {
          if (file.getParentFile() != null) {
