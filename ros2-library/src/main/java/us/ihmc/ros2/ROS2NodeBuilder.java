@@ -216,6 +216,15 @@ public class ROS2NodeBuilder
 
          profile.addUDPv4Transport(addressRestriction);
 
+         boolean runningInCI = (System.getenv("GITHUB_ACTIONS") != null) || (System.getenv("RUNNING_ON_CONTINUOUS_INTEGRATION_SERVER") != null)
+                               || (System.getProperty("runningOnCIServer") != null);
+         if (runningInCI)
+         {
+            buildPrintout.add("Detected running from CI. Using INTRAPROCESS_ONLY SpecialTransportMode");
+
+            specialTransportMode = SpecialTransportMode.INTRAPROCESS_ONLY;
+         }
+
          if (specialTransportMode != null)
          {
             switch (specialTransportMode)
