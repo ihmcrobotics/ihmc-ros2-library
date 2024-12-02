@@ -178,7 +178,7 @@ public class ROS2NodeBuilder
             // If a valid domain ID was not found automatically
             if (!domainIDValid(domainId))
             {
-               domainId = 0;
+               domainId = 100;
 
                buildPrintout.add("Unable to find any ROS Domain ID");
                buildPrintout.add(
@@ -206,17 +206,14 @@ public class ROS2NodeBuilder
             profile.addSharedMemoryTransport();
 
          if (addressRestriction != null)
-         {
             buildPrintout.add("Using a programmatically set address restriction");
-         }
          else
-         {
             addressRestriction = findAddressRestriction();
-         }
 
          profile.addUDPv4Transport(addressRestriction);
 
-         boolean runningInCI = (System.getenv("GITHUB_ACTIONS") != null) || (System.getenv("RUNNING_ON_CONTINUOUS_INTEGRATION_SERVER") != null)
+         boolean runningInCI = (System.getenv("GITHUB_ACTIONS") != null)
+                               || (System.getenv("RUNNING_ON_CONTINUOUS_INTEGRATION_SERVER") != null)
                                || (System.getProperty("runningOnCIServer") != null);
          if (runningInCI)
          {
@@ -250,9 +247,7 @@ public class ROS2NodeBuilder
       // Print the current transports and delivery methods
       {
          if (specialTransportMode != null)
-         {
             buildPrintout.add("Special transport mode: " + specialTransportMode.name());
-         }
 
          StringBuilder printout = new StringBuilder();
 
