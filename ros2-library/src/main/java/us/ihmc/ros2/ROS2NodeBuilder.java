@@ -217,7 +217,7 @@ public class ROS2NodeBuilder
                                || (System.getProperty("runningOnCIServer") != null);
          if (runningInCI)
          {
-            buildPrintout.add("Detected running from CI. Using INTRAPROCESS_ONLY SpecialTransportMode");
+            buildPrintout.add("Detected running from CI, using INTRAPROCESS_ONLY SpecialTransportMode");
 
             specialTransportMode = SpecialTransportMode.INTRAPROCESS_ONLY;
          }
