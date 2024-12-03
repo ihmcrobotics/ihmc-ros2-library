@@ -336,7 +336,7 @@ public class ParticipantProfile
       return participantProfile.getRtps().isUseBuiltinTransports();
    }
 
-   // https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/xml_configuration/library_settings.html#intra-process-delivery-xml-profile
+   // https://fast-dds.docs.eprosima.com/en/v2.14.4/fastdds/xml_configuration/library_settings.html#intra-process-delivery-xml-profile
    public ParticipantProfile useIntraProcessDelivery(boolean intraProcessDelivery)
    {
       librarySettings.setIntraprocessDelivery(intraProcessDelivery ? "FULL" : "OFF");

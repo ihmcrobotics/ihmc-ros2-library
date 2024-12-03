@@ -120,7 +120,7 @@ if(STANDALONE_PLUGIN)
         set(FastRTPS_LIBRARIES fastrtps fastcdr)
 
         # Annoying rename for the install here, because of the version suffix
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.2.14.3.dylib"
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.2.14.4.dylib"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.2.14.dylib")
 
         INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.2.2.2.dylib"
@@ -129,7 +129,7 @@ if(STANDALONE_PLUGIN)
         set(FastRTPS_LIBRARIES fastrtps fastcdr)
 
         # Annoying rename for the install here, because of the version suffix
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.so.2.14.3"
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.so.2.14.4"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.so.2.14")
             
         INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.so.2.2.2"

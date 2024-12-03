@@ -2,7 +2,7 @@
 
 Allocation free Java libraries for DDSI-RTPS messaging using eProsima's Fast-DDS.
 
-Fast-DDS release: `2.14.3`
+Fast-DDS release: `2.14.4`
 
 ## Features
 - Allocation free Publisher and Subscriber API in Java
@@ -10,7 +10,7 @@ Fast-DDS release: `2.14.3`
 - Serialize messages to JSON, BSON, YAML, Java Properties, and XML
 - Gradle plugin to generate Java types from IDL files
 
-The eProsima Fast-DDS documentation can be useful as a reference guide on more advanced features and the inner working of the RTPS layer [https://fast-dds.docs.eprosima.com/en/v2.14.3/](https://fast-dds.docs.eprosima.com/en/v2.14.3/).
+The eProsima Fast-DDS documentation can be useful as a reference guide on more advanced features and the inner working of the RTPS layer [https://fast-dds.docs.eprosima.com/en/v2.14.4/](https://fast-dds.docs.eprosima.com/en/v2.14.3/).
 
 #### Java type generator
 The IHMC Pub Sub generator creates Java classes from OMG DDS IDL formatted files. The resulting classes can be used to serialize and deserialize to the Common Data Representation (CDR) format.
