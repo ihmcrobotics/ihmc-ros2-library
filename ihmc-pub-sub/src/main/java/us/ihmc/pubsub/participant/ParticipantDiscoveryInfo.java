@@ -20,10 +20,13 @@ import us.ihmc.pubsub.common.Guid;
 
 /**
  * Class ParticipantDiscoveryInfo, provided to the user with information regarding a Discovered Participant.
- * 
+ *
+ * Deprecated - use {@link us.ihmc.pubsub.impl.fastRTPS.FastRTPSParticipantDiscoveryInfo} directly
+ *
  * @author Jesper Smith
  *
  */
+@Deprecated
 public class ParticipantDiscoveryInfo
 {
    protected final Guid guid;

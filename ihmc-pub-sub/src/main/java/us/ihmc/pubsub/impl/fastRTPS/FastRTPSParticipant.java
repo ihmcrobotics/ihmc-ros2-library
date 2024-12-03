@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-class FastRTPSParticipant implements Participant
+public class FastRTPSParticipant implements Participant
 {
    private final NativeParticipantImpl impl;
 

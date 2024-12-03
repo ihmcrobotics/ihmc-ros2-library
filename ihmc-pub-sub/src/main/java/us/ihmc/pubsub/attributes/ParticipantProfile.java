@@ -1,10 +1,12 @@
 package us.ihmc.pubsub.attributes;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.BuiltinAttributesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.Dds;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryProtocolType;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoveryServersListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.DiscoverySettingsType;
 import com.eprosima.xmlschemas.fastrtps_profiles.EDPType;
+import com.eprosima.xmlschemas.fastrtps_profiles.LibrarySettingsType;
 import com.eprosima.xmlschemas.fastrtps_profiles.LocatorListType;
 import com.eprosima.xmlschemas.fastrtps_profiles.LocatorListType.Locator;
 import com.eprosima.xmlschemas.fastrtps_profiles.ParticipantProfileType;
@@ -17,18 +19,21 @@ import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType;
 import com.eprosima.xmlschemas.fastrtps_profiles.TransportDescriptorType.InterfaceWhiteList;
 import com.eprosima.xmlschemas.fastrtps_profiles.Udpv4LocatorType;
 import jakarta.xml.bind.JAXBElement;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.UUID;
 
 public class ParticipantProfile
 {
-   private final ParticipantProfileType profileType = new ParticipantProfileType();
+   private final ParticipantProfileType participantProfile = new ParticipantProfileType();
    private final TransportDescriptorListType transportDescriptors = new TransportDescriptorListType();
+   private final LibrarySettingsType librarySettings = new LibrarySettingsType();
 
    public ParticipantProfile()
    {
@@ -37,36 +42,48 @@ public class ParticipantProfile
       DiscoverySettingsType discoverySettingsType = new DiscoverySettingsType();
       builtin.setDiscoveryConfig(discoverySettingsType);
 
-      profileType.setRtps(new Rtps());
-      profileType.getRtps().setBuiltin(builtin);
+      participantProfile.setRtps(new Rtps());
+      participantProfile.getRtps().setBuiltin(builtin);
 
       // Set default discovery duration
       discoveryLeaseDuration(Time.Infinite);
+
+      useIntraProcessDelivery(true);
    }
-   
+
    /**
     * Helper function to use a builder-like approach
-    * 
+    *
     * @return new intance of ParticipantAttributes
     */
    public static ParticipantProfile create()
    {
       return new ParticipantProfile();
    }
-   
+
    /**
     * Direct access to the participant profile. This allows the user to access all settings
-    * 
+    *
     * @return Participant profile XML structure
     */
    public ParticipantProfileType getProfile()
    {
-      return profileType;
+      return participantProfile;
+   }
+
+   public TransportDescriptorListType getTransportDescriptors()
+   {
+      return transportDescriptors;
+   }
+
+   public LibrarySettingsType getLibrarySettings()
+   {
+      return librarySettings;
    }
 
    public ParticipantProfile domainId(int id)
    {
-      profileType.setDomainId(id);
+      participantProfile.setDomainId(id);
       return this;
    }
 
@@ -77,21 +94,21 @@ public class ParticipantProfile
 
    public ParticipantProfile name(String name)
    {
-      profileType.getRtps().setName(name);
+      participantProfile.getRtps().setName(name);
       return this;
    }
 
    public String getName()
    {
-      return profileType.getRtps().getName();
+      return participantProfile.getRtps().getName();
    }
 
    public ParticipantProfile discoveryLeaseDuration(Time discoveryLeaseDuration)
    {
-      profileType.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(DDSConversionTools.timeToDurationType(discoveryLeaseDuration));
+      participantProfile.getRtps().getBuiltin().getDiscoveryConfig().setLeaseDuration(DDSConversionTools.timeToDurationType(discoveryLeaseDuration));
       return this;
    }
-   
+
    public ParticipantProfile discoveryServer(String discoveryServerAddress, int discoveryServerId)
    {
       return discoveryServer(discoveryServerAddress, discoveryServerId, FastRTPSDomain.DEFAULT_DISCOVERY_SERVER_PORT);
@@ -108,8 +125,8 @@ public class ParticipantProfile
       {
          throw new RuntimeException("Invalid discovery server port");
       }
-      
-      DiscoverySettingsType discoverySettingsType = profileType.getRtps().getBuiltin().getDiscoveryConfig();
+
+      DiscoverySettingsType discoverySettingsType = participantProfile.getRtps().getBuiltin().getDiscoveryConfig();
       discoverySettingsType.setDiscoveryProtocol(DiscoveryProtocolType.CLIENT);
 
       LocatorListType locatorListType = new LocatorListType();
@@ -127,7 +144,7 @@ public class ParticipantProfile
                                                    locatorListType));
       remoteServerAttributes.setPrefix(String.format(FastRTPSDomain.FAST_DDS_DISCOVERY_CONFIGURABLE_PREFIX, discoveryServerId));
 
-      DiscoveryServersListType discoveryServerList = profileType.getRtps().getBuiltin().getDiscoveryConfig().getDiscoveryServersList();
+      DiscoveryServersListType discoveryServerList = participantProfile.getRtps().getBuiltin().getDiscoveryConfig().getDiscoveryServersList();
       discoveryServerList.getRemoteServer().add(remoteServerAttributes);
 
       discoverySettingsType.setDiscoveryServersList(discoveryServerList);
@@ -156,13 +173,13 @@ public class ParticipantProfile
       }
 
       // Create userTransports if it doesn't exist
-      if (profileType.getRtps().getUserTransports() == null)
-         profileType.getRtps().setUserTransports(new UserTransports());
+      if (participantProfile.getRtps().getUserTransports() == null)
+         participantProfile.getRtps().setUserTransports(new UserTransports());
 
       // Add to userTransports if it doesn't exist
       {
          boolean existsInUserTransports = false;
-         for (String transportId : profileType.getRtps().getUserTransports().getTransportId())
+         for (String transportId : participantProfile.getRtps().getUserTransports().getTransportId())
          {
             if (transportId.equals(transport.getTransportId()))
             {
@@ -171,12 +188,12 @@ public class ParticipantProfile
             }
          }
          if (!existsInUserTransports)
-            profileType.getRtps().getUserTransports().getTransportId().add(transport.getTransportId());
+            participantProfile.getRtps().getUserTransports().getTransportId().add(transport.getTransportId());
       }
 
       return this;
    }
-   
+
    /**
     * Add a shared memory transport to this participant.
     * By setting useBuiltinTransports to false, you can use only a shared memory transport
@@ -206,7 +223,9 @@ public class ParticipantProfile
 
          for (InetAddress addr : addressRestriction)
          {
-            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"), String.class, addr.getHostAddress());
+            JAXBElement<String> addressElement = new JAXBElement<>(new QName(FastRTPSDomain.FAST_DDS_XML_NAMESPACE, "address"),
+                                                                   String.class,
+                                                                   addr.getHostAddress());
             addressWhitelist.getAddressOrInterface().add(addressElement);
          }
 
@@ -226,11 +245,12 @@ public class ParticipantProfile
    public ParticipantProfile useOnlySharedMemoryTransport()
    {
       useBuiltinTransports(false);
+      useIntraProcessDelivery(false);
 
-      if (profileType.getRtps().getUserTransports() == null)
-         profileType.getRtps().setUserTransports(new UserTransports());
+      if (participantProfile.getRtps().getUserTransports() == null)
+         participantProfile.getRtps().setUserTransports(new UserTransports());
 
-      profileType.getRtps().getUserTransports().getTransportId().clear();
+      participantProfile.getRtps().getUserTransports().getTransportId().clear();
 
       // Find the SHM transport
       boolean shmTransportFound = false;
@@ -250,46 +270,137 @@ public class ParticipantProfile
       return this;
    }
 
-   public ParticipantProfile useBuiltinTransports(boolean useBuiltinTransports)
+   public ParticipantProfile useOnlyUDPv4Transport(InetAddress... addressRestriction)
    {
-      profileType.getRtps().setUseBuiltinTransports(useBuiltinTransports);
+      useBuiltinTransports(false);
+      useIntraProcessDelivery(false);
+
+      if (participantProfile.getRtps().getUserTransports() == null)
+         participantProfile.getRtps().setUserTransports(new UserTransports());
+
+      participantProfile.getRtps().getUserTransports().getTransportId().clear();
+
+      // Find the UDPv4 transport
+      boolean udpv4TransportFound = false;
+      for (TransportDescriptorType transportDescriptorType : transportDescriptors.getTransportDescriptor())
+      {
+         if (transportDescriptorType.getType().equals("UDPv4"))
+         {
+            addTransport(transportDescriptorType);
+            udpv4TransportFound = true;
+            break;
+         }
+      }
+
+      if (!udpv4TransportFound)
+         addUDPv4Transport(addressRestriction);
+
       return this;
    }
-   
+
+   public ParticipantProfile useOnlyIntraProcessDelivery()
+   {
+      useBuiltinTransports(false);
+      useIntraProcessDelivery(true);
+
+      if (participantProfile.getRtps().getUserTransports() == null)
+         participantProfile.getRtps().setUserTransports(new UserTransports());
+
+      participantProfile.getRtps().getUserTransports().getTransportId().clear();
+
+      // Intra-process delivery requires at least 1 transport.
+      // Use shared memory to not bind to any network interface or UDPv4 bound to the loopback address if that is not available
+      if (System.getProperty("os.name").toLowerCase().contains("win") && !fastrtpsSHMAvailableOnWindows())
+      {
+         LogTools.error("Shared Memory Transport (SHM) is not available (Could not write to C:\\ProgramData\\eprosima\\fastrtps_interprocess)."
+                        + " Falling back to UDPv4 transport on the loopback address.");
+
+         addUDPv4Transport(InetAddress.getLoopbackAddress());
+      }
+      else
+      {
+         addSharedMemoryTransport();
+      }
+
+      return this;
+   }
+
+   public ParticipantProfile useBuiltinTransports(boolean useBuiltinTransports)
+   {
+      participantProfile.getRtps().setUseBuiltinTransports(useBuiltinTransports);
+      return this;
+   }
+
    public boolean isUseBuiltinTransports()
    {
-      return profileType.getRtps().isUseBuiltinTransports();
+      return participantProfile.getRtps().isUseBuiltinTransports();
+   }
+
+   // https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/xml_configuration/library_settings.html#intra-process-delivery-xml-profile
+   public ParticipantProfile useIntraProcessDelivery(boolean intraProcessDelivery)
+   {
+      librarySettings.setIntraprocessDelivery(intraProcessDelivery ? "FULL" : "OFF");
+      return this;
    }
 
    public boolean isUseStaticDiscovery()
    {
-      return profileType.getRtps().getBuiltin().getDiscoveryConfig().getEDP() == EDPType.STATIC;
+      return participantProfile.getRtps().getBuiltin().getDiscoveryConfig().getEDP() == EDPType.STATIC;
    }
 
    public ParticipantProfile useStaticDiscovery(boolean useStaticDiscovery)
    {
-      profileType.getRtps().getBuiltin().getDiscoveryConfig().setEDP(useStaticDiscovery ? EDPType.STATIC : EDPType.SIMPLE);
+      participantProfile.getRtps().getBuiltin().getDiscoveryConfig().setEDP(useStaticDiscovery ? EDPType.STATIC : EDPType.SIMPLE);
       return this;
    }
 
    /**
     * Marshall this profile to a XML structure
-    * 
+    *
     * @param profileName Unique name for this profile
     * @return XML representation of this profile
-    * @throws IOException 
+    * @throws IOException
     */
    public String marshall(String profileName) throws IOException
    {
-      profileType.setProfileName(profileName);
+      participantProfile.setProfileName(profileName);
+
+      Dds dds = new Dds();
 
       ProfilesType profilesType = new ProfilesType();
       profilesType.getDomainparticipantFactoryOrParticipantOrDataWriter().add(transportDescriptors);
-      profilesType.getDomainparticipantFactoryOrParticipantOrDataWriter().add(profileType);
+      profilesType.getDomainparticipantFactoryOrParticipantOrDataWriter().add(participantProfile);
 
-      String profileXML =FastRTPSDomain.marshalProfile(profilesType);
-//      profileXML = Pattern.compile("<id>(.*)<\\/id>").matcher(profileXML).replaceAll("<transport_id>$1<\\/transport_id>");
+      dds.setProfiles(profilesType);
+      dds.setLibrarySettings(librarySettings);
+
+      String profileXML = FastRTPSDomain.marshallProfile(dds);
+      // Tip: print profileXML for debugging
+      // profileXML = Pattern.compile("<id>(.*)<\\/id>").matcher(profileXML).replaceAll("<transport_id>$1<\\/transport_id>");
 
       return profileXML;
+   }
+
+   private static boolean fastrtpsSHMAvailableOnWindows()
+   {
+      File file = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess\\test");
+
+      try
+      {
+         if (file.getParentFile() != null)
+         {
+            file.getParentFile().mkdirs();
+         }
+
+         return file.createNewFile();
+      }
+      catch (IOException e)
+      {
+         return false;
+      }
+      finally
+      {
+         file.delete();
+      }
    }
 }

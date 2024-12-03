@@ -19,7 +19,7 @@ import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
 public class DomainFactory
 {
-   public static synchronized Domain getDomain()
+   public static synchronized FastRTPSDomain getDomain()
    {
       return FastRTPSDomain.getInstance(false);
    }

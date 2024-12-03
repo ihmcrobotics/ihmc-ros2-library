@@ -7,48 +7,23 @@ import org.junit.jupiter.api.Test;
 import ros_msgs.msg.dds.TwoNum;
 import ros_msgs.msg.dds.TwoNumPubSubType;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.pubsub.Domain;
-import us.ihmc.pubsub.DomainFactory;
-import us.ihmc.util.PeriodicNonRealtimeThreadScheduler;
+import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 
 import java.time.Duration;
 
 public class CommunicationTest
 {
-   @Test// timeout = 5000
-   public void testSimpleIntraProcessCommunication()
-   {
-      testSimpleCommunication();
-   }
-
-   @Test// timeout = 5000
-   public void testSimpleRealRTPSCommunicationDefaultRosVersion()
-   {
-      testSimpleCommunication();
-   }
-
-   @Test// timeout = 5000
-   public void testSimpleRealRTPSCommunicationArdent()
-   {
-      testSimpleCommunication();
-   }
-
-   @Test// timeout = 5000
-   public void testSimpleRealRTPSCommunicationBouncy()
-   {
-      testSimpleCommunication();
-   }
-
-   private void testSimpleCommunication()
+   @Test // timeout = 5000
+   public void testSimpleCommunication()
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
+         ROS2Node node = null;
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain();
             String name = "ROS2CommunicationTest";
-            ROS2Node node = new ROS2Node(domain, name);
+            node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY).build(name);
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -68,7 +43,7 @@ public class CommunicationTest
             for (int i = 0; i < 11; i++)
             {
                TwoNum message = new TwoNum();
-               message.getStr1().append("Hello world: " + i);
+               message.getStr1().append("Hello world: ").append(i);
                System.out.println("Publishing: " + message.getStr1());
                publisher.publish(message);
                System.out.println("Published: " + message.getStr1());
@@ -81,6 +56,9 @@ public class CommunicationTest
 
          while (messagesReceived.getValue() < 5)
             Thread.yield();
+
+         if (node != null)
+            node.destroy();
       });
    }
 
@@ -90,10 +68,10 @@ public class CommunicationTest
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
+         ROS2Node node = null;
          try
          {
-            Domain domain = DomainFactory.getDomain();
-            ROS2Node node = new ROS2Node(domain, "ROS2CommunicationTest");
+            node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY).build("ROS2CommunicationTest");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -113,15 +91,13 @@ public class CommunicationTest
             for (int i = 0; i < 11; i++)
             {
                TwoNum message = new TwoNum();
-               message.getStr1().append("Hello world: " + i);
+               message.getStr1().append("Hello world: ").append(i);
                System.out.println("Publishing: " + message.getStr1());
                publisher.publish(message);
                System.out.println("Published: " + message.getStr1());
             }
 
             ThreadTools.sleepSeconds(1.0);
-
-            node.destroy();
          }
          catch (Exception e)
          {
@@ -130,6 +106,9 @@ public class CommunicationTest
 
          while (messagesReceived.getValue() < 5)
             Thread.yield();
+
+         if (node != null)
+            node.destroy();
       });
    }
 
@@ -138,11 +117,14 @@ public class CommunicationTest
    {
       Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
       {
+         RealtimeROS2Node node = null;
+
          Pair<Integer, Integer> messagesReceived = new MutablePair<>();
          try
          {
-            Domain domain = DomainFactory.getDomain();
-            RealtimeROS2Node node = new RealtimeROS2Node(domain, PeriodicNonRealtimeThreadScheduler::new, "ROS2CommunicationTest", "/us/ihmc");
+            node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY)
+                                        .namespace("/us/ihmc")
+                                        .buildRealtime("ROS2CommunicationTest");
             TwoNumPubSubType topicDataType = new TwoNumPubSubType();
             ROS2Publisher<TwoNum> publisher = node.createPublisher(topicDataType, "/chatter");
 
@@ -155,7 +137,7 @@ public class CommunicationTest
             for (int i = 0; i < 11; i++)
             {
                TwoNum message = new TwoNum();
-               message.getStr1().append("Hello world: " + i);
+               message.getStr1().append("Hello world: ").append(i);
                System.out.println("Publishing: " + message.getStr1());
                boolean success = publisher.publish(message);
                System.out.println("Published: success: " + success + " content: " + message.getStr1());
@@ -185,6 +167,9 @@ public class CommunicationTest
          {
             e.printStackTrace();
          }
+
+         if (node != null)
+            node.destroy();
       });
    }
 }

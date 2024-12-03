@@ -40,6 +40,7 @@ public class PubSubTester<P extends Packet>
 
       ParticipantProfile attributes = ParticipantProfile.create()
                                                         .domainId(systemDomain())
+                                                        .useOnlyIntraProcessDelivery()
                                                         .discoveryLeaseDuration(Time.Infinite)
                                                         .name("PubSubTester");
 

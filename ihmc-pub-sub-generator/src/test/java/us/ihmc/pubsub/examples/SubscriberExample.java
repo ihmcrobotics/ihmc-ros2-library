@@ -82,6 +82,7 @@ public class SubscriberExample
 
       ParticipantProfile attributes2 = ParticipantProfile.create()
                                                          .domainId(1)
+                                                         .useOnlyIntraProcessDelivery()
                                                          .name("ParticipantExample")
                                                          .discoveryLeaseDuration(Time.Infinite);
       //.discoveryServer("127.0.0.1", 4);

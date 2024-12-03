@@ -32,8 +32,8 @@ public class AggressivePublisher
 
       ParticipantProfile attributes = ParticipantProfile.create()
                                                         .domainId(215)
+                                                        .useOnlyIntraProcessDelivery()
                                                         .discoveryLeaseDuration(Time.Infinite)
-                                                        .useOnlySharedMemoryTransport()
                                                         .name("AggressivePublisher");
 
       Participant participant = domain.createParticipant(attributes, new ParticipantListenerImpl());

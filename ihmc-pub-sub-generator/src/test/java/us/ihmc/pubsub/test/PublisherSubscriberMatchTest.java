@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PublisherSubscriberMatchTest
 {
    @Test
-   public void TestMatchingAttributes()
+   public void testMatchingAttributes()
    {
       TopicDataType topicDataType = new ChatMessagePubSubType();
 

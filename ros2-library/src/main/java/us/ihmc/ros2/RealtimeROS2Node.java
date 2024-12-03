@@ -1,15 +1,13 @@
 package us.ihmc.ros2;
 
-import us.ihmc.pubsub.Domain;
-import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.ParticipantProfile;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
-import us.ihmc.util.PeriodicNonRealtimeThreadSchedulerFactory;
+import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 import us.ihmc.util.PeriodicThreadScheduler;
 import us.ihmc.util.PeriodicThreadSchedulerFactory;
 
-import java.net.InetAddress;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -33,140 +31,21 @@ public class RealtimeROS2Node extends ROS2Node
    private long threadPeriod = DEFAULT_THREAD_PERIOD_MICROSECONDS;
 
    /**
-    * Create a new realtime ROS 2 node with non-realtime thread with the default namespace.
-    *
-    * @param name                   Name of the ROS 2 node
-    * @param domainId               Desired ROS domain ID
-    * @param addressRestriction     Restrict network traffic to the given addresses. When provided, it
-    *                               should describe one of the addresses of the computer hosting this node.
-    *                               Optional.
+    * Use {@link ROS2NodeBuilder} to construct
+    * <pre>{@code
+    *    RealtimeROS2Node realtimeNode = new ROS2NodeBuilder().buildRealtime("RealtimeNode");
+    * }</pre>
     */
-   public RealtimeROS2Node(String name, int domainId, InetAddress... addressRestriction)
+   protected RealtimeROS2Node(String name,
+                              String namespace,
+                              ParticipantProfile attributes,
+                              @Nullable SpecialTransportMode specialTransportMode,
+                              PeriodicThreadSchedulerFactory threadFactory)
    {
-      this(DomainFactory.getDomain(),
-           new PeriodicNonRealtimeThreadSchedulerFactory(),
-           name,
-           DEFAULT_NAMESPACE,
-           domainId,
-           addressRestriction);
-   }
-
-   /**
-    * Create a new realtime ROS 2 node with the default namespace.
-    *
-    * @param threadFactory         Thread factory for the publisher. Either
-    *                              PeriodicRealtimeThreadSchedulerFactory or
-    *                              PeriodicNonRealtimeThreadSchedulerFactory depending on the application
-    * @param name                  Name of the ROS 2 node
-    * @param domainId              Desired ROS domain ID
-    * @param addressRestriction    Restrict network traffic to the given addresses. When provided, it
-    *                              should describe one of the addresses of the computer hosting this node.
-    *                              Optional.
-    */
-   public RealtimeROS2Node(PeriodicThreadSchedulerFactory threadFactory,
-                           String name,
-                           int domainId,
-                           InetAddress... addressRestriction)
-   {
-      this(DomainFactory.getDomain(), threadFactory, name, DEFAULT_NAMESPACE, domainId, addressRestriction);
-   }
-
-   /**
-    * Create a new realtime ROS 2 node with the default namespace.
-    *
-    * @param domain        DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param threadFactory Thread factory for the publisher. Either
-    *                      PeriodicRealtimeThreadSchedulerFactory or
-    *                      PeriodicNonRealtimeThreadSchedulerFactory depending on the application
-    * @param name          Name of the ROS 2 node
-    */
-   public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name)
-   {
-      this(domain, threadFactory, name, ROS2Node.DEFAULT_NAMESPACE);
-   }
-
-   /**
-    * Create a new realtime ROS 2 node
-    *
-    * @param domain        DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param threadFactory Thread factory for the publisher. Either
-    *                      PeriodicRealtimeThreadSchedulerFactory or
-    *                      PeriodicNonRealtimeThreadSchedulerFactory depending on the application
-    * @param name          Name of the ROS 2 node
-    * @param namespace     Namespace of the ROS 2 node
-    */
-   public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace)
-   {
-      this(domain, threadFactory, name, namespace, domainFromEnvironment(), useSHMFromEnvironment());
-   }
-
-   /**
-    * Create a new realtime ROS 2 node
-    *
-    * @param domain             DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param threadFactory      Thread factory for the publisher. Either
-    *                           PeriodicRealtimeThreadSchedulerFactory or
-    *                           PeriodicNonRealtimeThreadSchedulerFactory depending on the application
-    * @param name               Name of the ROS 2 node
-    * @param namespace          Namespace of the ROS 2 node
-    * @param domainId           Desired ROS domain ID
-    * @param addressRestriction Restrict network traffic to the given addresses. When provided, it
-    *                           should describe one of the addresses of the computer hosting this node.
-    *                           Optional.
-    */
-   public RealtimeROS2Node(Domain domain,
-                           PeriodicThreadSchedulerFactory threadFactory,
-                           String name,
-                           String namespace,
-                           int domainId,
-                           InetAddress... addressRestriction)
-   {
-      this(domain, threadFactory, name, namespace, domainId, useSHMFromEnvironment(), addressRestriction);
-   }
-
-   /**
-    * Create a new realtime ROS 2 node
-    *
-    * @param domain             DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param threadFactory      Thread factory for the publisher. Either
-    *                           PeriodicRealtimeThreadSchedulerFactory or
-    *                           PeriodicNonRealtimeThreadSchedulerFactory depending on the application
-    * @param name               Name of the ROS 2 node
-    * @param namespace          Namespace of the ROS 2 node
-    * @param domainId           Desired ROS domain ID
-    * @param useSharedMemory    Enable shared memory transport if true
-    * @param addressRestriction Restrict network traffic to the given addresses. When provided, it
-    *                           should describe one of the addresses of the computer hosting this node.
-    *                           Optional.
-    */
-   public RealtimeROS2Node(Domain domain,
-                           PeriodicThreadSchedulerFactory threadFactory,
-                           String name,
-                           String namespace,
-                           int domainId,
-                           boolean useSharedMemory,
-                           InetAddress... addressRestriction)
-   {
-      this(domain, threadFactory, name, namespace, createParticipantAttributes(domainId, useSharedMemory, addressRestriction));
-   }
-
-   /**
-    * Create a new realtime ROS 2 node
-    *
-    * @param domain        DDS domain to use. Use DomainFactory.getDomain(implementation)
-    * @param threadFactory Thread factory for the publisher. Either
-    *                      PeriodicRealtimeThreadSchedulerFactory or
-    *                      PeriodicNonRealtimeThreadSchedulerFactory depending on the application
-    * @param name          Name of the ROS 2 node
-    * @param namespace     Namespace of the ROS 2 node
-    * @param attributes    ParticipantAttributes for the domain
-    */
-   public RealtimeROS2Node(Domain domain, PeriodicThreadSchedulerFactory threadFactory, String name, String namespace, ParticipantProfile attributes)
-   {
-      super(domain, name, namespace, attributes);
+      super(name, namespace, attributes, specialTransportMode);
       this.scheduler = threadFactory.createPeriodicThreadScheduler("RealtimeNode_" + namespace + "/" + name);
    }
-   
+
    /**
     * Adjust the desired thread period from the default (1000 microseconds)
     * This could be useful if a faster response is desired, or to reduce load on the CPU.
@@ -176,11 +55,11 @@ public class RealtimeROS2Node extends ROS2Node
       startupLock.lock();
       try
       {
-         if(spinning)
+         if (spinning)
          {
             throw new RuntimeException("Cannot set the thread period while the node is spinning.");
          }
-         
+
          this.threadPeriod = period;
          this.threadPeriodUnit = unit;
       }

@@ -1,6 +1,14 @@
 package us.ihmc.pubsub.attributes;
 
-import com.eprosima.xmlschemas.fastrtps_profiles.*;
+import com.eprosima.xmlschemas.fastrtps_profiles.DataWriterQosPoliciesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.Dds;
+import com.eprosima.xmlschemas.fastrtps_profiles.LifespanQosPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PartitionQosPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosKindPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublishModeQosPolicyType;
+import com.eprosima.xmlschemas.fastrtps_profiles.PublisherProfileType;
+import com.eprosima.xmlschemas.fastrtps_profiles.WriterTimesType;
 import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.impl.fastRTPS.FastRTPSDomain;
 
@@ -67,15 +75,18 @@ public class PublisherAttributes extends CommonAttributes<PublisherAttributes>
       return this;
    }
    
-
    public String marshall(String profileName) throws IOException
    {
       publisherProfile.setProfileName(profileName);
 
+      Dds dds = new Dds();
+
       ProfilesType profilesType = new ProfilesType();
       profilesType.getDomainparticipantFactoryOrParticipantOrDataWriter().add(publisherProfile);
 
-      return FastRTPSDomain.marshalProfile(profilesType);
+      dds.setProfiles(profilesType);
+
+      return FastRTPSDomain.marshallProfile(dds);
    }
 
    @Override

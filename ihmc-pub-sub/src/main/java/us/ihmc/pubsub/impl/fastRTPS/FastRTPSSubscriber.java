@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-class FastRTPSSubscriber<T> implements Subscriber<T>
+public class FastRTPSSubscriber<T> implements Subscriber<T>
 {
    private final Object destructorLock = new Object(); 
   

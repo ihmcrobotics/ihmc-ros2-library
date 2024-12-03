@@ -10,7 +10,6 @@
 package us.ihmc.pubsub.impl.fastRTPS;
 
 import com.eprosima.xmlschemas.fastrtps_profiles.Dds;
-import com.eprosima.xmlschemas.fastrtps_profiles.ProfilesType;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -275,22 +274,10 @@ public class FastRTPSDomain implements Domain
    {
       us.ihmc.rtps.impl.fastRTPS.LogLevel.setLogLevel(level.getLevel());
    }
-   
-   /**
-    * Marshall a ProfilesType to a string
-    * 
-    * Used internally to marshall data
-    * 
-    * @param profile
-    * @return
-    * @throws IOException 
-    */
-   public static String marshalProfile(ProfilesType profile) throws IOException
+
+   public static String marshallProfile(Dds dds) throws IOException
    {
       StringWriter writer = new StringWriter();
-      
-      Dds dds = new Dds();
-      dds.setProfiles(profile);
 
       try
       {

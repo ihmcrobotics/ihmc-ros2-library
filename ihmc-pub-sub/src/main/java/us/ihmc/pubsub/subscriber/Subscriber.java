@@ -19,6 +19,10 @@ import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.Guid;
 import us.ihmc.pubsub.common.SampleInfo;
 
+/**
+ * Deprecated - use {@link us.ihmc.pubsub.impl.fastRTPS.FastRTPSSubscriber} directly
+ */
+@Deprecated
 public interface Subscriber<T>
 {
    /**
