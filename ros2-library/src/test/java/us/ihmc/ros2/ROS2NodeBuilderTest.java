@@ -22,10 +22,10 @@ public class ROS2NodeBuilderTest
                                            .useSharedMemory(useSharedMemory)
                                            .build(nodeName);
 
-      assertEquals(node.getProfile().getDomainId(), domainId);
-      assertEquals(node.getSpecialTransportMode(), specialTransportMode);
-      assertEquals(node.getNamespace(), namespace);
-      assertEquals(node.getName(), "test_node");
+      assertEquals(domainId, node.getProfile().getDomainId());
+      assertEquals(specialTransportMode, node.getSpecialTransportMode());
+      assertEquals(namespace, node.getNamespace());
+      assertEquals(nodeName, node.getName());
 
       node.destroy();
    }
