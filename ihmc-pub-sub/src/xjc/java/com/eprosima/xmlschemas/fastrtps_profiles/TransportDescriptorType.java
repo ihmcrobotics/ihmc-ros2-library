@@ -1017,8 +1017,8 @@ public class TransportDescriptorType {
     public static class InterfaceWhiteList {
 
         @XmlElementRefs({
-            @XmlElementRef(name = "interface", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false),
-            @XmlElementRef(name = "address", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false)
+            @XmlElementRef(name = "address", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false),
+            @XmlElementRef(name = "interface", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false)
         })
         protected List<JAXBElement<?>> addressOrInterface;
 
@@ -1040,8 +1040,8 @@ public class TransportDescriptorType {
          * 
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link JAXBElement }{@code <}{@link String }{@code >}
          * {@link JAXBElement }{@code <}{@link List }{@code <}{@link String }{@code >}{@code >}
+         * {@link JAXBElement }{@code <}{@link String }{@code >}
          * 
          * 
          */
