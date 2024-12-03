@@ -15,7 +15,6 @@
  */
 package us.ihmc.ros2.example;
 
-import std_msgs.msg.dds.String;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
@@ -41,7 +40,7 @@ public class NonRealtimeROS2TalkerExample
                                            .domainId(112)
                                            .namespace("/us/ihmc")
                                            .build("NonRealtimeROS2ChatterExample");
-      ROS2Publisher<String> publisher = node.createPublisher(new std_msgs.msg.dds.StringPubSubType(), "/chatter");
+      ROS2Publisher<std_msgs.msg.dds.String> publisher = node.createPublisher(new std_msgs.msg.dds.StringPubSubType(), "/chatter");
       std_msgs.msg.dds.String message = new std_msgs.msg.dds.String();
       for (int i = 0; i < 1000000000; i++)
       {
