@@ -79,7 +79,7 @@ jobs:
           message: 'Rebuild natives for Windows'
           push: true
   build-macos-intel:
-    runs-on: [macos-12]
+    runs-on: [macos-13]
     needs: [build-windows]
     strategy:
       max-parallel: 1
@@ -92,7 +92,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew install coreutils
-          sudo xcode-select --switch /Applications/Xcode_13.1.app
+          sudo xcode-select --switch /Applications/Xcode_15.2.0.app
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -127,7 +127,7 @@ jobs:
         run: |
           brew install coreutils
           brew install swig
-          sudo xcode-select --switch /Applications/Xcode_14.3.1.app
+          sudo xcode-select --switch /Applications/Xcode_15.2.0.app
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
