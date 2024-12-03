@@ -19,7 +19,6 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 /**
  * A builder to construct {@link ROS2Node}, {@link RealtimeROS2Node}.
@@ -387,10 +385,7 @@ public class ROS2NodeBuilder
       List<InterfaceAddress> interfaceAddresses;
       try
       {
-         interfaceAddresses = Collections.list(NetworkInterface.getNetworkInterfaces())
-                                         .stream()
-                                         .flatMap(networkInterface -> networkInterface.getInterfaceAddresses().stream())
-                                         .collect(Collectors.toList());
+         interfaceAddresses = NetworkInterface.networkInterfaces().flatMap(networkInterface -> networkInterface.getInterfaceAddresses().stream()).toList();
       }
       catch (SocketException e)
       {
