@@ -46,8 +46,8 @@ import jakarta.xml.bind.annotation.XmlType;
 public class RemoteServerAttributesType {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "metatrafficMulticastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "metatrafficUnicastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false)
+        @XmlElementRef(name = "metatrafficUnicastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false),
+        @XmlElementRef(name = "metatrafficMulticastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false)
     })
     protected List<JAXBElement<LocatorListType>> content;
     @XmlAttribute(name = "prefix", required = true)
