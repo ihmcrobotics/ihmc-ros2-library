@@ -4,83 +4,83 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
-    runs-on: [ubuntu-20.04]
-    strategy:
-      matrix:
-        platform: [x86_64, arm64]
-      max-parallel: 1
-    steps:
-      - uses: actions/checkout@v4
-      - name: Debug
-        run: |
-          strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
-      - name: Pull repo
-        run: |
-          git reset --hard
-          git pull
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install build-essential g++ gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu g++-aarch64-linux-gnu cmake git swig -y
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Check Java/Gradle versions
-        run: |
-          java --version
-          gradle --version
-      - name: Compile native library (arm64)
-        if: matrix.platform == 'arm64'
-        run: |
-          LINUX_CROSS_COMPILE_ARM=1 bash cppbuild.bash
-      - name: Compile native library (x86_64)
-        if: matrix.platform == 'x86_64'
-        run: |
-          bash cppbuild.bash
-      - name: Commit generated java and native libraries
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: '*.java *.so *.so.*' # Only commit generated java from Linux
-          author_name: ihmc-rosie
-          author_email: rosie@ihmc.us
-          message: 'Rebuild natives for Linux'
-          push: true
-  build-windows:
-    runs-on: [windows-2019]
-    needs: [build-linux]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Pull repo
-        run: |
-          git reset --hard
-          git pull
-      - uses: ilammy/msvc-dev-cmd@v1
-        with:
-          vsversion: 2019
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Check Java/Gradle versions
-        run: |
-          java --version
-          gradle --version
-      - name: Compile native library
-        run: |
-          bash.exe cppbuild.bash
-      - name: Commit native libraries
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: '*.dll' # Only commit generated java from Linux
-          author_name: ihmc-rosie
-          author_email: rosie@ihmc.us
-          message: 'Rebuild natives for Windows'
-          push: true
+  # build-linux:
+  #   runs-on: [ubuntu-20.04]
+  #   strategy:
+  #     matrix:
+  #       platform: [x86_64, arm64]
+  #     max-parallel: 1
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Debug
+  #       run: |
+  #         strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
+  #     - name: Pull repo
+  #       run: |
+  #         git reset --hard
+  #         git pull
+  #     - name: Install dependencies
+  #       run: |
+  #         sudo apt update
+  #         sudo apt install build-essential g++ gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu g++-aarch64-linux-gnu cmake git swig -y
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '17'
+  #     - name: Check Java/Gradle versions
+  #       run: |
+  #         java --version
+  #         gradle --version
+  #     - name: Compile native library (arm64)
+  #       if: matrix.platform == 'arm64'
+  #       run: |
+  #         LINUX_CROSS_COMPILE_ARM=1 bash cppbuild.bash
+  #     - name: Compile native library (x86_64)
+  #       if: matrix.platform == 'x86_64'
+  #       run: |
+  #         bash cppbuild.bash
+  #     - name: Commit generated java and native libraries
+  #       uses: EndBug/add-and-commit@v9
+  #       with:
+  #         add: '*.java *.so *.so.*' # Only commit generated java from Linux
+  #         author_name: ihmc-rosie
+  #         author_email: rosie@ihmc.us
+  #         message: 'Rebuild natives for Linux'
+  #         push: true
+  # build-windows:
+  #   runs-on: [windows-2019]
+  #   needs: [build-linux]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Pull repo
+  #       run: |
+  #         git reset --hard
+  #         git pull
+  #     - uses: ilammy/msvc-dev-cmd@v1
+  #       with:
+  #         vsversion: 2019
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '17'
+  #     - name: Check Java/Gradle versions
+  #       run: |
+  #         java --version
+  #         gradle --version
+  #     - name: Compile native library
+  #       run: |
+  #         bash.exe cppbuild.bash
+  #     - name: Commit native libraries
+  #       uses: EndBug/add-and-commit@v9
+  #       with:
+  #         add: '*.dll' # Only commit generated java from Linux
+  #         author_name: ihmc-rosie
+  #         author_email: rosie@ihmc.us
+  #         message: 'Rebuild natives for Windows'
+  #         push: true
   build-macos-intel:
     runs-on: [macos-13]
-    needs: [build-windows]
+    # needs: [build-windows]
     strategy:
       max-parallel: 1
     steps:
