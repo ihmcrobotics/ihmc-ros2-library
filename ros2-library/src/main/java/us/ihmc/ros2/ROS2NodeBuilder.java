@@ -215,7 +215,7 @@ public class ROS2NodeBuilder
          boolean runningInCI = (System.getenv("GITHUB_ACTIONS") != null)
                                || (System.getenv("RUNNING_ON_CONTINUOUS_INTEGRATION_SERVER") != null)
                                || (System.getProperty("runningOnCIServer") != null);
-         if (runningInCI)
+         if (runningInCI && specialTransportMode == null)
          {
             buildPrintout.add("Detected running from CI, using INTRAPROCESS_ONLY SpecialTransportMode");
 
