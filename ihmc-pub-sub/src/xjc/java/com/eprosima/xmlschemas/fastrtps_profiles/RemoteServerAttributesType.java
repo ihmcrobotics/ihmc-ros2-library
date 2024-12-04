@@ -46,8 +46,8 @@ import jakarta.xml.bind.annotation.XmlType;
 public class RemoteServerAttributesType {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "metatrafficMulticastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "metatrafficUnicastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false)
+        @XmlElementRef(name = "metatrafficUnicastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false),
+        @XmlElementRef(name = "metatrafficMulticastLocatorList", namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", type = JAXBElement.class, required = false)
     })
     protected List<JAXBElement<LocatorListType>> content;
     @XmlAttribute(name = "prefix", required = true)
@@ -59,8 +59,8 @@ public class RemoteServerAttributesType {
      * <p>
      * You are getting this "catch-all" property because of the following reason: 
      * The field name "MetatrafficMulticastLocatorList" is used by two different parts of a schema. See: 
-     * line 723 of file:/home/d/Desktop/ihmc-ros2-library/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
-     * line 720 of file:/home/d/Desktop/ihmc-ros2-library/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
+     * line 723 of file:/home/runner/work/ihmc-ros2-library/ihmc-ros2-library/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
+     * line 720 of file:/home/runner/work/ihmc-ros2-library/ihmc-ros2-library/ihmc-pub-sub/thirdparty/Fast-RTPS/resources/xsd/fastRTPS_profiles.xsd
      * <p>
      * To get rid of this property, apply a property customization to one 
      * of both of the following declarations to change their names: 

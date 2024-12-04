@@ -11,8 +11,8 @@ package us.ihmc.rtps.impl.fastRTPS;
 public interface FastRTPSConstants {
   public final static int FASTRTPS_VERSION_MAJOR = 2;
   public final static int FASTRTPS_VERSION_MINOR = 14;
-  public final static int FASTRTPS_VERSION_MICRO = 3;
-  public final static String FASTRTPS_VERSION_STR = "2.14.3";
+  public final static int FASTRTPS_VERSION_MICRO = 4;
+  public final static String FASTRTPS_VERSION_STR = "2.14.4";
   public final static int GEN_API_VER = 2;
   public final static int HAVE_CXX20 = 0;
   public final static int HAVE_CXX17 = 0;

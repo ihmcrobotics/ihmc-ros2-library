@@ -31,10 +31,10 @@ public class ObjectFactory {
     private final static QName _Types_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "types");
     private final static QName _DurationTypeNanosec_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "nanosec");
     private final static QName _DurationTypeSec_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "sec");
-    private final static QName _RemoteServerAttributesTypeMetatrafficMulticastLocatorList_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "metatrafficMulticastLocatorList");
-    private final static QName _RemoteServerAttributesTypeMetatrafficUnicastLocatorList_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "metatrafficUnicastLocatorList");
     private final static QName _TransportDescriptorTypeInterfaceWhiteListInterface_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "interface");
     private final static QName _TransportDescriptorTypeInterfaceWhiteListAddress_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "address");
+    private final static QName _RemoteServerAttributesTypeMetatrafficMulticastLocatorList_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "metatrafficMulticastLocatorList");
+    private final static QName _RemoteServerAttributesTypeMetatrafficUnicastLocatorList_QNAME = new QName("http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", "metatrafficUnicastLocatorList");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.eprosima.xmlschemas.fastrtps_profiles
@@ -922,24 +922,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link LocatorListType }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "metatrafficMulticastLocatorList", scope = RemoteServerAttributesType.class)
-    public JAXBElement<LocatorListType> createRemoteServerAttributesTypeMetatrafficMulticastLocatorList(LocatorListType value) {
-        return new JAXBElement<LocatorListType>(_RemoteServerAttributesTypeMetatrafficMulticastLocatorList_QNAME, LocatorListType.class, RemoteServerAttributesType.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link LocatorListType }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "metatrafficUnicastLocatorList", scope = RemoteServerAttributesType.class)
-    public JAXBElement<LocatorListType> createRemoteServerAttributesTypeMetatrafficUnicastLocatorList(LocatorListType value) {
-        return new JAXBElement<LocatorListType>(_RemoteServerAttributesTypeMetatrafficUnicastLocatorList_QNAME, LocatorListType.class, RemoteServerAttributesType.class, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
@@ -955,6 +937,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "address", scope = TransportDescriptorType.InterfaceWhiteList.class)
     public JAXBElement<List<String>> createTransportDescriptorTypeInterfaceWhiteListAddress(List<String> value) {
         return new JAXBElement<List<String>>(_TransportDescriptorTypeInterfaceWhiteListAddress_QNAME, ((Class) List.class), TransportDescriptorType.InterfaceWhiteList.class, ((List<String> ) value));
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link LocatorListType }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "metatrafficMulticastLocatorList", scope = RemoteServerAttributesType.class)
+    public JAXBElement<LocatorListType> createRemoteServerAttributesTypeMetatrafficMulticastLocatorList(LocatorListType value) {
+        return new JAXBElement<LocatorListType>(_RemoteServerAttributesTypeMetatrafficMulticastLocatorList_QNAME, LocatorListType.class, RemoteServerAttributesType.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link LocatorListType }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles", name = "metatrafficUnicastLocatorList", scope = RemoteServerAttributesType.class)
+    public JAXBElement<LocatorListType> createRemoteServerAttributesTypeMetatrafficUnicastLocatorList(LocatorListType value) {
+        return new JAXBElement<LocatorListType>(_RemoteServerAttributesTypeMetatrafficUnicastLocatorList_QNAME, LocatorListType.class, RemoteServerAttributesType.class, value);
     }
 
 }

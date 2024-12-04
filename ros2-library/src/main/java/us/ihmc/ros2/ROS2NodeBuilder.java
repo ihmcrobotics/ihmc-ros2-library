@@ -54,19 +54,19 @@ public class ROS2NodeBuilder
        * SHARED_MEMORY_ONLY enables only the Shared Memory Transport. Participants communicate directly through memory on the host system.
        * Temporary files are written to disk (on Linux in /dev/shm, on Windows in %APPDATA%\Local\Temp) to assist with facilitating this mode of transport.
        * This mode is NOT compatible with mixed-transports, e.g. a participant with SHM and UDPv4 transports.
-       * Documentation: <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/shared_memory/shared_memory.html">Shared Memory Transport</a>
+       * Documentation: <a href="https://fast-dds.docs.eprosima.com/en/v2.14.4/fastdds/transport/shared_memory/shared_memory.html">Shared Memory Transport</a>
        */
       SHARED_MEMORY_ONLY,
       /**
        * UDPV4_LOOPBACK_ADDRESS_ONLY enables only the UDP Transport on the loopback address. Useful for mixed-DDS implementations where you only want local
        * communication, e.g. CycloneDDS and FastDDS communicating only locally.
-       * Documentation <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/udp/udp.html">UDP Transport</a>
+       * Documentation <a href="https://fast-dds.docs.eprosima.com/en/v2.14.4/fastdds/transport/udp/udp.html">UDP Transport</a>
        */
       UDPV4_LOOPBACK_ADDRESS_ONLY,
       /**
        * UDPV4_ONLY enables only the UDP Transport with no special address restrictions. Useful for debugging or testing, not super practical in most
        * applications.
-       * Documentation <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/udp/udp.html">UDP Transport</a>
+       * Documentation <a href="https://fast-dds.docs.eprosima.com/en/v2.14.4/fastdds/transport/udp/udp.html">UDP Transport</a>
        */
       UDPV4_ONLY,
       /**
@@ -75,7 +75,7 @@ public class ROS2NodeBuilder
        * This mode is especially useful for unit testing and single-process applications.
        * This mode does not bind to any network address, unless SHM transport was unable to initialize.
        * This mode is NOT compatible with mixed-transports, e.g. a participant with SHM and UDPv4 transports.
-       * Documentation: <a href="https://fast-dds.docs.eprosima.com/en/v2.14.3/fastdds/transport/intraprocess.html#intraprocess-delivery">Intra-process
+       * Documentation: <a href="https://fast-dds.docs.eprosima.com/en/v2.14.4/fastdds/transport/intraprocess.html#intraprocess-delivery">Intra-process
        * delivery</a>
        */
       INTRAPROCESS_ONLY
