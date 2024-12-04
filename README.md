@@ -22,6 +22,13 @@ ROS2Node ros2Node = new ROS2NodeBuilder().build("test_node");
 RealtimeROS2Node realtimeROS2Node = new ROS2NodeBuilder().buildRealtime("realtime_test_node");
 ```
 
+### Gradle
+```
+dependencies {
+  implementation("us.ihmc:ros2-library:1.0.0")
+}
+```
+
 ### Examples
 See `ROS2TalkerExample.java` and `ROS2PublishSubscribeExample.java`.
 
