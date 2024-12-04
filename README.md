@@ -16,7 +16,7 @@ This library provides a minimal implementation of a ROS 2 node in Java. Two vers
 - **ROS2Node**: Publishes in the same thread and uses direct callbacks for incoming messages.
 - **RealtimeROS2Node**:	Stores outgoing and incoming messages in a queue and uses non-blocking calls to publish messages and allows polling for new messages.
 
-Create ROS2Node and RealtimeROS2Node with ROS2NodeBuilder:
+Create **ROS2Node** and **RealtimeROS2Node** with **ROS2NodeBuilder**:
 ```
 ROS2Node ros2Node = new ROS2NodeBuilder().build("test_node");
 RealtimeROS2Node realtimeROS2Node = new ROS2NodeBuilder().buildRealtime("realtime_test_node");
