@@ -18,28 +18,23 @@ package us.ihmc.ros2.example;
 import std_msgs.msg.dds.Int64;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
-import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2Topic;
 
 import java.io.IOException;
 
 /**
- * Java version of the ROS2 demo listener.
- * 
- * To test, start a ROS2 talker using 
- * 
- *    ros2 run demo_nodes_cpp talker -- -t chatter
- * 
+ * Java ROS 2 simple publisher and subscriber example
+ *
  * @author Jesper Smith
  */
-public class NonRealtimeROS2PublishSubscribeExample
+public class ROS2PublishSubscribeExample
 {
    public static void main(String[] args) throws IOException, InterruptedException
    {
-      ROS2Node node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY).build("NonRealtimeROS2PublishSubscribeExample");
+      ROS2Node node = new ROS2NodeBuilder().build("publish_subscribe_example");
       ROS2Topic<Int64> topic = new ROS2Topic<>().withType(Int64.class).withSuffix("example");
-      node.createSubscription2(topic, message -> System.out.println(message.getData()));
+      node.createSubscription2(topic, message -> System.out.println("Received data: " + message.getData()));
 
       ROS2Publisher<Int64> publisher = node.createPublisher(topic);
       Int64 message = new Int64();
