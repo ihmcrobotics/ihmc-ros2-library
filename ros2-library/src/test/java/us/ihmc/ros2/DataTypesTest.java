@@ -1,4 +1,4 @@
-package us.ihmc.ros2.example;
+package us.ihmc.ros2;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;

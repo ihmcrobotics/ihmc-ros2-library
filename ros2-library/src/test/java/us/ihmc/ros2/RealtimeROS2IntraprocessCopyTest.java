@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.ihmc.ros2.example;
+package us.ihmc.ros2;
 
 import org.junit.jupiter.api.Test;
 import ros_msgs.msg.dds.BigNumSequence;

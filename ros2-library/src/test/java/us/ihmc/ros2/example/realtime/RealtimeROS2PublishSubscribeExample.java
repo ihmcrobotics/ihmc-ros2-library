@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.ihmc.ros2.example;
+package us.ihmc.ros2.example.realtime;
 
 import org.apache.commons.lang3.SystemUtils;
 import std_msgs.msg.dds.Int64;

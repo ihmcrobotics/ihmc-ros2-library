@@ -17,7 +17,6 @@ package us.ihmc.ros2.example;
 
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
-import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 import us.ihmc.ros2.ROS2Publisher;
 
 import java.io.IOException;
@@ -27,19 +26,18 @@ import java.io.IOException;
  *
  * To test, start a ROS2 talker using
  *
- *    ros2 run demo_nodes_cpp talker -- -t chatter
+ *    ROS_DOMAIN_ID=112 ros2 topic echo /chatter
  *
  * @author Jesper Smith
  *
  */
-public class NonRealtimeROS2TalkerExample
+public class ROS2TalkerExample
 {
    public static void main(String[] args) throws IOException, InterruptedException
    {
-      ROS2Node node = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.INTRAPROCESS_ONLY)
-                                           .domainId(112)
+      ROS2Node node = new ROS2NodeBuilder().domainId(112)
                                            .namespace("/us/ihmc")
-                                           .build("NonRealtimeROS2ChatterExample");
+                                           .build("talker_example");
       ROS2Publisher<std_msgs.msg.dds.String> publisher = node.createPublisher(new std_msgs.msg.dds.StringPubSubType(), "/chatter");
       std_msgs.msg.dds.String message = new std_msgs.msg.dds.String();
       for (int i = 0; i < 1000000000; i++)
