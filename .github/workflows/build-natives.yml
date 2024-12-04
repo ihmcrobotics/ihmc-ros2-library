@@ -92,6 +92,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew install coreutils
+          brew install swig
           sudo xcode-select --switch /Applications/Xcode_15.2.0.app
       - uses: actions/setup-java@v4
         with:
@@ -112,38 +113,38 @@ jobs:
           author_email: rosie@ihmc.us
           message: 'Rebuild natives for macOS'
           push: true
-  build-macos-arm:
-    runs-on: [macos-14]
-    needs: [build-macos-intel]
-    strategy:
-      max-parallel: 1
-    steps:
-      - uses: actions/checkout@v4
-      - name: Pull repo
-        run: |
-          git reset --hard
-          git pull
-      - name: Install dependencies
-        run: |
-          brew install coreutils
-          brew install swig
-          sudo xcode-select --switch /Applications/Xcode_15.2.0.app
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Check Java/Gradle versions
-        run: |
-          java --version
-          gradle --version
-      - name: Compile native library (arm64)
-        run: |
-          bash cppbuild.bash
-      - name: Commit generated java and native libraries
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: '*.dylib *.jnilib' # Only commit generated java from Linux
-          author_name: ihmc-rosie
-          author_email: rosie@ihmc.us
-          message: 'Rebuild natives for macOS'
-          push: true
+  # build-macos-arm:
+  #   runs-on: [macos-14]
+  #   needs: [build-macos-intel]
+  #   strategy:
+  #     max-parallel: 1
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Pull repo
+  #       run: |
+  #         git reset --hard
+  #         git pull
+  #     - name: Install dependencies
+  #       run: |
+  #         brew install coreutils
+  #         brew install swig
+  #         sudo xcode-select --switch /Applications/Xcode_15.2.0.app
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '17'
+  #     - name: Check Java/Gradle versions
+  #       run: |
+  #         java --version
+  #         gradle --version
+  #     - name: Compile native library (arm64)
+  #       run: |
+  #         bash cppbuild.bash
+  #     - name: Commit generated java and native libraries
+  #       uses: EndBug/add-and-commit@v9
+  #       with:
+  #         add: '*.dylib *.jnilib' # Only commit generated java from Linux
+  #         author_name: ihmc-rosie
+  #         author_email: rosie@ihmc.us
+  #         message: 'Rebuild natives for macOS'
+  #         push: true
