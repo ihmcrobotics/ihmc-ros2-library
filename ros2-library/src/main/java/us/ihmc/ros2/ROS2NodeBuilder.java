@@ -91,7 +91,7 @@ public class ROS2NodeBuilder
    @Nullable
    private SpecialTransportMode specialTransportMode;
 
-   private final transient StringJoiner buildPrintout = new StringJoiner("\n\t\t");
+   private final transient StringJoiner buildPrintout = new StringJoiner("\n   ");
 
    public ROS2NodeBuilder domainId(int domainId)
    {
