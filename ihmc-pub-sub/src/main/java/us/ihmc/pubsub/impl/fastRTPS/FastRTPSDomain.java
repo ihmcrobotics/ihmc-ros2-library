@@ -180,17 +180,28 @@ public class FastRTPSDomain implements Domain
    @Override
    public synchronized boolean removeParticipant(Participant participant)
    {
+      int removed = 0;
+
       for (int i = 0; i < participants.size(); i++)
       {
          if (participants.get(i) == participant)
          {
             participants.get(i).delete();
             participants.remove(i);
-            return true;
+            removed++;
          }
       }
 
-      return false;
+      for (int i = 0; i < allParticipantsForStatistics.size(); i++)
+      {
+         if (allParticipantsForStatistics.get(i) == participant)
+         {
+            allParticipantsForStatistics.remove(i);
+            removed++;
+         }
+      }
+
+      return removed == 2;
    }
 
    @Override
