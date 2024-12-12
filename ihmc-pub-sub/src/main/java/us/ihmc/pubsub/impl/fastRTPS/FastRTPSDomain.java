@@ -49,7 +49,6 @@ public class FastRTPSDomain implements Domain
    public static final int DEFAULT_DISCOVERY_SERVER_PORT = 11811;
 
    private final ArrayList<FastRTPSParticipant> participants = new ArrayList<>();
-   private final ArrayList<Participant> allParticipantsForStatistics = new ArrayList<>();
 
    private static boolean useSystemFastRTPS = false;
    private static FastRTPSDomain instance = null;
@@ -119,10 +118,6 @@ public class FastRTPSDomain implements Domain
    {
       FastRTPSParticipant participant = new FastRTPSParticipant(att, participantListener);
       participants.add(participant);
-      synchronized (allParticipantsForStatistics)
-      {
-         allParticipantsForStatistics.add(participant);
-      }
       return participant;
    }
 
@@ -180,28 +175,10 @@ public class FastRTPSDomain implements Domain
    @Override
    public synchronized boolean removeParticipant(Participant participant)
    {
-      int removed = 0;
+      if (participant instanceof FastRTPSParticipant fastRTPSParticipant)
+         fastRTPSParticipant.delete();
 
-      for (int i = 0; i < participants.size(); i++)
-      {
-         if (participants.get(i) == participant)
-         {
-            participants.get(i).delete();
-            participants.remove(i);
-            removed++;
-         }
-      }
-
-      for (int i = 0; i < allParticipantsForStatistics.size(); i++)
-      {
-         if (allParticipantsForStatistics.get(i) == participant)
-         {
-            allParticipantsForStatistics.remove(i);
-            removed++;
-         }
-      }
-
-      return removed == 2;
+      return participants.remove(participant);
    }
 
    @Override
@@ -309,6 +286,7 @@ public class FastRTPSDomain implements Domain
    @Override
    public List<Participant> getAllParticipantsForStatistics()
    {
-      return allParticipantsForStatistics;
+      // TODO: This is temporary
+      return new ArrayList<>(participants);
    }
 }
