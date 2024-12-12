@@ -284,9 +284,8 @@ public class FastRTPSDomain implements Domain
    }
 
    @Override
-   public List<Participant> getAllParticipantsForStatistics()
+   public List<FastRTPSParticipant> getAllParticipantsForStatistics()
    {
-      // TODO: This is temporary
-      return new ArrayList<>(participants);
+      return participants;
    }
 }
