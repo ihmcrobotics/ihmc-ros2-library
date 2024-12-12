@@ -317,5 +317,5 @@ public interface Domain {
    }
 
    /** This list is meant for external access. The user may synchronize over the returned list for thread safety. */
-   public List<Participant> getAllParticipantsForStatistics();
+   public List<? extends Participant> getAllParticipantsForStatistics();
 }
