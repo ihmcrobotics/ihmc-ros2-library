@@ -58,7 +58,7 @@ public class ROS2Publisher<T>
       domain.removePublisher(publisher);
    }
 
-   Publisher getPublisher()
+   public Publisher getPublisher()
    {
       return publisher;
    }
