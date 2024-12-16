@@ -5,6 +5,8 @@ import us.ihmc.pubsub.subscriber.Subscriber;
 
 /**
  * A ROS 2 compatible subscription
+ * // TODO: Rename to ROS2Subscriber
+ *
  * @param <T> the data type
  */
 public class ROS2Subscription<T>
@@ -21,5 +23,17 @@ public class ROS2Subscription<T>
    public void remove()
    {
       domain.removeSubscriber(subscriber);
+   }
+
+   // TODO: ROS2Subscription should extend FastRTPSSubscriber
+   public Subscriber<T> getSubscriber()
+   {
+      return subscriber;
+   }
+
+   // TODO: Remove domain from ROS2Subscription
+   public Domain getDomain()
+   {
+      return domain;
    }
 }
