@@ -58,12 +58,14 @@ public class ROS2Publisher<T>
       domain.removePublisher(publisher);
    }
 
-   Publisher getPublisher()
+   // TODO: ROS2Publisher should extend FastRTPSPublisher
+   public Publisher getPublisher()
    {
       return publisher;
    }
 
-   Domain getDomain()
+   // TODO: Remove domain from ROS2Publisher
+   public Domain getDomain()
    {
       return domain;
    }
