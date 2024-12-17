@@ -11,7 +11,7 @@ ihmc {
 
 mainDependencies {
    api("us.ihmc:ihmc-pub-sub:source")
-   api("us.ihmc:ihmc-realtime:1.6.0")
+   api("us.ihmc:ihmc-realtime:1.7.0")
    api("us.ihmc:ihmc-commons:0.35.0")
 
    api("us.ihmc:ros2-common-interfaces:source")
