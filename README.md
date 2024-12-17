@@ -25,7 +25,7 @@ RealtimeROS2Node realtimeROS2Node = new ROS2NodeBuilder().buildRealtime("realtim
 ### Gradle
 ```
 dependencies {
-  implementation("us.ihmc:ros2-library:1.0.0")
+  implementation("us.ihmc:ros2-library:1.1.4")
 }
 ```
 
