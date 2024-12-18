@@ -1,6 +1,6 @@
 buildscript {
    dependencies {
-      classpath("us.ihmc:ros2-msg-to-pubsub-generator:1.1.4")
+      classpath("us.ihmc:ros2-msg-to-pubsub-generator:1.1.5")
    }
 }
 
