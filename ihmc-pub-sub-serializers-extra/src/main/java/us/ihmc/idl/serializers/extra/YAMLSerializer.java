@@ -17,7 +17,7 @@ package us.ihmc.idl.serializers.extra;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
+import org.yaml.snakeyaml.LoaderOptions;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
@@ -29,8 +29,14 @@ import us.ihmc.pubsub.TopicDataType;
  */
 public class YAMLSerializer<T> extends AbstractSerializer<T>
 {
+   private static final LoaderOptions LOADER_OPTIONS;
+   static {
+      LOADER_OPTIONS = new LoaderOptions();
+      LOADER_OPTIONS.setCodePointLimit((int) 2e24);
+   }
+
    public YAMLSerializer(TopicDataType<T> topicDataType)
    {
-      super(topicDataType, new ObjectMapper(new YAMLFactory()));
+      super(topicDataType, new ObjectMapper(YAMLFactory.builder().loaderOptions(LOADER_OPTIONS).build()));
    }
 }
