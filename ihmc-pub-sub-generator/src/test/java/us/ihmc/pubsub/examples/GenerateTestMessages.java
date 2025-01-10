@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class GenerateTestMessages
 {
    /**
-    * Must be run from ihmc-pub-sub-group/ihmc-pub-sub-generator/src/test folder.
+    * Must be run from ihmc-ros2-library/ihmc-pub-sub-generator/src/test folder.
     */
    public static void main(String[] args) throws IOException
    {
