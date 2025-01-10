@@ -7,35 +7,35 @@ import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
-       * This is the header
-       * Header line 2
-       * This is some dangling comment that will be included in header
-       */
+* This is the header
+* Header line 2
+* This is some dangling comment that will be included in header
+*/
 public class Num extends Packet<Num> implements Settable<Num>, EpsilonComparable<Num>
 {
    /**
-          * a, b, c
-          * 1, 2, 3
-          * baby
-          * sneaky boi
-          */
+   * a, b, c
+   * 1, 2, 3
+   * baby
+   * sneaky boi
+   */
    public static final int X = 123;
    public static final String CATCH_22 = "No doc, watch out!";
 
    /**
-            * this num should have default value 5
-            */
+   * this num should have default value 5
+   */
    public long num_ = 5;
    public double double_test_;
    /**
-            * I have some doc not relevant to the next
-            */
+   * I have some doc not relevant to the next
+   */
    public long no_default_with_doc_;
    public long no_doc_num_;
    /**
-            * @javadoc I guess javadoc will work okay.
-            * hello
-            */
+   * @javadoc I guess javadoc will work okay.
+   * hello
+   */
    public int hello_;
 
    public Num()
@@ -63,15 +63,15 @@ public class Num extends Packet<Num> implements Settable<Num>, EpsilonComparable
    }
 
    /**
-            * this num should have default value 5
-            */
+   * this num should have default value 5
+   */
    public void setNum(long num)
    {
       num_ = num;
    }
    /**
-            * this num should have default value 5
-            */
+   * this num should have default value 5
+   */
    public long getNum()
    {
       return num_;
@@ -87,15 +87,15 @@ public class Num extends Packet<Num> implements Settable<Num>, EpsilonComparable
    }
 
    /**
-            * I have some doc not relevant to the next
-            */
+   * I have some doc not relevant to the next
+   */
    public void setNoDefaultWithDoc(long no_default_with_doc)
    {
       no_default_with_doc_ = no_default_with_doc;
    }
    /**
-            * I have some doc not relevant to the next
-            */
+   * I have some doc not relevant to the next
+   */
    public long getNoDefaultWithDoc()
    {
       return no_default_with_doc_;
@@ -111,17 +111,17 @@ public class Num extends Packet<Num> implements Settable<Num>, EpsilonComparable
    }
 
    /**
-            * @javadoc I guess javadoc will work okay.
-            * hello
-            */
+   * @javadoc I guess javadoc will work okay.
+   * hello
+   */
    public void setHello(int hello)
    {
       hello_ = hello;
    }
    /**
-            * @javadoc I guess javadoc will work okay.
-            * hello
-            */
+   * @javadoc I guess javadoc will work okay.
+   * hello
+   */
    public int getHello()
    {
       return hello_;

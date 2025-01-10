@@ -7,16 +7,16 @@ import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
-       * we don't support this
-       * int32[] nums [-200, -100, 0, 100, 200]
-       */
+* we don't support this
+* int32[] nums [-200, -100, 0, 100, 200]
+*/
 public class TwoNum extends Packet<TwoNum> implements Settable<TwoNum>, EpsilonComparable<TwoNum>
 {
    public ros_msgs.msg.dds.Num num1_;
    public us.ihmc.idl.IDLSequence.Object<ros_msgs.msg.dds.Num>  num2_;
    /**
-            * Should be ros_msgs::msg::dds::Num num3[3];
-            */
+   * Should be ros_msgs::msg::dds::Num num3[3];
+   */
    public ros_msgs.msg.dds.Num[] num3_;
    public us.ihmc.idl.IDLSequence.Object<ros_msgs.msg.dds.Num>  num4_;
    public java.lang.StringBuilder str1_;
@@ -84,8 +84,8 @@ public class TwoNum extends Packet<TwoNum> implements Settable<TwoNum>, EpsilonC
 
 
    /**
-            * Should be ros_msgs::msg::dds::Num num3[3];
-            */
+   * Should be ros_msgs::msg::dds::Num num3[3];
+   */
    public ros_msgs.msg.dds.Num[] getNum3()
    {
       return num3_;
