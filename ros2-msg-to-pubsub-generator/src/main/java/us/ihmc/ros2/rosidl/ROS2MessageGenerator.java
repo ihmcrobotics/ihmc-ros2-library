@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * To be used in Gradle scripts to generate ROS 2 messages.
+ */
 public class ROS2MessageGenerator extends DefaultTask
 {
    /**
