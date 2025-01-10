@@ -36,7 +36,7 @@ public class TwoNum extends Packet<TwoNum> implements Settable<TwoNum>, EpsilonC
           num3_[i1] = new ros_msgs.msg.dds.Num();
       }
       num4_ = new us.ihmc.idl.IDLSequence.Object<ros_msgs.msg.dds.Num> (3, new ros_msgs.msg.dds.NumPubSubType());
-      str1_ = new java.lang.StringBuilder(255);
+      str1_ = new java.lang.StringBuilder();
       str2_ = new java.lang.StringBuilder(10);
       str3_ = new us.ihmc.idl.IDLSequence.StringBuilderHolder (5, "type_d");
       str4_ = new us.ihmc.idl.IDLSequence.StringBuilderHolder ("type_d");
