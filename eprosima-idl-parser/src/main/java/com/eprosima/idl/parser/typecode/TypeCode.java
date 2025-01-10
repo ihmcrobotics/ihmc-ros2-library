@@ -196,7 +196,7 @@ public abstract class TypeCode
 
     public boolean getUnbounded()
     {
-        return getMaxsize() != null && getMaxsize().equals("-1");
+        return getMaxsize() != null;
     }
     
     /*!
