@@ -936,18 +936,6 @@ public interface IDLSequence
       private final TopicDataType<T> topicDataType;
 
       /**
-       * @deprecated Use {@link IDLSequence(int, TopicDataType)} instead.
-       * 
-       * @param maxSize Maximum size of this sequence
-       * @param clazz Class to store
-       * @param topicDataType TopicDataType to preallocate data if desired
-       */
-      public Object(int maxSize, Class<T> clazz, TopicDataType<T> topicDataType)
-      {
-         this(maxSize, topicDataType);
-      }
-
-      /**
        * 
        * @param maxSize Maximum size of this sequence
        * @param topicDataType TopicDataType to preallocate data if desired
