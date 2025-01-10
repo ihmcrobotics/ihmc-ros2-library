@@ -39,8 +39,8 @@ $elseif(object.typecode.isType_a)$$object.typecode.pubsubTypename$.write($elemen
 $else$cdr.write_$object.typecode.stType$($element$get$object.javaName$($arg$));
 $endif$
 $if(object.typecode.maxsize)$
-else
-    throw new RuntimeException("$object.name$ field exceeds the maximum length");
+$\n$else
+   throw new RuntimeException("$object.name$ field exceeds the maximum length");
 $endif$
 >>
 
