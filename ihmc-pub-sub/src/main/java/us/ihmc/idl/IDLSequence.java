@@ -45,7 +45,16 @@ public interface IDLSequence
       public static final byte True = 1;
       public static final byte False = 0;
       private final int maxSize;
-      
+
+      public Boolean(String typeCode)
+      {
+         if (!typeCode.equals("type_7"))
+         {
+            throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         this.maxSize = java.lang.Integer.MAX_VALUE;
+      }
+
       public Boolean(int maxSize, String typeCode)
       {
          super(maxSize);
@@ -118,6 +127,8 @@ public interface IDLSequence
 
    public static class Byte implements IDLSequence
    {
+      private static final int DEFAULT_MAX_SIZE_BYTES = 4096;
+
       /**
        * The backing buffer as a heap array.
        * We only use the position and capacity. We do not use the limit or mark.
@@ -125,6 +136,15 @@ public interface IDLSequence
        * and is final after construction.
        */
       private final ByteBuffer buffer;
+
+      public Byte(String typeCode)
+      {
+         if (!typeCode.equals("type_9"))
+         {
+            throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         buffer = ByteBuffer.allocate(DEFAULT_MAX_SIZE_BYTES);
+      }
 
       public Byte(int maxSize, String typeCode)
       {
@@ -271,6 +291,23 @@ public interface IDLSequence
    {
       private final int type;
       private final int maxSize;
+
+      public Char(String typeCode)
+      {
+         switch (typeCode)
+         {
+            case "type_8":
+               type = 8;
+               break;
+            case "type_14":
+               type = 14;
+               break;
+            default:
+               throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         this.maxSize = java.lang.Integer.MAX_VALUE;
+      }
+
       public Char(int maxSize, String typeCode)
       {
          super(maxSize);
@@ -352,6 +389,16 @@ public interface IDLSequence
    public static class Short extends TShortArrayList implements IDLSequence
    {
       private final int maxSize;
+
+      public Short(String typeCode)
+      {
+         if (!typeCode.equals("type_1"))
+         {
+            throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         this.maxSize = java.lang.Integer.MAX_VALUE;
+      }
+
       public Short(int maxSize, String typeCode)
       {
          super(maxSize);
@@ -411,6 +458,22 @@ public interface IDLSequence
    {
       private final int type;
       private final int maxSize;
+
+      public Integer(String typeCode)
+      {
+         switch (typeCode)
+         {
+            case "type_2":
+               type = 2;
+               break;
+            case "type_3":
+               type = 3;
+               break;
+            default:
+               throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         this.maxSize = java.lang.Integer.MAX_VALUE;
+      }
 
       public Integer(int maxSize, String typeCode)
       {
@@ -494,6 +557,26 @@ public interface IDLSequence
    {
       private final int type;
       private final int maxSize;
+
+      public Long(String typeCode)
+      {
+         switch (typeCode)
+         {
+            case "type_11":
+               type = 11;
+               break;
+            case "type_12":
+               type = 12;
+               break;
+            case "type_4":
+               type = 4;
+               break;
+            default:
+               throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         this.maxSize = java.lang.Integer.MAX_VALUE;
+      }
+
       public Long(int maxSize, String typeCode)
       {
          super(maxSize);
@@ -584,6 +667,16 @@ public interface IDLSequence
    public static class Float extends TFloatArrayList implements IDLSequence
    {
       private final int maxSize;
+
+      public Float(String typeCode)
+      {
+         if (!typeCode.equals("type_5"))
+         {
+            throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         this.maxSize = java.lang.Integer.MAX_VALUE;
+      }
+
       public Float(int maxSize, String typeCode)
       {
          super(maxSize);
@@ -642,6 +735,16 @@ public interface IDLSequence
    public static class Double extends TDoubleArrayList implements IDLSequence
    {
       private final int maxSize;
+
+      public Double(String typeCode)
+      {
+         if (!typeCode.equals("type_6"))
+         {
+            throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+         maxSize = java.lang.Integer.MAX_VALUE;
+      }
+
       public Double(int maxSize, String typeCode)
       {
          super(maxSize);
@@ -700,6 +803,25 @@ public interface IDLSequence
    public static class StringBuilderHolder extends RecyclingArrayList<StringBuilder> implements IDLSequence
    {
       private final int type;
+
+      /**
+       * @param typeCode Can be "type_d" (idl type string) or "type_15" (idl type wstring)
+       */
+      public StringBuilderHolder(String typeCode)
+      {
+         super(StringBuilder::new);
+         switch (typeCode)
+         {
+            case "type_d":
+               type = 0xd;
+               break;
+            case "type_15":
+               type = 0x15;
+               break;
+            default:
+               throw new NotImplementedException(typeCode + " is not implemented for Sequence");
+         }
+      }
 
       /**
        * @param maxSize Preallocate elements
@@ -934,6 +1056,15 @@ public interface IDLSequence
    public static class Object<T> extends RecyclingArrayList<T> implements IDLSequence
    {
       private final TopicDataType<T> topicDataType;
+
+      /**
+       * @param topicDataType TopicDataType to preallocate data if desired
+       */
+      public Object(TopicDataType<T> topicDataType)
+      {
+         super(topicDataType::createData);
+         this.topicDataType = topicDataType;
+      }
 
       /**
        * 

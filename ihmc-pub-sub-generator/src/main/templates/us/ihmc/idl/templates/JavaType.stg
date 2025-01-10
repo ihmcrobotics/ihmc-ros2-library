@@ -50,13 +50,13 @@ $endif$
 $struct.members : { member |
 $if(member.typecode.isType_e)$
 $if(member.typecode.ContentTypeCode.isType_c)$
-      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, $member.typecode.ContentTypeCode.javaTypename$.class, $member.typecode.ContentTypeCode.javaTypename$.values);$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$$member.typecode.ContentTypeCode.javaTypename$.class, $member.typecode.ContentTypeCode.javaTypename$.values);$\n$
 $elseif(member.typecode.ContentTypeCode.primitive)$
-      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, "$member.typecode.ContentTypeCode.stType$");$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$"$member.typecode.ContentTypeCode.stType$");$\n$
 $elseif(member.typecode.ContentTypeCode.isType_d)$
-      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, "$member.typecode.ContentTypeCode.stType$");$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$"$member.typecode.ContentTypeCode.stType$");$\n$
 $else$
-      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$, new $member.typecode.ContentTypeCode.pubsubTypename$());$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$new $member.typecode.ContentTypeCode.pubsubTypename$());$\n$
 $endif$
 $elseif(member.typecode.isType_f)$
       $member.name$_ = new $member.typecode.ContentTypeCode.JavaTypename$[$member.typecode.Dimensions;separator="]["$];$\n$

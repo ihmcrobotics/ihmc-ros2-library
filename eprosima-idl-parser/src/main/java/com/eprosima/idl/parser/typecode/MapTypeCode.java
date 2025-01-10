@@ -60,7 +60,7 @@ public class MapTypeCode extends ContainerTypeCode
     public String getMaxsize()
     {
         if(m_maxsize == null)
-            return "100";
+            return "-1";
 
         return m_maxsize;
     }

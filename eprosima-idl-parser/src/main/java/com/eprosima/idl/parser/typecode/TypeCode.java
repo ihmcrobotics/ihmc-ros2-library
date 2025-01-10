@@ -193,6 +193,11 @@ public abstract class TypeCode
     {
         return null;
     }
+
+    public boolean getUnbounded()
+    {
+        return getMaxsize() != null && getMaxsize().equals("-1");
+    }
     
     /*!
      * @brief This function returns the size of the datatype. By default is null string.
