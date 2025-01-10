@@ -50,13 +50,13 @@ $endif$
 $struct.members : { member |
 $if(member.typecode.isType_e)$
 $if(member.typecode.ContentTypeCode.isType_c)$
-      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$$member.typecode.ContentTypeCode.javaTypename$.class, $member.typecode.ContentTypeCode.javaTypename$.values);$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(!member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$$member.typecode.ContentTypeCode.javaTypename$.class, $member.typecode.ContentTypeCode.javaTypename$.values);$\n$
 $elseif(member.typecode.ContentTypeCode.primitive)$
-      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$"$member.typecode.ContentTypeCode.stType$");$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(!member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$"$member.typecode.ContentTypeCode.stType$");$\n$
 $elseif(member.typecode.ContentTypeCode.isType_d)$
-      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$"$member.typecode.ContentTypeCode.stType$");$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(!member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$"$member.typecode.ContentTypeCode.stType$");$\n$
 $else$
-      $member.name$_ = new $member.typecode.javaTypename$($if(member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$new $member.typecode.ContentTypeCode.pubsubTypename$());$\n$
+      $member.name$_ = new $member.typecode.javaTypename$($if(!member.typecode.Unbounded)$$member.typecode.Maxsize$, $endif$new $member.typecode.ContentTypeCode.pubsubTypename$());$\n$
 $endif$
 $elseif(member.typecode.isType_f)$
       $member.name$_ = new $member.typecode.ContentTypeCode.JavaTypename$[$member.typecode.Dimensions;separator="]["$];$\n$
@@ -64,7 +64,7 @@ $if(!member.typecode.ContentTypeCode.primitive)$
       $array_init(ctx=ctx, typecodeArr=member.typecode, data=[member.name, "_"], elemInit=["new ", member.typecode.ContentTypeCode.JavaTypename, "()"], loopvar=ctx.nextLoopVarName, dimensions=member.typecode.dimensions)$$\n$
 $endif$
 $elseif(member.typecode.isType_d)$
-      $member.name$_ = new $member.typecode.javaTypename$($member.typecode.Maxsize$);
+      $member.name$_ = new $member.typecode.javaTypename$($if(!member.typecode.Unbounded)$$member.typecode.Maxsize$$endif$);
 $elseif(!member.typecode.primitive)$
       $member.name$_ = new $member.typecode.javaTypename$();$\n$
 $endif$
