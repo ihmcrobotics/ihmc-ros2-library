@@ -32,20 +32,24 @@ public class SerializedPayload
    public static final short PL_CDR_LE = 0x0003;
 
    private short encapsulation;
-   private int length;
-   private final ByteBuffer data;
-   private int max_size;
+   private final boolean unbounded;
+   private ByteBuffer data;
    private int pos;
 
    /**
     * Constructor 
     * 
-    * @param maxSize maximum size of the serialized data
+    * @param typeSize bounded size or 0 for unbounded types
     */
-   public SerializedPayload(int maxSize)
+   public SerializedPayload(int typeSize)
    {
-      this.max_size = maxSize;
-      this.data = ByteBuffer.allocateDirect(maxSize);
+      unbounded = typeSize == 0;
+
+      if (unbounded)
+         data = ByteBuffer.allocate(8);
+      else
+         data = ByteBuffer.allocate(typeSize);
+
       setEncapsulation(CDR_LE);
    }
 
@@ -81,21 +85,9 @@ public class SerializedPayload
     */
    public int getLength()
    {
-      return length;
+      return data.limit();
    }
 
-   public void setLength(int length)
-   {
-      this.length = length;
-   }
-
-   /**
-    * @return Maximum size of the payload
-    */
-   public int getMax_size()
-   {
-      return max_size;
-   }
    /**
     * 
     * @return Position when reading.
@@ -108,6 +100,17 @@ public class SerializedPayload
    public void setPos(int pos)
    {
       this.pos = pos;
+   }
+
+   public void ensureCapacity(int size)
+   {
+      if (unbounded)
+      {
+         if (data.capacity() < size)
+         {
+            data = ByteBuffer.allocate(data.capacity() * 2);
+         }
+      }
    }
 
    public ByteBuffer getData()

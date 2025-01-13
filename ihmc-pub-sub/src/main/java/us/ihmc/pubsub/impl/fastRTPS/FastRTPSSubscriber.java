@@ -15,7 +15,7 @@
  */
 package us.ihmc.pubsub.impl.fastRTPS;
 
-import us.ihmc.idl.CDR;
+import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
 import us.ihmc.pubsub.common.*;
@@ -100,14 +100,6 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    {
       payload.getData().clear();
       payload.setEncapsulation(encapsulation);
-      
-      // Compatibility for older versions of FastRTPS that do not include encapsulation in the payload size
-      if(CDR.getTypeSize(dataLength) <= payload.getMax_size())
-      {
-         dataLength = CDR.getTypeSize(dataLength);
-      }
-      
-      payload.setLength(dataLength);         
       payload.getData().limit(dataLength);
    }
 
@@ -193,33 +185,39 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
             System.err.println("This subscriber has been removed from the domain");
             return false;
          }         
-         
-         if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
-         {
-            if (info != null)
-            {
-               updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
-            }
-            preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
-            try
-            {
-               currentMessageSize = payload.getLength();
-               if (payload.getLength() > largestMessageSize)
-                  largestMessageSize = payload.getLength();
-               cumulativePayloadBytes += payload.getLength();
 
-               topicDataType.deserialize(payload, data);
-            }
-            catch (IOException e)
-            {
-               e.printStackTrace();
-               return false;
-            }
-            return true;
+         if (info == null)
+         {
+            LogTools.error("Info is null");
+            return false;
          }
          else
          {
-            return false;
+            if (impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
+            {
+               updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+               preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
+               try
+               {
+                  currentMessageSize = info.getDataLength();
+                  if (currentMessageSize > largestMessageSize)
+                     largestMessageSize = currentMessageSize;
+                  cumulativePayloadBytes += currentMessageSize;
+
+                  payload.ensureCapacity((int) currentMessageSize);
+                  topicDataType.deserialize(payload, data);
+               }
+               catch (IOException e)
+               {
+                  e.printStackTrace();
+                  return false;
+               }
+               return true;
+            }
+            else
+            {
+               return false;
+            }
          }
       }
    }

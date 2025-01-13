@@ -351,7 +351,6 @@ public class IDLElementTestTest
       SerializedPayload cppPayload = new SerializedPayload(type.getTypeSize());
       cppPayload.getData().put(IDLElementTestCPPData.cppData);
       cppPayload.getData().flip();
-      cppPayload.setLength(IDLElementTestCPPData.cppData.length);
       type.deserialize(cppPayload, cppElement);
 
       assertArrayEquals(IDLElementTestCPPData.cppData, javadata);

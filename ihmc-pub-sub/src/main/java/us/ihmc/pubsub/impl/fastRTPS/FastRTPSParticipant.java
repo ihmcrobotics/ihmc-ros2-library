@@ -151,11 +151,6 @@ public class FastRTPSParticipant implements Participant
 
    synchronized void registerType(TopicDataType<?> topicDataType) throws IllegalArgumentException
    {
-      if (topicDataType.getTypeSize() <= 0)
-      {
-         throw new IllegalArgumentException("Registered type must have maximum byte size > 0");
-      }
-
       if (topicDataType.getName().isEmpty())
       {
          throw new IllegalArgumentException("Registered type must have a name");

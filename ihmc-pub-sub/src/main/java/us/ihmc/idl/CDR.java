@@ -56,6 +56,7 @@ public class CDR
    public static void writeEncapsulation(SerializedPayload payload)
    {
       ByteBuffer buf = payload.getData();
+      payload.ensureCapacity(buf.position() + 1 + encapsulation_size + 2);
       //Write encapsulation
       buf.put((byte) 0x0);
       buf.put((byte) payload.getEncapsulation());
@@ -81,7 +82,6 @@ public class CDR
    public void finishSerialize()
    {
       buf.flip();
-      payload.setLength(buf.limit());
    }
 
    public void finishDeserialize()
@@ -90,6 +90,8 @@ public class CDR
    
    public static int getTypeSize(int elementTypeSize)
    {
+      if (elementTypeSize == 0) // unbounded
+         return 0;
       return elementTypeSize + encapsulation_size;
    }
 
@@ -105,6 +107,7 @@ public class CDR
    public void write_type_1(short val)
    {
       align(2);
+      payload.ensureCapacity(buf.position() + 2);
       buf.putShort(val);
    }
 
@@ -120,6 +123,7 @@ public class CDR
    public void write_type_2(int val)
    {
       align(4);
+      payload.ensureCapacity(buf.position() + 4);
       buf.putInt(val);
    }
 
@@ -171,6 +175,7 @@ public class CDR
    public void write_type_5(float val)
    {
       align(4);
+      payload.ensureCapacity(buf.position() + 4);
       buf.putFloat(val);
    }
 
@@ -186,6 +191,7 @@ public class CDR
    public void write_type_6(double val)
    {
       align(8);
+      payload.ensureCapacity(buf.position() + 8);
       buf.putDouble(val);
    }
 
@@ -213,6 +219,7 @@ public class CDR
 
    public void write_type_8(char val)
    {
+      payload.ensureCapacity(buf.position() + 1);
       buf.put((byte) val);
    }
 
@@ -226,6 +233,7 @@ public class CDR
 
    public void write_type_9(byte val)
    {
+      payload.ensureCapacity(buf.position() + 1);
       buf.put(val);
    }
 
@@ -273,6 +281,8 @@ public class CDR
    public void write_type_d(StringBuilder str)
    {
       write_type_2(str.length() + 1);
+
+      payload.ensureCapacity(buf.position() + str.length() + 1);
       for (int i = 0; i < str.length(); i++)
       {
          buf.put((byte) str.charAt(i));
@@ -308,6 +318,7 @@ public class CDR
       int length = seq.size();
       write_type_2(length);
 
+      payload.ensureCapacity(buf.position() + length);
       if (seq instanceof IDLSequence.Byte byteSeq) // faster copy
       {
          buf.put(buf.position(), byteSeq.getBuffer(), 0, length);
@@ -342,6 +353,7 @@ public class CDR
    public void write_type_11(long val)
    {
       align(8);
+      payload.ensureCapacity(buf.position() + 8);
       buf.putLong(val);
    }
 
@@ -400,6 +412,7 @@ public class CDR
    public void write_type_15(StringBuilder str)
    {
       write_type_2(str.length());
+      payload.ensureCapacity(buf.position() + str.length());
       for (int i = 0; i < str.length(); i++)
       {
          buf.putChar(str.charAt(i));
@@ -413,7 +426,9 @@ public class CDR
 
       if (adv != 0)
       {
-         buf.position(position + encapsulation_size + (byteBoundary - adv));
+         int newPosition = position + encapsulation_size + (byteBoundary - adv);
+         payload.ensureCapacity(newPosition);
+         buf.position(newPosition);
       }
 
       return adv;

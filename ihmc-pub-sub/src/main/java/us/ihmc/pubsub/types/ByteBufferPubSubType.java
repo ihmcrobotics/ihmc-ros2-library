@@ -83,9 +83,12 @@ public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
       CDR.writeEncapsulation(serializedPayload);
 
       ByteBuffer target = serializedPayload.getData();
+      serializedPayload.ensureCapacity(4 + data.remaining());
       target.putInt(data.remaining());
       target.put(data);
-      serializedPayload.setLength(align(target.position()));
+      int alignedSize = align(target.position());
+      serializedPayload.ensureCapacity(alignedSize);
+      serializedPayload.getData().limit(alignedSize);
    }
 
    @Override
