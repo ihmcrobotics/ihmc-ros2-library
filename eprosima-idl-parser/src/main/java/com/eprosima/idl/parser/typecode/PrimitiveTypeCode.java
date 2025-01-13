@@ -90,7 +90,13 @@ public class PrimitiveTypeCode extends TypeCode
     {
         return currentSize + getSize();
     }*/
-    
+
+    @Override
+    public String getMaxsize()
+    {
+        return getSize();
+    }
+
     @Override
     public String getSize()
     {

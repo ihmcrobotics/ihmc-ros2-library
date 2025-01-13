@@ -51,19 +51,19 @@ public class NumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.msg.
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
 int initial_alignment = current_alignment;
-      // Num (unbounded)
+      // Num 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // DoubleTest (unbounded)
+      // DoubleTest 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // NoDefaultWithDoc (unbounded)
+      // NoDefaultWithDoc 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // NoDocNum (unbounded)
+      // NoDocNum 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // Hello (unbounded)
+      // Hello 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
       return current_alignment - initial_alignment;   }
@@ -77,23 +77,23 @@ int initial_alignment = current_alignment;
    {
       int initial_alignment = current_alignment;
 
-      // Num (unbounded)
+      // Num 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // DoubleTest (unbounded)
+      // DoubleTest 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // NoDefaultWithDoc (unbounded)
+      // NoDefaultWithDoc 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // NoDocNum (unbounded)
+      // NoDocNum 
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // Hello (unbounded)
+      // Hello 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
@@ -103,38 +103,38 @@ int initial_alignment = current_alignment;
 
    public static void write(ros_msgs.msg.dds.Num data, us.ihmc.idl.CDR cdr)
    {
-      // Num (unbounded)
+      // Num 
       cdr.write_type_11(data.getNum());
 
-      // DoubleTest (unbounded)
+      // DoubleTest 
       cdr.write_type_6(data.getDoubleTest());
 
-      // NoDefaultWithDoc (unbounded)
+      // NoDefaultWithDoc 
       cdr.write_type_11(data.getNoDefaultWithDoc());
 
-      // NoDocNum (unbounded)
+      // NoDocNum 
       cdr.write_type_11(data.getNoDocNum());
 
-      // Hello (unbounded)
+      // Hello 
       cdr.write_type_2(data.getHello());
 
    }
 
    public static void read(ros_msgs.msg.dds.Num data, us.ihmc.idl.CDR cdr)
    {
-      // Num (unbounded)
+      // Num 
       data.setNum(cdr.read_type_11());
       	
-      // DoubleTest (unbounded)
+      // DoubleTest 
       data.setDoubleTest(cdr.read_type_6());
       	
-      // NoDefaultWithDoc (unbounded)
+      // NoDefaultWithDoc 
       data.setNoDefaultWithDoc(cdr.read_type_11());
       	
-      // NoDocNum (unbounded)
+      // NoDocNum 
       data.setNoDocNum(cdr.read_type_11());
       	
-      // Hello (unbounded)
+      // Hello 
       data.setHello(cdr.read_type_2());
       	
 
@@ -143,30 +143,30 @@ int initial_alignment = current_alignment;
    @Override
    public final void serialize(ros_msgs.msg.dds.Num data, us.ihmc.idl.InterchangeSerializer ser)
    {
-      // Num (unbounded)
+      // Num 
       ser.write_type_11("num", data.getNum());
-      // DoubleTest (unbounded)
+      // DoubleTest 
       ser.write_type_6("double_test", data.getDoubleTest());
-      // NoDefaultWithDoc (unbounded)
+      // NoDefaultWithDoc 
       ser.write_type_11("no_default_with_doc", data.getNoDefaultWithDoc());
-      // NoDocNum (unbounded)
+      // NoDocNum 
       ser.write_type_11("no_doc_num", data.getNoDocNum());
-      // Hello (unbounded)
+      // Hello 
       ser.write_type_2("hello", data.getHello());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, ros_msgs.msg.dds.Num data)
    {
-      // Num (unbounded)
+      // Num 
       data.setNum(ser.read_type_11("num"));
-      // DoubleTest (unbounded)
+      // DoubleTest 
       data.setDoubleTest(ser.read_type_6("double_test"));
-      // NoDefaultWithDoc (unbounded)
+      // NoDefaultWithDoc 
       data.setNoDefaultWithDoc(ser.read_type_11("no_default_with_doc"));
-      // NoDocNum (unbounded)
+      // NoDocNum 
       data.setNoDocNum(ser.read_type_11("no_doc_num"));
-      // Hello (unbounded)
+      // Hello 
       data.setHello(ser.read_type_2("hello"));
    }
 

@@ -30,8 +30,10 @@ $if(params)$$separatorInicial$$endif$$params : {param | /*$param.comment$*/ $par
 
 object_serialization(ctx, object, arg, element) ::= <<
 $if(object.typecode.maxsize)$
+$if(!object.typecode.primitive)$
 if($element$get$object.javaName$($arg$).$sizeFunction.(object.typecode.stType)$ <= $object.typecode.maxsize$)
 
+$endif$
 $endif$
 $if(object.typecode.isType_c)$cdr.write_$object.typecode.stType$($element$get$object.javaName$($arg$).ordinal());
 $elseif(object.typecode.isType_f)$$array_serialize(ctx=ctx, typecodeArr=object.typecode, data=[element, "get", object.javaName, "(", arg, ")"], loopvar=ctx.newLoopVarName, dimensions=object.typecode.dimensions)$
@@ -39,8 +41,10 @@ $elseif(object.typecode.isType_a)$$object.typecode.pubsubTypename$.write($elemen
 $else$cdr.write_$object.typecode.stType$($element$get$object.javaName$($arg$));
 $endif$
 $if(object.typecode.maxsize)$
+$if(!object.typecode.primitive)$
 $\n$else
    throw new RuntimeException("$object.name$ field exceeds the maximum length");
+$endif$
 $endif$
 >>
 
