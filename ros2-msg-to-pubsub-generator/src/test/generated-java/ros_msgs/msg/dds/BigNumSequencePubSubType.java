@@ -50,13 +50,12 @@ public class BigNumSequencePubSubType implements us.ihmc.pubsub.TopicDataType<ro
 
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
-      int initial_alignment = current_alignment;
-
+int initial_alignment = current_alignment;
+      // LargeSequence 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 10000; ++i0)
       {
           current_alignment += ros_msgs.msg.dds.NumPubSubType.getMaxCdrSerializedSize(current_alignment);}
-      return current_alignment - initial_alignment;
-   }
+      return current_alignment - initial_alignment;   }
 
    public final static int getCdrSerializedSize(ros_msgs.msg.dds.BigNumSequence data)
    {
@@ -67,24 +66,29 @@ public class BigNumSequencePubSubType implements us.ihmc.pubsub.TopicDataType<ro
    {
       int initial_alignment = current_alignment;
 
+      // LargeSequence 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
       for(int i0 = 0; i0 < data.getLargeSequence().size(); ++i0)
       {
           current_alignment += ros_msgs.msg.dds.NumPubSubType.getCdrSerializedSize(data.getLargeSequence().get(i0), current_alignment);}
+
 
       return current_alignment - initial_alignment;
    }
 
    public static void write(ros_msgs.msg.dds.BigNumSequence data, us.ihmc.idl.CDR cdr)
    {
+      // LargeSequence 
       if(data.getLargeSequence().size() <= 10000)
-      cdr.write_type_e(data.getLargeSequence());else
-          throw new RuntimeException("large_sequence field exceeds the maximum length");
+      cdr.write_type_e(data.getLargeSequence());
+      else
+         throw new RuntimeException("large_sequence field exceeds the maximum length");
 
    }
 
    public static void read(ros_msgs.msg.dds.BigNumSequence data, us.ihmc.idl.CDR cdr)
    {
+      // LargeSequence 
       cdr.read_type_e(data.getLargeSequence());	
 
    }
@@ -92,12 +96,14 @@ public class BigNumSequencePubSubType implements us.ihmc.pubsub.TopicDataType<ro
    @Override
    public final void serialize(ros_msgs.msg.dds.BigNumSequence data, us.ihmc.idl.InterchangeSerializer ser)
    {
+      // LargeSequence 
       ser.write_type_e("large_sequence", data.getLargeSequence());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, ros_msgs.msg.dds.BigNumSequence data)
    {
+      // LargeSequence 
       ser.read_type_e("large_sequence", data.getLargeSequence());
    }
 

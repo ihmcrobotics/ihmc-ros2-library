@@ -50,35 +50,7 @@ public class TwoNumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.m
 
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
-      int initial_alignment = current_alignment;
-
-      current_alignment += ros_msgs.msg.dds.NumPubSubType.getMaxCdrSerializedSize(current_alignment);
-
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < -1; ++i0)
-      {
-          current_alignment += ros_msgs.msg.dds.NumPubSubType.getMaxCdrSerializedSize(current_alignment);}
-      for(int i0 = 0; i0 < (3); ++i0)
-      {
-          current_alignment += ros_msgs.msg.dds.NumPubSubType.getMaxCdrSerializedSize(current_alignment);}
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 3; ++i0)
-      {
-          current_alignment += ros_msgs.msg.dds.NumPubSubType.getMaxCdrSerializedSize(current_alignment);}
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 10 + 1;
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 5; ++i0)
-      {
-        current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
-      }
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < -1; ++i0)
-      {
-        current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 10 + 1;
-      }
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 5; ++i0)
-      {
-        current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 10 + 1;
-      }
-
-      return current_alignment - initial_alignment;
+      return 0; // One or more members of the message is unbounded
    }
 
    public final static int getCdrSerializedSize(ros_msgs.msg.dds.TwoNum data)
@@ -90,36 +62,45 @@ public class TwoNumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.m
    {
       int initial_alignment = current_alignment;
 
+      // Num1 
       current_alignment += ros_msgs.msg.dds.NumPubSubType.getCdrSerializedSize(data.getNum1(), current_alignment);
 
+      // Num2 (unbounded)
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
       for(int i0 = 0; i0 < data.getNum2().size(); ++i0)
       {
           current_alignment += ros_msgs.msg.dds.NumPubSubType.getCdrSerializedSize(data.getNum2().get(i0), current_alignment);}
 
+      // Num3 (unbounded)
       for(int i0 = 0; i0 < data.getNum3().length; ++i0)
       {
               current_alignment += ros_msgs.msg.dds.NumPubSubType.getCdrSerializedSize(data.getNum3()[i0], current_alignment);
       }
+      // Num4 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
       for(int i0 = 0; i0 < data.getNum4().size(); ++i0)
       {
           current_alignment += ros_msgs.msg.dds.NumPubSubType.getCdrSerializedSize(data.getNum4().get(i0), current_alignment);}
 
+      // Str1 (unbounded)
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getStr1().length() + 1;
 
+      // Str2 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getStr2().length() + 1;
 
+      // Str3 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
       for(int i0 = 0; i0 < data.getStr3().size(); ++i0)
       {
           current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getStr3().get(i0).length() + 1;
       }
+      // Str4 (unbounded)
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
       for(int i0 = 0; i0 < data.getStr4().size(); ++i0)
       {
           current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getStr4().get(i0).length() + 1;
       }
+      // Str5 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
       for(int i0 = 0; i0 < data.getStr5().size(); ++i0)
       {
@@ -131,56 +112,72 @@ public class TwoNumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.m
 
    public static void write(ros_msgs.msg.dds.TwoNum data, us.ihmc.idl.CDR cdr)
    {
+      // Num1 
       ros_msgs.msg.dds.NumPubSubType.write(data.getNum1(), cdr);
-      if(data.getNum2().size() <= -1)
-      cdr.write_type_e(data.getNum2());else
-          throw new RuntimeException("num2 field exceeds the maximum length");
+      // Num2 (unbounded)
+      cdr.write_type_e(data.getNum2());
 
+      // Num3 (unbounded)
       for(int i0 = 0; i0 < data.getNum3().length; ++i0)
       {
         	ros_msgs.msg.dds.NumPubSubType.write(data.getNum3()[i0], cdr);		
       }
 
+      // Num4 
       if(data.getNum4().size() <= 3)
-      cdr.write_type_e(data.getNum4());else
-          throw new RuntimeException("num4 field exceeds the maximum length");
+      cdr.write_type_e(data.getNum4());
+      else
+         throw new RuntimeException("num4 field exceeds the maximum length");
 
-      if(data.getStr1().length() <= 255)
-      cdr.write_type_d(data.getStr1());else
-          throw new RuntimeException("str1 field exceeds the maximum length");
+      // Str1 (unbounded)
+      cdr.write_type_d(data.getStr1());
 
+      // Str2 
       if(data.getStr2().length() <= 10)
-      cdr.write_type_d(data.getStr2());else
-          throw new RuntimeException("str2 field exceeds the maximum length");
+      cdr.write_type_d(data.getStr2());
+      else
+         throw new RuntimeException("str2 field exceeds the maximum length");
 
+      // Str3 
       if(data.getStr3().size() <= 5)
-      cdr.write_type_e(data.getStr3());else
-          throw new RuntimeException("str3 field exceeds the maximum length");
+      cdr.write_type_e(data.getStr3());
+      else
+         throw new RuntimeException("str3 field exceeds the maximum length");
 
-      if(data.getStr4().size() <= -1)
-      cdr.write_type_e(data.getStr4());else
-          throw new RuntimeException("str4 field exceeds the maximum length");
+      // Str4 (unbounded)
+      cdr.write_type_e(data.getStr4());
 
+      // Str5 
       if(data.getStr5().size() <= 5)
-      cdr.write_type_e(data.getStr5());else
-          throw new RuntimeException("str5 field exceeds the maximum length");
+      cdr.write_type_e(data.getStr5());
+      else
+         throw new RuntimeException("str5 field exceeds the maximum length");
 
    }
 
    public static void read(ros_msgs.msg.dds.TwoNum data, us.ihmc.idl.CDR cdr)
    {
+      // Num1 
       ros_msgs.msg.dds.NumPubSubType.read(data.getNum1(), cdr);	
+      // Num2 (unbounded)
       cdr.read_type_e(data.getNum2());	
+      // Num3 (unbounded)
       for(int i0 = 0; i0 < data.getNum3().length; ++i0)
       {
         	ros_msgs.msg.dds.NumPubSubType.read(data.getNum3()[i0], cdr);	
       }
       	
+      // Num4 
       cdr.read_type_e(data.getNum4());	
+      // Str1 (unbounded)
       cdr.read_type_d(data.getStr1());	
+      // Str2 
       cdr.read_type_d(data.getStr2());	
+      // Str3 
       cdr.read_type_e(data.getStr3());	
+      // Str4 (unbounded)
       cdr.read_type_e(data.getStr4());	
+      // Str5 
       cdr.read_type_e(data.getStr5());	
 
    }
@@ -188,30 +185,48 @@ public class TwoNumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.m
    @Override
    public final void serialize(ros_msgs.msg.dds.TwoNum data, us.ihmc.idl.InterchangeSerializer ser)
    {
+      // Num1 
       ser.write_type_a("num1", new ros_msgs.msg.dds.NumPubSubType(), data.getNum1());
 
+      // Num2 (unbounded)
       ser.write_type_e("num2", data.getNum2());
+      // Num3 (unbounded)
       ser.write_type_f("num3", new ros_msgs.msg.dds.NumPubSubType(), data.getNum3());
+      // Num4 
       ser.write_type_e("num4", data.getNum4());
+      // Str1 (unbounded)
       ser.write_type_d("str1", data.getStr1());
+      // Str2 
       ser.write_type_d("str2", data.getStr2());
+      // Str3 
       ser.write_type_e("str3", data.getStr3());
+      // Str4 (unbounded)
       ser.write_type_e("str4", data.getStr4());
+      // Str5 
       ser.write_type_e("str5", data.getStr5());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, ros_msgs.msg.dds.TwoNum data)
    {
+      // Num1 
       ser.read_type_a("num1", new ros_msgs.msg.dds.NumPubSubType(), data.getNum1());
 
+      // Num2 (unbounded)
       ser.read_type_e("num2", data.getNum2());
+      // Num3 (unbounded)
       ser.read_type_f("num3", new ros_msgs.msg.dds.NumPubSubType(), data.getNum3());
+      // Num4 
       ser.read_type_e("num4", data.getNum4());
+      // Str1 (unbounded)
       ser.read_type_d("str1", data.getStr1());
+      // Str2 
       ser.read_type_d("str2", data.getStr2());
+      // Str3 
       ser.read_type_e("str3", data.getStr3());
+      // Str4 (unbounded)
       ser.read_type_e("str4", data.getStr4());
+      // Str5 
       ser.read_type_e("str5", data.getStr5());
    }
 

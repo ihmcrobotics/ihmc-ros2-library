@@ -50,21 +50,23 @@ public class NumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.msg.
 
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
-      int initial_alignment = current_alignment;
-
+int initial_alignment = current_alignment;
+      // Num (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
+      // DoubleTest (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
+      // NoDefaultWithDoc (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
+      // NoDocNum (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
+      // Hello (unbounded)
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
-
-      return current_alignment - initial_alignment;
-   }
+      return current_alignment - initial_alignment;   }
 
    public final static int getCdrSerializedSize(ros_msgs.msg.dds.Num data)
    {
@@ -75,18 +77,23 @@ public class NumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.msg.
    {
       int initial_alignment = current_alignment;
 
+      // Num (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
+      // DoubleTest (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
+      // NoDefaultWithDoc (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
+      // NoDocNum (unbounded)
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
+      // Hello (unbounded)
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
@@ -96,28 +103,38 @@ public class NumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.msg.
 
    public static void write(ros_msgs.msg.dds.Num data, us.ihmc.idl.CDR cdr)
    {
+      // Num (unbounded)
       cdr.write_type_11(data.getNum());
 
+      // DoubleTest (unbounded)
       cdr.write_type_6(data.getDoubleTest());
 
+      // NoDefaultWithDoc (unbounded)
       cdr.write_type_11(data.getNoDefaultWithDoc());
 
+      // NoDocNum (unbounded)
       cdr.write_type_11(data.getNoDocNum());
 
+      // Hello (unbounded)
       cdr.write_type_2(data.getHello());
 
    }
 
    public static void read(ros_msgs.msg.dds.Num data, us.ihmc.idl.CDR cdr)
    {
+      // Num (unbounded)
       data.setNum(cdr.read_type_11());
       	
+      // DoubleTest (unbounded)
       data.setDoubleTest(cdr.read_type_6());
       	
+      // NoDefaultWithDoc (unbounded)
       data.setNoDefaultWithDoc(cdr.read_type_11());
       	
+      // NoDocNum (unbounded)
       data.setNoDocNum(cdr.read_type_11());
       	
+      // Hello (unbounded)
       data.setHello(cdr.read_type_2());
       	
 
@@ -126,20 +143,30 @@ public class NumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.msg.
    @Override
    public final void serialize(ros_msgs.msg.dds.Num data, us.ihmc.idl.InterchangeSerializer ser)
    {
+      // Num (unbounded)
       ser.write_type_11("num", data.getNum());
+      // DoubleTest (unbounded)
       ser.write_type_6("double_test", data.getDoubleTest());
+      // NoDefaultWithDoc (unbounded)
       ser.write_type_11("no_default_with_doc", data.getNoDefaultWithDoc());
+      // NoDocNum (unbounded)
       ser.write_type_11("no_doc_num", data.getNoDocNum());
+      // Hello (unbounded)
       ser.write_type_2("hello", data.getHello());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, ros_msgs.msg.dds.Num data)
    {
+      // Num (unbounded)
       data.setNum(ser.read_type_11("num"));
+      // DoubleTest (unbounded)
       data.setDoubleTest(ser.read_type_6("double_test"));
+      // NoDefaultWithDoc (unbounded)
       data.setNoDefaultWithDoc(ser.read_type_11("no_default_with_doc"));
+      // NoDocNum (unbounded)
       data.setNoDocNum(ser.read_type_11("no_doc_num"));
+      // Hello (unbounded)
       data.setHello(ser.read_type_2("hello"));
    }
 

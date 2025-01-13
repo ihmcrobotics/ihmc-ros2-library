@@ -85,6 +85,20 @@ public abstract class MemberedTypeCode extends TypeCode
         return false;
     }
 
+    @Override
+    public boolean getUnbounded()
+    {
+        for (Member member : getMembers())
+        {
+            // TODO: there may be more type codes that are sequence-like
+            if (member.getTypecode() instanceof SequenceTypeCode || member.getTypecode() instanceof MapTypeCode)
+                if (member.getTypecode().getUnbounded())
+                    return true;
+        }
+
+        return false;
+    }
+
     public List<ConstDeclaration> getConstants()
     {
         return m_consts;

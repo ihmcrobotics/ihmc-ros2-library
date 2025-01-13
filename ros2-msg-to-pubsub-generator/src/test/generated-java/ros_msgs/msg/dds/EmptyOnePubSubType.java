@@ -50,13 +50,11 @@ public class EmptyOnePubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs
 
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
-      int initial_alignment = current_alignment;
-
+int initial_alignment = current_alignment;
+      // UnusedPlaceholderField (unbounded)
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
-
-      return current_alignment - initial_alignment;
-   }
+      return current_alignment - initial_alignment;   }
 
    public final static int getCdrSerializedSize(ros_msgs.msg.dds.EmptyOne data)
    {
@@ -67,6 +65,7 @@ public class EmptyOnePubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs
    {
       int initial_alignment = current_alignment;
 
+      // UnusedPlaceholderField (unbounded)
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
@@ -76,12 +75,14 @@ public class EmptyOnePubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs
 
    public static void write(ros_msgs.msg.dds.EmptyOne data, us.ihmc.idl.CDR cdr)
    {
+      // UnusedPlaceholderField (unbounded)
       cdr.write_type_7(data.getUnusedPlaceholderField());
 
    }
 
    public static void read(ros_msgs.msg.dds.EmptyOne data, us.ihmc.idl.CDR cdr)
    {
+      // UnusedPlaceholderField (unbounded)
       data.setUnusedPlaceholderField(cdr.read_type_7());
       	
 
@@ -90,13 +91,16 @@ public class EmptyOnePubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs
    @Override
    public final void serialize(ros_msgs.msg.dds.EmptyOne data, us.ihmc.idl.InterchangeSerializer ser)
    {
+      // UnusedPlaceholderField (unbounded)
       ser.write_type_7("unused_placeholder_field", data.getUnusedPlaceholderField());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, ros_msgs.msg.dds.EmptyOne data)
    {
-      data.setUnusedPlaceholderField(ser.read_type_7("unused_placeholder_field"));   }
+      // UnusedPlaceholderField (unbounded)
+      data.setUnusedPlaceholderField(ser.read_type_7("unused_placeholder_field"));
+   }
 
    public static void staticCopy(ros_msgs.msg.dds.EmptyOne src, ros_msgs.msg.dds.EmptyOne dest)
    {

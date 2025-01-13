@@ -230,13 +230,16 @@ $else$
 
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
-      int initial_alignment = current_alignment;
-
+$if(struct.Unbounded)$
+      return 0; // One or more members of the message is unbounded$\n$
+$else$
+int initial_alignment = current_alignment;
 $struct.members : { member |
+      // $member.javaName$ $if(member.typecode.Unbounded)$(unbounded)$endif$
       $max_serialized_size(ctx=ctx, typecode=member.typecode, var="current_alignment")$
 }; separator="\n"$
-
       return current_alignment - initial_alignment;
+$endif$
    }
 
    public final static int getCdrSerializedSize($struct.javaTypename$ data)
@@ -249,6 +252,7 @@ $struct.members : { member |
       int initial_alignment = current_alignment;
 
 $struct.members : { member |
+      // $member.javaName$ $if(member.typecode.Unbounded)$(unbounded)$endif$
       $serialized_size(ctx=ctx, object=member, data=["data.get", member.javaName, "()"], var="current_alignment")$
 }; separator="\n"$
 
@@ -258,6 +262,7 @@ $struct.members : { member |
    public static void write($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
    {
 $struct.members : { member |
+      // $member.javaName$ $if(member.typecode.Unbounded)$(unbounded)$endif$
       $object_serialization(ctx=ctx, object=member, arg="", element="data.")$
 }; separator="\n"$
    }
@@ -265,6 +270,7 @@ $struct.members : { member |
    public static void read($struct.javaTypename$ data, us.ihmc.idl.CDR cdr)
    {
 $struct.members : { member |
+      // $member.javaName$ $if(member.typecode.Unbounded)$(unbounded)$endif$
       $object_deserialization(ctx=ctx, object=member, arg="", argsep="", element="data.")$
 }; separator=""$
    }
@@ -273,6 +279,7 @@ $struct.members : { member |
    public final void serialize($struct.javaTypename$ data, us.ihmc.idl.InterchangeSerializer ser)
    {
 $struct.members : { member |
+      // $member.javaName$ $if(member.typecode.Unbounded)$(unbounded)$endif$
 $if(member.typecode.isType_a)$
       ser.write_$member.typecode.stType$("$member.name$", new $member.typecode.pubsubTypename$(), data.get$member.javaName$());
 $elseif(member.typecode.isType_f)$
@@ -291,6 +298,7 @@ $endif$
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, $struct.javaTypename$ data)
    {
 $struct.members : { member |
+      // $member.javaName$ $if(member.typecode.Unbounded)$(unbounded)$endif$
 $if(member.typecode.isType_c)$
       data.set$member.javaName$(($member.typecode.javaTypename$)ser.read_$member.typecode.stType$("$member.name$", $member.typecode.javaTypename$.class));
 $elseif(member.typecode.isType_a)$
