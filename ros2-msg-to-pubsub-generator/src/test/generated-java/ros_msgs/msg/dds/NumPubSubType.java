@@ -51,19 +51,19 @@ public class NumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.msg.
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
 int initial_alignment = current_alignment;
-      // Num 
+      // Num
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // DoubleTest 
+      // DoubleTest
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // NoDefaultWithDoc 
+      // NoDefaultWithDoc
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // NoDocNum 
+      // NoDocNum
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
-      // Hello 
+      // Hello
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
       return current_alignment - initial_alignment;   }
@@ -77,23 +77,23 @@ int initial_alignment = current_alignment;
    {
       int initial_alignment = current_alignment;
 
-      // Num 
+      // Num
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // DoubleTest 
+      // DoubleTest
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // NoDefaultWithDoc 
+      // NoDefaultWithDoc
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // NoDocNum 
+      // NoDocNum
       current_alignment += 8 + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
-      // Hello 
+      // Hello
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
@@ -103,38 +103,38 @@ int initial_alignment = current_alignment;
 
    public static void write(ros_msgs.msg.dds.Num data, us.ihmc.idl.CDR cdr)
    {
-      // Num 
+      // Num
       cdr.write_type_11(data.getNum());
 
-      // DoubleTest 
+      // DoubleTest
       cdr.write_type_6(data.getDoubleTest());
 
-      // NoDefaultWithDoc 
+      // NoDefaultWithDoc
       cdr.write_type_11(data.getNoDefaultWithDoc());
 
-      // NoDocNum 
+      // NoDocNum
       cdr.write_type_11(data.getNoDocNum());
 
-      // Hello 
+      // Hello
       cdr.write_type_2(data.getHello());
 
    }
 
    public static void read(ros_msgs.msg.dds.Num data, us.ihmc.idl.CDR cdr)
    {
-      // Num 
+      // Num
       data.setNum(cdr.read_type_11());
       	
-      // DoubleTest 
+      // DoubleTest
       data.setDoubleTest(cdr.read_type_6());
       	
-      // NoDefaultWithDoc 
+      // NoDefaultWithDoc
       data.setNoDefaultWithDoc(cdr.read_type_11());
       	
-      // NoDocNum 
+      // NoDocNum
       data.setNoDocNum(cdr.read_type_11());
       	
-      // Hello 
+      // Hello
       data.setHello(cdr.read_type_2());
       	
 
@@ -143,30 +143,30 @@ int initial_alignment = current_alignment;
    @Override
    public final void serialize(ros_msgs.msg.dds.Num data, us.ihmc.idl.InterchangeSerializer ser)
    {
-      // Num 
+      // Num
       ser.write_type_11("num", data.getNum());
-      // DoubleTest 
+      // DoubleTest
       ser.write_type_6("double_test", data.getDoubleTest());
-      // NoDefaultWithDoc 
+      // NoDefaultWithDoc
       ser.write_type_11("no_default_with_doc", data.getNoDefaultWithDoc());
-      // NoDocNum 
+      // NoDocNum
       ser.write_type_11("no_doc_num", data.getNoDocNum());
-      // Hello 
+      // Hello
       ser.write_type_2("hello", data.getHello());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, ros_msgs.msg.dds.Num data)
    {
-      // Num 
+      // Num
       data.setNum(ser.read_type_11("num"));
-      // DoubleTest 
+      // DoubleTest
       data.setDoubleTest(ser.read_type_6("double_test"));
-      // NoDefaultWithDoc 
+      // NoDefaultWithDoc
       data.setNoDefaultWithDoc(ser.read_type_11("no_default_with_doc"));
-      // NoDocNum 
+      // NoDocNum
       data.setNoDocNum(ser.read_type_11("no_doc_num"));
-      // Hello 
+      // Hello
       data.setHello(ser.read_type_2("hello"));
    }
 

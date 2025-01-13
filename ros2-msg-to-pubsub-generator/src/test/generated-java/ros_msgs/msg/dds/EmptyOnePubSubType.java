@@ -51,7 +51,7 @@ public class EmptyOnePubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs
    public static int getMaxCdrSerializedSize(int current_alignment)
    {
 int initial_alignment = current_alignment;
-      // UnusedPlaceholderField 
+      // UnusedPlaceholderField
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
       return current_alignment - initial_alignment;   }
@@ -65,7 +65,7 @@ int initial_alignment = current_alignment;
    {
       int initial_alignment = current_alignment;
 
-      // UnusedPlaceholderField 
+      // UnusedPlaceholderField
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
@@ -75,14 +75,14 @@ int initial_alignment = current_alignment;
 
    public static void write(ros_msgs.msg.dds.EmptyOne data, us.ihmc.idl.CDR cdr)
    {
-      // UnusedPlaceholderField 
+      // UnusedPlaceholderField
       cdr.write_type_7(data.getUnusedPlaceholderField());
 
    }
 
    public static void read(ros_msgs.msg.dds.EmptyOne data, us.ihmc.idl.CDR cdr)
    {
-      // UnusedPlaceholderField 
+      // UnusedPlaceholderField
       data.setUnusedPlaceholderField(cdr.read_type_7());
       	
 
@@ -91,14 +91,14 @@ int initial_alignment = current_alignment;
    @Override
    public final void serialize(ros_msgs.msg.dds.EmptyOne data, us.ihmc.idl.InterchangeSerializer ser)
    {
-      // UnusedPlaceholderField 
+      // UnusedPlaceholderField
       ser.write_type_7("unused_placeholder_field", data.getUnusedPlaceholderField());
    }
 
    @Override
    public final void deserialize(us.ihmc.idl.InterchangeSerializer ser, ros_msgs.msg.dds.EmptyOne data)
    {
-      // UnusedPlaceholderField 
+      // UnusedPlaceholderField
       data.setUnusedPlaceholderField(ser.read_type_7("unused_placeholder_field"));
    }
 
