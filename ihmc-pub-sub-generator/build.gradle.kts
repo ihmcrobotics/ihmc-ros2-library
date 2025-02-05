@@ -18,7 +18,7 @@ mainDependencies {
    api(dependencies.gradleApi())
    api("us.ihmc:eprosima-idl-parser:source")
    api("org.anarres:jcpp:1.4.14")
-   api("us.ihmc:euclid:0.22.2")
+   api("us.ihmc:euclid:0.22.3")
    api("commons-codec:commons-codec:1.15")
 }
 
