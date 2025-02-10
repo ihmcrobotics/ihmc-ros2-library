@@ -148,7 +148,7 @@ The code will not compile until this is run once.
 
 This will also clone the git submodules.
 ```
-ihmc-pub-sub-group $ gradle compositeTask -PtaskName=compileJava
+ihmc-ros2-library $ gradle compositeTask -PtaskName=compileJava
 ```
 
 ### Native compilation

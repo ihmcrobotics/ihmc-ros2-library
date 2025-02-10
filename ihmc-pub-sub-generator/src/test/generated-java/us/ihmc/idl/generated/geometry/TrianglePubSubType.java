@@ -15,7 +15,7 @@ public class TrianglePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "8351b92621479f30b0e44fa9c2eb0aeeb69d4e498ede17257ccf877bc41a7508";
+   		return "97ec2f548eb33fbf6852c738bba2dc387be47a6d33c595bd02e5a94a00a559a5";
    }
    
    @Override

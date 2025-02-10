@@ -83,12 +83,12 @@ public class FieldPubSubType implements us.ihmc.pubsub.TopicDataType<type_descri
    {
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       type_description_interfaces.msg.dds.FieldTypePubSubType.write(data.getType(), cdr);
       if(data.getDefaultValue().length() <= 255)
       cdr.write_type_d(data.getDefaultValue());else
-          throw new RuntimeException("default_value field exceeds the maximum length");
+          throw new RuntimeException("default_value field exceeds the maximum length: %d > %d".formatted(data.getDefaultValue().length(), 255));
 
    }
 

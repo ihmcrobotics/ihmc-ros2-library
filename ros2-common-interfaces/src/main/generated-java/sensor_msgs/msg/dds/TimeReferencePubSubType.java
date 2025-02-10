@@ -86,7 +86,7 @@ public class TimeReferencePubSubType implements us.ihmc.pubsub.TopicDataType<sen
       builtin_interfaces.msg.dds.TimePubSubType.write(data.getTimeRef(), cdr);
       if(data.getTimeSource().length() <= 255)
       cdr.write_type_d(data.getTimeSource());else
-          throw new RuntimeException("timeSource field exceeds the maximum length");
+          throw new RuntimeException("timeSource field exceeds the maximum length: %d > %d".formatted(data.getTimeSource().length(), 255));
 
    }
 

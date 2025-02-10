@@ -87,11 +87,11 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getFormat().length() <= 255)
       cdr.write_type_d(data.getFormat());else
-          throw new RuntimeException("format field exceeds the maximum length");
+          throw new RuntimeException("format field exceeds the maximum length: %d > %d".formatted(data.getFormat().length(), 255));
 
       if(data.getData().size() <= 100)
       cdr.write_type_e(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length");
+          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().size(), 100));
 
    }
 

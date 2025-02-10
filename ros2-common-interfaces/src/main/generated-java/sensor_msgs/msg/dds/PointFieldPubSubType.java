@@ -91,7 +91,7 @@ public class PointFieldPubSubType implements us.ihmc.pubsub.TopicDataType<sensor
    {
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       cdr.write_type_4(data.getOffset());
 

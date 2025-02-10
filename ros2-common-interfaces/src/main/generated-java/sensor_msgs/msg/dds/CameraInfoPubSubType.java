@@ -124,11 +124,11 @@ public class CameraInfoPubSubType implements us.ihmc.pubsub.TopicDataType<sensor
 
       if(data.getDistortionModel().length() <= 255)
       cdr.write_type_d(data.getDistortionModel());else
-          throw new RuntimeException("distortion_model field exceeds the maximum length");
+          throw new RuntimeException("distortion_model field exceeds the maximum length: %d > %d".formatted(data.getDistortionModel().length(), 255));
 
       if(data.getD().size() <= 100)
       cdr.write_type_e(data.getD());else
-          throw new RuntimeException("d field exceeds the maximum length");
+          throw new RuntimeException("d field exceeds the maximum length: %d > %d".formatted(data.getD().size(), 100));
 
       for(int i0 = 0; i0 < data.getK().length; ++i0)
       {

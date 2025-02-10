@@ -91,11 +91,11 @@ public class ListParametersResultPubSubType implements us.ihmc.pubsub.TopicDataT
    {
       if(data.getNames().size() <= 100)
       cdr.write_type_e(data.getNames());else
-          throw new RuntimeException("names field exceeds the maximum length");
+          throw new RuntimeException("names field exceeds the maximum length: %d > %d".formatted(data.getNames().size(), 100));
 
       if(data.getPrefixes().size() <= 100)
       cdr.write_type_e(data.getPrefixes());else
-          throw new RuntimeException("prefixes field exceeds the maximum length");
+          throw new RuntimeException("prefixes field exceeds the maximum length: %d > %d".formatted(data.getPrefixes().size(), 100));
 
    }
 

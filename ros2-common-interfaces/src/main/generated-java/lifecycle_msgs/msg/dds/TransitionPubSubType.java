@@ -83,7 +83,7 @@ public class TransitionPubSubType implements us.ihmc.pubsub.TopicDataType<lifecy
 
       if(data.getLabel().length() <= 255)
       cdr.write_type_d(data.getLabel());else
-          throw new RuntimeException("label field exceeds the maximum length");
+          throw new RuntimeException("label field exceeds the maximum length: %d > %d".formatted(data.getLabel().length(), 255));
 
    }
 

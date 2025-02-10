@@ -97,19 +97,19 @@ public class DiagnosticStatusPubSubType implements us.ihmc.pubsub.TopicDataType<
 
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       if(data.getMessage().length() <= 255)
       cdr.write_type_d(data.getMessage());else
-          throw new RuntimeException("message field exceeds the maximum length");
+          throw new RuntimeException("message field exceeds the maximum length: %d > %d".formatted(data.getMessage().length(), 255));
 
       if(data.getHardwareId().length() <= 255)
       cdr.write_type_d(data.getHardwareId());else
-          throw new RuntimeException("hardware_id field exceeds the maximum length");
+          throw new RuntimeException("hardware_id field exceeds the maximum length: %d > %d".formatted(data.getHardwareId().length(), 255));
 
       if(data.getValues().size() <= 100)
       cdr.write_type_e(data.getValues());else
-          throw new RuntimeException("values field exceeds the maximum length");
+          throw new RuntimeException("values field exceeds the maximum length: %d > %d".formatted(data.getValues().size(), 100));
 
    }
 

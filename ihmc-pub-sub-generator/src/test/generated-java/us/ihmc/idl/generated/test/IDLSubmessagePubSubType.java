@@ -15,7 +15,7 @@ public class IDLSubmessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "55c57aeb47f3b3c2cd1bfa1d42333bcf1e0c50e9f4e62e347bafc6a62a41249b";
+   		return "bbcb65fdb526d2490491961e72bbc136d6bec0491ef27884cd48039c66f21787";
    }
    
    @Override

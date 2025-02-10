@@ -138,7 +138,7 @@ public class ImageMarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visua
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getNs().length() <= 255)
       cdr.write_type_d(data.getNs());else
-          throw new RuntimeException("ns field exceeds the maximum length");
+          throw new RuntimeException("ns field exceeds the maximum length: %d > %d".formatted(data.getNs().length(), 255));
 
       cdr.write_type_2(data.getId());
 
@@ -156,11 +156,11 @@ public class ImageMarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visua
       builtin_interfaces.msg.dds.DurationPubSubType.write(data.getLifetime(), cdr);
       if(data.getPoints().size() <= 100)
       cdr.write_type_e(data.getPoints());else
-          throw new RuntimeException("points field exceeds the maximum length");
+          throw new RuntimeException("points field exceeds the maximum length: %d > %d".formatted(data.getPoints().size(), 100));
 
       if(data.getOutlineColors().size() <= 100)
       cdr.write_type_e(data.getOutlineColors());else
-          throw new RuntimeException("outline_colors field exceeds the maximum length");
+          throw new RuntimeException("outline_colors field exceeds the maximum length: %d > %d".formatted(data.getOutlineColors().size(), 100));
 
    }
 

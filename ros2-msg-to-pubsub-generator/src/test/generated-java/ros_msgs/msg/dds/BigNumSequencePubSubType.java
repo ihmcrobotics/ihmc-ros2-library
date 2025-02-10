@@ -79,7 +79,7 @@ public class BigNumSequencePubSubType implements us.ihmc.pubsub.TopicDataType<ro
    {
       if(data.getLargeSequence().size() <= 10000)
       cdr.write_type_e(data.getLargeSequence());else
-          throw new RuntimeException("large_sequence field exceeds the maximum length");
+          throw new RuntimeException("large_sequence field exceeds the maximum length: %d > %d".formatted(data.getLargeSequence().size(), 10000));
 
    }
 

@@ -86,7 +86,7 @@ public class InteractiveMarkerPosePubSubType implements us.ihmc.pubsub.TopicData
       geometry_msgs.msg.dds.PosePubSubType.write(data.getPose(), cdr);
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
    }
 

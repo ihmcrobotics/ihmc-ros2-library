@@ -82,11 +82,11 @@ public class ChannelFloat32PubSubType implements us.ihmc.pubsub.TopicDataType<se
    {
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       if(data.getValues().size() <= 100)
       cdr.write_type_e(data.getValues());else
-          throw new RuntimeException("values field exceeds the maximum length");
+          throw new RuntimeException("values field exceeds the maximum length: %d > %d".formatted(data.getValues().size(), 100));
 
    }
 

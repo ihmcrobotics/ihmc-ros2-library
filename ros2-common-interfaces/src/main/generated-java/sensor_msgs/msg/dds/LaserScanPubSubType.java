@@ -139,11 +139,11 @@ public class LaserScanPubSubType implements us.ihmc.pubsub.TopicDataType<sensor_
 
       if(data.getRanges().size() <= 100)
       cdr.write_type_e(data.getRanges());else
-          throw new RuntimeException("ranges field exceeds the maximum length");
+          throw new RuntimeException("ranges field exceeds the maximum length: %d > %d".formatted(data.getRanges().size(), 100));
 
       if(data.getIntensities().size() <= 100)
       cdr.write_type_e(data.getIntensities());else
-          throw new RuntimeException("intensities field exceeds the maximum length");
+          throw new RuntimeException("intensities field exceeds the maximum length: %d > %d".formatted(data.getIntensities().size(), 100));
 
    }
 

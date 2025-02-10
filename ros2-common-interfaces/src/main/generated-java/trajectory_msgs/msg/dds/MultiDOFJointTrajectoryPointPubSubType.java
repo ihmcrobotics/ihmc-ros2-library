@@ -101,15 +101,15 @@ public class MultiDOFJointTrajectoryPointPubSubType implements us.ihmc.pubsub.To
    {
       if(data.getTransforms().size() <= 100)
       cdr.write_type_e(data.getTransforms());else
-          throw new RuntimeException("transforms field exceeds the maximum length");
+          throw new RuntimeException("transforms field exceeds the maximum length: %d > %d".formatted(data.getTransforms().size(), 100));
 
       if(data.getVelocities().size() <= 100)
       cdr.write_type_e(data.getVelocities());else
-          throw new RuntimeException("velocities field exceeds the maximum length");
+          throw new RuntimeException("velocities field exceeds the maximum length: %d > %d".formatted(data.getVelocities().size(), 100));
 
       if(data.getAccelerations().size() <= 100)
       cdr.write_type_e(data.getAccelerations());else
-          throw new RuntimeException("accelerations field exceeds the maximum length");
+          throw new RuntimeException("accelerations field exceeds the maximum length: %d > %d".formatted(data.getAccelerations().size(), 100));
 
       builtin_interfaces.msg.dds.DurationPubSubType.write(data.getTimeFromStart(), cdr);
    }

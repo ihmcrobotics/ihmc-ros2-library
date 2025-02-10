@@ -111,7 +111,7 @@ public class InteractiveMarkerUpdatePubSubType implements us.ihmc.pubsub.TopicDa
    {
       if(data.getServerId().length() <= 255)
       cdr.write_type_d(data.getServerId());else
-          throw new RuntimeException("server_id field exceeds the maximum length");
+          throw new RuntimeException("server_id field exceeds the maximum length: %d > %d".formatted(data.getServerId().length(), 255));
 
       cdr.write_type_12(data.getSeqNum());
 
@@ -119,15 +119,15 @@ public class InteractiveMarkerUpdatePubSubType implements us.ihmc.pubsub.TopicDa
 
       if(data.getMarkers().size() <= 100)
       cdr.write_type_e(data.getMarkers());else
-          throw new RuntimeException("markers field exceeds the maximum length");
+          throw new RuntimeException("markers field exceeds the maximum length: %d > %d".formatted(data.getMarkers().size(), 100));
 
       if(data.getPoses().size() <= 100)
       cdr.write_type_e(data.getPoses());else
-          throw new RuntimeException("poses field exceeds the maximum length");
+          throw new RuntimeException("poses field exceeds the maximum length: %d > %d".formatted(data.getPoses().size(), 100));
 
       if(data.getErases().size() <= 100)
       cdr.write_type_e(data.getErases());else
-          throw new RuntimeException("erases field exceeds the maximum length");
+          throw new RuntimeException("erases field exceeds the maximum length: %d > %d".formatted(data.getErases().size(), 100));
 
    }
 

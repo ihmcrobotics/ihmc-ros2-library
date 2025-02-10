@@ -97,7 +97,7 @@ public class FieldTypePubSubType implements us.ihmc.pubsub.TopicDataType<type_de
 
       if(data.getNestedTypeName().length() <= 255)
       cdr.write_type_d(data.getNestedTypeName());else
-          throw new RuntimeException("nested_type_name field exceeds the maximum length");
+          throw new RuntimeException("nested_type_name field exceeds the maximum length: %d > %d".formatted(data.getNestedTypeName().length(), 255));
 
    }
 

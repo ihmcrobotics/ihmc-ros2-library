@@ -84,11 +84,11 @@ public class IndividualTypeDescriptionPubSubType implements us.ihmc.pubsub.Topic
    {
       if(data.getTypeName().length() <= 255)
       cdr.write_type_d(data.getTypeName());else
-          throw new RuntimeException("type_name field exceeds the maximum length");
+          throw new RuntimeException("type_name field exceeds the maximum length: %d > %d".formatted(data.getTypeName().length(), 255));
 
       if(data.getFields().size() <= 100)
       cdr.write_type_e(data.getFields());else
-          throw new RuntimeException("fields field exceeds the maximum length");
+          throw new RuntimeException("fields field exceeds the maximum length: %d > %d".formatted(data.getFields().size(), 100));
 
    }
 
