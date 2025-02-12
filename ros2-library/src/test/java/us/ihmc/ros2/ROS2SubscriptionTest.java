@@ -45,7 +45,6 @@ public class ROS2SubscriptionTest
          {
             ByteMultiArray msg = generateBigMessage(messageSizeBytes);
             publisher.publish(msg);
-            ThreadTools.park(0.05);
          }
       });
 
