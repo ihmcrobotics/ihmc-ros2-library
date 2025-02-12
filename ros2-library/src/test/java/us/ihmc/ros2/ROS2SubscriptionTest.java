@@ -69,8 +69,8 @@ public class ROS2SubscriptionTest
       subscriberNode.destroy();
    }
 
-   @Test
-   @Timeout(10)
+   @RepeatedTest(10)
+   @Timeout(15)
    public void testRemoveDeadlock()
    {
       ROS2Topic<ByteMultiArray> topic = new ROS2Topic<>().withType(ByteMultiArray.class).withSuffix("test_topic");
@@ -97,15 +97,13 @@ public class ROS2SubscriptionTest
 
                ThreadTools.park(RANDOM.nextDouble(0.1));
 
-               System.out.println("Removing " + Thread.currentThread().getName());
                subscription.remove();
-               System.out.println("Removed " + Thread.currentThread().getName());
+               subscription.remove(); // Call remove() multiple times for better test coverage
             }, "thread_" + i));
          }
 
          for (int i = 0; i < threadCount; ++i)
          {
-            System.out.println("Joining " + i);
             try
             {
                threads.get(i).join();
@@ -115,7 +113,7 @@ public class ROS2SubscriptionTest
                throw new RuntimeException(e);
             }
          }
-      }, "remove_thread");
+      }, "removeThread");
 
       Thread publishThread = ThreadTools.startAThread(() ->
       {

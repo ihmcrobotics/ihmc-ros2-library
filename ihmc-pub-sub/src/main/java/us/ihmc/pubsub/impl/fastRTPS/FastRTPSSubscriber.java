@@ -32,7 +32,7 @@ import java.util.UUID;
 
 public class FastRTPSSubscriber<T> implements Subscriber<T>
 {
-   private final Object destructorLock = new Object(); 
+   private final Object readLock = new Object();
   
    private NativeSubscriberImpl impl;
 
@@ -114,7 +114,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, SubscriberAttributes attrs, SubscriberListener<T> listener, NativeParticipantImpl participantImpl)
          throws IOException
    {
-      synchronized (destructorLock)
+      synchronized (readLock)
       {
          this.attributes = attrs;
          this.topicDataType = topicDataTypeIn.newInstance();
@@ -151,7 +151,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public void waitForUnreadMessage(int timeoutInMilliseconds)
    {
-      synchronized(destructorLock)
+      synchronized(readLock)
       {
          if(impl == null)
          {
@@ -186,7 +186,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean readNextData(T data, SampleInfo info)
    {
-      synchronized(destructorLock)
+      synchronized(readLock)
       {
          if(impl == null)
          {
@@ -243,7 +243,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean takeNextData(T data, SampleInfo info)
    {
-      synchronized(destructorLock)
+      synchronized(readLock)
       {
          if(impl == null)
          {
@@ -306,7 +306,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean isInCleanState()
    {
-      synchronized(destructorLock)
+      synchronized(readLock)
       {
          if(impl == null)
          {
@@ -318,12 +318,9 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
 
    void delete()
    {
-      synchronized(destructorLock)
-      {
-         impl.delete();
-         nativeListenerImpl.delete();
-         impl = null;
-      }
+      impl.delete();
+      nativeListenerImpl.delete();
+      impl = null;
 
       isRemoved = true;
    }
@@ -342,7 +339,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean isAvailable()
    {
-      synchronized(destructorLock)
+      synchronized(readLock)
       {
          return impl != null;
       }
