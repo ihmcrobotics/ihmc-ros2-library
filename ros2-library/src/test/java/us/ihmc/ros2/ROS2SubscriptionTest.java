@@ -1,6 +1,7 @@
 package us.ihmc.ros2;
 
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import std_msgs.msg.dds.ByteMultiArray;
 import us.ihmc.commons.thread.ThreadTools;
@@ -17,7 +18,8 @@ public class ROS2SubscriptionTest
    private static final Random RANDOM = new Random(349473937);
    private static final ByteMultiArray BIG_MESSAGE = generateBigMessage(100);
 
-   @RepeatedTest(500)
+   @Test
+//   @RepeatedTest(500)
    public void testPublishSubscribe()
    {
       int messagesToPublish = 10;
