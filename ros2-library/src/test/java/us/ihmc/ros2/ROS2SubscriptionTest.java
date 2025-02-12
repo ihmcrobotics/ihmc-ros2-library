@@ -20,6 +20,7 @@ public class ROS2SubscriptionTest
    public void testRaceCondition() throws InterruptedException
    {
       final int subscriberCount = 3;
+      final int messagesToPublish = 100;
       final int messageSizeBytes = 100; // TODO: make larger
 
       ROS2Topic<ByteMultiArray> topic = new ROS2Topic<>().withType(ByteMultiArray.class).withSuffix("test_topic").withQoS(ROS2QosProfile.RELIABLE());
@@ -39,10 +40,14 @@ public class ROS2SubscriptionTest
          subscriberNode.createSubscription(topic, messageListener);
 
       Thread publisherThread = new Thread(() ->
-                                          {
-                                             ByteMultiArray msg = generateBigMessage(messageSizeBytes);
-                                             publisher.publish(msg);
-                                          });
+      {
+         for (int i = 0; i < messagesToPublish; i++)
+         {
+            ByteMultiArray msg = generateBigMessage(messageSizeBytes);
+            publisher.publish(msg);
+            ThreadTools.park(0.05);
+         }
+      });
 
       publisherThread.start();
       publisherThread.join();
@@ -51,7 +56,8 @@ public class ROS2SubscriptionTest
       // The messages have to go over the network interface, etc
       ThreadTools.park(1.0);
 
-      assertEquals(subscriberCount, totalReceivedMessages.get());
+      int expectedMessageCount = subscriberCount * messagesToPublish;
+      assertEquals(expectedMessageCount, totalReceivedMessages.get());
 
       for (ROS2Node subscriberNode : subscriberNodes)
          subscriberNode.destroy();
