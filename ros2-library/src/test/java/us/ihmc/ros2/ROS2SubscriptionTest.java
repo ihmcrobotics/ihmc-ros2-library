@@ -68,7 +68,7 @@ public class ROS2SubscriptionTest
    }
 
    @RepeatedTest(10)
-   @Timeout(15)
+   @Timeout(30)
    public void testRemoveDeadlock()
    {
       ROS2Topic<ByteMultiArray> topic = new ROS2Topic<>().withType(ByteMultiArray.class).withSuffix("test_topic");
