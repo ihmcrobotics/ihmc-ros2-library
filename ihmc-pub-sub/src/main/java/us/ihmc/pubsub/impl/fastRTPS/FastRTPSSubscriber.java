@@ -18,7 +18,13 @@ package us.ihmc.pubsub.impl.fastRTPS;
 import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
-import us.ihmc.pubsub.common.*;
+import us.ihmc.pubsub.common.ChangeKind;
+import us.ihmc.pubsub.common.Guid;
+import us.ihmc.pubsub.common.MatchingInfo;
+import us.ihmc.pubsub.common.SampleIdentity;
+import us.ihmc.pubsub.common.SampleInfo;
+import us.ihmc.pubsub.common.SerializedPayload;
+import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
@@ -29,11 +35,10 @@ import us.ihmc.rtps.impl.fastRTPS.SampleInfoMarshaller;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FastRTPSSubscriber<T> implements Subscriber<T>
 {
-   private final Object destructorLock = new Object(); 
-  
    private NativeSubscriberImpl impl;
 
    private final SubscriberAttributes attributes;
@@ -42,15 +47,15 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    private final SerializedPayload payload;
    private final Guid guid = new Guid();
    private final MatchingInfo matchingInfo = new MatchingInfo();
-   
+
    private final ByteBuffer keyBuffer = ByteBuffer.allocateDirect(16);
 
    private final SampleInfoMarshaller sampleInfoMarshaller = new SampleInfoMarshaller();
 
    private final NativeSubscriberListenerImpl nativeListenerImpl = new NativeSubscriberListenerImpl();
 
+   private final AtomicBoolean removed = new AtomicBoolean();
    private boolean hasMatched = false;
-   private boolean isRemoved = false;
    private long numberOfReceivedMessages = 0;
    private long largestMessageSize = 0;
    private long currentMessageSize = 0;
@@ -80,6 +85,9 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
       @Override
       public void onNewDataMessage()
       {
+         if (isRemoved())
+            return;
+
          try
          {
             if (listener != null)
@@ -114,32 +122,29 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    FastRTPSSubscriber(TopicDataType<T> topicDataTypeIn, SubscriberAttributes attrs, SubscriberListener<T> listener, NativeParticipantImpl participantImpl)
          throws IOException
    {
-      synchronized (destructorLock)
+      this.attributes = attrs;
+      this.topicDataType = topicDataTypeIn.newInstance();
+      this.listener = listener;
+      /*
+       * Fast-RTPS can pad messages to 4 byte boundries. Adding 3 to the typesize will make sure the message fits.
+       *
+       * See
+       * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
+       */
+      this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
+
+      String profileName = UUID.randomUUID().toString();
+      String profileXML = attributes.marshall(profileName);
+
+
+      impl = new NativeSubscriberImpl(participantImpl, nativeListenerImpl);
+
+
+      if (!impl.createSubscriber(profileName, profileXML, profileXML.length())) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
       {
-         this.attributes = attrs;
-         this.topicDataType = topicDataTypeIn.newInstance();
-         this.listener = listener;
-         /*
-          * Fast-RTPS can pad messages to 4 byte boundries. Adding 3 to the typesize will make sure the message fits.
-          *
-          * See
-          * https://github.com/eProsima/Fast-RTPS/blob/095d657e117381fd7f6b611a0db216b7df942354/src/cpp/subscriber/SubscriberImpl.cpp#L46
-          */
-         this.payload = new SerializedPayload(topicDataType.getTypeSize() + 3 /* Possible alignment */);
-
-         String profileName = UUID.randomUUID().toString();
-         String profileXML = attributes.marshall(profileName);
-
-
-         impl = new NativeSubscriberImpl(participantImpl, nativeListenerImpl);
-
-
-         if (!impl.createSubscriber(profileName, profileXML, profileXML.length())) // Create subscriber after assigning impl to avoid callbacks with impl being unassigned
-         {
-            throw new IOException("Cannot create subscriber with data: \n" + profileXML);
-         }
-         guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
+         throw new IOException("Cannot create subscriber with data: \n" + profileXML);
       }
+      guid.fromPrimitives(impl.getGuidHigh(), impl.getGuidLow());
    }
 
    @Override
@@ -151,14 +156,11 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public void waitForUnreadMessage(int timeoutInMilliseconds)
    {
-      synchronized(destructorLock)
+      if (impl == null)
       {
-         if(impl == null)
-         {
-            throw new RuntimeException("This subscriber has been removed from the domain");
-         }
-         impl.waitForUnreadMessage();
+         throw new RuntimeException("This subscriber has been removed from the domain");
       }
+      impl.waitForUnreadMessage();
    }
 
    private void updateSampleInfo(SampleInfoMarshaller marshaller, SampleInfo info, ByteBuffer keyBuffer)
@@ -184,43 +186,40 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    }
 
    @Override
-   public boolean readNextData(T data, SampleInfo info)
+   public synchronized boolean readNextData(T data, SampleInfo info)
    {
-      synchronized(destructorLock)
+      if (impl == null)
       {
-         if(impl == null)
-         {
-            System.err.println("This subscriber has been removed from the domain");
-            return false;
-         }         
-         
-         if(impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
-         {
-            if (info != null)
-            {
-               updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
-            }
-            preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
-            try
-            {
-               currentMessageSize = payload.getLength();
-               if (payload.getLength() > largestMessageSize)
-                  largestMessageSize = payload.getLength();
-               cumulativePayloadBytes += payload.getLength();
+         System.err.println("This subscriber has been removed from the domain");
+         return false;
+      }
 
-               topicDataType.deserialize(payload, data);
-            }
-            catch (IOException e)
-            {
-               e.printStackTrace();
-               return false;
-            }
-            return true;
-         }
-         else
+      if (impl.readnextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
+      {
+         if (info != null)
          {
+            updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+         }
+         preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
+         try
+         {
+            currentMessageSize = payload.getLength();
+            if (payload.getLength() > largestMessageSize)
+               largestMessageSize = payload.getLength();
+            cumulativePayloadBytes += payload.getLength();
+
+            topicDataType.deserialize(payload, data);
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
             return false;
          }
+         return true;
+      }
+      else
+      {
+         return false;
       }
    }
 
@@ -241,43 +240,40 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    }
 
    @Override
-   public boolean takeNextData(T data, SampleInfo info)
+   public synchronized boolean takeNextData(T data, SampleInfo info)
    {
-      synchronized(destructorLock)
+      if (impl == null)
       {
-         if(impl == null)
-         {
-            System.err.println("This subscriber has been removed from the domain");
-            return false;
-         }         
-         
-         if(impl.takeNextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
-         {
-            if (info != null)
-            {
-               updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
-            }
-            preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
-            try
-            {
-               currentMessageSize = payload.getLength();
-               if (payload.getLength() > largestMessageSize)
-                  largestMessageSize = payload.getLength();
-               cumulativePayloadBytes += payload.getLength();
+         System.err.println("This subscriber has been removed from the domain");
+         return false;
+      }
 
-               topicDataType.deserialize(payload, data);
-            }
-            catch (IOException e)
-            {
-               e.printStackTrace();
-               return false;
-            }
-            return true;
-         }
-         else
+      if (impl.takeNextData(payload.getData().capacity(), payload.getData(), sampleInfoMarshaller))
+      {
+         if (info != null)
          {
+            updateSampleInfo(sampleInfoMarshaller, info, keyBuffer);
+         }
+         preparePayload(sampleInfoMarshaller.getEncapsulation(), sampleInfoMarshaller.getDataLength());
+         try
+         {
+            currentMessageSize = payload.getLength();
+            if (payload.getLength() > largestMessageSize)
+               largestMessageSize = payload.getLength();
+            cumulativePayloadBytes += payload.getLength();
+
+            topicDataType.deserialize(payload, data);
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
             return false;
          }
+         return true;
+      }
+      else
+      {
+         return false;
       }
    }
 
@@ -306,26 +302,20 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean isInCleanState()
    {
-      synchronized(destructorLock)
+      if (impl == null)
       {
-         if(impl == null)
-         {
-            throw new RuntimeException("This subscriber has been removed from the domain");
-         }
-         return impl.isInCleanState();
+         throw new RuntimeException("This subscriber has been removed from the domain");
       }
+      return impl.isInCleanState();
    }
 
    void delete()
    {
-      synchronized(destructorLock)
-      {
-         impl.delete();
-         nativeListenerImpl.delete();
-         impl = null;
-      }
+      removed.set(true);
 
-      isRemoved = true;
+      impl.delete();
+      nativeListenerImpl.delete();
+      impl = null;
    }
 
    TopicDataType<T> getTopicDataType()
@@ -342,16 +332,13 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean isAvailable()
    {
-      synchronized(destructorLock)
-      {
-         return impl != null;
-      }
+      return impl != null;
    }
 
    @Override
    public boolean isRemoved()
    {
-      return isRemoved;
+      return removed.get();
    }
 
    @Override
