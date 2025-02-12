@@ -1,11 +1,9 @@
 package us.ihmc.ros2;
 
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import std_msgs.msg.dds.ByteMultiArray;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ public class ROS2SubscriptionTest
       AtomicInteger receivedData = new AtomicInteger(0);
 
       ROS2Topic<ByteMultiArray> topic = new ROS2Topic<>().withType(ByteMultiArray.class).withSuffix("test_topic");
-      ROS2NodeBuilder builder = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.UDPV4_ONLY);
+      ROS2NodeBuilder builder = new ROS2NodeBuilder();
       ROS2Node publisherNode = builder.build("publisher_node");
       ROS2Node subscriberNode = builder.build("subscriber_node");
 
@@ -74,7 +72,7 @@ public class ROS2SubscriptionTest
    public void testRemoveDeadlock()
    {
       ROS2Topic<ByteMultiArray> topic = new ROS2Topic<>().withType(ByteMultiArray.class).withSuffix("test_topic");
-      ROS2NodeBuilder builder = new ROS2NodeBuilder().specialTransportMode(SpecialTransportMode.UDPV4_ONLY);
+      ROS2NodeBuilder builder = new ROS2NodeBuilder();
       ROS2Node publisherNode = builder.build("publisher_node");
       ROS2Node subscriberNode = builder.build("subscriber_node");
 
