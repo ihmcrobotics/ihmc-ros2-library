@@ -15,6 +15,7 @@
  */
 package us.ihmc.pubsub.common;
 
+import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.Pointer;
 
@@ -54,7 +55,7 @@ public class SerializedPayload implements AutoCloseable
    public SerializedPayload(int maxSize)
    {
       this.max_size = maxSize;
-      this.dataPointer = Pointer.malloc(maxSize);
+      this.dataPointer = new BytePointer(maxSize);
       this.data = dataPointer.asByteBuffer();
       setEncapsulation(CDR_LE);
    }
