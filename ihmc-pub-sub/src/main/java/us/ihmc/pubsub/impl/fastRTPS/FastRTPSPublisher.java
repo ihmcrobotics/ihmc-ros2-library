@@ -15,6 +15,9 @@
  */
 package us.ihmc.pubsub.impl.fastRTPS;
 
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.PublisherAttributes;
 import us.ihmc.pubsub.common.Guid;
@@ -32,6 +35,11 @@ import java.util.UUID;
 
 public class FastRTPSPublisher implements Publisher
 {
+   static
+   {
+      Loader.load(Pointer.class);
+   }
+
    private final Object destructorLock = new Object(); 
 
    private NativePublisherImpl impl;
@@ -41,7 +49,8 @@ public class FastRTPSPublisher implements Publisher
    private final SerializedPayload payload;
    private final Guid guid = new Guid();
 
-   private final ByteBuffer keyBuffer = ByteBuffer.allocateDirect(16);
+   private final Pointer keyBufferPointer = new BytePointer(16);
+   private final ByteBuffer keyBuffer = keyBufferPointer.asByteBuffer();
    private final NativePublisherListenerImpl nativeListenerImpl = new NativePublisherListenerImpl();
 
    private boolean isRemoved = false;
@@ -190,6 +199,8 @@ public class FastRTPSPublisher implements Publisher
    {
       synchronized(destructorLock)
       {
+         keyBufferPointer.close();
+         payload.close();
          impl.delete();
          nativeListenerImpl.delete();
          impl = null;

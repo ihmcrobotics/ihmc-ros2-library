@@ -15,6 +15,9 @@
  */
 package us.ihmc.pubsub.impl.fastRTPS;
 
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
 import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
@@ -38,6 +41,11 @@ import java.util.UUID;
 
 public class FastRTPSSubscriber<T> implements Subscriber<T>
 {
+   static
+   {
+      Loader.load(Pointer.class);
+   }
+
    private final Object destructorLock = new Object(); 
   
    private NativeSubscriberImpl impl;
@@ -48,11 +56,11 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    private final SerializedPayload payload;
    private final Guid guid = new Guid();
    private final MatchingInfo matchingInfo = new MatchingInfo();
-   
-   private final ByteBuffer keyBuffer = ByteBuffer.allocateDirect(16);
 
    private final SampleInfoMarshaller sampleInfoMarshaller = new SampleInfoMarshaller();
 
+   private final Pointer keyBufferPointer = new BytePointer(16);
+   private final ByteBuffer keyBuffer = keyBufferPointer.asByteBuffer();
    private final NativeSubscriberListenerImpl nativeListenerImpl = new NativeSubscriberListenerImpl();
 
    private boolean hasMatched = false;
@@ -326,6 +334,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    {
       synchronized(destructorLock)
       {
+         keyBufferPointer.close();
          payload.close();
          impl.delete();
          nativeListenerImpl.delete();
