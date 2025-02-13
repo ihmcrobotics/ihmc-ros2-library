@@ -91,8 +91,6 @@ public class ROS2NodeBuilder
    @Nullable
    private SpecialTransportMode specialTransportMode;
 
-   private final transient StringJoiner buildPrintout = new StringJoiner("\n   ");
-
    public ROS2NodeBuilder domainId(int domainId)
    {
       this.domainId = domainId;
@@ -143,8 +141,9 @@ public class ROS2NodeBuilder
 
    public ROS2Node build(String name)
    {
+      StringJoiner buildPrintout = new StringJoiner("\n   ");
       buildPrintout.add("Building ROS2Node: " + name);
-      return new ROS2Node(name, namespace, buildProfile(), specialTransportMode);
+      return new ROS2Node(name, namespace, buildProfile(buildPrintout), specialTransportMode);
    }
 
    public RealtimeROS2Node buildRealtime(String name)
@@ -154,11 +153,12 @@ public class ROS2NodeBuilder
 
    public RealtimeROS2Node buildRealtime(String name, PeriodicThreadSchedulerFactory threadFactory)
    {
+      StringJoiner buildPrintout = new StringJoiner("\n   ");
       buildPrintout.add("Building RealtimeROS2Node: " + name);
-      return new RealtimeROS2Node(name, namespace, buildProfile(), specialTransportMode, threadFactory);
+      return new RealtimeROS2Node(name, namespace, buildProfile(buildPrintout), specialTransportMode, threadFactory);
    }
 
-   private ParticipantProfile buildProfile()
+   private ParticipantProfile buildProfile(StringJoiner buildPrintout)
    {
       ParticipantProfile profile = ParticipantProfile.create();
 
@@ -171,7 +171,7 @@ public class ROS2NodeBuilder
          else
          {
             // Try to find a ROS Domain ID
-            domainId = findDomainID();
+            domainId = findDomainID(buildPrintout);
 
             // If a valid domain ID was not found automatically
             if (!domainIDValid(domainId))
@@ -206,7 +206,7 @@ public class ROS2NodeBuilder
          if (addressRestriction != null)
             buildPrintout.add("Using a programmatically set address restriction");
          else
-            addressRestriction = findAddressRestriction();
+            addressRestriction = findAddressRestriction(buildPrintout);
 
          profile.addUDPv4Transport(addressRestriction);
 
@@ -285,7 +285,7 @@ public class ROS2NodeBuilder
     * @param networkParametersKey Key from ~/.ihmc/IHMCNetworkParameters.ini properties file
     * @return the value found for the most-prioritized key
     */
-   private String findValueForField(String environmentKey, String propertiesKey, String networkParametersKey)
+   private String findValueForField(String environmentKey, String propertiesKey, String networkParametersKey, StringJoiner buildPrintout)
    {
       Stack<Map.Entry<String, String>> possibleValues = new Stack<>();
 
@@ -340,11 +340,11 @@ public class ROS2NodeBuilder
       return !possibleValues.isEmpty() ? possibleValues.peek().getValue() : null;
    }
 
-   private int findDomainID()
+   private int findDomainID(StringJoiner buildPrintout)
    {
       int domainID = UNSET_DOMAIN_ID;
 
-      String valueForField = findValueForField("ROS_DOMAIN_ID", "ros.domain.id", "RTPSDomainID");
+      String valueForField = findValueForField("ROS_DOMAIN_ID", "ros.domain.id", "RTPSDomainID", buildPrintout);
 
       if (valueForField != null)
       {
@@ -361,9 +361,9 @@ public class ROS2NodeBuilder
       return domainID;
    }
 
-   private InetAddress[] findAddressRestriction()
+   private InetAddress[] findAddressRestriction(StringJoiner buildPrintout)
    {
-      String valueForField = findValueForField("ROS_ADDRESS_RESTRICTION", "ros.address.restriction", "RTPSSubnet");
+      String valueForField = findValueForField("ROS_ADDRESS_RESTRICTION", "ros.address.restriction", "RTPSSubnet", buildPrintout);
 
       return convertToInetAddressArray(valueForField != null ? valueForField : "127.0.0.1/8");
    }
