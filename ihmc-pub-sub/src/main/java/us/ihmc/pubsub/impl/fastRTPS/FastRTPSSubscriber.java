@@ -320,6 +320,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    {
       synchronized(destructorLock)
       {
+         payload.release();
          impl.delete();
          nativeListenerImpl.delete();
          impl = null;

@@ -15,6 +15,9 @@
  */
 package us.ihmc.pubsub.common;
 
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -26,6 +29,11 @@ import java.nio.ByteOrder;
  */
 public class SerializedPayload
 {
+   static
+   {
+      Loader.load(Pointer.class);
+   }
+
    public static final short CDR_BE = 0x0000;
    public static final short CDR_LE = 0x0001;
    public static final short PL_CDR_BE = 0x0002;
@@ -33,6 +41,7 @@ public class SerializedPayload
 
    private short encapsulation;
    private int length;
+   private final Pointer dataPointer;
    private final ByteBuffer data;
    private int max_size;
    private int pos;
@@ -45,7 +54,8 @@ public class SerializedPayload
    public SerializedPayload(int maxSize)
    {
       this.max_size = maxSize;
-      this.data = ByteBuffer.allocateDirect(maxSize);
+      this.dataPointer = Pointer.malloc(maxSize);
+      this.data = dataPointer.asByteBuffer();
       setEncapsulation(CDR_LE);
    }
 
@@ -113,5 +123,10 @@ public class SerializedPayload
    public ByteBuffer getData()
    {
       return data;
+   }
+
+   public void release()
+   {
+      dataPointer.close();
    }
 }
