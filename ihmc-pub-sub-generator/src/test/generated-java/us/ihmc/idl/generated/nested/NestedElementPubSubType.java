@@ -15,7 +15,7 @@ public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "2e2bfec4d4819ad00cbb8b5156d157270603584c15596aa60e9d54fb113906b7";
+   		return "e3c779d289e4a606eddd58b51d2e2794981bf9c41398a2c112ce15369de5da82";
    }
    
    @Override
@@ -81,7 +81,7 @@ public class NestedElementPubSubType implements us.ihmc.pubsub.TopicDataType<us.
    {
       if(data.getStringTest().length() <= 255)
       cdr.write_type_d(data.getStringTest());else
-          throw new RuntimeException("stringTest field exceeds the maximum length");
+          throw new RuntimeException("stringTest field exceeds the maximum length: %d > %d".formatted(data.getStringTest().length(), 255));
 
       cdr.write_type_2(data.getLongTest());
 

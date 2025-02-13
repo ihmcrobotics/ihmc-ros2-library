@@ -15,7 +15,7 @@ public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "aa10d9eb05237b7df516eba027f9a2c5209299f2add98a641520b0bc7c7d27d9";
+   		return "57dba1b40843d742336b4114c1d6d79788e80e14e309ccc9139f5ced89dec385";
    }
    
    @Override
@@ -293,7 +293,7 @@ public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us
       us.ihmc.idl.generated.nested.NestedElementPubSubType.write(data.getNestedElementTest(), cdr);
       if(data.getStringTest().length() <= 255)
       cdr.write_type_d(data.getStringTest());else
-          throw new RuntimeException("stringTest field exceeds the maximum length");
+          throw new RuntimeException("stringTest field exceeds the maximum length: %d > %d".formatted(data.getStringTest().length(), 255));
 
       for(int i0 = 0; i0 < data.getLongArray().length; ++i0)
       {
@@ -324,63 +324,63 @@ public class IDLElementTestPubSubType implements us.ihmc.pubsub.TopicDataType<us
 
       if(data.getCharSeqTest().size() <= 25)
       cdr.write_type_e(data.getCharSeqTest());else
-          throw new RuntimeException("charSeqTest field exceeds the maximum length");
+          throw new RuntimeException("charSeqTest field exceeds the maximum length: %d > %d".formatted(data.getCharSeqTest().size(), 25));
 
       if(data.getWcharSeqTest().size() <= 25)
       cdr.write_type_e(data.getWcharSeqTest());else
-          throw new RuntimeException("wcharSeqTest field exceeds the maximum length");
+          throw new RuntimeException("wcharSeqTest field exceeds the maximum length: %d > %d".formatted(data.getWcharSeqTest().size(), 25));
 
       if(data.getOctetSeqTest().size() <= 25)
       cdr.write_type_e(data.getOctetSeqTest());else
-          throw new RuntimeException("octetSeqTest field exceeds the maximum length");
+          throw new RuntimeException("octetSeqTest field exceeds the maximum length: %d > %d".formatted(data.getOctetSeqTest().size(), 25));
 
       if(data.getShortSeqTest().size() <= 25)
       cdr.write_type_e(data.getShortSeqTest());else
-          throw new RuntimeException("shortSeqTest field exceeds the maximum length");
+          throw new RuntimeException("shortSeqTest field exceeds the maximum length: %d > %d".formatted(data.getShortSeqTest().size(), 25));
 
       if(data.getUshortSeqTest().size() <= 25)
       cdr.write_type_e(data.getUshortSeqTest());else
-          throw new RuntimeException("ushortSeqTest field exceeds the maximum length");
+          throw new RuntimeException("ushortSeqTest field exceeds the maximum length: %d > %d".formatted(data.getUshortSeqTest().size(), 25));
 
       if(data.getLongSeqTest().size() <= 25)
       cdr.write_type_e(data.getLongSeqTest());else
-          throw new RuntimeException("longSeqTest field exceeds the maximum length");
+          throw new RuntimeException("longSeqTest field exceeds the maximum length: %d > %d".formatted(data.getLongSeqTest().size(), 25));
 
       if(data.getUlongSeqTest().size() <= 25)
       cdr.write_type_e(data.getUlongSeqTest());else
-          throw new RuntimeException("ulongSeqTest field exceeds the maximum length");
+          throw new RuntimeException("ulongSeqTest field exceeds the maximum length: %d > %d".formatted(data.getUlongSeqTest().size(), 25));
 
       if(data.getLonglongSeqtest().size() <= 25)
       cdr.write_type_e(data.getLonglongSeqtest());else
-          throw new RuntimeException("longlongSeqtest field exceeds the maximum length");
+          throw new RuntimeException("longlongSeqtest field exceeds the maximum length: %d > %d".formatted(data.getLonglongSeqtest().size(), 25));
 
       if(data.getUlonglongSeqTest().size() <= 25)
       cdr.write_type_e(data.getUlonglongSeqTest());else
-          throw new RuntimeException("ulonglongSeqTest field exceeds the maximum length");
+          throw new RuntimeException("ulonglongSeqTest field exceeds the maximum length: %d > %d".formatted(data.getUlonglongSeqTest().size(), 25));
 
       if(data.getFloatSeqTest().size() <= 25)
       cdr.write_type_e(data.getFloatSeqTest());else
-          throw new RuntimeException("floatSeqTest field exceeds the maximum length");
+          throw new RuntimeException("floatSeqTest field exceeds the maximum length: %d > %d".formatted(data.getFloatSeqTest().size(), 25));
 
       if(data.getDoubleSeqTest().size() <= 25)
       cdr.write_type_e(data.getDoubleSeqTest());else
-          throw new RuntimeException("doubleSeqTest field exceeds the maximum length");
+          throw new RuntimeException("doubleSeqTest field exceeds the maximum length: %d > %d".formatted(data.getDoubleSeqTest().size(), 25));
 
       if(data.getBooleanSeqTest().size() <= 25)
       cdr.write_type_e(data.getBooleanSeqTest());else
-          throw new RuntimeException("booleanSeqTest field exceeds the maximum length");
+          throw new RuntimeException("booleanSeqTest field exceeds the maximum length: %d > %d".formatted(data.getBooleanSeqTest().size(), 25));
 
       if(data.getNestedSeqTest().size() <= 25)
       cdr.write_type_e(data.getNestedSeqTest());else
-          throw new RuntimeException("nestedSeqTest field exceeds the maximum length");
+          throw new RuntimeException("nestedSeqTest field exceeds the maximum length: %d > %d".formatted(data.getNestedSeqTest().size(), 25));
 
       if(data.getEnumSeqTest().size() <= 25)
       cdr.write_type_e(data.getEnumSeqTest());else
-          throw new RuntimeException("enumSeqTest field exceeds the maximum length");
+          throw new RuntimeException("enumSeqTest field exceeds the maximum length: %d > %d".formatted(data.getEnumSeqTest().size(), 25));
 
       if(data.getStringSeqTest().size() <= 25)
       cdr.write_type_e(data.getStringSeqTest());else
-          throw new RuntimeException("stringSeqTest field exceeds the maximum length");
+          throw new RuntimeException("stringSeqTest field exceeds the maximum length: %d > %d".formatted(data.getStringSeqTest().size(), 25));
 
    }
 

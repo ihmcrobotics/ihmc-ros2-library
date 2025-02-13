@@ -94,11 +94,11 @@ public class PointCloudPubSubType implements us.ihmc.pubsub.TopicDataType<sensor
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getPoints().size() <= 100)
       cdr.write_type_e(data.getPoints());else
-          throw new RuntimeException("points field exceeds the maximum length");
+          throw new RuntimeException("points field exceeds the maximum length: %d > %d".formatted(data.getPoints().size(), 100));
 
       if(data.getChannels().size() <= 100)
       cdr.write_type_e(data.getChannels());else
-          throw new RuntimeException("channels field exceeds the maximum length");
+          throw new RuntimeException("channels field exceeds the maximum length: %d > %d".formatted(data.getChannels().size(), 100));
 
    }
 

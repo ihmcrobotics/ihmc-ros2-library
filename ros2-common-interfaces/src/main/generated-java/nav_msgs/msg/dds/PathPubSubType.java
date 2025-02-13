@@ -86,7 +86,7 @@ public class PathPubSubType implements us.ihmc.pubsub.TopicDataType<nav_msgs.msg
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getPoses().size() <= 100)
       cdr.write_type_e(data.getPoses());else
-          throw new RuntimeException("poses field exceeds the maximum length");
+          throw new RuntimeException("poses field exceeds the maximum length: %d > %d".formatted(data.getPoses().size(), 100));
 
    }
 

@@ -105,19 +105,19 @@ public class JointStatePubSubType implements us.ihmc.pubsub.TopicDataType<sensor
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getName().size() <= 100)
       cdr.write_type_e(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().size(), 100));
 
       if(data.getPosition().size() <= 100)
       cdr.write_type_e(data.getPosition());else
-          throw new RuntimeException("position field exceeds the maximum length");
+          throw new RuntimeException("position field exceeds the maximum length: %d > %d".formatted(data.getPosition().size(), 100));
 
       if(data.getVelocity().size() <= 100)
       cdr.write_type_e(data.getVelocity());else
-          throw new RuntimeException("velocity field exceeds the maximum length");
+          throw new RuntimeException("velocity field exceeds the maximum length: %d > %d".formatted(data.getVelocity().size(), 100));
 
       if(data.getEffort().size() <= 100)
       cdr.write_type_e(data.getEffort());else
-          throw new RuntimeException("effort field exceeds the maximum length");
+          throw new RuntimeException("effort field exceeds the maximum length: %d > %d".formatted(data.getEffort().size(), 100));
 
    }
 

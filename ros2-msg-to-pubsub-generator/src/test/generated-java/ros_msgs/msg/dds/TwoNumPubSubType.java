@@ -134,7 +134,7 @@ public class TwoNumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.m
       ros_msgs.msg.dds.NumPubSubType.write(data.getNum1(), cdr);
       if(data.getNum2().size() <= 100)
       cdr.write_type_e(data.getNum2());else
-          throw new RuntimeException("num2 field exceeds the maximum length");
+          throw new RuntimeException("num2 field exceeds the maximum length: %d > %d".formatted(data.getNum2().size(), 100));
 
       for(int i0 = 0; i0 < data.getNum3().length; ++i0)
       {
@@ -143,27 +143,27 @@ public class TwoNumPubSubType implements us.ihmc.pubsub.TopicDataType<ros_msgs.m
 
       if(data.getNum4().size() <= 3)
       cdr.write_type_e(data.getNum4());else
-          throw new RuntimeException("num4 field exceeds the maximum length");
+          throw new RuntimeException("num4 field exceeds the maximum length: %d > %d".formatted(data.getNum4().size(), 3));
 
       if(data.getStr1().length() <= 255)
       cdr.write_type_d(data.getStr1());else
-          throw new RuntimeException("str1 field exceeds the maximum length");
+          throw new RuntimeException("str1 field exceeds the maximum length: %d > %d".formatted(data.getStr1().length(), 255));
 
       if(data.getStr2().length() <= 10)
       cdr.write_type_d(data.getStr2());else
-          throw new RuntimeException("str2 field exceeds the maximum length");
+          throw new RuntimeException("str2 field exceeds the maximum length: %d > %d".formatted(data.getStr2().length(), 10));
 
       if(data.getStr3().size() <= 5)
       cdr.write_type_e(data.getStr3());else
-          throw new RuntimeException("str3 field exceeds the maximum length");
+          throw new RuntimeException("str3 field exceeds the maximum length: %d > %d".formatted(data.getStr3().size(), 5));
 
       if(data.getStr4().size() <= 100)
       cdr.write_type_e(data.getStr4());else
-          throw new RuntimeException("str4 field exceeds the maximum length");
+          throw new RuntimeException("str4 field exceeds the maximum length: %d > %d".formatted(data.getStr4().size(), 100));
 
       if(data.getStr5().size() <= 5)
       cdr.write_type_e(data.getStr5());else
-          throw new RuntimeException("str5 field exceeds the maximum length");
+          throw new RuntimeException("str5 field exceeds the maximum length: %d > %d".formatted(data.getStr5().size(), 5));
 
    }
 

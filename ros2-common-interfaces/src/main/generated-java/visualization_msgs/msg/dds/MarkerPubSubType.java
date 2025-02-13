@@ -144,7 +144,7 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getNs().length() <= 255)
       cdr.write_type_d(data.getNs());else
-          throw new RuntimeException("ns field exceeds the maximum length");
+          throw new RuntimeException("ns field exceeds the maximum length: %d > %d".formatted(data.getNs().length(), 255));
 
       cdr.write_type_2(data.getId());
 
@@ -160,19 +160,19 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
 
       if(data.getPoints().size() <= 100)
       cdr.write_type_e(data.getPoints());else
-          throw new RuntimeException("points field exceeds the maximum length");
+          throw new RuntimeException("points field exceeds the maximum length: %d > %d".formatted(data.getPoints().size(), 100));
 
       if(data.getColors().size() <= 100)
       cdr.write_type_e(data.getColors());else
-          throw new RuntimeException("colors field exceeds the maximum length");
+          throw new RuntimeException("colors field exceeds the maximum length: %d > %d".formatted(data.getColors().size(), 100));
 
       if(data.getText().length() <= 255)
       cdr.write_type_d(data.getText());else
-          throw new RuntimeException("text field exceeds the maximum length");
+          throw new RuntimeException("text field exceeds the maximum length: %d > %d".formatted(data.getText().length(), 255));
 
       if(data.getMeshResource().length() <= 255)
       cdr.write_type_d(data.getMeshResource());else
-          throw new RuntimeException("mesh_resource field exceeds the maximum length");
+          throw new RuntimeException("mesh_resource field exceeds the maximum length: %d > %d".formatted(data.getMeshResource().length(), 255));
 
       cdr.write_type_7(data.getMeshUseEmbeddedMaterials());
 

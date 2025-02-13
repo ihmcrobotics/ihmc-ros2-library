@@ -79,7 +79,7 @@ public class PolygonPubSubType implements us.ihmc.pubsub.TopicDataType<geometry_
    {
       if(data.getPoints().size() <= 100)
       cdr.write_type_e(data.getPoints());else
-          throw new RuntimeException("points field exceeds the maximum length");
+          throw new RuntimeException("points field exceeds the maximum length: %d > %d".formatted(data.getPoints().size(), 100));
 
    }
 

@@ -83,7 +83,7 @@ public class TF2ErrorPubSubType implements us.ihmc.pubsub.TopicDataType<tf2_msgs
 
       if(data.getErrorString().length() <= 255)
       cdr.write_type_d(data.getErrorString());else
-          throw new RuntimeException("error_string field exceeds the maximum length");
+          throw new RuntimeException("error_string field exceeds the maximum length: %d > %d".formatted(data.getErrorString().length(), 255));
 
    }
 

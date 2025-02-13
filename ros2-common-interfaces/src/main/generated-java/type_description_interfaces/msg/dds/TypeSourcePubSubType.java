@@ -82,15 +82,15 @@ public class TypeSourcePubSubType implements us.ihmc.pubsub.TopicDataType<type_d
    {
       if(data.getTypeName().length() <= 255)
       cdr.write_type_d(data.getTypeName());else
-          throw new RuntimeException("type_name field exceeds the maximum length");
+          throw new RuntimeException("type_name field exceeds the maximum length: %d > %d".formatted(data.getTypeName().length(), 255));
 
       if(data.getEncoding().length() <= 255)
       cdr.write_type_d(data.getEncoding());else
-          throw new RuntimeException("encoding field exceeds the maximum length");
+          throw new RuntimeException("encoding field exceeds the maximum length: %d > %d".formatted(data.getEncoding().length(), 255));
 
       if(data.getRawFileContents().length() <= 255)
       cdr.write_type_d(data.getRawFileContents());else
-          throw new RuntimeException("raw_file_contents field exceeds the maximum length");
+          throw new RuntimeException("raw_file_contents field exceeds the maximum length: %d > %d".formatted(data.getRawFileContents().length(), 255));
 
    }
 

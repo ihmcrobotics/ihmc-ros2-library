@@ -79,11 +79,11 @@ public class KeyValuePubSubType implements us.ihmc.pubsub.TopicDataType<type_des
    {
       if(data.getKey().length() <= 255)
       cdr.write_type_d(data.getKey());else
-          throw new RuntimeException("key field exceeds the maximum length");
+          throw new RuntimeException("key field exceeds the maximum length: %d > %d".formatted(data.getKey().length(), 255));
 
       if(data.getValue().length() <= 255)
       cdr.write_type_d(data.getValue());else
-          throw new RuntimeException("value field exceeds the maximum length");
+          throw new RuntimeException("value field exceeds the maximum length: %d > %d".formatted(data.getValue().length(), 255));
 
    }
 

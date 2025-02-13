@@ -15,7 +15,7 @@ public class FooAppearanceDefinitionMessagePubSubType implements us.ihmc.pubsub.
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "139e6db624b1ceaa57b92618c26ffdce0d461930165565a5b28dd617cb2c0d2e";
+   		return "8bed971d61b4e975d038615d58b2c4ae9bc2a3f6b00c8100a7e0254ee2b80b3f";
    }
    
    @Override

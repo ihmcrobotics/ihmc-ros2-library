@@ -88,7 +88,7 @@ public class GoalStatusPubSubType implements us.ihmc.pubsub.TopicDataType<action
 
       if(data.getText().length() <= 255)
       cdr.write_type_d(data.getText());else
-          throw new RuntimeException("text field exceeds the maximum length");
+          throw new RuntimeException("text field exceeds the maximum length: %d > %d".formatted(data.getText().length(), 255));
 
    }
 

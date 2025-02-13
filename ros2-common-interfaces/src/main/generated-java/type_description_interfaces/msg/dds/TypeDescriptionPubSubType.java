@@ -86,7 +86,7 @@ public class TypeDescriptionPubSubType implements us.ihmc.pubsub.TopicDataType<t
       type_description_interfaces.msg.dds.IndividualTypeDescriptionPubSubType.write(data.getTypeDescription(), cdr);
       if(data.getReferencedTypeDescriptions().size() <= 100)
       cdr.write_type_e(data.getReferencedTypeDescriptions());else
-          throw new RuntimeException("referenced_type_descriptions field exceeds the maximum length");
+          throw new RuntimeException("referenced_type_descriptions field exceeds the maximum length: %d > %d".formatted(data.getReferencedTypeDescriptions().size(), 100));
 
    }
 

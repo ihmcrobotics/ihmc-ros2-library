@@ -40,7 +40,7 @@ $else$cdr.write_$object.typecode.stType$($element$get$object.javaName$($arg$));
 $endif$
 $if(object.typecode.maxsize)$
 else
-    throw new RuntimeException("$object.name$ field exceeds the maximum length");
+    throw new RuntimeException("$object.name$ field exceeds the maximum length: %d > %d".formatted($element$get$object.javaName$($arg$).$sizeFunction.(object.typecode.stType)$, $object.typecode.maxsize$));
 $endif$
 >>
 

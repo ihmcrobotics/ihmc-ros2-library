@@ -81,7 +81,7 @@ public class GoalIDPubSubType implements us.ihmc.pubsub.TopicDataType<actionlib_
       builtin_interfaces.msg.dds.TimePubSubType.write(data.getStamp(), cdr);
       if(data.getId().length() <= 255)
       cdr.write_type_d(data.getId());else
-          throw new RuntimeException("id field exceeds the maximum length");
+          throw new RuntimeException("id field exceeds the maximum length: %d > %d".formatted(data.getId().length(), 255));
 
    }
 

@@ -15,7 +15,7 @@ public class VectorPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.id
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "8351b92621479f30b0e44fa9c2eb0aeeb69d4e498ede17257ccf877bc41a7508";
+   		return "97ec2f548eb33fbf6852c738bba2dc387be47a6d33c595bd02e5a94a00a559a5";
    }
    
    @Override
@@ -100,7 +100,7 @@ public class VectorPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.id
    {
       if(data.getFrame().length() <= 128)
       cdr.write_type_d(data.getFrame());else
-          throw new RuntimeException("frame field exceeds the maximum length");
+          throw new RuntimeException("frame field exceeds the maximum length: %d > %d".formatted(data.getFrame().length(), 128));
 
       cdr.write_type_6(data.getX());
 
@@ -110,7 +110,7 @@ public class VectorPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihmc.id
 
       if(data.getBla().size() <= 100)
       cdr.write_type_e(data.getBla());else
-          throw new RuntimeException("bla field exceeds the maximum length");
+          throw new RuntimeException("bla field exceeds the maximum length: %d > %d".formatted(data.getBla().size(), 100));
 
       for(int i0 = 0; i0 < data.getWaa().length; ++i0)
       {

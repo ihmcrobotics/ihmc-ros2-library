@@ -89,11 +89,11 @@ public class MeshPubSubType implements us.ihmc.pubsub.TopicDataType<shape_msgs.m
    {
       if(data.getTriangles().size() <= 100)
       cdr.write_type_e(data.getTriangles());else
-          throw new RuntimeException("triangles field exceeds the maximum length");
+          throw new RuntimeException("triangles field exceeds the maximum length: %d > %d".formatted(data.getTriangles().size(), 100));
 
       if(data.getVertices().size() <= 100)
       cdr.write_type_e(data.getVertices());else
-          throw new RuntimeException("vertices field exceeds the maximum length");
+          throw new RuntimeException("vertices field exceeds the maximum length: %d > %d".formatted(data.getVertices().size(), 100));
 
    }
 

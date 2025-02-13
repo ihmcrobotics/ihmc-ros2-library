@@ -90,11 +90,11 @@ public class JoyPubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs.m
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getAxes().size() <= 100)
       cdr.write_type_e(data.getAxes());else
-          throw new RuntimeException("axes field exceeds the maximum length");
+          throw new RuntimeException("axes field exceeds the maximum length: %d > %d".formatted(data.getAxes().size(), 100));
 
       if(data.getButtons().size() <= 100)
       cdr.write_type_e(data.getButtons());else
-          throw new RuntimeException("buttons field exceeds the maximum length");
+          throw new RuntimeException("buttons field exceeds the maximum length: %d > %d".formatted(data.getButtons().size(), 100));
 
    }
 

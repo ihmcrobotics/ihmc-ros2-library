@@ -15,7 +15,7 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "ab4e0e2b883369505f0e7246223a943d909e949b50048f6ea03ad7e659b9f2a2";
+   		return "4fe8741c5b725a403e3bde341e593f621a1ec2578ef007d1edd145c0297b8bf1";
    }
    
    @Override
@@ -86,11 +86,11 @@ public class ChatMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ih
 
       if(data.getSender().length() <= 255)
       cdr.write_type_d(data.getSender());else
-          throw new RuntimeException("sender field exceeds the maximum length");
+          throw new RuntimeException("sender field exceeds the maximum length: %d > %d".formatted(data.getSender().length(), 255));
 
       if(data.getMsg().length() <= 255)
       cdr.write_type_d(data.getMsg());else
-          throw new RuntimeException("msg field exceeds the maximum length");
+          throw new RuntimeException("msg field exceeds the maximum length: %d > %d".formatted(data.getMsg().length(), 255));
 
    }
 

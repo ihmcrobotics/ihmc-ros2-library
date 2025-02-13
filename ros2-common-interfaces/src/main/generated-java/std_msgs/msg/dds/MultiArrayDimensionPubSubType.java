@@ -86,7 +86,7 @@ public class MultiArrayDimensionPubSubType implements us.ihmc.pubsub.TopicDataTy
    {
       if(data.getLabel().length() <= 255)
       cdr.write_type_d(data.getLabel());else
-          throw new RuntimeException("label field exceeds the maximum length");
+          throw new RuntimeException("label field exceeds the maximum length: %d > %d".formatted(data.getLabel().length(), 255));
 
       cdr.write_type_4(data.getSize());
 

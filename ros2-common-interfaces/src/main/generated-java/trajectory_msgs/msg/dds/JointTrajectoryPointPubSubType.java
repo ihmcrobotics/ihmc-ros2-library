@@ -101,19 +101,19 @@ public class JointTrajectoryPointPubSubType implements us.ihmc.pubsub.TopicDataT
    {
       if(data.getPositions().size() <= 100)
       cdr.write_type_e(data.getPositions());else
-          throw new RuntimeException("positions field exceeds the maximum length");
+          throw new RuntimeException("positions field exceeds the maximum length: %d > %d".formatted(data.getPositions().size(), 100));
 
       if(data.getVelocities().size() <= 100)
       cdr.write_type_e(data.getVelocities());else
-          throw new RuntimeException("velocities field exceeds the maximum length");
+          throw new RuntimeException("velocities field exceeds the maximum length: %d > %d".formatted(data.getVelocities().size(), 100));
 
       if(data.getAccelerations().size() <= 100)
       cdr.write_type_e(data.getAccelerations());else
-          throw new RuntimeException("accelerations field exceeds the maximum length");
+          throw new RuntimeException("accelerations field exceeds the maximum length: %d > %d".formatted(data.getAccelerations().size(), 100));
 
       if(data.getEffort().size() <= 100)
       cdr.write_type_e(data.getEffort());else
-          throw new RuntimeException("effort field exceeds the maximum length");
+          throw new RuntimeException("effort field exceeds the maximum length: %d > %d".formatted(data.getEffort().size(), 100));
 
       builtin_interfaces.msg.dds.DurationPubSubType.write(data.getTimeFromStart(), cdr);
    }

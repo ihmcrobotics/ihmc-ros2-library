@@ -15,7 +15,7 @@ public class FooHandshakePubSubType implements us.ihmc.pubsub.TopicDataType<us.i
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "139e6db624b1ceaa57b92618c26ffdce0d461930165565a5b28dd617cb2c0d2e";
+   		return "8bed971d61b4e975d038615d58b2c4ae9bc2a3f6b00c8100a7e0254ee2b80b3f";
    }
    
    @Override
@@ -132,27 +132,27 @@ public class FooHandshakePubSubType implements us.ihmc.pubsub.TopicDataType<us.i
 
       if(data.getRegistries().size() <= 1024)
       cdr.write_type_e(data.getRegistries());else
-          throw new RuntimeException("registries field exceeds the maximum length");
+          throw new RuntimeException("registries field exceeds the maximum length: %d > %d".formatted(data.getRegistries().size(), 1024));
 
       if(data.getVariables().size() <= 32767)
       cdr.write_type_e(data.getVariables());else
-          throw new RuntimeException("variables field exceeds the maximum length");
+          throw new RuntimeException("variables field exceeds the maximum length: %d > %d".formatted(data.getVariables().size(), 32767));
 
       if(data.getJoints().size() <= 128)
       cdr.write_type_e(data.getJoints());else
-          throw new RuntimeException("joints field exceeds the maximum length");
+          throw new RuntimeException("joints field exceeds the maximum length: %d > %d".formatted(data.getJoints().size(), 128));
 
       if(data.getGraphicObjects().size() <= 2048)
       cdr.write_type_e(data.getGraphicObjects());else
-          throw new RuntimeException("graphicObjects field exceeds the maximum length");
+          throw new RuntimeException("graphicObjects field exceeds the maximum length: %d > %d".formatted(data.getGraphicObjects().size(), 2048));
 
       if(data.getArtifacts().size() <= 2048)
       cdr.write_type_e(data.getArtifacts());else
-          throw new RuntimeException("artifacts field exceeds the maximum length");
+          throw new RuntimeException("artifacts field exceeds the maximum length: %d > %d".formatted(data.getArtifacts().size(), 2048));
 
       if(data.getEnumTypes().size() <= 1024)
       cdr.write_type_e(data.getEnumTypes());else
-          throw new RuntimeException("enumTypes field exceeds the maximum length");
+          throw new RuntimeException("enumTypes field exceeds the maximum length: %d > %d".formatted(data.getEnumTypes().size(), 1024));
 
       us.ihmc.idl.generated.test.FooSummaryPubSubType.write(data.getSummary(), cdr);
    }

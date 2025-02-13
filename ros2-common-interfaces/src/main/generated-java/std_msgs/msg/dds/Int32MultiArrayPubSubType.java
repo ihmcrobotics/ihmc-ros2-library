@@ -84,7 +84,7 @@ public class Int32MultiArrayPubSubType implements us.ihmc.pubsub.TopicDataType<s
       std_msgs.msg.dds.MultiArrayLayoutPubSubType.write(data.getLayout(), cdr);
       if(data.getData().size() <= 100)
       cdr.write_type_e(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length");
+          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().size(), 100));
 
    }
 

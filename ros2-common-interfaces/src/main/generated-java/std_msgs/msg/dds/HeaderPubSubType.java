@@ -81,7 +81,7 @@ public class HeaderPubSubType implements us.ihmc.pubsub.TopicDataType<std_msgs.m
       builtin_interfaces.msg.dds.TimePubSubType.write(data.getStamp(), cdr);
       if(data.getFrameId().length() <= 255)
       cdr.write_type_d(data.getFrameId());else
-          throw new RuntimeException("frame_id field exceeds the maximum length");
+          throw new RuntimeException("frame_id field exceeds the maximum length: %d > %d".formatted(data.getFrameId().length(), 255));
 
    }
 

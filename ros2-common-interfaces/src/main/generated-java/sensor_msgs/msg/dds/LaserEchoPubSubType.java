@@ -77,7 +77,7 @@ public class LaserEchoPubSubType implements us.ihmc.pubsub.TopicDataType<sensor_
    {
       if(data.getEchoes().size() <= 100)
       cdr.write_type_e(data.getEchoes());else
-          throw new RuntimeException("echoes field exceeds the maximum length");
+          throw new RuntimeException("echoes field exceeds the maximum length: %d > %d".formatted(data.getEchoes().size(), 100));
 
    }
 

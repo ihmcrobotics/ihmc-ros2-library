@@ -111,19 +111,19 @@ public class MultiDOFJointStatePubSubType implements us.ihmc.pubsub.TopicDataTyp
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getJointNames().size() <= 100)
       cdr.write_type_e(data.getJointNames());else
-          throw new RuntimeException("joint_names field exceeds the maximum length");
+          throw new RuntimeException("joint_names field exceeds the maximum length: %d > %d".formatted(data.getJointNames().size(), 100));
 
       if(data.getTransforms().size() <= 100)
       cdr.write_type_e(data.getTransforms());else
-          throw new RuntimeException("transforms field exceeds the maximum length");
+          throw new RuntimeException("transforms field exceeds the maximum length: %d > %d".formatted(data.getTransforms().size(), 100));
 
       if(data.getTwist().size() <= 100)
       cdr.write_type_e(data.getTwist());else
-          throw new RuntimeException("twist field exceeds the maximum length");
+          throw new RuntimeException("twist field exceeds the maximum length: %d > %d".formatted(data.getTwist().size(), 100));
 
       if(data.getWrench().size() <= 100)
       cdr.write_type_e(data.getWrench());else
-          throw new RuntimeException("wrench field exceeds the maximum length");
+          throw new RuntimeException("wrench field exceeds the maximum length: %d > %d".formatted(data.getWrench().size(), 100));
 
    }
 
