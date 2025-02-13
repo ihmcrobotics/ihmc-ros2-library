@@ -381,7 +381,7 @@ public class ParticipantProfile
       return profileXML;
    }
 
-   private static boolean FASTRTPS_SHM_AVAILABLE_ON_WINDOWS;
+   private static final boolean FASTRTPS_SHM_AVAILABLE_ON_WINDOWS;
 
    static
    {
@@ -391,35 +391,14 @@ public class ParticipantProfile
 
         https://github.com/eProsima/Fast-DDS/blob/e0c453b0ca70ef54fe9dfa0e6031c48cc6446d2f/tools/fds/CliDiscoveryManager.cpp#L113
        */
-      File testFile = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess\\test");
+      File shmDir = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess");
 
-      try
+      // Ensure the directory structure exists
+      if (!shmDir.exists())
       {
-         // Ensure the directory structure exists
-         if (testFile.getParentFile() != null)
-         {
-            boolean ignored = testFile.getParentFile().mkdirs();
-         }
-
-         // If the test file already exists, delete it
-         if (testFile.exists())
-         {
-            boolean ignored = testFile.delete();
-         }
-
-         // Create the test file
-         boolean ignored = testFile.createNewFile();
-
-         FASTRTPS_SHM_AVAILABLE_ON_WINDOWS = true;
+         boolean ignored = shmDir.mkdirs();
       }
-      catch (IOException ignored)
-      {
-         FASTRTPS_SHM_AVAILABLE_ON_WINDOWS = false;
-      }
-      finally
-      {
-         // Delete the test file when finished
-         boolean ignored = testFile.delete();
-      }
+
+      FASTRTPS_SHM_AVAILABLE_ON_WINDOWS = shmDir.exists() && shmDir.canWrite();
    }
 }
