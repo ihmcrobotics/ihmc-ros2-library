@@ -132,6 +132,8 @@ public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>, AutoClos
    public ByteBuffer createData()
    {
       dataPointer = new BytePointer(maxSize);
+      // Initialize the entire buffer to zeros
+      Pointer.memset(dataPointer, 0, (long) dataPointer.sizeof() * maxSize);
       return dataPointer.asByteBuffer();
    }
 

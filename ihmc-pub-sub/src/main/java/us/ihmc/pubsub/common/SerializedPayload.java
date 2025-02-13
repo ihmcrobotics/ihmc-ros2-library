@@ -56,6 +56,8 @@ public class SerializedPayload implements AutoCloseable
    {
       this.max_size = maxSize;
       this.dataPointer = new BytePointer(maxSize);
+      // Initialize the entire buffer to zeros
+      Pointer.memset(dataPointer, 0, (long) dataPointer.sizeof() * maxSize);
       this.data = dataPointer.asByteBuffer();
       setEncapsulation(CDR_LE);
    }
