@@ -22,10 +22,11 @@ mainDependencies {
    api("us.ihmc:log-tools:0.6.4")
 
    // JavaCPP used for backing native memory pointers
-   api("us.ihmc:javacpp:1.5.11-ihmc-2")
-   api("us.ihmc:javacpp:1.5.11-ihmc-2:linux-arm64")
-   api("us.ihmc:javacpp:1.5.11-ihmc-2:linux-x86_64")
-   api("us.ihmc:javacpp:1.5.11-ihmc-2:windows-x86_64")
+   val javacppVersion = "1.5.11-ihmc-2"
+   api("us.ihmc:javacpp:$javacppVersion")
+   api("us.ihmc:javacpp:$javacppVersion:linux-arm64")
+   api("us.ihmc:javacpp:$javacppVersion:linux-x86_64")
+   api("us.ihmc:javacpp:$javacppVersion:windows-x86_64")
    // TODO: macOS
 
    api(ihmc.sourceSetProject("xjc"))
