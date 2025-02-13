@@ -95,11 +95,11 @@ public class JointTrajectoryPubSubType implements us.ihmc.pubsub.TopicDataType<t
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getJointNames().size() <= 100)
       cdr.write_type_e(data.getJointNames());else
-          throw new RuntimeException("joint_names field exceeds the maximum length");
+          throw new RuntimeException("joint_names field exceeds the maximum length: %d > %d".formatted(data.getJointNames().size(), 100));
 
       if(data.getPoints().size() <= 100)
       cdr.write_type_e(data.getPoints());else
-          throw new RuntimeException("points field exceeds the maximum length");
+          throw new RuntimeException("points field exceeds the maximum length: %d > %d".formatted(data.getPoints().size(), 100));
 
    }
 

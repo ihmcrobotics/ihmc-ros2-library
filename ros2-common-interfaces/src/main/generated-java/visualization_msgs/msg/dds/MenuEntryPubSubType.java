@@ -98,11 +98,11 @@ public class MenuEntryPubSubType implements us.ihmc.pubsub.TopicDataType<visuali
 
       if(data.getTitle().length() <= 255)
       cdr.write_type_d(data.getTitle());else
-          throw new RuntimeException("title field exceeds the maximum length");
+          throw new RuntimeException("title field exceeds the maximum length: %d > %d".formatted(data.getTitle().length(), 255));
 
       if(data.getCommand().length() <= 255)
       cdr.write_type_d(data.getCommand());else
-          throw new RuntimeException("command field exceeds the maximum length");
+          throw new RuntimeException("command field exceeds the maximum length: %d > %d".formatted(data.getCommand().length(), 255));
 
       cdr.write_type_9(data.getCommandType());
 

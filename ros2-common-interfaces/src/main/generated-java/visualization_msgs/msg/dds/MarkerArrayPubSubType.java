@@ -79,7 +79,7 @@ public class MarkerArrayPubSubType implements us.ihmc.pubsub.TopicDataType<visua
    {
       if(data.getMarkers().size() <= 100)
       cdr.write_type_e(data.getMarkers());else
-          throw new RuntimeException("markers field exceeds the maximum length");
+          throw new RuntimeException("markers field exceeds the maximum length: %d > %d".formatted(data.getMarkers().size(), 100));
 
    }
 

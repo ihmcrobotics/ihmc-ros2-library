@@ -86,7 +86,7 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
 
       if(data.getDimensions().size() <= 3)
       cdr.write_type_e(data.getDimensions());else
-          throw new RuntimeException("dimensions field exceeds the maximum length");
+          throw new RuntimeException("dimensions field exceeds the maximum length: %d > %d".formatted(data.getDimensions().size(), 3));
 
    }
 

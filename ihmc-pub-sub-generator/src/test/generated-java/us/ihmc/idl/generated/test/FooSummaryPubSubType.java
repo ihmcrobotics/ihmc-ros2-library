@@ -15,7 +15,7 @@ public class FooSummaryPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "139e6db624b1ceaa57b92618c26ffdce0d461930165565a5b28dd617cb2c0d2e";
+   		return "8bed971d61b4e975d038615d58b2c4ae9bc2a3f6b00c8100a7e0254ee2b80b3f";
    }
    
    @Override
@@ -92,11 +92,11 @@ public class FooSummaryPubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
 
       if(data.getSummaryTriggerVariable().length() <= 1024)
       cdr.write_type_d(data.getSummaryTriggerVariable());else
-          throw new RuntimeException("summaryTriggerVariable field exceeds the maximum length");
+          throw new RuntimeException("summaryTriggerVariable field exceeds the maximum length: %d > %d".formatted(data.getSummaryTriggerVariable().length(), 1024));
 
       if(data.getSummarizedVariables().size() <= 128)
       cdr.write_type_e(data.getSummarizedVariables());else
-          throw new RuntimeException("summarizedVariables field exceeds the maximum length");
+          throw new RuntimeException("summarizedVariables field exceeds the maximum length: %d > %d".formatted(data.getSummarizedVariables().size(), 128));
 
    }
 

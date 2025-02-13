@@ -113,17 +113,17 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
    {
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       cdr.write_type_9(data.getType());
 
       if(data.getDescription().length() <= 255)
       cdr.write_type_d(data.getDescription());else
-          throw new RuntimeException("description field exceeds the maximum length");
+          throw new RuntimeException("description field exceeds the maximum length: %d > %d".formatted(data.getDescription().length(), 255));
 
       if(data.getAdditionalConstraints().length() <= 255)
       cdr.write_type_d(data.getAdditionalConstraints());else
-          throw new RuntimeException("additional_constraints field exceeds the maximum length");
+          throw new RuntimeException("additional_constraints field exceeds the maximum length: %d > %d".formatted(data.getAdditionalConstraints().length(), 255));
 
       cdr.write_type_7(data.getReadOnly());
 
@@ -131,11 +131,11 @@ public class ParameterDescriptorPubSubType implements us.ihmc.pubsub.TopicDataTy
 
       if(data.getFloatingPointRange().size() <= 1)
       cdr.write_type_e(data.getFloatingPointRange());else
-          throw new RuntimeException("floating_point_range field exceeds the maximum length");
+          throw new RuntimeException("floating_point_range field exceeds the maximum length: %d > %d".formatted(data.getFloatingPointRange().size(), 1));
 
       if(data.getIntegerRange().size() <= 1)
       cdr.write_type_e(data.getIntegerRange());else
-          throw new RuntimeException("integer_range field exceeds the maximum length");
+          throw new RuntimeException("integer_range field exceeds the maximum length: %d > %d".formatted(data.getIntegerRange().size(), 1));
 
    }
 

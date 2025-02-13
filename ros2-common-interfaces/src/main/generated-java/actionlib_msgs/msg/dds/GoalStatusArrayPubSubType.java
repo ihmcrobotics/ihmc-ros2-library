@@ -86,7 +86,7 @@ public class GoalStatusArrayPubSubType implements us.ihmc.pubsub.TopicDataType<a
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getStatusList().size() <= 100)
       cdr.write_type_e(data.getStatusList());else
-          throw new RuntimeException("status_list field exceeds the maximum length");
+          throw new RuntimeException("status_list field exceeds the maximum length: %d > %d".formatted(data.getStatusList().size(), 100));
 
    }
 

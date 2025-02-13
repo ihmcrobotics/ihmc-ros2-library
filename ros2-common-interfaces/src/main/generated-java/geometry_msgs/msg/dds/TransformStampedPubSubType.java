@@ -85,7 +85,7 @@ public class TransformStampedPubSubType implements us.ihmc.pubsub.TopicDataType<
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getChildFrameId().length() <= 255)
       cdr.write_type_d(data.getChildFrameId());else
-          throw new RuntimeException("child_frame_id field exceeds the maximum length");
+          throw new RuntimeException("child_frame_id field exceeds the maximum length: %d > %d".formatted(data.getChildFrameId().length(), 255));
 
       geometry_msgs.msg.dds.TransformPubSubType.write(data.getTransform(), cdr);
    }

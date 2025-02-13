@@ -98,21 +98,21 @@ public class MetricsMessagePubSubType implements us.ihmc.pubsub.TopicDataType<st
    {
       if(data.getMeasurementSourceName().length() <= 255)
       cdr.write_type_d(data.getMeasurementSourceName());else
-          throw new RuntimeException("measurement_source_name field exceeds the maximum length");
+          throw new RuntimeException("measurement_source_name field exceeds the maximum length: %d > %d".formatted(data.getMeasurementSourceName().length(), 255));
 
       if(data.getMetricsSource().length() <= 255)
       cdr.write_type_d(data.getMetricsSource());else
-          throw new RuntimeException("metrics_source field exceeds the maximum length");
+          throw new RuntimeException("metrics_source field exceeds the maximum length: %d > %d".formatted(data.getMetricsSource().length(), 255));
 
       if(data.getUnit().length() <= 255)
       cdr.write_type_d(data.getUnit());else
-          throw new RuntimeException("unit field exceeds the maximum length");
+          throw new RuntimeException("unit field exceeds the maximum length: %d > %d".formatted(data.getUnit().length(), 255));
 
       builtin_interfaces.msg.dds.TimePubSubType.write(data.getWindowStart(), cdr);
       builtin_interfaces.msg.dds.TimePubSubType.write(data.getWindowStop(), cdr);
       if(data.getStatistics().size() <= 100)
       cdr.write_type_e(data.getStatistics());else
-          throw new RuntimeException("statistics field exceeds the maximum length");
+          throw new RuntimeException("statistics field exceeds the maximum length: %d > %d".formatted(data.getStatistics().size(), 100));
 
    }
 

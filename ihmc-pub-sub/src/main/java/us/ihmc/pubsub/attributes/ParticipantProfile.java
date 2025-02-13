@@ -310,7 +310,7 @@ public class ParticipantProfile
 
       // Intra-process delivery requires at least 1 transport.
       // Use shared memory to not bind to any network interface or UDPv4 bound to the loopback address if that is not available
-      if (System.getProperty("os.name").toLowerCase().contains("win") && !fastrtpsSHMAvailableOnWindows())
+      if (System.getProperty("os.name").toLowerCase().contains("win") && !FASTRTPS_SHM_AVAILABLE_ON_WINDOWS)
       {
          LogTools.error("Shared Memory Transport (SHM) is not available (Could not write to C:\\ProgramData\\eprosima\\fastrtps_interprocess)."
                         + " Falling back to UDPv4 transport on the loopback address.");
@@ -381,26 +381,24 @@ public class ParticipantProfile
       return profileXML;
    }
 
-   private static boolean fastrtpsSHMAvailableOnWindows()
+   private static final boolean FASTRTPS_SHM_AVAILABLE_ON_WINDOWS;
+
+   static
    {
-      File file = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess\\test");
+      /*
+        Check if SHM transport is available for use on Windows.
+        Effectively checks that the directory Fast-DDS uses for shared memory is available for writing.
 
-      try
-      {
-         if (file.getParentFile() != null)
-         {
-            file.getParentFile().mkdirs();
-         }
+        https://github.com/eProsima/Fast-DDS/blob/e0c453b0ca70ef54fe9dfa0e6031c48cc6446d2f/tools/fds/CliDiscoveryManager.cpp#L113
+       */
+      File shmDir = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess");
 
-         return file.createNewFile();
-      }
-      catch (IOException e)
+      // Ensure the directory structure exists
+      if (!shmDir.exists())
       {
-         return false;
+         boolean ignored = shmDir.mkdirs();
       }
-      finally
-      {
-         file.delete();
-      }
+
+      FASTRTPS_SHM_AVAILABLE_ON_WINDOWS = shmDir.exists() && shmDir.canWrite();
    }
 }

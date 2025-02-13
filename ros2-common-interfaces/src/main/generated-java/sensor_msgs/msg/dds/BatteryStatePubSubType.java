@@ -173,19 +173,19 @@ public class BatteryStatePubSubType implements us.ihmc.pubsub.TopicDataType<sens
 
       if(data.getCellVoltage().size() <= 100)
       cdr.write_type_e(data.getCellVoltage());else
-          throw new RuntimeException("cell_voltage field exceeds the maximum length");
+          throw new RuntimeException("cell_voltage field exceeds the maximum length: %d > %d".formatted(data.getCellVoltage().size(), 100));
 
       if(data.getCellTemperature().size() <= 100)
       cdr.write_type_e(data.getCellTemperature());else
-          throw new RuntimeException("cell_temperature field exceeds the maximum length");
+          throw new RuntimeException("cell_temperature field exceeds the maximum length: %d > %d".formatted(data.getCellTemperature().size(), 100));
 
       if(data.getLocation().length() <= 255)
       cdr.write_type_d(data.getLocation());else
-          throw new RuntimeException("location field exceeds the maximum length");
+          throw new RuntimeException("location field exceeds the maximum length: %d > %d".formatted(data.getLocation().length(), 255));
 
       if(data.getSerialNumber().length() <= 255)
       cdr.write_type_d(data.getSerialNumber());else
-          throw new RuntimeException("serial_number field exceeds the maximum length");
+          throw new RuntimeException("serial_number field exceeds the maximum length: %d > %d".formatted(data.getSerialNumber().length(), 255));
 
    }
 

@@ -74,7 +74,7 @@ public class StringPubSubType implements us.ihmc.pubsub.TopicDataType<std_msgs.m
    {
       if(data.getData().length() <= 255)
       cdr.write_type_d(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length");
+          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().length(), 255));
 
    }
 

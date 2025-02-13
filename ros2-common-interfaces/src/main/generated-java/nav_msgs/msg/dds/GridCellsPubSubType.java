@@ -100,7 +100,7 @@ public class GridCellsPubSubType implements us.ihmc.pubsub.TopicDataType<nav_msg
 
       if(data.getCells().size() <= 100)
       cdr.write_type_e(data.getCells());else
-          throw new RuntimeException("cells field exceeds the maximum length");
+          throw new RuntimeException("cells field exceeds the maximum length: %d > %d".formatted(data.getCells().size(), 100));
 
    }
 

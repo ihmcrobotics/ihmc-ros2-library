@@ -86,7 +86,7 @@ public class MultiArrayLayoutPubSubType implements us.ihmc.pubsub.TopicDataType<
    {
       if(data.getDim().size() <= 100)
       cdr.write_type_e(data.getDim());else
-          throw new RuntimeException("dim field exceeds the maximum length");
+          throw new RuntimeException("dim field exceeds the maximum length: %d > %d".formatted(data.getDim().size(), 100));
 
       cdr.write_type_4(data.getDataOffset());
 

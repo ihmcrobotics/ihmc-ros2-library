@@ -126,7 +126,7 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       if(data.getFields().size() <= 100)
       cdr.write_type_e(data.getFields());else
-          throw new RuntimeException("fields field exceeds the maximum length");
+          throw new RuntimeException("fields field exceeds the maximum length: %d > %d".formatted(data.getFields().size(), 100));
 
       cdr.write_type_7(data.getIsBigendian());
 
@@ -136,7 +136,7 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       if(data.getData().size() <= 100)
       cdr.write_type_e(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length");
+          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().size(), 100));
 
       cdr.write_type_7(data.getIsDense());
 

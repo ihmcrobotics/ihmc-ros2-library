@@ -83,7 +83,7 @@ public class StatePubSubType implements us.ihmc.pubsub.TopicDataType<lifecycle_m
 
       if(data.getLabel().length() <= 255)
       cdr.write_type_d(data.getLabel());else
-          throw new RuntimeException("label field exceeds the maximum length");
+          throw new RuntimeException("label field exceeds the maximum length: %d > %d".formatted(data.getLabel().length(), 255));
 
    }
 

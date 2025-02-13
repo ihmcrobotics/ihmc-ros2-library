@@ -79,7 +79,7 @@ public class TFMessagePubSubType implements us.ihmc.pubsub.TopicDataType<tf2_msg
    {
       if(data.getTransforms().size() <= 100)
       cdr.write_type_e(data.getTransforms());else
-          throw new RuntimeException("transforms field exceeds the maximum length");
+          throw new RuntimeException("transforms field exceeds the maximum length: %d > %d".formatted(data.getTransforms().size(), 100));
 
    }
 

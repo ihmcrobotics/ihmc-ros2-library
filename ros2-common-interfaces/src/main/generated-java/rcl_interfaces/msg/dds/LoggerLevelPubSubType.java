@@ -81,7 +81,7 @@ public class LoggerLevelPubSubType implements us.ihmc.pubsub.TopicDataType<rcl_i
    {
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       cdr.write_type_4(data.getLevel());
 

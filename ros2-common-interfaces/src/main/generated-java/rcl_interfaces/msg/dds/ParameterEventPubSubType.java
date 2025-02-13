@@ -105,19 +105,19 @@ public class ParameterEventPubSubType implements us.ihmc.pubsub.TopicDataType<rc
       builtin_interfaces.msg.dds.TimePubSubType.write(data.getStamp(), cdr);
       if(data.getNode().length() <= 255)
       cdr.write_type_d(data.getNode());else
-          throw new RuntimeException("node field exceeds the maximum length");
+          throw new RuntimeException("node field exceeds the maximum length: %d > %d".formatted(data.getNode().length(), 255));
 
       if(data.getNewParameters().size() <= 100)
       cdr.write_type_e(data.getNewParameters());else
-          throw new RuntimeException("new_parameters field exceeds the maximum length");
+          throw new RuntimeException("new_parameters field exceeds the maximum length: %d > %d".formatted(data.getNewParameters().size(), 100));
 
       if(data.getChangedParameters().size() <= 100)
       cdr.write_type_e(data.getChangedParameters());else
-          throw new RuntimeException("changed_parameters field exceeds the maximum length");
+          throw new RuntimeException("changed_parameters field exceeds the maximum length: %d > %d".formatted(data.getChangedParameters().size(), 100));
 
       if(data.getDeletedParameters().size() <= 100)
       cdr.write_type_e(data.getDeletedParameters());else
-          throw new RuntimeException("deleted_parameters field exceeds the maximum length");
+          throw new RuntimeException("deleted_parameters field exceeds the maximum length: %d > %d".formatted(data.getDeletedParameters().size(), 100));
 
    }
 

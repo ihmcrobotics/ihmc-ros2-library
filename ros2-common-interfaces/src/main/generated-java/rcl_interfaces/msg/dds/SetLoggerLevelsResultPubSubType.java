@@ -83,7 +83,7 @@ public class SetLoggerLevelsResultPubSubType implements us.ihmc.pubsub.TopicData
 
       if(data.getReason().length() <= 255)
       cdr.write_type_d(data.getReason());else
-          throw new RuntimeException("reason field exceeds the maximum length");
+          throw new RuntimeException("reason field exceeds the maximum length: %d > %d".formatted(data.getReason().length(), 255));
 
    }
 

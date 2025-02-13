@@ -111,7 +111,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
 
       if(data.getEncoding().length() <= 255)
       cdr.write_type_d(data.getEncoding());else
-          throw new RuntimeException("encoding field exceeds the maximum length");
+          throw new RuntimeException("encoding field exceeds the maximum length: %d > %d".formatted(data.getEncoding().length(), 255));
 
       cdr.write_type_9(data.getIsBigendian());
 
@@ -119,7 +119,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
 
       if(data.getData().size() <= 100)
       cdr.write_type_e(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length");
+          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().size(), 100));
 
    }
 

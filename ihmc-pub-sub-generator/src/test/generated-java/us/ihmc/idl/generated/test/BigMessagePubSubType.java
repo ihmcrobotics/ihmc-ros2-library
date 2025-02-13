@@ -15,7 +15,7 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "85f0e78a9889d4cbb647a0028d04d2b9e90883615a9cf5906bcba600e26da4a1";
+   		return "811e3736e2eb3102d4f67282270141ca8b183daa8c22f795fb7fa245b0a601b3";
    }
    
    @Override
@@ -88,7 +88,7 @@ public class BigMessagePubSubType implements us.ihmc.pubsub.TopicDataType<us.ihm
 
       if(data.getLargeSequence().size() <= 100000)
       cdr.write_type_e(data.getLargeSequence());else
-          throw new RuntimeException("largeSequence field exceeds the maximum length");
+          throw new RuntimeException("largeSequence field exceeds the maximum length: %d > %d".formatted(data.getLargeSequence().size(), 100000));
 
    }
 

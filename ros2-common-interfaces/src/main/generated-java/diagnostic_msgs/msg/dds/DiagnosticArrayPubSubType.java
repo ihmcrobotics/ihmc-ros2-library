@@ -86,7 +86,7 @@ public class DiagnosticArrayPubSubType implements us.ihmc.pubsub.TopicDataType<d
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getStatus().size() <= 100)
       cdr.write_type_e(data.getStatus());else
-          throw new RuntimeException("status field exceeds the maximum length");
+          throw new RuntimeException("status field exceeds the maximum length: %d > %d".formatted(data.getStatus().size(), 100));
 
    }
 

@@ -80,7 +80,7 @@ public class ParameterPubSubType implements us.ihmc.pubsub.TopicDataType<rcl_int
    {
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       rcl_interfaces.msg.dds.ParameterValuePubSubType.write(data.getValue(), cdr);
    }

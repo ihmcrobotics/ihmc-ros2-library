@@ -111,7 +111,7 @@ public class InteractiveMarkerControlPubSubType implements us.ihmc.pubsub.TopicD
    {
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       geometry_msgs.msg.dds.QuaternionPubSubType.write(data.getOrientation(), cdr);
       cdr.write_type_9(data.getOrientationMode());
@@ -122,13 +122,13 @@ public class InteractiveMarkerControlPubSubType implements us.ihmc.pubsub.TopicD
 
       if(data.getMarkers().size() <= 100)
       cdr.write_type_e(data.getMarkers());else
-          throw new RuntimeException("markers field exceeds the maximum length");
+          throw new RuntimeException("markers field exceeds the maximum length: %d > %d".formatted(data.getMarkers().size(), 100));
 
       cdr.write_type_7(data.getIndependentMarkerOrientation());
 
       if(data.getDescription().length() <= 255)
       cdr.write_type_d(data.getDescription());else
-          throw new RuntimeException("description field exceeds the maximum length");
+          throw new RuntimeException("description field exceeds the maximum length: %d > %d".formatted(data.getDescription().length(), 255));
 
    }
 

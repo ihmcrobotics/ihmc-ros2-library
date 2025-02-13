@@ -102,19 +102,19 @@ public class LogPubSubType implements us.ihmc.pubsub.TopicDataType<rcl_interface
 
       if(data.getName().length() <= 255)
       cdr.write_type_d(data.getName());else
-          throw new RuntimeException("name field exceeds the maximum length");
+          throw new RuntimeException("name field exceeds the maximum length: %d > %d".formatted(data.getName().length(), 255));
 
       if(data.getMsg().length() <= 255)
       cdr.write_type_d(data.getMsg());else
-          throw new RuntimeException("msg field exceeds the maximum length");
+          throw new RuntimeException("msg field exceeds the maximum length: %d > %d".formatted(data.getMsg().length(), 255));
 
       if(data.getFile().length() <= 255)
       cdr.write_type_d(data.getFile());else
-          throw new RuntimeException("file field exceeds the maximum length");
+          throw new RuntimeException("file field exceeds the maximum length: %d > %d".formatted(data.getFile().length(), 255));
 
       if(data.getFunction().length() <= 255)
       cdr.write_type_d(data.getFunction());else
-          throw new RuntimeException("function field exceeds the maximum length");
+          throw new RuntimeException("function field exceeds the maximum length: %d > %d".formatted(data.getFunction().length(), 255));
 
       cdr.write_type_4(data.getLine());
 

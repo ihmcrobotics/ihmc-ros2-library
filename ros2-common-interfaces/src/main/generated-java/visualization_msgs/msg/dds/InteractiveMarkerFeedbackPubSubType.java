@@ -110,15 +110,15 @@ public class InteractiveMarkerFeedbackPubSubType implements us.ihmc.pubsub.Topic
       std_msgs.msg.dds.HeaderPubSubType.write(data.getHeader(), cdr);
       if(data.getClientId().length() <= 255)
       cdr.write_type_d(data.getClientId());else
-          throw new RuntimeException("client_id field exceeds the maximum length");
+          throw new RuntimeException("client_id field exceeds the maximum length: %d > %d".formatted(data.getClientId().length(), 255));
 
       if(data.getMarkerName().length() <= 255)
       cdr.write_type_d(data.getMarkerName());else
-          throw new RuntimeException("marker_name field exceeds the maximum length");
+          throw new RuntimeException("marker_name field exceeds the maximum length: %d > %d".formatted(data.getMarkerName().length(), 255));
 
       if(data.getControlName().length() <= 255)
       cdr.write_type_d(data.getControlName());else
-          throw new RuntimeException("control_name field exceeds the maximum length");
+          throw new RuntimeException("control_name field exceeds the maximum length: %d > %d".formatted(data.getControlName().length(), 255));
 
       cdr.write_type_9(data.getEventType());
 
