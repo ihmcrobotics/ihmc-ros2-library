@@ -30,11 +30,6 @@ import java.nio.ByteOrder;
  */
 public class SerializedPayload implements AutoCloseable
 {
-   static
-   {
-      Loader.load(Pointer.class);
-   }
-
    public static final short CDR_BE = 0x0000;
    public static final short CDR_LE = 0x0001;
    public static final short PL_CDR_BE = 0x0002;

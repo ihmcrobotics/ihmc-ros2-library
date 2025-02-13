@@ -35,12 +35,7 @@ import java.util.UUID;
 
 public class FastRTPSPublisher implements Publisher
 {
-   static
-   {
-      Loader.load(Pointer.class);
-   }
-
-   private final Object destructorLock = new Object(); 
+   private final Object destructorLock = new Object();
 
    private NativePublisherImpl impl;
    private final PublisherAttributes attributes;

@@ -41,12 +41,7 @@ import java.util.UUID;
 
 public class FastRTPSSubscriber<T> implements Subscriber<T>
 {
-   static
-   {
-      Loader.load(Pointer.class);
-   }
-
-   private final Object destructorLock = new Object(); 
+   private final Object destructorLock = new Object();
   
    private NativeSubscriberImpl impl;
 

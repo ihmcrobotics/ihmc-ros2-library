@@ -45,11 +45,6 @@ import java.nio.ByteBuffer;
  */
 public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>, AutoCloseable
 {
-   static
-   {
-      Loader.load(Pointer.class);
-   }
-
    private final String name;
    private final int maxSize;
    private final String userName;
