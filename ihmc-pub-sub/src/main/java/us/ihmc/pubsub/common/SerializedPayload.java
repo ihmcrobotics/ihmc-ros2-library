@@ -15,6 +15,10 @@
  */
 package us.ihmc.pubsub.common;
 
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -24,7 +28,7 @@ import java.nio.ByteOrder;
  * @author Jesper Smith
  *
  */
-public class SerializedPayload
+public class SerializedPayload implements AutoCloseable
 {
    public static final short CDR_BE = 0x0000;
    public static final short CDR_LE = 0x0001;
@@ -33,6 +37,7 @@ public class SerializedPayload
 
    private short encapsulation;
    private int length;
+   private final Pointer dataPointer;
    private final ByteBuffer data;
    private int max_size;
    private int pos;
@@ -45,7 +50,10 @@ public class SerializedPayload
    public SerializedPayload(int maxSize)
    {
       this.max_size = maxSize;
-      this.data = ByteBuffer.allocateDirect(maxSize);
+      dataPointer = new BytePointer(maxSize);
+      // Initialize the entire buffer to zeros
+      Pointer.memset(dataPointer, 0, (long) dataPointer.sizeof() * maxSize);
+      this.data = dataPointer.asByteBuffer();
       setEncapsulation(CDR_LE);
    }
 
@@ -113,5 +121,11 @@ public class SerializedPayload
    public ByteBuffer getData()
    {
       return data;
+   }
+
+   @Override
+   public void close()
+   {
+      dataPointer.close();
    }
 }
