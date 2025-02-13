@@ -27,7 +27,7 @@ import java.nio.ByteOrder;
  * @author Jesper Smith
  *
  */
-public class SerializedPayload
+public class SerializedPayload implements AutoCloseable
 {
    static
    {
@@ -125,7 +125,8 @@ public class SerializedPayload
       return data;
    }
 
-   public void release()
+   @Override
+   public void close() throws Exception
    {
       dataPointer.close();
    }
