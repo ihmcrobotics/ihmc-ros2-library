@@ -18,7 +18,13 @@ package us.ihmc.pubsub.impl.fastRTPS;
 import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.attributes.SubscriberAttributes;
-import us.ihmc.pubsub.common.*;
+import us.ihmc.pubsub.common.ChangeKind;
+import us.ihmc.pubsub.common.Guid;
+import us.ihmc.pubsub.common.MatchingInfo;
+import us.ihmc.pubsub.common.SampleIdentity;
+import us.ihmc.pubsub.common.SampleInfo;
+import us.ihmc.pubsub.common.SerializedPayload;
+import us.ihmc.pubsub.common.Time;
 import us.ihmc.pubsub.subscriber.Subscriber;
 import us.ihmc.pubsub.subscriber.SubscriberListener;
 import us.ihmc.rtps.impl.fastRTPS.NativeParticipantImpl;
@@ -320,7 +326,7 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    {
       synchronized(destructorLock)
       {
-         payload.release();
+         payload.close();
          impl.delete();
          nativeListenerImpl.delete();
          impl = null;
