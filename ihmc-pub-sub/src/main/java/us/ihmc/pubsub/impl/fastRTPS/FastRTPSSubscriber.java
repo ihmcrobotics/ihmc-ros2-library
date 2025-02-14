@@ -16,7 +16,6 @@
 package us.ihmc.pubsub.impl.fastRTPS;
 
 import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.Pointer;
 import us.ihmc.idl.CDR;
 import us.ihmc.pubsub.TopicDataType;
@@ -38,10 +37,12 @@ import us.ihmc.rtps.impl.fastRTPS.SampleInfoMarshaller;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FastRTPSSubscriber<T> implements Subscriber<T>
 {
    private final Object readLock = new Object();
+   private final AtomicBoolean deleted = new AtomicBoolean();
   
    private NativeSubscriberImpl impl;
 
@@ -195,6 +196,9 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean readNextData(T data, SampleInfo info)
    {
+      if (deleted.get())
+         return false;
+
       synchronized(readLock)
       {
          if(impl == null)
@@ -252,6 +256,9 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
    @Override
    public boolean takeNextData(T data, SampleInfo info)
    {
+      if (deleted.get())
+         return false;
+
       synchronized(readLock)
       {
          if(impl == null)
@@ -327,6 +334,8 @@ public class FastRTPSSubscriber<T> implements Subscriber<T>
 
    void delete()
    {
+      deleted.set(true);
+
       keyBufferPointer.close();
       payload.close();
       impl.delete();
