@@ -15,15 +15,18 @@
  */
 package us.ihmc.pubsub.types;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
 import org.apache.commons.lang3.NotImplementedException;
-
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
 import us.ihmc.idl.CDR;
 import us.ihmc.idl.InterchangeSerializer;
 import us.ihmc.pubsub.TopicDataType;
 import us.ihmc.pubsub.common.SerializedPayload;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * A generic data type to send over raw byte buffers.
@@ -40,12 +43,14 @@ import us.ihmc.pubsub.common.SerializedPayload;
  * @author Jesper Smith
  *
  */
-public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
+public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>, AutoCloseable
 {
    private final String name;
    private final int maxSize;
    private final String userName;
    private final int userMaxSize;
+   @Nullable
+   private Pointer dataPointer;
    
    private static int align(int size)
    {
@@ -121,7 +126,10 @@ public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
    @Override
    public ByteBuffer createData()
    {
-      return ByteBuffer.allocateDirect(maxSize);
+      dataPointer = new BytePointer(maxSize);
+      // Initialize the entire buffer to zeros
+      Pointer.memset(dataPointer, 0, (long) dataPointer.sizeof() * maxSize);
+      return dataPointer.asByteBuffer();
    }
 
    @Override
@@ -158,5 +166,12 @@ public class ByteBufferPubSubType implements TopicDataType<ByteBuffer>
    public void deserialize(InterchangeSerializer serializer, ByteBuffer data)
    {
       throw new NotImplementedException("Interchange serializer is not implemented for bytebuffer pub/sub type");
+   }
+
+   @Override
+   public void close()
+   {
+      if (dataPointer != null)
+         dataPointer.close();
    }
 }
