@@ -123,7 +123,7 @@ if(STANDALONE_PLUGIN)
         INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.2.14.4.dylib"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.2.14.dylib")
 
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.2.2.2.dylib"
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.2.2.5.dylib"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.2.dylib")
     else()
         set(FastRTPS_LIBRARIES fastrtps fastcdr)
@@ -132,7 +132,7 @@ if(STANDALONE_PLUGIN)
         INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastrtps.so.2.14.4"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastrtps.so.2.14")
             
-        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.so.2.2.2"
+        INSTALL(FILES "${FAST_RTPS_INSTALL_PREFIX}/lib/libfastcdr.so.2.2.5"
               DESTINATION ${LIBRARY_RESOURCES_DIRECTORY} RENAME "libfastcdr.so.2")
     endif()
     
