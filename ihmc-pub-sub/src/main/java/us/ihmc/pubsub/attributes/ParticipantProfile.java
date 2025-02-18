@@ -386,19 +386,27 @@ public class ParticipantProfile
    static
    {
       /*
-        Check if SHM transport is available for use on Windows.
-        Effectively checks that the directory Fast-DDS uses for shared memory is available for writing.
+      Check if SHM transport is available for use on Windows.
+      Effectively checks that the directory Fast-DDS uses for shared memory is available for writing.
 
-        https://github.com/eProsima/Fast-DDS/blob/e0c453b0ca70ef54fe9dfa0e6031c48cc6446d2f/tools/fds/CliDiscoveryManager.cpp#L113
-       */
-      File shmDir = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess");
-
-      // Ensure the directory structure exists
-      if (!shmDir.exists())
+      https://github.com/eProsima/Fast-DDS/blob/e0c453b0ca70ef54fe9dfa0e6031c48cc6446d2f/tools/fds/CliDiscoveryManager.cpp#L113
+      */
+      if (System.getProperty("os.name").toLowerCase().contains("win"))
       {
-         boolean ignored = shmDir.mkdirs();
-      }
+         File shmDir = new File("C:\\ProgramData\\eprosima\\fastrtps_interprocess");
 
-      FASTRTPS_SHM_AVAILABLE_ON_WINDOWS = shmDir.exists() && shmDir.canWrite();
+         // Ensure the directory structure exists
+         if (!shmDir.exists())
+         {
+            boolean ignored = shmDir.mkdirs();
+         }
+
+         // Check that the directory structure exists again and check that it's writable
+         FASTRTPS_SHM_AVAILABLE_ON_WINDOWS = shmDir.exists() && shmDir.canWrite();
+      }
+      else
+      {
+         FASTRTPS_SHM_AVAILABLE_ON_WINDOWS = false;
+      }
    }
 }
