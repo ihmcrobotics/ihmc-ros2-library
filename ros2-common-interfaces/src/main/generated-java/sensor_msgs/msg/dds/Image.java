@@ -51,13 +51,13 @@ public class Image extends Packet<Image> implements Settable<Image>, EpsilonComp
    /**
             * actual matrix data, size is (step * rows)
             */
-   public us.ihmc.idl.IDLSequence.Byte  data_;
+   public byte[] data_;
 
    public Image()
    {
       header_ = new std_msgs.msg.dds.Header();
       encoding_ = new java.lang.StringBuilder(255);
-      data_ = new us.ihmc.idl.IDLSequence.Byte (100, "type_9");
+      data_ = new byte[25000000];
 
    }
 
@@ -81,7 +81,12 @@ public class Image extends Packet<Image> implements Settable<Image>, EpsilonComp
 
       step_ = other.step_;
 
-      data_.set(other.data_);
+      for(int i1 = 0; i1 < data_.length; ++i1)
+      {
+            data_[i1] = other.data_[i1];
+
+      }
+
    }
 
 
@@ -181,7 +186,7 @@ public class Image extends Packet<Image> implements Settable<Image>, EpsilonComp
    /**
             * actual matrix data, size is (step * rows)
             */
-   public us.ihmc.idl.IDLSequence.Byte  getData()
+   public byte[] getData()
    {
       return data_;
    }
@@ -215,7 +220,10 @@ public class Image extends Packet<Image> implements Settable<Image>, EpsilonComp
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.step_, other.step_, epsilon)) return false;
 
-      if (!us.ihmc.idl.IDLTools.epsilonEqualsByteSequence(this.data_, other.data_, epsilon)) return false;
+      for(int i3 = 0; i3 < data_.length; ++i3)
+      {
+                if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.data_[i3], other.data_[i3], epsilon)) return false;
+      }
 
 
       return true;
@@ -241,7 +249,11 @@ public class Image extends Packet<Image> implements Settable<Image>, EpsilonComp
 
       if(this.step_ != otherMyClass.step_) return false;
 
-      if (!this.data_.equals(otherMyClass.data_)) return false;
+      for(int i5 = 0; i5 < data_.length; ++i5)
+      {
+                if(this.data_[i5] != otherMyClass.data_[i5]) return false;
+
+      }
 
       return true;
    }
@@ -265,7 +277,7 @@ public class Image extends Packet<Image> implements Settable<Image>, EpsilonComp
       builder.append("step=");
       builder.append(this.step_);      builder.append(", ");
       builder.append("data=");
-      builder.append(this.data_);
+      builder.append(java.util.Arrays.toString(this.data_));
       builder.append("}");
       return builder.toString();
    }

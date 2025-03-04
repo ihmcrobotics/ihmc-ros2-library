@@ -15,7 +15,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "af3074134cd980b298d438f69a888c4026c655b99e154bffabe67d744ff0a7da";
+   		return "9ba4fc723176665d35e3c3c3b7c8f24d628f37ec4e65b87a87c247be80800a13";
    }
    
    @Override
@@ -63,7 +63,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);current_alignment += (100 * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+      current_alignment += ((25000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
       return current_alignment - initial_alignment;
@@ -94,10 +94,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
-      current_alignment += (data.getData().size() * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
-
-
+      current_alignment += ((25000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
       return current_alignment - initial_alignment;
    }
@@ -117,9 +114,10 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
 
       cdr.write_type_4(data.getStep());
 
-      if(data.getData().size() <= 100)
-      cdr.write_type_e(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().size(), 100));
+      for(int i0 = 0; i0 < data.getData().length; ++i0)
+      {
+        	cdr.write_type_9(data.getData()[i0]);	
+      }
 
    }
 
@@ -135,7 +133,12 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
       	
       data.setStep(cdr.read_type_4());
       	
-      cdr.read_type_e(data.getData());	
+      for(int i0 = 0; i0 < data.getData().length; ++i0)
+      {
+        	data.getData()[i0] = cdr.read_type_9();
+        	
+      }
+      	
 
    }
 
@@ -149,7 +152,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
       ser.write_type_d("encoding", data.getEncoding());
       ser.write_type_9("is_bigendian", data.getIsBigendian());
       ser.write_type_4("step", data.getStep());
-      ser.write_type_e("data", data.getData());
+      ser.write_type_f("data", data.getData());
    }
 
    @Override
@@ -162,7 +165,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
       ser.read_type_d("encoding", data.getEncoding());
       data.setIsBigendian(ser.read_type_9("is_bigendian"));
       data.setStep(ser.read_type_4("step"));
-      ser.read_type_e("data", data.getData());
+      ser.read_type_f("data", data.getData());
    }
 
    public static void staticCopy(sensor_msgs.msg.dds.Image src, sensor_msgs.msg.dds.Image dest)

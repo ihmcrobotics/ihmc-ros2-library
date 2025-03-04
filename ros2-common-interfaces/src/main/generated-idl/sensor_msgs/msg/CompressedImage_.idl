@@ -33,7 +33,7 @@ module sensor_msgs
         /**
          * Compressed image buffer
          */
-        sequence<octet> data;
+        octet data[5000000];
       };
     };
   };

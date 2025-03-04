@@ -15,7 +15,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "f54c830d1b2fb7405c89bd687995deb03ba88c50c0c0e0df3e9e5437e8dca85b";
+   		return "85bbc6e6f76439e3727d58a1fdde551f7faea86e3970f8d34114153ed25a4edf";
    }
    
    @Override
@@ -55,7 +55,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
       current_alignment += std_msgs.msg.dds.HeaderPubSubType.getMaxCdrSerializedSize(current_alignment);
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);current_alignment += (100 * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+      current_alignment += ((5000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
       return current_alignment - initial_alignment;
@@ -74,10 +74,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getFormat().length() + 1;
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
-      current_alignment += (data.getData().size() * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
-
-
+      current_alignment += ((5000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
       return current_alignment - initial_alignment;
    }
@@ -89,9 +86,10 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
       cdr.write_type_d(data.getFormat());else
           throw new RuntimeException("format field exceeds the maximum length: %d > %d".formatted(data.getFormat().length(), 255));
 
-      if(data.getData().size() <= 100)
-      cdr.write_type_e(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().size(), 100));
+      for(int i0 = 0; i0 < data.getData().length; ++i0)
+      {
+        	cdr.write_type_9(data.getData()[i0]);	
+      }
 
    }
 
@@ -99,7 +97,12 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
    {
       std_msgs.msg.dds.HeaderPubSubType.read(data.getHeader(), cdr);	
       cdr.read_type_d(data.getFormat());	
-      cdr.read_type_e(data.getData());	
+      for(int i0 = 0; i0 < data.getData().length; ++i0)
+      {
+        	data.getData()[i0] = cdr.read_type_9();
+        	
+      }
+      	
 
    }
 
@@ -109,7 +112,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
       ser.write_type_a("header", new std_msgs.msg.dds.HeaderPubSubType(), data.getHeader());
 
       ser.write_type_d("format", data.getFormat());
-      ser.write_type_e("data", data.getData());
+      ser.write_type_f("data", data.getData());
    }
 
    @Override
@@ -118,7 +121,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
       ser.read_type_a("header", new std_msgs.msg.dds.HeaderPubSubType(), data.getHeader());
 
       ser.read_type_d("format", data.getFormat());
-      ser.read_type_e("data", data.getData());
+      ser.read_type_f("data", data.getData());
    }
 
    public static void staticCopy(sensor_msgs.msg.dds.CompressedImage src, sensor_msgs.msg.dds.CompressedImage dest)
