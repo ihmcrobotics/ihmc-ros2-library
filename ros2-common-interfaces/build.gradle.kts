@@ -58,6 +58,26 @@ val generateMessages by tasks.creating(us.ihmc.ros2.rosidl.ROS2MessageGenerator:
       setupVendoredRepo(uuidPath, uuidUrl, uuidRelease)
 
       delete(file("src/main/vendor/rcl_interfaces/test_msgs"))
+
+      // Patch for Image
+      val imageMsg = file("$commonInterfacesPath/sensor_msgs/msg/Image.msg")
+      val imageMsgContent = imageMsg.readText()
+      val imageMsgContentUpdated = imageMsgContent.replace("uint8[] data", "uint8[10000000] data") // 10MB of data
+      imageMsg.writeText(imageMsgContentUpdated)
+
+      // Patch for CompressedImage
+      val compressedImageMsg = file("$commonInterfacesPath/sensor_msgs/msg/CompressedImage.msg")
+      val compressedImageMsgContent = compressedImageMsg.readText()
+      val compressedImageMsgContentUpdated = compressedImageMsgContent.replace("uint8[] data", "uint8[3000000] data") // 3MB of data
+      compressedImageMsg.writeText(compressedImageMsgContentUpdated)
+
+      // Patch for PointCloud2
+      val pointCloud2Msg = file("$commonInterfacesPath/sensor_msgs/msg/PointCloud2.msg")
+      val pointCloud2MsgContent = pointCloud2Msg.readText()
+      val pointCloud2MsgContentUpdated = pointCloud2MsgContent
+            .replace("uint8[] data", "uint8[25000000] data") // 25MB of data
+            .replace("PointField[] fields", "PointField[16] fields")
+      pointCloud2Msg.writeText(pointCloud2MsgContentUpdated)
    }
 
    rosPackages = files(rclInterfacesPath, commonInterfacesPath, tf2Path, uuidPath)

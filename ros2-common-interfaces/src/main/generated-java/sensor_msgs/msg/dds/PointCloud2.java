@@ -31,7 +31,7 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
    /**
             * Describes the channels and their layout in the binary data blob.
             */
-   public us.ihmc.idl.IDLSequence.Object<sensor_msgs.msg.dds.PointField>  fields_;
+   public sensor_msgs.msg.dds.PointField[] fields_;
    /**
             * Is this data bigendian?
             */
@@ -47,7 +47,7 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
    /**
             * Actual point data, size is (row_step*height)
             */
-   public us.ihmc.idl.IDLSequence.Byte  data_;
+   public byte[] data_;
    /**
             * True if there are no invalid points
             */
@@ -56,9 +56,13 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
    public PointCloud2()
    {
       header_ = new std_msgs.msg.dds.Header();
-      fields_ = new us.ihmc.idl.IDLSequence.Object<sensor_msgs.msg.dds.PointField> (100, new sensor_msgs.msg.dds.PointFieldPubSubType());
-      data_ = new us.ihmc.idl.IDLSequence.Byte (100, "type_9");
+      fields_ = new sensor_msgs.msg.dds.PointField[16];
 
+      for(int i1 = 0; i1 < fields_.length; ++i1)
+      {
+          fields_[i1] = new sensor_msgs.msg.dds.PointField();
+      }
+      data_ = new byte[25000000];
 
    }
 
@@ -75,14 +79,22 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
 
       width_ = other.width_;
 
-      fields_.set(other.fields_);
+      for(int i3 = 0; i3 < fields_.length; ++i3)
+      {
+            sensor_msgs.msg.dds.PointFieldPubSubType.staticCopy(other.fields_[i3], fields_[i3]);}
+
       is_bigendian_ = other.is_bigendian_;
 
       point_step_ = other.point_step_;
 
       row_step_ = other.row_step_;
 
-      data_.set(other.data_);
+      for(int i5 = 0; i5 < data_.length; ++i5)
+      {
+            data_[i5] = other.data_[i5];
+
+      }
+
       is_dense_ = other.is_dense_;
 
    }
@@ -126,7 +138,7 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
    /**
             * Describes the channels and their layout in the binary data blob.
             */
-   public us.ihmc.idl.IDLSequence.Object<sensor_msgs.msg.dds.PointField>  getFields()
+   public sensor_msgs.msg.dds.PointField[] getFields()
    {
       return fields_;
    }
@@ -180,7 +192,7 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
    /**
             * Actual point data, size is (row_step*height)
             */
-   public us.ihmc.idl.IDLSequence.Byte  getData()
+   public byte[] getData()
    {
       return data_;
    }
@@ -223,11 +235,9 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.width_, other.width_, epsilon)) return false;
 
-      if (this.fields_.size() != other.fields_.size()) { return false; }
-      else
+      for(int i7 = 0; i7 < fields_.length; ++i7)
       {
-         for (int i = 0; i < this.fields_.size(); i++)
-         {  if (!this.fields_.get(i).epsilonEquals(other.fields_.get(i), epsilon)) return false; }
+              if (!this.fields_[i7].epsilonEquals(other.fields_[i7], epsilon)) return false;
       }
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.is_bigendian_, other.is_bigendian_, epsilon)) return false;
@@ -236,7 +246,10 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.row_step_, other.row_step_, epsilon)) return false;
 
-      if (!us.ihmc.idl.IDLTools.epsilonEqualsByteSequence(this.data_, other.data_, epsilon)) return false;
+      for(int i9 = 0; i9 < data_.length; ++i9)
+      {
+                if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.data_[i9], other.data_[i9], epsilon)) return false;
+      }
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.is_dense_, other.is_dense_, epsilon)) return false;
 
@@ -258,14 +271,21 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
 
       if(this.width_ != otherMyClass.width_) return false;
 
-      if (!this.fields_.equals(otherMyClass.fields_)) return false;
+      for(int i11 = 0; i11 < fields_.length; ++i11)
+      {
+                if (!this.fields_[i11].equals(otherMyClass.fields_[i11])) return false;
+      }
       if(this.is_bigendian_ != otherMyClass.is_bigendian_) return false;
 
       if(this.point_step_ != otherMyClass.point_step_) return false;
 
       if(this.row_step_ != otherMyClass.row_step_) return false;
 
-      if (!this.data_.equals(otherMyClass.data_)) return false;
+      for(int i13 = 0; i13 < data_.length; ++i13)
+      {
+                if(this.data_[i13] != otherMyClass.data_[i13]) return false;
+
+      }
       if(this.is_dense_ != otherMyClass.is_dense_) return false;
 
 
@@ -285,7 +305,7 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
       builder.append("width=");
       builder.append(this.width_);      builder.append(", ");
       builder.append("fields=");
-      builder.append(this.fields_);      builder.append(", ");
+      builder.append(java.util.Arrays.toString(this.fields_));      builder.append(", ");
       builder.append("is_bigendian=");
       builder.append(this.is_bigendian_);      builder.append(", ");
       builder.append("point_step=");
@@ -293,7 +313,7 @@ public class PointCloud2 extends Packet<PointCloud2> implements Settable<PointCl
       builder.append("row_step=");
       builder.append(this.row_step_);      builder.append(", ");
       builder.append("data=");
-      builder.append(this.data_);      builder.append(", ");
+      builder.append(java.util.Arrays.toString(this.data_));      builder.append(", ");
       builder.append("is_dense=");
       builder.append(this.is_dense_);
       builder.append("}");

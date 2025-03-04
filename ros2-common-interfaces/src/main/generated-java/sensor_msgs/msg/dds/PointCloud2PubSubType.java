@@ -15,7 +15,7 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "c064ea88bc513c7478080596d6013599913deffe608c6543ee49b77289b15376";
+   		return "be3a876aa4717e7738568e9d10542dceccdf593f18fd61b7a90359c0ca8d8f81";
    }
    
    @Override
@@ -58,7 +58,7 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 100; ++i0)
+      for(int i0 = 0; i0 < (16); ++i0)
       {
           current_alignment += sensor_msgs.msg.dds.PointFieldPubSubType.getMaxCdrSerializedSize(current_alignment);}
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
@@ -67,7 +67,7 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);current_alignment += (100 * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+      current_alignment += ((25000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
@@ -92,11 +92,10 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
-      for(int i0 = 0; i0 < data.getFields().size(); ++i0)
+      for(int i0 = 0; i0 < data.getFields().length; ++i0)
       {
-          current_alignment += sensor_msgs.msg.dds.PointFieldPubSubType.getCdrSerializedSize(data.getFields().get(i0), current_alignment);}
-
+              current_alignment += sensor_msgs.msg.dds.PointFieldPubSubType.getCdrSerializedSize(data.getFields()[i0], current_alignment);
+      }
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
@@ -106,10 +105,7 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
-      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
-      current_alignment += (data.getData().size() * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
-
-
+      current_alignment += ((25000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
@@ -124,9 +120,10 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       cdr.write_type_4(data.getWidth());
 
-      if(data.getFields().size() <= 100)
-      cdr.write_type_e(data.getFields());else
-          throw new RuntimeException("fields field exceeds the maximum length: %d > %d".formatted(data.getFields().size(), 100));
+      for(int i0 = 0; i0 < data.getFields().length; ++i0)
+      {
+        	sensor_msgs.msg.dds.PointFieldPubSubType.write(data.getFields()[i0], cdr);		
+      }
 
       cdr.write_type_7(data.getIsBigendian());
 
@@ -134,9 +131,10 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       cdr.write_type_4(data.getRowStep());
 
-      if(data.getData().size() <= 100)
-      cdr.write_type_e(data.getData());else
-          throw new RuntimeException("data field exceeds the maximum length: %d > %d".formatted(data.getData().size(), 100));
+      for(int i0 = 0; i0 < data.getData().length; ++i0)
+      {
+        	cdr.write_type_9(data.getData()[i0]);	
+      }
 
       cdr.write_type_7(data.getIsDense());
 
@@ -149,14 +147,23 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
       	
       data.setWidth(cdr.read_type_4());
       	
-      cdr.read_type_e(data.getFields());	
+      for(int i0 = 0; i0 < data.getFields().length; ++i0)
+      {
+        	sensor_msgs.msg.dds.PointFieldPubSubType.read(data.getFields()[i0], cdr);	
+      }
+      	
       data.setIsBigendian(cdr.read_type_7());
       	
       data.setPointStep(cdr.read_type_4());
       	
       data.setRowStep(cdr.read_type_4());
       	
-      cdr.read_type_e(data.getData());	
+      for(int i0 = 0; i0 < data.getData().length; ++i0)
+      {
+        	data.getData()[i0] = cdr.read_type_9();
+        	
+      }
+      	
       data.setIsDense(cdr.read_type_7());
       	
 
@@ -169,11 +176,11 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       ser.write_type_4("height", data.getHeight());
       ser.write_type_4("width", data.getWidth());
-      ser.write_type_e("fields", data.getFields());
+      ser.write_type_f("fields", new sensor_msgs.msg.dds.PointFieldPubSubType(), data.getFields());
       ser.write_type_7("is_bigendian", data.getIsBigendian());
       ser.write_type_4("point_step", data.getPointStep());
       ser.write_type_4("row_step", data.getRowStep());
-      ser.write_type_e("data", data.getData());
+      ser.write_type_f("data", data.getData());
       ser.write_type_7("is_dense", data.getIsDense());
    }
 
@@ -184,11 +191,11 @@ public class PointCloud2PubSubType implements us.ihmc.pubsub.TopicDataType<senso
 
       data.setHeight(ser.read_type_4("height"));
       data.setWidth(ser.read_type_4("width"));
-      ser.read_type_e("fields", data.getFields());
+      ser.read_type_f("fields", new sensor_msgs.msg.dds.PointFieldPubSubType(), data.getFields());
       data.setIsBigendian(ser.read_type_7("is_bigendian"));
       data.setPointStep(ser.read_type_4("point_step"));
       data.setRowStep(ser.read_type_4("row_step"));
-      ser.read_type_e("data", data.getData());
+      ser.read_type_f("data", data.getData());
       data.setIsDense(ser.read_type_7("is_dense"));
    }
 
