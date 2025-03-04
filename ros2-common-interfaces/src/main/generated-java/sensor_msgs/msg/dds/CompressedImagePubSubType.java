@@ -15,7 +15,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "85bbc6e6f76439e3727d58a1fdde551f7faea86e3970f8d34114153ed25a4edf";
+   		return "56a3a2b0fce51cec2b3851794859224cb8a8b16b48e334a51746d40091d4e0fd";
    }
    
    @Override
@@ -55,7 +55,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
       current_alignment += std_msgs.msg.dds.HeaderPubSubType.getMaxCdrSerializedSize(current_alignment);
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
-      current_alignment += ((5000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+      current_alignment += ((3000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
       return current_alignment - initial_alignment;
@@ -74,7 +74,7 @@ public class CompressedImagePubSubType implements us.ihmc.pubsub.TopicDataType<s
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getFormat().length() + 1;
 
-      current_alignment += ((5000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+      current_alignment += ((3000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
       return current_alignment - initial_alignment;
    }

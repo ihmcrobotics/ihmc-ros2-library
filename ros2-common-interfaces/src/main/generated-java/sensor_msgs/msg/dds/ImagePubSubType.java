@@ -15,7 +15,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "9ba4fc723176665d35e3c3c3b7c8f24d628f37ec4e65b87a87c247be80800a13";
+   		return "ca8161af067f9da446ceed96c46c493b3ba681001eb213abe3fcd29aac5bab44";
    }
    
    @Override
@@ -63,7 +63,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
-      current_alignment += ((25000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+      current_alignment += ((10000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
       return current_alignment - initial_alignment;
@@ -94,7 +94,7 @@ public class ImagePubSubType implements us.ihmc.pubsub.TopicDataType<sensor_msgs
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
 
 
-      current_alignment += ((25000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
+      current_alignment += ((10000000) * 1) + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
       return current_alignment - initial_alignment;
    }

@@ -57,7 +57,7 @@ public class Image extends Packet<Image> implements Settable<Image>, EpsilonComp
    {
       header_ = new std_msgs.msg.dds.Header();
       encoding_ = new java.lang.StringBuilder(255);
-      data_ = new byte[25000000];
+      data_ = new byte[10000000];
 
    }
 

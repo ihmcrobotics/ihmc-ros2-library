@@ -35,7 +35,7 @@ public class CompressedImage extends Packet<CompressedImage> implements Settable
    {
       header_ = new std_msgs.msg.dds.Header();
       format_ = new java.lang.StringBuilder(255);
-      data_ = new byte[5000000];
+      data_ = new byte[3000000];
 
    }
 
