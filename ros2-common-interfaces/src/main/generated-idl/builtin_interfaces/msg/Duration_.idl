@@ -21,7 +21,7 @@ module builtin_interfaces
          */
         long sec;
         /**
-         * Nanoseconds component in the range of [0, 1e9).
+         * Nanoseconds component in the range of [0, 10e9).
          */
         unsigned long nanosec;
       };

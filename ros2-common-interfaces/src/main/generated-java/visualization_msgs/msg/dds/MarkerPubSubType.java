@@ -15,7 +15,7 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "376a27a22789587188d03dc275c6964eac008f399bdc7dd3e70a8820ee849b23";
+   		return "3b92bc2338f62b36a8b83be30ee32fd0162806c172eecd7f616b6eacb1e1661d";
    }
    
    @Override
@@ -78,7 +78,15 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       {
           current_alignment += std_msgs.msg.dds.ColorRGBAPubSubType.getMaxCdrSerializedSize(current_alignment);}
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
+      current_alignment += sensor_msgs.msg.dds.CompressedImagePubSubType.getMaxCdrSerializedSize(current_alignment);
+
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);for(int i0 = 0; i0 < 100; ++i0)
+      {
+          current_alignment += visualization_msgs.msg.dds.UVCoordinatePubSubType.getMaxCdrSerializedSize(current_alignment);}
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + 255 + 1;
+      current_alignment += visualization_msgs.msg.dds.MeshFilePubSubType.getMaxCdrSerializedSize(current_alignment);
+
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
 
@@ -128,9 +136,20 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       {
           current_alignment += std_msgs.msg.dds.ColorRGBAPubSubType.getCdrSerializedSize(data.getColors().get(i0), current_alignment);}
 
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getTextureResource().length() + 1;
+
+      current_alignment += sensor_msgs.msg.dds.CompressedImagePubSubType.getCdrSerializedSize(data.getTexture(), current_alignment);
+
+      current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);
+      for(int i0 = 0; i0 < data.getUvCoordinates().size(); ++i0)
+      {
+          current_alignment += visualization_msgs.msg.dds.UVCoordinatePubSubType.getCdrSerializedSize(data.getUvCoordinates().get(i0), current_alignment);}
+
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getText().length() + 1;
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4) + data.getMeshResource().length() + 1;
+
+      current_alignment += visualization_msgs.msg.dds.MeshFilePubSubType.getCdrSerializedSize(data.getMeshFile(), current_alignment);
 
       current_alignment += 1 + us.ihmc.idl.CDR.alignment(current_alignment, 1);
 
@@ -166,6 +185,15 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       cdr.write_type_e(data.getColors());else
           throw new RuntimeException("colors field exceeds the maximum length: %d > %d".formatted(data.getColors().size(), 100));
 
+      if(data.getTextureResource().length() <= 255)
+      cdr.write_type_d(data.getTextureResource());else
+          throw new RuntimeException("texture_resource field exceeds the maximum length: %d > %d".formatted(data.getTextureResource().length(), 255));
+
+      sensor_msgs.msg.dds.CompressedImagePubSubType.write(data.getTexture(), cdr);
+      if(data.getUvCoordinates().size() <= 100)
+      cdr.write_type_e(data.getUvCoordinates());else
+          throw new RuntimeException("uv_coordinates field exceeds the maximum length: %d > %d".formatted(data.getUvCoordinates().size(), 100));
+
       if(data.getText().length() <= 255)
       cdr.write_type_d(data.getText());else
           throw new RuntimeException("text field exceeds the maximum length: %d > %d".formatted(data.getText().length(), 255));
@@ -174,6 +202,7 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       cdr.write_type_d(data.getMeshResource());else
           throw new RuntimeException("mesh_resource field exceeds the maximum length: %d > %d".formatted(data.getMeshResource().length(), 255));
 
+      visualization_msgs.msg.dds.MeshFilePubSubType.write(data.getMeshFile(), cdr);
       cdr.write_type_7(data.getMeshUseEmbeddedMaterials());
 
    }
@@ -196,8 +225,12 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       	
       cdr.read_type_e(data.getPoints());	
       cdr.read_type_e(data.getColors());	
+      cdr.read_type_d(data.getTextureResource());	
+      sensor_msgs.msg.dds.CompressedImagePubSubType.read(data.getTexture(), cdr);	
+      cdr.read_type_e(data.getUvCoordinates());	
       cdr.read_type_d(data.getText());	
       cdr.read_type_d(data.getMeshResource());	
+      visualization_msgs.msg.dds.MeshFilePubSubType.read(data.getMeshFile(), cdr);	
       data.setMeshUseEmbeddedMaterials(cdr.read_type_7());
       	
 
@@ -223,8 +256,14 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       ser.write_type_7("frame_locked", data.getFrameLocked());
       ser.write_type_e("points", data.getPoints());
       ser.write_type_e("colors", data.getColors());
+      ser.write_type_d("texture_resource", data.getTextureResource());
+      ser.write_type_a("texture", new sensor_msgs.msg.dds.CompressedImagePubSubType(), data.getTexture());
+
+      ser.write_type_e("uv_coordinates", data.getUvCoordinates());
       ser.write_type_d("text", data.getText());
       ser.write_type_d("mesh_resource", data.getMeshResource());
+      ser.write_type_a("mesh_file", new visualization_msgs.msg.dds.MeshFilePubSubType(), data.getMeshFile());
+
       ser.write_type_7("mesh_use_embedded_materials", data.getMeshUseEmbeddedMaterials());
    }
 
@@ -248,8 +287,14 @@ public class MarkerPubSubType implements us.ihmc.pubsub.TopicDataType<visualizat
       data.setFrameLocked(ser.read_type_7("frame_locked"));
       ser.read_type_e("points", data.getPoints());
       ser.read_type_e("colors", data.getColors());
+      ser.read_type_d("texture_resource", data.getTextureResource());
+      ser.read_type_a("texture", new sensor_msgs.msg.dds.CompressedImagePubSubType(), data.getTexture());
+
+      ser.read_type_e("uv_coordinates", data.getUvCoordinates());
       ser.read_type_d("text", data.getText());
       ser.read_type_d("mesh_resource", data.getMeshResource());
+      ser.read_type_a("mesh_file", new visualization_msgs.msg.dds.MeshFilePubSubType(), data.getMeshFile());
+
       data.setMeshUseEmbeddedMaterials(ser.read_type_7("mesh_use_embedded_materials"));
    }
 

@@ -1,0 +1,25 @@
+#ifndef __visualization_msgs__msg__UVCoordinate__idl__
+#define __visualization_msgs__msg__UVCoordinate__idl__
+
+module visualization_msgs
+{
+  module msg
+  {
+    module dds
+    {
+
+      @TypeCode(type="visualization_msgs::msg::dds_::UVCoordinate_")
+      struct UVCoordinate
+      {
+        /**
+         * Location of the pixel as a ratio of the width of a 2D texture.
+         * Values should be in range: [0.0-1.0].
+         */
+        float u;
+        float v;
+      };
+    };
+  };
+};
+
+#endif

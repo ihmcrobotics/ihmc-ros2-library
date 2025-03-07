@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import us.ihmc.pubsub.TopicDataType;
 
 /**
-       * Defines box, sphere, cylinder, and cone.
+       * Defines box, sphere, cylinder, cone and prism.
        * All shapes are defined to have their bounding boxes centered around 0,0,0.
        * The meaning of the shape dimensions: each constant defines the index in the 'dimensions' array.
        * For the CYLINDER and CONE types, the center line is oriented along the Z axis.
@@ -17,6 +17,14 @@ import us.ihmc.pubsub.TopicDataType;
        * the base of the cylinder (cone).
        * Cone and cylinder primitives are defined to be circular. The tip of the cone
        * is pointing up, along +Z axis.
+       * For the type PRISM, the center line is oriented along Z axis.
+       * The PRISM_HEIGHT component of dimensions gives the
+       * height of the prism.
+       * The polygon defines the Z axis centered base of the prism.
+       * The prism is constructed by extruding the base in +Z and -Z
+       * directions by half of the PRISM_HEIGHT
+       * Only x and y fields of the points are used in the polygon.
+       * Points of the polygon are ordered counter-clockwise.
        */
 public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<SolidPrimitive>, EpsilonComparable<SolidPrimitive>
 {
@@ -24,6 +32,7 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
    public static final byte SPHERE = (byte) 2;
    public static final byte CYLINDER = (byte) 3;
    public static final byte CONE = (byte) 4;
+   public static final byte PRISM = (byte) 5;
    /**
           * For type BOX, the X, Y, and Z dimensions are the length of the corresponding sides of the box.
           */
@@ -38,6 +47,7 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
    public static final byte CYLINDER_RADIUS = (byte) 1;
    public static final byte CONE_HEIGHT = (byte) 0;
    public static final byte CONE_RADIUS = (byte) 1;
+   public static final byte PRISM_HEIGHT = (byte) 0;
    /**
             * The type of the shape
             */
@@ -47,11 +57,13 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
             * At no point will dimensions have a length > 3.
             */
    public us.ihmc.idl.IDLSequence.Double  dimensions_;
+   public geometry_msgs.msg.dds.Polygon polygon_;
 
    public SolidPrimitive()
    {
       dimensions_ = new us.ihmc.idl.IDLSequence.Double (3, "type_6");
 
+      polygon_ = new geometry_msgs.msg.dds.Polygon();
    }
 
    public SolidPrimitive(SolidPrimitive other)
@@ -65,6 +77,7 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
       type_ = other.type_;
 
       dimensions_.set(other.dimensions_);
+      geometry_msgs.msg.dds.PolygonPubSubType.staticCopy(other.polygon_, polygon_);
    }
 
    /**
@@ -93,6 +106,12 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
    }
 
 
+   public geometry_msgs.msg.dds.Polygon getPolygon()
+   {
+      return polygon_;
+   }
+
+
    public static Supplier<SolidPrimitivePubSubType> getPubSubType()
    {
       return SolidPrimitivePubSubType::new;
@@ -114,6 +133,7 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsDoubleSequence(this.dimensions_, other.dimensions_, epsilon)) return false;
 
+      if (!this.polygon_.epsilonEquals(other.polygon_, epsilon)) return false;
 
       return true;
    }
@@ -130,6 +150,7 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
       if(this.type_ != otherMyClass.type_) return false;
 
       if (!this.dimensions_.equals(otherMyClass.dimensions_)) return false;
+      if (!this.polygon_.equals(otherMyClass.polygon_)) return false;
 
       return true;
    }
@@ -143,7 +164,9 @@ public class SolidPrimitive extends Packet<SolidPrimitive> implements Settable<S
       builder.append("type=");
       builder.append(this.type_);      builder.append(", ");
       builder.append("dimensions=");
-      builder.append(this.dimensions_);
+      builder.append(this.dimensions_);      builder.append(", ");
+      builder.append("polygon=");
+      builder.append(this.polygon_);
       builder.append("}");
       return builder.toString();
    }

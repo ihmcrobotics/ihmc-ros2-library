@@ -14,7 +14,7 @@ import us.ihmc.pubsub.TopicDataType;
        * +y should point down in the image
        * +z should point into to plane of the image
        * Acceptable values:
-       * jpeg, png
+       * jpeg, png, tiff
        */
 public class CompressedImage extends Packet<CompressedImage> implements Settable<CompressedImage>, EpsilonComparable<CompressedImage>
 {
