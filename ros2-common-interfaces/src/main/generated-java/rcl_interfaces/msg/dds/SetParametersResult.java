@@ -14,8 +14,8 @@ public class SetParametersResult extends Packet<SetParametersResult> implements 
             */
    public boolean successful_;
    /**
-            * Reason why the setting was a failure. On success, the contents of this field
-            * are undefined.  This should only be used for logging and user interfaces.
+            * Reason why the setting was either successful or a failure. This should only be
+            * used for logging and user interfaces.
             */
    public java.lang.StringBuilder reason_;
 
@@ -57,8 +57,8 @@ public class SetParametersResult extends Packet<SetParametersResult> implements 
    }
 
    /**
-            * Reason why the setting was a failure. On success, the contents of this field
-            * are undefined.  This should only be used for logging and user interfaces.
+            * Reason why the setting was either successful or a failure. This should only be
+            * used for logging and user interfaces.
             */
    public void setReason(java.lang.String reason)
    {
@@ -67,16 +67,16 @@ public class SetParametersResult extends Packet<SetParametersResult> implements 
    }
 
    /**
-            * Reason why the setting was a failure. On success, the contents of this field
-            * are undefined.  This should only be used for logging and user interfaces.
+            * Reason why the setting was either successful or a failure. This should only be
+            * used for logging and user interfaces.
             */
    public java.lang.String getReasonAsString()
    {
       return getReason().toString();
    }
    /**
-            * Reason why the setting was a failure. On success, the contents of this field
-            * are undefined.  This should only be used for logging and user interfaces.
+            * Reason why the setting was either successful or a failure. This should only be
+            * used for logging and user interfaces.
             */
    public java.lang.StringBuilder getReason()
    {

@@ -1,6 +1,7 @@
 #ifndef __shape_msgs__msg__SolidPrimitive__idl__
 #define __shape_msgs__msg__SolidPrimitive__idl__
 
+#include "geometry_msgs/msg/./Polygon_.idl"
 module shape_msgs
 {
   module msg
@@ -18,6 +19,9 @@ module shape_msgs
 
       const octet CONE =
       4;
+
+      const octet PRISM =
+      5;
 
       /**
        * For type BOX, the X, Y, and Z dimensions are the length of the corresponding sides of the box.
@@ -49,9 +53,12 @@ module shape_msgs
       const octet CONE_RADIUS =
       1;
 
+      const octet PRISM_HEIGHT =
+      0;
+
 
       /**
-       * Defines box, sphere, cylinder, and cone.
+       * Defines box, sphere, cylinder, cone and prism.
        * All shapes are defined to have their bounding boxes centered around 0,0,0.
        * The meaning of the shape dimensions: each constant defines the index in the 'dimensions' array.
        * For the CYLINDER and CONE types, the center line is oriented along the Z axis.
@@ -61,6 +68,14 @@ module shape_msgs
        * the base of the cylinder (cone).
        * Cone and cylinder primitives are defined to be circular. The tip of the cone
        * is pointing up, along +Z axis.
+       * For the type PRISM, the center line is oriented along Z axis.
+       * The PRISM_HEIGHT component of dimensions gives the
+       * height of the prism.
+       * The polygon defines the Z axis centered base of the prism.
+       * The prism is constructed by extruding the base in +Z and -Z
+       * directions by half of the PRISM_HEIGHT
+       * Only x and y fields of the points are used in the polygon.
+       * Points of the polygon are ordered counter-clockwise.
        */
       @TypeCode(type="shape_msgs::msg::dds_::SolidPrimitive_")
       struct SolidPrimitive
@@ -74,6 +89,7 @@ module shape_msgs
          * At no point will dimensions have a length > 3.
          */
         sequence<double, 3> dimensions;
+        geometry_msgs::msg::dds::Polygon polygon;
       };
     };
   };

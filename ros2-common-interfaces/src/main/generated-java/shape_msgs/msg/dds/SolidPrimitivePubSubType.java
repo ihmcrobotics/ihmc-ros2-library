@@ -15,7 +15,7 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "50c06f218b8faae4224b29be9373b9bddc960170d1a5b6af53508b229d9beaef";
+   		return "ab6bee1b39609974b4e11c93ef8f6f0607cea4b5ef09f05abd826308400752aa";
    }
    
    @Override
@@ -56,6 +56,8 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
 
       current_alignment += 4 + us.ihmc.idl.CDR.alignment(current_alignment, 4);current_alignment += (3 * 8) + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
+      current_alignment += geometry_msgs.msg.dds.PolygonPubSubType.getMaxCdrSerializedSize(current_alignment);
+
 
       return current_alignment - initial_alignment;
    }
@@ -76,6 +78,8 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
       current_alignment += (data.getDimensions().size() * 8) + us.ihmc.idl.CDR.alignment(current_alignment, 8);
 
 
+      current_alignment += geometry_msgs.msg.dds.PolygonPubSubType.getCdrSerializedSize(data.getPolygon(), current_alignment);
+
 
       return current_alignment - initial_alignment;
    }
@@ -88,6 +92,7 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
       cdr.write_type_e(data.getDimensions());else
           throw new RuntimeException("dimensions field exceeds the maximum length: %d > %d".formatted(data.getDimensions().size(), 3));
 
+      geometry_msgs.msg.dds.PolygonPubSubType.write(data.getPolygon(), cdr);
    }
 
    public static void read(shape_msgs.msg.dds.SolidPrimitive data, us.ihmc.idl.CDR cdr)
@@ -95,6 +100,7 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
       data.setType(cdr.read_type_9());
       	
       cdr.read_type_e(data.getDimensions());	
+      geometry_msgs.msg.dds.PolygonPubSubType.read(data.getPolygon(), cdr);	
 
    }
 
@@ -103,6 +109,8 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
    {
       ser.write_type_9("type", data.getType());
       ser.write_type_e("dimensions", data.getDimensions());
+      ser.write_type_a("polygon", new geometry_msgs.msg.dds.PolygonPubSubType(), data.getPolygon());
+
    }
 
    @Override
@@ -110,6 +118,8 @@ public class SolidPrimitivePubSubType implements us.ihmc.pubsub.TopicDataType<sh
    {
       data.setType(ser.read_type_9("type"));
       ser.read_type_e("dimensions", data.getDimensions());
+      ser.read_type_a("polygon", new geometry_msgs.msg.dds.PolygonPubSubType(), data.getPolygon());
+
    }
 
    public static void staticCopy(shape_msgs.msg.dds.SolidPrimitive src, shape_msgs.msg.dds.SolidPrimitive dest)

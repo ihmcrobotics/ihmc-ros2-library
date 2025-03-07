@@ -18,7 +18,7 @@ public class Duration extends Packet<Duration> implements Settable<Duration>, Ep
             */
    public int sec_;
    /**
-            * Nanoseconds component in the range of [0, 1e9).
+            * Nanoseconds component in the range of [0, 10e9).
             */
    public long nanosec_;
 
@@ -56,14 +56,14 @@ public class Duration extends Packet<Duration> implements Settable<Duration>, Ep
    }
 
    /**
-            * Nanoseconds component in the range of [0, 1e9).
+            * Nanoseconds component in the range of [0, 10e9).
             */
    public void setNanosec(long nanosec)
    {
       nanosec_ = nanosec;
    }
    /**
-            * Nanoseconds component in the range of [0, 1e9).
+            * Nanoseconds component in the range of [0, 10e9).
             */
    public long getNanosec()
    {

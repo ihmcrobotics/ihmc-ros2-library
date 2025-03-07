@@ -1,0 +1,31 @@
+#ifndef __visualization_msgs__msg__MeshFile__idl__
+#define __visualization_msgs__msg__MeshFile__idl__
+
+module visualization_msgs
+{
+  module msg
+  {
+    module dds
+    {
+
+      /**
+       * Used to send raw mesh files.
+       */
+      @TypeCode(type="visualization_msgs::msg::dds_::MeshFile_")
+      struct MeshFile
+      {
+        /**
+         * The filename is used for both debug purposes and to provide a file extension
+         * for whatever parser is used.
+         */
+        string filename;
+        /**
+         * This stores the raw text of the mesh file.
+         */
+        sequence<octet> data;
+      };
+    };
+  };
+};
+
+#endif

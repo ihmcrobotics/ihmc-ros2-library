@@ -52,8 +52,8 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
             * Action to take; one of:
             * - 0 add/modify an object
             * - 1 (deprecated)
-            * - 2 deletes an object
-            * - 3 deletes all objects
+            * - 2 deletes an object (with the given ns and id)
+            * - 3 deletes all objects (or those with the given ns if any)
             */
    public int action_;
    /**
@@ -88,13 +88,34 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
             */
    public us.ihmc.idl.IDLSequence.Object<std_msgs.msg.dds.ColorRGBA>  colors_;
    /**
+            * Texture resource is a special URI that can either reference a texture file in
+            * a format acceptable to (resource retriever)[https://index.ros.org/p/resource_retriever/]
+            * or an embedded texture via a string matching the format:
+            * "embedded://texture_name"
+            */
+   public java.lang.StringBuilder texture_resource_;
+   /**
+            * An image to be loaded into the rendering engine as the texture for this marker.
+            * This will be used iff texture_resource is set to embedded.
+            */
+   public sensor_msgs.msg.dds.CompressedImage texture_;
+   /**
+            * Location of each vertex within the texture; in the range: [0.0-1.0]
+            */
+   public us.ihmc.idl.IDLSequence.Object<visualization_msgs.msg.dds.UVCoordinate>  uv_coordinates_;
+   /**
             * Only used for text markers
             */
    public java.lang.StringBuilder text_;
    /**
             * Only used for MESH_RESOURCE markers.
+            * Similar to texture_resource, mesh_resource uses resource retriever to load a mesh.
+            * Optionally, a mesh file can be sent in-message via the mesh_file field. If doing so,
+            * use the following format for mesh_resource:
+            * "embedded://mesh_name"
             */
    public java.lang.StringBuilder mesh_resource_;
+   public visualization_msgs.msg.dds.MeshFile mesh_file_;
    public boolean mesh_use_embedded_materials_;
 
    public Marker()
@@ -107,8 +128,12 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
       lifetime_ = new builtin_interfaces.msg.dds.Duration();
       points_ = new us.ihmc.idl.IDLSequence.Object<us.ihmc.euclid.tuple3D.Point3D> (100, new geometry_msgs.msg.dds.PointPubSubType());
       colors_ = new us.ihmc.idl.IDLSequence.Object<std_msgs.msg.dds.ColorRGBA> (100, new std_msgs.msg.dds.ColorRGBAPubSubType());
+      texture_resource_ = new java.lang.StringBuilder(255);
+      texture_ = new sensor_msgs.msg.dds.CompressedImage();
+      uv_coordinates_ = new us.ihmc.idl.IDLSequence.Object<visualization_msgs.msg.dds.UVCoordinate> (100, new visualization_msgs.msg.dds.UVCoordinatePubSubType());
       text_ = new java.lang.StringBuilder(255);
       mesh_resource_ = new java.lang.StringBuilder(255);
+      mesh_file_ = new visualization_msgs.msg.dds.MeshFile();
 
    }
 
@@ -138,12 +163,18 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
 
       points_.set(other.points_);
       colors_.set(other.colors_);
+      texture_resource_.setLength(0);
+      texture_resource_.append(other.texture_resource_);
+
+      sensor_msgs.msg.dds.CompressedImagePubSubType.staticCopy(other.texture_, texture_);
+      uv_coordinates_.set(other.uv_coordinates_);
       text_.setLength(0);
       text_.append(other.text_);
 
       mesh_resource_.setLength(0);
       mesh_resource_.append(other.mesh_resource_);
 
+      visualization_msgs.msg.dds.MeshFilePubSubType.staticCopy(other.mesh_file_, mesh_file_);
       mesh_use_embedded_materials_ = other.mesh_use_embedded_materials_;
 
    }
@@ -218,8 +249,8 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
             * Action to take; one of:
             * - 0 add/modify an object
             * - 1 (deprecated)
-            * - 2 deletes an object
-            * - 3 deletes all objects
+            * - 2 deletes an object (with the given ns and id)
+            * - 3 deletes all objects (or those with the given ns if any)
             */
    public void setAction(int action)
    {
@@ -229,8 +260,8 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
             * Action to take; one of:
             * - 0 add/modify an object
             * - 1 (deprecated)
-            * - 2 deletes an object
-            * - 3 deletes all objects
+            * - 2 deletes an object (with the given ns and id)
+            * - 3 deletes all objects (or those with the given ns if any)
             */
    public int getAction()
    {
@@ -310,6 +341,58 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
    }
 
    /**
+            * Texture resource is a special URI that can either reference a texture file in
+            * a format acceptable to (resource retriever)[https://index.ros.org/p/resource_retriever/]
+            * or an embedded texture via a string matching the format:
+            * "embedded://texture_name"
+            */
+   public void setTextureResource(java.lang.String texture_resource)
+   {
+      texture_resource_.setLength(0);
+      texture_resource_.append(texture_resource);
+   }
+
+   /**
+            * Texture resource is a special URI that can either reference a texture file in
+            * a format acceptable to (resource retriever)[https://index.ros.org/p/resource_retriever/]
+            * or an embedded texture via a string matching the format:
+            * "embedded://texture_name"
+            */
+   public java.lang.String getTextureResourceAsString()
+   {
+      return getTextureResource().toString();
+   }
+   /**
+            * Texture resource is a special URI that can either reference a texture file in
+            * a format acceptable to (resource retriever)[https://index.ros.org/p/resource_retriever/]
+            * or an embedded texture via a string matching the format:
+            * "embedded://texture_name"
+            */
+   public java.lang.StringBuilder getTextureResource()
+   {
+      return texture_resource_;
+   }
+
+
+   /**
+            * An image to be loaded into the rendering engine as the texture for this marker.
+            * This will be used iff texture_resource is set to embedded.
+            */
+   public sensor_msgs.msg.dds.CompressedImage getTexture()
+   {
+      return texture_;
+   }
+
+
+   /**
+            * Location of each vertex within the texture; in the range: [0.0-1.0]
+            */
+   public us.ihmc.idl.IDLSequence.Object<visualization_msgs.msg.dds.UVCoordinate>  getUvCoordinates()
+   {
+      return uv_coordinates_;
+   }
+
+   /**
             * Only used for text markers
             */
    public void setText(java.lang.String text)
@@ -335,6 +418,10 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
 
    /**
             * Only used for MESH_RESOURCE markers.
+            * Similar to texture_resource, mesh_resource uses resource retriever to load a mesh.
+            * Optionally, a mesh file can be sent in-message via the mesh_file field. If doing so,
+            * use the following format for mesh_resource:
+            * "embedded://mesh_name"
             */
    public void setMeshResource(java.lang.String mesh_resource)
    {
@@ -344,6 +431,10 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
 
    /**
             * Only used for MESH_RESOURCE markers.
+            * Similar to texture_resource, mesh_resource uses resource retriever to load a mesh.
+            * Optionally, a mesh file can be sent in-message via the mesh_file field. If doing so,
+            * use the following format for mesh_resource:
+            * "embedded://mesh_name"
             */
    public java.lang.String getMeshResourceAsString()
    {
@@ -351,10 +442,20 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
    }
    /**
             * Only used for MESH_RESOURCE markers.
+            * Similar to texture_resource, mesh_resource uses resource retriever to load a mesh.
+            * Optionally, a mesh file can be sent in-message via the mesh_file field. If doing so,
+            * use the following format for mesh_resource:
+            * "embedded://mesh_name"
             */
    public java.lang.StringBuilder getMeshResource()
    {
       return mesh_resource_;
+   }
+
+
+   public visualization_msgs.msg.dds.MeshFile getMeshFile()
+   {
+      return mesh_file_;
    }
 
    public void setMeshUseEmbeddedMaterials(boolean mesh_use_embedded_materials)
@@ -413,10 +514,21 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
          {  if (!this.colors_.get(i).epsilonEquals(other.colors_.get(i), epsilon)) return false; }
       }
 
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.texture_resource_, other.texture_resource_, epsilon)) return false;
+
+      if (!this.texture_.epsilonEquals(other.texture_, epsilon)) return false;
+      if (this.uv_coordinates_.size() != other.uv_coordinates_.size()) { return false; }
+      else
+      {
+         for (int i = 0; i < this.uv_coordinates_.size(); i++)
+         {  if (!this.uv_coordinates_.get(i).epsilonEquals(other.uv_coordinates_.get(i), epsilon)) return false; }
+      }
+
       if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.text_, other.text_, epsilon)) return false;
 
       if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.mesh_resource_, other.mesh_resource_, epsilon)) return false;
 
+      if (!this.mesh_file_.epsilonEquals(other.mesh_file_, epsilon)) return false;
       if (!us.ihmc.idl.IDLTools.epsilonEqualsBoolean(this.mesh_use_embedded_materials_, other.mesh_use_embedded_materials_, epsilon)) return false;
 
 
@@ -449,10 +561,15 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
 
       if (!this.points_.equals(otherMyClass.points_)) return false;
       if (!this.colors_.equals(otherMyClass.colors_)) return false;
+      if (!us.ihmc.idl.IDLTools.equals(this.texture_resource_, otherMyClass.texture_resource_)) return false;
+
+      if (!this.texture_.equals(otherMyClass.texture_)) return false;
+      if (!this.uv_coordinates_.equals(otherMyClass.uv_coordinates_)) return false;
       if (!us.ihmc.idl.IDLTools.equals(this.text_, otherMyClass.text_)) return false;
 
       if (!us.ihmc.idl.IDLTools.equals(this.mesh_resource_, otherMyClass.mesh_resource_)) return false;
 
+      if (!this.mesh_file_.equals(otherMyClass.mesh_file_)) return false;
       if(this.mesh_use_embedded_materials_ != otherMyClass.mesh_use_embedded_materials_) return false;
 
 
@@ -489,10 +606,18 @@ public class Marker extends Packet<Marker> implements Settable<Marker>, EpsilonC
       builder.append(this.points_);      builder.append(", ");
       builder.append("colors=");
       builder.append(this.colors_);      builder.append(", ");
+      builder.append("texture_resource=");
+      builder.append(this.texture_resource_);      builder.append(", ");
+      builder.append("texture=");
+      builder.append(this.texture_);      builder.append(", ");
+      builder.append("uv_coordinates=");
+      builder.append(this.uv_coordinates_);      builder.append(", ");
       builder.append("text=");
       builder.append(this.text_);      builder.append(", ");
       builder.append("mesh_resource=");
       builder.append(this.mesh_resource_);      builder.append(", ");
+      builder.append("mesh_file=");
+      builder.append(this.mesh_file_);      builder.append(", ");
       builder.append("mesh_use_embedded_materials=");
       builder.append(this.mesh_use_embedded_materials_);
       builder.append("}");
