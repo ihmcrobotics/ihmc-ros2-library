@@ -55,7 +55,7 @@ module sensor_msgs
         /**
          * actual matrix data, size is (step * rows)
          */
-        octet data[10000000];
+        sequence<octet, 10000000> data;
       };
     };
   };

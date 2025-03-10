@@ -15,7 +15,7 @@ public class DisparityImagePubSubType implements us.ihmc.pubsub.TopicDataType<st
    @Override
    public final java.lang.String getDefinitionChecksum()
    {
-   		return "8d72fb03446501c7f345cf0a0c1af8ffa1c603661b308e294a47370f7f96133a";
+   		return "4887ae3248cdbce3668be3270fefb18d16584597929f5a25f9a51a1182acf320";
    }
    
    @Override
