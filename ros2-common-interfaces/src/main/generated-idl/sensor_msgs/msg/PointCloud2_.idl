@@ -36,7 +36,7 @@ module sensor_msgs
         /**
          * Describes the channels and their layout in the binary data blob.
          */
-        sensor_msgs::msg::dds::PointField fields[16];
+        sequence<sensor_msgs::msg::dds::PointField, 16> fields;
         /**
          * Is this data bigendian?
          */
@@ -52,7 +52,7 @@ module sensor_msgs
         /**
          * Actual point data, size is (row_step*height)
          */
-        octet data[25000000];
+        sequence<octet, 25000000> data;
         /**
          * True if there are no invalid points
          */

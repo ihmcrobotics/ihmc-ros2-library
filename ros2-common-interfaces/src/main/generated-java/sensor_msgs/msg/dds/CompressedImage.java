@@ -29,13 +29,13 @@ public class CompressedImage extends Packet<CompressedImage> implements Settable
    /**
             * Compressed image buffer
             */
-   public byte[] data_;
+   public us.ihmc.idl.IDLSequence.Byte  data_;
 
    public CompressedImage()
    {
       header_ = new std_msgs.msg.dds.Header();
       format_ = new java.lang.StringBuilder(255);
-      data_ = new byte[3000000];
+      data_ = new us.ihmc.idl.IDLSequence.Byte (3000000, "type_9");
 
    }
 
@@ -51,12 +51,7 @@ public class CompressedImage extends Packet<CompressedImage> implements Settable
       format_.setLength(0);
       format_.append(other.format_);
 
-      for(int i1 = 0; i1 < data_.length; ++i1)
-      {
-            data_[i1] = other.data_[i1];
-
-      }
-
+      data_.set(other.data_);
    }
 
 
@@ -96,7 +91,7 @@ public class CompressedImage extends Packet<CompressedImage> implements Settable
    /**
             * Compressed image buffer
             */
-   public byte[] getData()
+   public us.ihmc.idl.IDLSequence.Byte  getData()
    {
       return data_;
    }
@@ -122,10 +117,7 @@ public class CompressedImage extends Packet<CompressedImage> implements Settable
       if (!this.header_.epsilonEquals(other.header_, epsilon)) return false;
       if (!us.ihmc.idl.IDLTools.epsilonEqualsStringBuilder(this.format_, other.format_, epsilon)) return false;
 
-      for(int i3 = 0; i3 < data_.length; ++i3)
-      {
-                if (!us.ihmc.idl.IDLTools.epsilonEqualsPrimitive(this.data_[i3], other.data_[i3], epsilon)) return false;
-      }
+      if (!us.ihmc.idl.IDLTools.epsilonEqualsByteSequence(this.data_, other.data_, epsilon)) return false;
 
 
       return true;
@@ -143,11 +135,7 @@ public class CompressedImage extends Packet<CompressedImage> implements Settable
       if (!this.header_.equals(otherMyClass.header_)) return false;
       if (!us.ihmc.idl.IDLTools.equals(this.format_, otherMyClass.format_)) return false;
 
-      for(int i5 = 0; i5 < data_.length; ++i5)
-      {
-                if(this.data_[i5] != otherMyClass.data_[i5]) return false;
-
-      }
+      if (!this.data_.equals(otherMyClass.data_)) return false;
 
       return true;
    }
@@ -163,7 +151,7 @@ public class CompressedImage extends Packet<CompressedImage> implements Settable
       builder.append("format=");
       builder.append(this.format_);      builder.append(", ");
       builder.append("data=");
-      builder.append(java.util.Arrays.toString(this.data_));
+      builder.append(this.data_);
       builder.append("}");
       return builder.toString();
    }
