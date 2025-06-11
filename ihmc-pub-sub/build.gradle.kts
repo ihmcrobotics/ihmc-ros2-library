@@ -79,4 +79,4 @@ fun runScript(scriptPath: String, envVars: Map<String, String> = emptyMap(), var
 val envVars = mapOf(
    "ONLY_CLONE_AND_PATCH" to "1"
 )
-runScript(projectDir.absolutePath + "/../cppbuild.bash", envVars)
+//runScript(projectDir.absolutePath + "/../cppbuild.bash", envVars)
