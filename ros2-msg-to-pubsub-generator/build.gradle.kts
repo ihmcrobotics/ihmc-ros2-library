@@ -30,3 +30,8 @@ for (allproject in project.allprojects)
    allproject.tasks.named<Jar>("sourcesJar") {
       duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+for (allproject in project.allprojects)
+   allproject.tasks.named<ProcessResources>("processResources") {
+      duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
