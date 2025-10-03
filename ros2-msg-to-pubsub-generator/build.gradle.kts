@@ -26,8 +26,7 @@ testDependencies {
    api("us.ihmc:ihmc-commons:0.35.1")
 }
 
-// Gradle 7 forces us to do this I guess...
-// https://github.com/gradle/gradle/issues/17236
-ihmc.sourceSetProject("test").tasks.named("processResources", Copy::class.java) {
-   duplicatesStrategy = DuplicatesStrategy.INCLUDE
+for (allproject in project.allprojects)
+   allproject.tasks.named<Jar>("sourcesJar") {
+      duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

@@ -17,7 +17,10 @@ public class Time extends Packet<Time> implements Settable<Time>, EpsilonCompara
             */
    public int sec_;
    /**
-            * The nanoseconds component, valid in the range [0, 10e9).
+            * The nanoseconds component, valid in the range [0, 1e9), to be added to the seconds component.
+            * e.g.
+            * The time -1.7 seconds is represented as {sec: -2, nanosec: 3e8}
+            * The time 1.7 seconds is represented as {sec: 1, nanosec: 7e8}
             */
    public long nanosec_;
 
@@ -55,14 +58,20 @@ public class Time extends Packet<Time> implements Settable<Time>, EpsilonCompara
    }
 
    /**
-            * The nanoseconds component, valid in the range [0, 10e9).
+            * The nanoseconds component, valid in the range [0, 1e9), to be added to the seconds component.
+            * e.g.
+            * The time -1.7 seconds is represented as {sec: -2, nanosec: 3e8}
+            * The time 1.7 seconds is represented as {sec: 1, nanosec: 7e8}
             */
    public void setNanosec(long nanosec)
    {
       nanosec_ = nanosec;
    }
    /**
-            * The nanoseconds component, valid in the range [0, 10e9).
+            * The nanoseconds component, valid in the range [0, 1e9), to be added to the seconds component.
+            * e.g.
+            * The time -1.7 seconds is represented as {sec: -2, nanosec: 3e8}
+            * The time 1.7 seconds is represented as {sec: 1, nanosec: 7e8}
             */
    public long getNanosec()
    {

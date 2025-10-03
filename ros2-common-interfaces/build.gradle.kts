@@ -1,6 +1,6 @@
 buildscript {
    dependencies {
-      classpath("us.ihmc:ros2-msg-to-pubsub-generator:1.2.3")
+      classpath("us.ihmc:ros2-msg-to-pubsub-generator:1.2.4")
    }
 }
 
@@ -87,10 +87,15 @@ val generateMessages by tasks.creating(us.ihmc.ros2.rosidl.ROS2MessageGenerator:
    customIDLDirectory = files("src/main/custom-idl")
 }
 
-tasks.named<Copy>("processResources") {
-    duplicatesStrategy = DuplicatesStrategy.WARN
+for (allproject in project.allprojects)
+   allproject.tasks.named<ProcessResources>("processResources") {
+      duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+for (allproject in project.allprojects)
+   allproject.tasks.named<Jar>("sourcesJar") {
+      duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 fun setupVendoredRepo(clonePath: String, vcsUrl: String, tagName: String)
 {

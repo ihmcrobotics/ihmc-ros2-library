@@ -1,0 +1,36 @@
+#ifndef __nav_msgs__msg__Goals__idl__
+#define __nav_msgs__msg__Goals__idl__
+
+#include "geometry_msgs/msg/./PoseStamped_.idl"
+#include "std_msgs/msg/./Header_.idl"
+module nav_msgs
+{
+  module msg
+  {
+    module dds
+    {
+
+      /**
+       * An array of navigation goals
+       */
+      @TypeCode(type="nav_msgs::msg::dds_::Goals_")
+      struct Goals
+      {
+        /**
+         * This header will store the time at which the poses were computed (not to be confused with the stamps of the poses themselves)
+         * In the case that individual poses do not have their frame_id set or their timetamp set they will use the default value here.
+         */
+        std_msgs::msg::dds::Header header;
+        /**
+         * An array of goals to for navigation to achieve.
+         * The goals should be executed in the order of the array.
+         * The header and stamp are intended to be used for computing the position of the goals.
+         * They may vary to support cases of goals that are moving with respect to the robot.
+         */
+        sequence<geometry_msgs::msg::dds::PoseStamped> goals;
+      };
+    };
+  };
+};
+
+#endif

@@ -1,0 +1,27 @@
+#ifndef __geometry_msgs__msg__PolygonInstanceStamped__idl__
+#define __geometry_msgs__msg__PolygonInstanceStamped__idl__
+
+#include "geometry_msgs/msg/./PolygonInstance_.idl"
+#include "std_msgs/msg/./Header_.idl"
+module geometry_msgs
+{
+  module msg
+  {
+    module dds
+    {
+
+      /**
+       * This represents a Polygon with reference coordinate frame and timestamp
+       * It includes a unique identification field for disambiguating multiple instances
+       */
+      @TypeCode(type="geometry_msgs::msg::dds_::PolygonInstanceStamped_")
+      struct PolygonInstanceStamped
+      {
+        std_msgs::msg::dds::Header header;
+        geometry_msgs::msg::dds::PolygonInstance polygon;
+      };
+    };
+  };
+};
+
+#endif

@@ -1,0 +1,26 @@
+#ifndef __geometry_msgs__msg__PolygonInstance__idl__
+#define __geometry_msgs__msg__PolygonInstance__idl__
+
+#include "geometry_msgs/msg/./Polygon_.idl"
+module geometry_msgs
+{
+  module msg
+  {
+    module dds
+    {
+
+      /**
+       * A specification of a polygon where the first and last points are assumed to be connected
+       * It includes a unique identification field for disambiguating multiple instances
+       */
+      @TypeCode(type="geometry_msgs::msg::dds_::PolygonInstance_")
+      struct PolygonInstance
+      {
+        geometry_msgs::msg::dds::Polygon polygon;
+        long long id;
+      };
+    };
+  };
+};
+
+#endif

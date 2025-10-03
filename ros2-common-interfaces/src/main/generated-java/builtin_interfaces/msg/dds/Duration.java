@@ -14,11 +14,14 @@ import us.ihmc.pubsub.TopicDataType;
 public class Duration extends Packet<Duration> implements Settable<Duration>, EpsilonComparable<Duration>
 {
    /**
-            * Seconds component, range is valid over any possible int32 value.
+            * The seconds component, valid over all int32 values.
             */
    public int sec_;
    /**
-            * Nanoseconds component in the range of [0, 10e9).
+            * The nanoseconds component, valid in the range [0, 1e9), to be added to the seconds component.
+            * e.g.
+            * The duration -1.7 seconds is represented as {sec: -2, nanosec: 3e8}
+            * The duration 1.7 seconds is represented as {sec: 1, nanosec: 7e8}
             */
    public long nanosec_;
 
@@ -41,14 +44,14 @@ public class Duration extends Packet<Duration> implements Settable<Duration>, Ep
    }
 
    /**
-            * Seconds component, range is valid over any possible int32 value.
+            * The seconds component, valid over all int32 values.
             */
    public void setSec(int sec)
    {
       sec_ = sec;
    }
    /**
-            * Seconds component, range is valid over any possible int32 value.
+            * The seconds component, valid over all int32 values.
             */
    public int getSec()
    {
@@ -56,14 +59,20 @@ public class Duration extends Packet<Duration> implements Settable<Duration>, Ep
    }
 
    /**
-            * Nanoseconds component in the range of [0, 10e9).
+            * The nanoseconds component, valid in the range [0, 1e9), to be added to the seconds component.
+            * e.g.
+            * The duration -1.7 seconds is represented as {sec: -2, nanosec: 3e8}
+            * The duration 1.7 seconds is represented as {sec: 1, nanosec: 7e8}
             */
    public void setNanosec(long nanosec)
    {
       nanosec_ = nanosec;
    }
    /**
-            * Nanoseconds component in the range of [0, 10e9).
+            * The nanoseconds component, valid in the range [0, 1e9), to be added to the seconds component.
+            * e.g.
+            * The duration -1.7 seconds is represented as {sec: -2, nanosec: 3e8}
+            * The duration 1.7 seconds is represented as {sec: 1, nanosec: 7e8}
             */
    public long getNanosec()
    {
