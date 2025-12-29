@@ -2,6 +2,7 @@ pluginManagement {
    repositories {
 	  mavenLocal()
       gradlePluginPortal()
+      maven { url = uri("https://robotlabfiles.ihmc.us/repository/") }
    }
    plugins {
       id("us.ihmc.ihmc-build") version "1.3.0"
