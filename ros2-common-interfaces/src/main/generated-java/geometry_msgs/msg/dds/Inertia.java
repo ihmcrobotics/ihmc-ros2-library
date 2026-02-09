@@ -17,7 +17,7 @@ public class Inertia extends Packet<Inertia> implements Settable<Inertia>, Epsil
             */
    public us.ihmc.euclid.tuple3D.Vector3D com_;
    /**
-            * Inertia Tensor [kg-m^2]
+            * Inertia Tensor [kg-m^2] about the center of mass
             * | ixx ixy ixz |
             * I = | ixy iyy iyz |
             * | ixz iyz izz |
@@ -84,7 +84,7 @@ public class Inertia extends Packet<Inertia> implements Settable<Inertia>, Epsil
    }
 
    /**
-            * Inertia Tensor [kg-m^2]
+            * Inertia Tensor [kg-m^2] about the center of mass
             * | ixx ixy ixz |
             * I = | ixy iyy iyz |
             * | ixz iyz izz |
@@ -94,7 +94,7 @@ public class Inertia extends Packet<Inertia> implements Settable<Inertia>, Epsil
       ixx_ = ixx;
    }
    /**
-            * Inertia Tensor [kg-m^2]
+            * Inertia Tensor [kg-m^2] about the center of mass
             * | ixx ixy ixz |
             * I = | ixy iyy iyz |
             * | ixz iyz izz |

@@ -41,28 +41,6 @@ Then, update the version of `ros2-msg-to-pubsub-generator` plugin in `ros2-commo
 > gradle generateMessages
 ```
 
-###### Generate test IDLs
-
-If there are no changes to the .msg to .idl parser, you can ignore this step.
-
-Run `TestGenerateMSGToIDL`, 
-located in `ros2-msg-to-idl-generator/src/test/java` 
-with `ros2-msg-to-idl-generator` set as the working directory.
-
-Note: This currently doesn't convert the generated files to Unix line endings
-
-###### Generate test messages
-
-If there are no changes to the .msg to .idl parser, you can ignore this step.
-
-Run `us.ihmc.TestGenerateMSGToPubSub`, 
-located in `ros2-msg-to-pubsub-generator/src/test/java` 
-with `ros2-msg-to-pubsub-generator/src/test` set as the working directory.
-
-Make sure the generated files have LF (Unix) line separators.
-
-> Note: In IntelliJ, you may need to build with Eclipse compiler and use "Build, no error check".
-
 #### Ensure tests are passing
 
 ```
@@ -76,9 +54,9 @@ Bump version number in `ihmc-ros2-library/group.gradle.properties` (if you didn'
 
 Update the README.md to document any changed procedures, new features, etc.
 
-Publish artifacts to sonatype: `gradle compositePublish -PpublishUrl=ihmcRelease` from `ihmc-ros2-library/`
+Publish artifacts to sonatype: `gradle compositePublish -PpublishUrl=robotlabfiles` from `ihmc-ros2-library/`
 
-Check when they become available at [https://repo.maven.apache.org/maven2/us/ihmc/](https://repo.maven.apache.org/maven2/us/ihmc/).
+Check when they become available at [https://robotlabfiles.ihmc.us/repository/us/ihmc/](https://robotlabfiles.ihmc.us/repository/us/ihmc/).
 
 #### Update generator version (if you didn't already)
 

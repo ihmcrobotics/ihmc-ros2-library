@@ -21,7 +21,7 @@ module geometry_msgs
          */
         geometry_msgs::msg::dds::Vector3 com;
         /**
-         * Inertia Tensor [kg-m^2]
+         * Inertia Tensor [kg-m^2] about the center of mass
          * | ixx ixy ixz |
          * I = | ixy iyy iyz |
          * | ixz iyz izz |
