@@ -1,6 +1,8 @@
 # IHMC ROS 2 Library
 ROS2 messaging for Java. Implements a ROS 2 compatible layer with a Java JNI layer on top of Fast-DDS.
 
+# This project has been replaced with [jros2](https://github.com/ihmcrobotics/jros2)!
+
 ## Features
 - Easy-to-use API for publishing and subscribing to ROS 2 topics
 - Allocation free modules for realtime support
