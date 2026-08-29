@@ -29,6 +29,10 @@ RealtimeROS2Node realtimeROS2Node = new ROS2NodeBuilder().buildRealtime("realtim
 dependencies {
   implementation("us.ihmc:ros2-library:1.2.4")
 }
+
+repositories {
+  maven { url = uri("https://robotlabfiles.ihmc.us/repository/") }
+}
 ```
 
 ### Examples
